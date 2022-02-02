@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movies/home_page.dart';
 import 'package:movies/index_page.dart';
+import 'package:movies/routes.dart';
 
 import 'news_tab.dart';
 import 'profile_tab.dart';
@@ -23,7 +24,8 @@ class MyAdaptingApp extends StatelessWidget {
     // Either Material or Cupertino widgets work in either Material or Cupertino
     // Apps.
     return MaterialApp(
-      title: 'Adaptive Music App',
+      routes: Routes,
+      title: 'movies App',
       theme: ThemeData(
         // Use the green theme for Material widgets.
         primarySwatch: Colors.blue,

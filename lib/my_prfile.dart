@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:movies/antd_ttf.dart';
 import 'package:movies/profile_tab.dart';
 import 'package:movies/settings_tab.dart';
+import 'package:movies/system_ttf.dart';
+import 'package:movies/xiaoxiong_icon.dart';
 // import 'package:fluttertoast/fluttertoast.dart';
 import 'image_icon.dart';
 
@@ -26,20 +29,59 @@ class _MyProfile extends State<MyProfile> {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        trailing: CupertinoButton(
-          padding: EdgeInsets.zero,
-          child: SettingsTab.iosIcon,
-          onPressed: () {
-            // This pushes the settings page as a full page modal dialog on top
-            // of the tab bar and everything.
-            Navigator.of(context, rootNavigator: true).push<void>(
-              CupertinoPageRoute(
-                title: SettingsTab.title,
-                fullscreenDialog: true,
-                builder: (context) => const SettingsTab(),
-              ),
-            );
-          },
+        trailing: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+
+            CupertinoButton(
+              padding: EdgeInsets.zero,
+              child: Icon(SystemTtf.saoyisao,size: 42,),
+              onPressed: () {
+                // This pushes the settings page as a full page modal dialog on top
+                // of the tab bar and everything.
+                Navigator.of(context, rootNavigator: true).push<void>(
+                  CupertinoPageRoute(
+                    title: SettingsTab.title,
+                    // fullscreenDialog: true,
+                    builder: (context) => const SettingsTab(),
+                  ),
+                );
+              },
+            ),
+            CupertinoButton(
+              padding: EdgeInsets.zero,
+              child: Icon(XiaoXiongIcon.xiaoxi,size: 30,),
+              onPressed: () {
+                // This pushes the settings page as a full page modal dialog on top
+                // of the tab bar and everything.
+                Navigator.of(context, rootNavigator: true).push<void>(
+                  CupertinoPageRoute(
+                    title: SettingsTab.title,
+                    // fullscreenDialog: true,
+                    builder: (context) => const SettingsTab(),
+                  ),
+                );
+              },
+            ),
+
+            CupertinoButton(
+              padding: EdgeInsets.zero,
+              child: SettingsTab.iosIcon,
+              onPressed: () {
+                // This pushes the settings page as a full page modal dialog on top
+                // of the tab bar and everything.
+                Navigator.of(context, rootNavigator: true).push<void>(
+                  CupertinoPageRoute(
+                    title: SettingsTab.title,
+                    // fullscreenDialog: true,
+                    builder: (context) => const SettingsTab(),
+                  ),
+                );
+              },
+            ),
+          ],
         ),
       ),
       child: _buildBody(context),
@@ -51,11 +93,11 @@ class _MyProfile extends State<MyProfile> {
       child: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          // mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // 头像用户名
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Container(
                   width: 80,
@@ -79,7 +121,7 @@ class _MyProfile extends State<MyProfile> {
             ),
             // 金币数
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
                   child: Column(
@@ -96,7 +138,7 @@ class _MyProfile extends State<MyProfile> {
                           child: Text(
                             '金币',
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 13,
                               color: Colors.grey
                             ),
                           )),
@@ -118,7 +160,7 @@ class _MyProfile extends State<MyProfile> {
                           child: Text(
                             '钻石',
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 13,
                               color: Colors.grey
                             ),
                           )),
@@ -140,7 +182,51 @@ class _MyProfile extends State<MyProfile> {
                           child: Text(
                             '推荐数',
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 13,
+                              color: Colors.grey
+                            ),
+                          )),
+                    ],
+                  ),
+                ),
+                Container(
+                  child: Column(
+                    children: [
+                      Container(
+                          margin: EdgeInsets.only(left: 10, top: 10),
+                          child: Text(
+                            '0',
+                            style: TextStyle(
+                                fontSize: 25, fontWeight: FontWeight.bold),
+                          )),
+                      Container(
+                          margin: EdgeInsets.only(left: 10, top: 10),
+                          child: Text(
+                            '我的关注',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.grey
+                            ),
+                          )),
+                    ],
+                  ),
+                ),
+                Container(
+                  child: Column(
+                    children: [
+                      Container(
+                          margin: EdgeInsets.only(left: 10, top: 10),
+                          child: Text(
+                            '0',
+                            style: TextStyle(
+                                fontSize: 25, fontWeight: FontWeight.bold),
+                          )),
+                      Container(
+                          margin: EdgeInsets.only(left: 10, top: 10),
+                          child: Text(
+                            '我的粉丝',
+                            style: TextStyle(
+                              fontSize: 13,
                               color: Colors.grey
                             ),
                           )),
@@ -150,6 +236,10 @@ class _MyProfile extends State<MyProfile> {
 
               ],
             ),
+            Image(
+                image:
+            ),
+            // 三图片
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [

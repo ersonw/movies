@@ -68,7 +68,7 @@ class _HomePageState extends State<HomePage> {
           //   );
           case 0:
             return CupertinoTabView(
-              defaultTitle: MyProfile.title,
+              // defaultTitle: MyProfile.title,
               builder: (context) => const MyProfile(),
             );
           default:
