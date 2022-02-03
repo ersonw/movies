@@ -2,20 +2,47 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:async';
+
+import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:movies/global.dart';
 import 'package:movies/home_page.dart';
 import 'package:movies/index_page.dart';
 import 'package:movies/routes.dart';
+import 'package:movies/web_view.dart';
 
+import 'Take_picture_screen.dart';
 import 'news_tab.dart';
 import 'profile_tab.dart';
 import 'settings_tab.dart';
 import 'songs_tab.dart';
 import 'widgets.dart';
 
-void main() => runApp(const MyAdaptingApp());
 
+void main() => Global.init().then((e) => runApp(const MyAdaptingApp()));
+// Future<void> main() async {
+//   // Ensure that plugin services are initialized so that `availableCameras()`
+//   // can be called before `runApp()`
+//   WidgetsFlutterBinding.ensureInitialized();
+//
+//   // Obtain a list of the available cameras on the device.
+//   final cameras = await availableCameras();
+//
+//   // Get a specific camera from the list of available cameras.
+//   final firstCamera = cameras.last;
+//
+//   runApp(
+//     MaterialApp(
+//       theme: ThemeData.dark(),
+//       home: TakePictureScreen(
+//         // Pass the appropriate camera to the TakePictureScreen widget.
+//         camera: firstCamera,
+//       ),
+//     ),
+//   );
+// }
 class MyAdaptingApp extends StatelessWidget {
   const MyAdaptingApp({Key? key}) : super(key: key);
 
@@ -37,14 +64,15 @@ class MyAdaptingApp extends StatelessWidget {
           // theme (which is green), this app will use a different theme
           // for Cupertino (which is blue by default).
           data: const CupertinoThemeData(
-            primaryColor: Colors.red,
-            barBackgroundColor: Colors.white, //上层颜色
-            scaffoldBackgroundColor: Colors.white //Body 颜色
-          ),
+              primaryColor: Colors.red,
+              barBackgroundColor: Colors.white, //上层颜色
+              scaffoldBackgroundColor: Colors.white //Body 颜色
+              ),
           child: Material(child: child),
         );
       },
       home: const HomePage(),
+      // home:  WebViewExample(url: 'https://www.google.com'),
     );
   }
 }
@@ -94,6 +122,7 @@ class _PlatformAdaptingHomePageState extends State<PlatformAdaptingHomePage> {
   Widget _buildIosHomePage(BuildContext context) {
     return CupertinoTabScaffold(
       tabBar: CupertinoTabBar(
+        // activeColor: Colors.red,
         items: const [
           BottomNavigationBarItem(
             label: SongsTab.title,
