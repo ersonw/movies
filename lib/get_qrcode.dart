@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:movies/functions.dart';
 import 'package:movies/web_view.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'dart:io';
@@ -15,6 +16,7 @@ class _ScanQRPageState extends State<ScanQRPage> {
   final GlobalKey qrKey = GlobalKey();
   late QRViewController controller;
   Barcode? result;
+  String text = '对着二维码扫';
 
 //in order to get hot reload to work.
   @override
@@ -96,20 +98,10 @@ class _ScanQRPageState extends State<ScanQRPage> {
               width: double.infinity,
               color: Colors.black,
               child: Center(
-                child: result != null
-                    ? Column(
-                        children: [
-                          // Text('Code: ${result!.code}'),
-                          // SizedBox(
-                          //   height: 8.0,
-                          // ),
-                          // Text('Format: ${result!.format}'),
-                        ],
-                      )
-                    : Text(
-                        '对着二维码扫',
-                        style: TextStyle(color: Colors.green, fontSize: 20),
-                      ),
+                child: Text(
+                  text,
+                  style: TextStyle(color: Colors.green, fontSize: 20),
+                ),
               ),
             ),
           ),
@@ -130,15 +122,18 @@ class _ScanQRPageState extends State<ScanQRPage> {
         }else if(str == '${result!.code}'){
           return;
         }
+        Navigator.pop(context);
         if(str.contains('http')){
-          print(str);
-          Navigator.pop(context);
+          // print(str);
           Navigator.push(context, CupertinoPageRoute(
             // builder: (context) => TakePictureScreen(cameras: Global.cameras, ),
             builder: (context) => WebViewExample(url: str),
           ),
           );
-
+        }else{
+          // text = '未识别内容:${str}';
+          // Navigator.pop(context);
+          ShowCopyDialog(context, '二维码扫描', str);
         }
       });
     });

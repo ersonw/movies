@@ -2,45 +2,63 @@ PODS:
   - camera (0.0.1):
     - Flutter
   - Flutter (1.0.0)
+  - images_picker (0.0.1):
+    - Flutter
+    - ZLPhotoBrowser (= 4.2.0)
   - MTBBarcodeScanner (5.0.11)
   - path_provider_ios (0.0.1):
     - Flutter
   - qr_code_scanner (0.2.0):
     - Flutter
     - MTBBarcodeScanner
+  - qr_code_tools (0.0.7):
+    - Flutter
   - webview_flutter_wkwebview (0.0.1):
     - Flutter
+  - ZLPhotoBrowser (4.2.0):
+    - ZLPhotoBrowser/Core (= 4.2.0)
+  - ZLPhotoBrowser/Core (4.2.0)
 
 DEPENDENCIES:
   - camera (from `.symlinks/plugins/camera/ios`)
   - Flutter (from `Flutter`)
+  - images_picker (from `.symlinks/plugins/images_picker/ios`)
   - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
   - qr_code_scanner (from `.symlinks/plugins/qr_code_scanner/ios`)
+  - qr_code_tools (from `.symlinks/plugins/qr_code_tools/ios`)
   - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/ios`)
 
 SPEC REPOS:
   trunk:
     - MTBBarcodeScanner
+    - ZLPhotoBrowser
 
 EXTERNAL SOURCES:
   camera:
     :path: ".symlinks/plugins/camera/ios"
   Flutter:
     :path: Flutter
+  images_picker:
+    :path: ".symlinks/plugins/images_picker/ios"
   path_provider_ios:
     :path: ".symlinks/plugins/path_provider_ios/ios"
   qr_code_scanner:
     :path: ".symlinks/plugins/qr_code_scanner/ios"
+  qr_code_tools:
+    :path: ".symlinks/plugins/qr_code_tools/ios"
   webview_flutter_wkwebview:
     :path: ".symlinks/plugins/webview_flutter_wkwebview/ios"
 
 SPEC CHECKSUMS:
   camera: 9993f92f2c793e87b65e35f3a23c70582afb05b1
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
+  images_picker: 8508f4097cec731ab87d47564ed964aa3fe942c7
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
   path_provider_ios: 7d7ce634493af4477d156294792024ec3485acd5
   qr_code_scanner: bb67d64904c3b9658ada8c402e8b4d406d5d796e
+  qr_code_tools: 5b5dd44ccdfa4b81f645c251e421f61003254b81
   webview_flutter_wkwebview: 005fbd90c888a42c5690919a1527ecc6649e1162
+  ZLPhotoBrowser: 602d505d4f2cf7f309ce973c4353d33e85216d58
 
 PODFILE CHECKSUM: c2e66ad3542dfbe0618f9c1dc757f2d61646d81f
 

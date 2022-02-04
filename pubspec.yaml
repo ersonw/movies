@@ -101,6 +101,10 @@ flutter:
     - family: XiaoXiongIcon
       fonts:
         - asset: assets/fonts/xiaoxiongfont.ttf
+    - family: XiaoXiZhongXin
+      fonts:
+        - asset: assets/fonts/xiaoxizhongxin.ttf
+
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf
