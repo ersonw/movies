@@ -4,6 +4,10 @@
 <dict>
     <key>io.flutter.embedded_views_preview</key>
     <true/>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>This app needs camera access to scan QR codes</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>This app needs camera access to scan QR codes</string>
     <key>NSCameraUsageDescription</key>
     <string>This app needs camera access to scan QR codes</string>
 	<key>CFBundleDevelopmentRegion</key>
