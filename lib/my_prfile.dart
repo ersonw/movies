@@ -146,7 +146,7 @@ class _MyProfile extends State<MyProfile> {
                 // of the tab bar and everything.
                 Navigator.of(context, rootNavigator: true).push<void>(
                   CupertinoPageRoute(
-                    title: SettingsTab.title,
+                    title: Messages.title,
                     // fullscreenDialog: true,
                     builder: (context) => const Messages(),
                   ),
