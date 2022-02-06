@@ -42,9 +42,9 @@ dependencies:
   qr_code_scanner: ^0.6.1
   webview_flutter: ^3.0.0
   images_picker: ^1.2.10
-  dio: ^4.0.4
   qr_code_tools: ^0.0.7
   device_info: ^2.0.3
+  dio: ^4.0.4
 #  fluttertoast: ^8.0.8
 
 

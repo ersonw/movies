@@ -1,6 +1,9 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:movies/functions.dart';
+import 'package:movies/http_manager.dart';
+import 'package:movies/network/NWApi.dart';
+import 'package:movies/network/NWMethod.dart';
 import 'dart:convert';
 import 'dart:io';
 
@@ -11,6 +14,7 @@ class Global {
   static late final cameras;
   static late final firstCamera;
   static late final lastCamera;
+  static late BuildContext MainContext;
   //初始化全局信息，会在APP启动时执行
   static Future init() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -19,6 +23,15 @@ class Global {
     firstCamera = cameras.first;
     lastCamera = cameras.last;
     _readConfig();
+    DioManager().request(
+        NWMethod.POST,
+        NWApi.loginPath,
+        params: {'account': '123456789'},
+        success: (data){
+          print("success data = $data");
+        }, error:(error) {
+          print("error code = ${error.code}, massage = ${error.message}");
+        });
   }
   static Future<int> _readConfig() async {
     try {

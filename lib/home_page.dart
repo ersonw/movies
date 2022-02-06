@@ -5,6 +5,8 @@ import 'package:movies/my_prfile.dart';
 import 'package:movies/news_tab.dart';
 import 'package:movies/songs_tab.dart';
 
+import 'global.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -52,6 +54,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    Global.MainContext = context;
     return _buildHomePage(context);
   }
 }
