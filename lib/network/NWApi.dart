@@ -1,6 +1,8 @@
 class NWApi {
-  static final baseApi = "http://172.21.68.12:8015/api/";
-  static final loginPath = "user/login";//接口返回：{"code": int, "message": "String", "data": {"account": "String", "password": "String"}}
-  static final queryListPath = "/query/list";//接口返回：{"code": ing, "message": "String", "data": [int, int, String, int, String, int]}
-  static final queryListJsonPath = "/query/listjson";//接口返回：{"code": int, "message": "String", "data": [{"account": "String", "password": "String"}， {"account": "String", "password": "String"}]}
+  static const baseApi = "http://192.168.254.142:8015/api/";
+  // static final baseApi = "http://172.21.68.12:8015/api/";
+  static const loginPath = "user/login";
+  static const getInfo = "user/info";
+  static const queryListPath = "/query/list";
+  static const queryListJsonPath = "/query/listjson";
 }

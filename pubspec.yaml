@@ -45,6 +45,7 @@ dependencies:
   qr_code_tools: ^0.0.7
   device_info: ^2.0.3
   dio: ^4.0.4
+  shared_preferences: ^2.0.13
 #  fluttertoast: ^8.0.8
 
 

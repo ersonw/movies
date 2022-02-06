@@ -1,11 +1,17 @@
 class User {
-  late String token;
-  late String nickname;
-
+  String token = '';
+  String nickname = '';
+  String uid = '';
+  User();
+  User.fromJson(Map<String, dynamic> json)
+      : token = json['token'],
+        nickname = json['nickname'],
+        uid = json['uid'];
   Map toJson() {
     Map map = {};
     map['token'] = token;
     map['nickname'] = nickname;
+    map['uid'] = uid;
     return map;
   }
 }
