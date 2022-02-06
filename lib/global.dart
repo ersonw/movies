@@ -1,6 +1,7 @@
 import 'package:camera/camera.dart';
+import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:movies/functions.dart';
+import 'package:flutter/services.dart';
 import 'package:movies/http_manager.dart';
 import 'package:movies/network/NWApi.dart';
 import 'package:movies/network/NWMethod.dart';
@@ -15,6 +16,7 @@ class Global {
   static late final firstCamera;
   static late final lastCamera;
   static late BuildContext MainContext;
+  static late final uid;
   //初始化全局信息，会在APP启动时执行
   static Future init() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -23,15 +25,35 @@ class Global {
     firstCamera = cameras.first;
     lastCamera = cameras.last;
     _readConfig();
+    uid = GetUUID().toString();
+    print(uid);
     DioManager().request(
         NWMethod.POST,
         NWApi.loginPath,
-        params: {'account': '123456789'},
+        params: {'uid': uid},
         success: (data){
           print("success data = $data");
         }, error:(error) {
           print("error code = ${error.code}, massage = ${error.message}");
         });
+  }
+  static Future<String?> GetUUID() async{
+    final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+    try {
+      if (Platform.isAndroid) {
+        var build =  await deviceInfoPlugin.androidInfo;
+        return build.androidId;
+        //UUID for Android
+      } else if (Platform.isIOS) {
+        var build =  await deviceInfoPlugin.iosInfo;
+        return build.identifierForVendor;
+      }
+    // ignore: nullable_type_in_catch_clause
+    } on PlatformException {
+      print('Failed to get platform version');
+      return null;
+    }
+
   }
   static Future<int> _readConfig() async {
     try {

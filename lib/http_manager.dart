@@ -38,16 +38,19 @@ class DioManager {
       Response response = await dio.request(path, queryParameters: params, options: Options(method: NWMethodValues[method]));
       if (response != null) {
         BaseEntity entity = BaseEntity<T>.fromJson(response.data);
-        if (entity.code == 0) {
+        if (entity.code == 200) {
           success(entity.data);
         } else {
-          error(ErrorEntity(code: entity.code, message: entity.message));
+//          error(ErrorEntity(code: entity.code, message: entity.message));
+          ShowAlertDialog(Global.MainContext, '操作失败!', '${entity.message}');
         }
       } else {
-        error(ErrorEntity(code: -1, message: "未知错误"));
+        ShowAlertDialog(Global.MainContext, '操作失败!', '未知错误48');
+//        error(ErrorEntity(code: -1, message: "未知错误"));
       }
     } on DioError catch(e) {
-      error(createErrorEntity(e));
+      ShowAlertDialog(Global.MainContext, '网络错误!', '原因:${e.message}');
+//      error(createErrorEntity(e));
     }
   }
 
@@ -62,7 +65,7 @@ class DioManager {
       Response response = await dio.request(path, queryParameters: params, options: Options(method: NWMethodValues[method]));
       if (response != null) {
         BaseListEntity entity = BaseListEntity<T>.fromJson(response.data);
-        if (entity.code == 0) {
+        if (entity.code == 200) {
 //          success(entity.data);
         } else {
           error(ErrorEntity(code: entity.code, message: entity.message));
@@ -142,7 +145,6 @@ class DioManager {
 //      }
 //      break;
 //      default: {
-  ShowAlertDialog(Global.MainContext, '网络请求', '本次网络请求失败！\n原因：${error.message}');
         return ErrorEntity(code: -1, message: error.message);
 //      }
 //    }
