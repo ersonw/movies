@@ -24,6 +24,8 @@ class Global {
   static late SharedPreferences _prefs;
   //初始化全局信息，会在APP启动时执行
   static Future init() async {
+    bool data = await fetchData();
+    print(data);
     WidgetsFlutterBinding.ensureInitialized();
     _prefs = await SharedPreferences.getInstance();
     var _profile = _prefs.getString("profile");
@@ -33,19 +35,35 @@ class Global {
       } catch (e) {
         print(e);
       }
+    }else{
+      saveProfile();
     }
     WidgetsFlutterBinding.ensureInitialized();
     WidgetsFlutterBinding.ensureInitialized();
     cameras = await availableCameras();
-    // firstCamera = cameras.first;
-    // lastCamera = cameras.last;
-    //  await _readConfig();
     uid = await GetUUID();
+    initUser();
     // User user = User();
     // user.uid = uid;
     // profile.user = user;
     // saveProfile();
-    // print(_profile);
+//     print(_profile);
+  }
+  static Future<void> initUser() async {
+    User user = profile.user;
+    if(user.token.isEmpty){
+      GetUserInfo();
+    }
+  }
+  static Future<bool> fetchData() async {
+    bool data = false;
+
+    // Change to API call
+    await Future.delayed(Duration(seconds: 6), () {
+      data = true;
+    });
+
+    return data;
   }
   static Future<void> GetUserInfo() async {
     DioManager().request(
@@ -54,6 +72,8 @@ class Global {
         params: {'identifier': uid},
         success: (data){
           print("success data = $data");
+          if(data != null) profile.user = User.fromJson(jsonDecode(data));
+          saveProfile();
         }, error:(error) {});
   }
   static Future<String> GetUUID() async{

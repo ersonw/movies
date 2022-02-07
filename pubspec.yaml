@@ -46,9 +46,15 @@ dependencies:
   device_info: ^2.0.3
   dio: ^4.0.4
   shared_preferences: ^2.0.13
+  flutter_native_splash: ^2.0.2
+  flare_splash_screen: ^4.0.0
 #  fluttertoast: ^8.0.8
 
-
+flutter_native_splash:
+  color: "#FFFFFF"
+  image: assets/image/splash.png
+  fullscreen: true
+  fill: true
 dev_dependencies:
   flutter_test:
     sdk: flutter

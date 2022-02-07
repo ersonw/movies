@@ -64,24 +64,6 @@ class _MyProfile extends State<MyProfile> {
                           child: const Text(
                             '相机', style: TextStyle(color: Colors.black),),
                           isDestructiveAction: true,
-//                          onPressed: () async {
-//                            List<Media>? res = await ImagesPicker.openCamera(
-//                              // pickType: PickType.video,
-//                              pickType: PickType.image,
-//                              quality: 0.8,
-//                              maxSize: 800,
-//                              // cropOpt: CropOption(
-//                              //   aspectRatio: CropAspectRatio.wh16x9,
-//                              // ),
-//                              maxTime: 15,
-//                            );
-//                            if(res != null){
-//                              setState(() {
-//                                var image = res[0].thumbPath;
-////                                print(image);
-//                              });
-//                            }
-//                          },
                           onPressed: () async {
                             Navigator.pop(context);
                             Navigator.of(context, rootNavigator: true).push<void>(
@@ -108,11 +90,6 @@ class _MyProfile extends State<MyProfile> {
 //                               ),
                             );
                             if (res != null) {
-//                              print(res.map((e) => e.path).toList());
-//                              setState(() async {
-//                              });
-                              // bool status = await ImagesPicker.saveImageToAlbum(File(res[0]?.path));
-                              // print(status);
                               var image = res[0].thumbPath;
                               String data = await QrCodeToolsPlugin.decodeFrom(image);
                               if(data.contains('http')){

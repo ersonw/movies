@@ -15,8 +15,15 @@ class DioManager {
   DioManager._internal() {
     // ignore: unnecessary_null_comparison
 //    if (dio == null) {
+    /// 自定义Header
+    Map<String, dynamic> httpHeaders = {
+//      'Accept': 'application/json,*/*',
+//      'Content-Type': 'application/json',
+      'Token': Global.profile.user.token
+    };
       BaseOptions options = BaseOptions(
         baseUrl: NWApi.baseApi,
+        headers: httpHeaders,
         contentType: Headers.jsonContentType,
         responseType: ResponseType.json,
         receiveDataWhenStatusError: false,
@@ -33,7 +40,7 @@ class DioManager {
   // params：请求参数
   // success：请求成功回调
   // error：请求失败回调
-  Future request<T>(NWMethod method, String path, {required Map<String, dynamic> params, required Function(T) success, required Function(ErrorEntity) error}) async {
+  Future request<T>(NWMethod method, String path, {required Map<String, dynamic> params, required Function(String?) success, required Function(ErrorEntity) error}) async {
     try {
       Response response = await dio.request(path, queryParameters: params, options: Options(method: NWMethodValues[method]));
       if (response != null) {
