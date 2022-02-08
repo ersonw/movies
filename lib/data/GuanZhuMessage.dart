@@ -1,0 +1,3 @@
+class GuanZhuMessage {
+  GuanZhuMessage();
+}

@@ -14,7 +14,7 @@ import 'package:movies/web_view.dart';
 import 'package:movies/xiaoxiong_icon.dart';
 import 'package:movies/Take_picture_screen.dart';
 import 'package:qr_code_tools/qr_code_tools.dart';
-import 'get_qrcode.dart';
+import 'GetQrcode.dart';
 import 'global.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
@@ -133,7 +133,7 @@ class _MyProfile extends State<MyProfile> {
 
             CupertinoButton(
               padding: EdgeInsets.zero,
-              child: Icon(SystemTtf.shezhi, size: 42, color: Colors.grey,),
+              child: const Icon(SystemTtf.shezhi, size: 42, color: Colors.grey,),
               onPressed: () {
                 // This pushes the settings page as a full page modal dialog on top
                 // of the tab bar and everything.
@@ -172,15 +172,16 @@ class _MyProfile extends State<MyProfile> {
                       color: Colors.grey,
                       borderRadius: BorderRadius.circular(50.0),
                       image: DecorationImage(
-                        image: AssetImage('assets/image/default_head.gif'),
+                        // image: AssetImage('assets/image/default_head.gif'),
+                        image: NetworkImage(Global.profile.user.avatar!),
                       )),
                 ),
                 Container(
-                    margin: EdgeInsets.only(left: 10, top: 10),
+                    margin: const EdgeInsets.only(left: 10, top: 10),
                     child: Text(
-                      '游客_13132133',
+                      Global.profile.user.nickname,
                       style:
-                      TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     )),
               ],
             ),
@@ -192,15 +193,15 @@ class _MyProfile extends State<MyProfile> {
                   child: Column(
                     children: [
                       Container(
-                          margin: EdgeInsets.only(left: 10, top: 10),
+                          margin: const EdgeInsets.only(left: 10, top: 10),
                           child: Text(
-                            '0',
-                            style: TextStyle(
+                            '${Global.profile.user.gold}',
+                            style: const TextStyle(
                                 fontSize: 25, fontWeight: FontWeight.bold),
                           )),
                       Container(
-                          margin: EdgeInsets.only(left: 10, top: 10),
-                          child: Text(
+                          margin: const EdgeInsets.only(left: 10, top: 10),
+                          child: const Text(
                             '金币',
                             style: TextStyle(
                                 fontSize: 13,
@@ -214,15 +215,15 @@ class _MyProfile extends State<MyProfile> {
                   child: Column(
                     children: [
                       Container(
-                          margin: EdgeInsets.only(left: 10, top: 10),
+                          margin: const EdgeInsets.only(left: 10, top: 10),
                           child: Text(
-                            '0',
-                            style: TextStyle(
+                            '${Global.profile.user.diamond}',
+                            style: const TextStyle(
                                 fontSize: 25, fontWeight: FontWeight.bold),
                           )),
                       Container(
-                          margin: EdgeInsets.only(left: 10, top: 10),
-                          child: Text(
+                          margin: const EdgeInsets.only(left: 10, top: 10),
+                          child: const Text(
                             '钻石',
                             style: TextStyle(
                                 fontSize: 13,

@@ -4,6 +4,8 @@ class NWApi {
   static const baseConfig = "getConfig";
   static const loginPath = "user/login";
   static const getInfo = "user/info";
+  static const checkVersion = 'checkVersion';
+
   static const queryListPath = "/query/list";
   static const queryListJsonPath = "/query/listjson";
 }

@@ -1,0 +1,3 @@
+class KefuMessage {
+  KefuMessage();
+}

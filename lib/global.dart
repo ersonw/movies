@@ -2,8 +2,11 @@ import 'package:camera/camera.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:movies/data_class.dart';
-import 'package:movies/http_manager.dart';
+import 'package:movies/data/User.dart';
+import 'package:movies/data/Config.dart';
+import 'package:movies/data/Profile.dart';
+import 'package:movies/functions.dart';
+import 'package:movies/HttpManager.dart';
 import 'package:movies/network/NWApi.dart';
 import 'package:movies/network/NWMethod.dart';
 import 'dart:convert';
@@ -11,7 +14,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'Profile.dart';
+import 'data/Profile.dart';
 class Global {
   // 是否为release版
   static bool get isRelease => bool.fromEnvironment("dart.vm.product");
@@ -24,8 +27,8 @@ class Global {
   static late SharedPreferences _prefs;
   //初始化全局信息，会在APP启动时执行
   static Future init() async {
-    bool data = await fetchData();
-    print(data);
+    // bool data = await fetchData();
+    // print(data);
     WidgetsFlutterBinding.ensureInitialized();
     _prefs = await SharedPreferences.getInstance();
     var _profile = _prefs.getString("profile");
@@ -35,48 +38,78 @@ class Global {
       } catch (e) {
         print(e);
       }
-    }else{
-      saveProfile();
     }
-    WidgetsFlutterBinding.ensureInitialized();
     WidgetsFlutterBinding.ensureInitialized();
     cameras = await availableCameras();
-    uid = await GetUUID();
-    initUser();
-    // User user = User();
-    // user.uid = uid;
-    // profile.user = user;
-    // saveProfile();
-//     print(_profile);
+    uid = await getUUID();
+    print(_profile);
+    await _init();
   }
-  static Future<void> initUser() async {
-    User user = profile.user;
-    if(user.token.isEmpty){
-      GetUserInfo();
+  static Future<void> _init() async {
+    if(profile.config.hash == null || profile.config.hash.isEmpty){
+      getConfig();
+    }
+    // await checkVersion();
+    if(profile.config.autoLogin){
+      if(profile.user.token == null || profile.user.token.isEmpty){
+        await getUserInfo();
+      }
     }
   }
-  static Future<bool> fetchData() async {
-    bool data = false;
-
-    // Change to API call
-    await Future.delayed(Duration(seconds: 6), () {
-      data = true;
+  static Future<void> checkVersion() async {
+    DioManager().request(
+        NWMethod.GET,
+        NWApi.checkVersion,
+        params: {},
+        success: (data){
+          // print("success data = $data");
+          if(data != null && data.isNotEmpty){
+            Config config = Config.fromJson(jsonDecode(data));
+            if(config.hash != profile.config.hash){
+              getConfig();
+            }
+            if(MainContext != null){
+              if(config.version.compareTo(profile.config.version) > 0){
+                ShowOptionDialog(MainContext, '新版本上线', '目前版本：${profile.config.version}\n最新版本:${config.version}', config.url, config.force);
+              }
+            }
+          }
+        }, error:(error) {
+          // print(error);
     });
-
-    return data;
   }
-  static Future<void> GetUserInfo() async {
+  static Future<void> getConfig() async {
+    DioManager().request(
+        NWMethod.GET,
+        NWApi.baseConfig,
+        params: {},
+        success: (data){
+          // print("success data = $data");
+          if(data != null && data.isNotEmpty) {
+            Config config = Config.fromJson(jsonDecode(data));
+            profile.config.hash = config.hash;
+            profile.config.autoLogin = config.autoLogin;
+            profile.config.force = config.force;
+            profile.config.url = config.url;
+            profile.config.bootImage = config.bootImage;
+            saveProfile();
+          }
+        }, error:(error) {});
+  }
+  static Future<void> getUserInfo() async {
     DioManager().request(
         NWMethod.POST,
         NWApi.getInfo,
         params: {'identifier': uid},
         success: (data){
-          print("success data = $data");
-          if(data != null) profile.user = User.fromJson(jsonDecode(data));
-          saveProfile();
+          // print("success data = $data");
+          if(data != null) {
+            profile.user = User.fromJson(jsonDecode(data));
+            saveProfile();
+          }
         }, error:(error) {});
   }
-  static Future<String> GetUUID() async{
+  static Future<String> getUUID() async{
     final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
     String uid = '';
     try {

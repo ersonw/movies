@@ -8,10 +8,13 @@ import 'package:movies/network/NWApi.dart';
 import 'package:movies/network/NWMethod.dart';
 
 import 'global.dart';
+
 class DioManager {
   static final DioManager _shared = DioManager._internal();
+
   factory DioManager() => _shared;
   late Dio dio;
+
   DioManager._internal() {
     // ignore: unnecessary_null_comparison
 //    if (dio == null) {
@@ -21,16 +24,16 @@ class DioManager {
 //      'Content-Type': 'application/json',
       'Token': Global.profile.user.token
     };
-      BaseOptions options = BaseOptions(
-        baseUrl: NWApi.baseApi,
-        headers: httpHeaders,
-        contentType: Headers.jsonContentType,
-        responseType: ResponseType.json,
-        receiveDataWhenStatusError: false,
-        connectTimeout: 30000,
-        receiveTimeout: 3000,
-      );
-      dio = Dio(options);
+    BaseOptions options = BaseOptions(
+      baseUrl: NWApi.baseApi,
+      headers: httpHeaders,
+      contentType: Headers.jsonContentType,
+      responseType: ResponseType.json,
+      receiveDataWhenStatusError: false,
+      connectTimeout: 30000,
+      receiveTimeout: 3000,
+    );
+    dio = Dio(options);
 //    }
   }
 
@@ -40,9 +43,14 @@ class DioManager {
   // params：请求参数
   // success：请求成功回调
   // error：请求失败回调
-  Future request<T>(NWMethod method, String path, {required Map<String, dynamic> params, required Function(String?) success, required Function(ErrorEntity) error}) async {
+  Future request<T>(NWMethod method, String path,
+      {required Map<String, dynamic> params,
+      required Function(String?) success,
+      required Function(ErrorEntity) error}) async {
     try {
-      Response response = await dio.request(path, queryParameters: params, options: Options(method: NWMethodValues[method]));
+      Response response = await dio.request(path,
+          queryParameters: params,
+          options: Options(method: NWMethodValues[method]));
       if (response != null) {
         BaseEntity entity = BaseEntity<T>.fromJson(response.data);
         if (entity.code == 200) {
@@ -51,12 +59,26 @@ class DioManager {
 //          error(ErrorEntity(code: entity.code, message: entity.message));
           ShowAlertDialog(Global.MainContext, '操作失败!', '${entity.message}');
         }
+        if (entity.code == 106) {
+          Global.profile.user.token = '';
+          Global.saveProfile();
+        }
       } else {
         ShowAlertDialog(Global.MainContext, '操作失败!', '未知错误48');
 //        error(ErrorEntity(code: -1, message: "未知错误"));
       }
-    } on DioError catch(e) {
-      ShowAlertDialog(Global.MainContext, '网络错误!', '原因:${e.message}');
+    } on DioError catch (e) {
+      // print(e.response?.statusCode);
+      if (e.response?.statusCode == 105) {
+        ShowAlertDialog(Global.MainContext, '温馨提醒', '原因:未登录用户');
+      } else if (e.response?.statusCode == 106) {
+        Global.profile.user.token = '';
+        Global.saveProfile();
+        ShowAlertDialog(Global.MainContext, '温馨提醒', '原因:登录已失效');
+      } else {
+        ShowAlertDialog(Global.MainContext, '网络错误!', '原因:${e.message}');
+      }
+
 //      error(createErrorEntity(e));
     }
   }
@@ -67,9 +89,14 @@ class DioManager {
   // params：请求参数
   // success：请求成功回调
   // error：请求失败回调
-  Future requestList<T>(NWMethod method, String path, {required Map<String, dynamic> params, required Function(List<T>) success, required Function(ErrorEntity) error}) async {
+  Future requestList<T>(NWMethod method, String path,
+      {required Map<String, dynamic> params,
+      required Function(List<T>) success,
+      required Function(ErrorEntity) error}) async {
     try {
-      Response response = await dio.request(path, queryParameters: params, options: Options(method: NWMethodValues[method]));
+      Response response = await dio.request(path,
+          queryParameters: params,
+          options: Options(method: NWMethodValues[method]));
       if (response != null) {
         BaseListEntity entity = BaseListEntity<T>.fromJson(response.data);
         if (entity.code == 200) {
@@ -80,7 +107,7 @@ class DioManager {
       } else {
         error(ErrorEntity(code: -1, message: "未知错误"));
       }
-    } on DioError catch(e) {
+    } on DioError catch (e) {
       error(createErrorEntity(e));
     }
   }
@@ -152,7 +179,7 @@ class DioManager {
 //      }
 //      break;
 //      default: {
-        return ErrorEntity(code: -1, message: error.message);
+    return ErrorEntity(code: -1, message: error.message);
 //      }
 //    }
   }

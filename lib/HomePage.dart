@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:movies/index_page.dart';
 import 'package:movies/my_prfile.dart';
 import 'package:movies/news_tab.dart';
-import 'package:movies/songs_tab.dart';
 
 import 'global.dart';
 
@@ -55,6 +53,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     Global.MainContext = context;
+    Global.checkVersion();
     return _buildHomePage(context);
   }
 }

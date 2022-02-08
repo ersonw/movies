@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'dart:io';
 
+import 'package:url_launcher/url_launcher.dart';
+
 ShowCopyDialog(BuildContext context, String title, String? text) {
   return showCupertinoDialog<void>(
       context: context,
@@ -22,6 +24,27 @@ ShowCopyDialog(BuildContext context, String title, String? text) {
                 onPressed: () {
                   Navigator.of(_context).pop();
                 })
+          ],
+        );
+      });
+}
+ShowOptionDialog(BuildContext context, String title, String? text,String? url, bool force) {
+  return showCupertinoDialog<void>(
+      context: context,
+      builder: (_context) {
+        return CupertinoAlertDialog(
+          title: Text(title),
+          content: Text(text!),
+          actions: [
+            CupertinoDialogAction(
+                child: Text(force ? "马上更新":"好的"),
+                onPressed: () {
+                  Navigator.of(_context).pop();
+                  if(force){
+                    launch(url!);
+                    exit(0);
+                  }
+                }),
           ],
         );
       });
