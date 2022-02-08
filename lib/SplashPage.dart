@@ -17,7 +17,7 @@ class SplashScreenState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    // Global.MainContext = context;
+    Global.MainContext = context;
     // Global.checkVersion();
     _timer = Timer.periodic(
         const Duration(seconds: 1),

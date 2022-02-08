@@ -10,5 +10,15 @@ class Messages {
   List<ShenHeMessage> shenheMessage = [];
   List<DianZanMessage> dianzanMessage = [];
   List<GuanZhuMessage> guanzhuMessage = [];
+
   Messages();
+
+  Messages.formJson(Map<String, dynamic> json)
+      : systemMessage = (json['systemMessage'] as List)
+            .map((i) => SystemMessage.formJson(i))
+            .toList();
+
+  Map<String, dynamic> toJson() => {
+        'systemMessage': systemMessage.map((e) => e.toJson()).toList(),
+      };
 }

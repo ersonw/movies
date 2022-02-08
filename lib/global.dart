@@ -2,6 +2,8 @@ import 'package:camera/camera.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:movies/data/Messages.dart';
+import 'package:movies/data/SystemMessage.dart';
 import 'package:movies/data/User.dart';
 import 'package:movies/data/Config.dart';
 import 'package:movies/data/Profile.dart';
@@ -24,6 +26,7 @@ class Global {
   static late BuildContext MainContext;
   static late final String uid;
   static Profile profile = Profile();
+  static Messages messages = Messages();
   static late SharedPreferences _prefs;
   //初始化全局信息，会在APP启动时执行
   static Future init() async {
@@ -39,10 +42,18 @@ class Global {
         print(e);
       }
     }
+    var _messages = _prefs.getString("messages");
+    if(_messages != null){
+      try{
+        messages = Messages.formJson(jsonDecode(_messages));
+      }catch(e){
+        print(e);
+      }
+    }
     WidgetsFlutterBinding.ensureInitialized();
     cameras = await availableCameras();
     uid = await getUUID();
-    print(_profile);
+    print(_messages);
     await _init();
   }
   static Future<void> _init() async {
@@ -55,6 +66,7 @@ class Global {
         await getUserInfo();
       }
     }
+    getSystemMessage();
   }
   static Future<void> checkVersion() async {
     DioManager().request(
@@ -96,6 +108,30 @@ class Global {
           }
         }, error:(error) {});
   }
+  static Future<void> getSystemMessage() async {
+    DioManager().request(
+        NWMethod.GET,
+        NWApi.getSystemMessage,
+        params: {},
+        success: (data) async{
+          // print("success data = $data");
+          if(data != null && data.isNotEmpty) {
+            SystemMessage message = SystemMessage.formJson(jsonDecode(data));
+            bool have = false;
+            List<SystemMessage> systemMessages = messages.systemMessage;
+            for(int i=0; i< systemMessages.length; i++){
+              if(systemMessages[i].id == message.id){
+                have = true;
+              }
+            }
+            if(!have){
+              messages.systemMessage.add(message);
+            }
+            // messages.systemMessage = [];
+            saveMessages();
+          }
+        }, error:(error) {});
+  }
   static Future<void> getUserInfo() async {
     DioManager().request(
         NWMethod.POST,
@@ -128,18 +164,6 @@ class Global {
     }
     return uid;
   }
-  static Future<int> _readConfig() async {
-    try {
-      File file = await _getLocalFile('system.json');
-      // read the variable as a string from the file.
-//    Map<String, dynamic> config = JSON.decode(await file.readAsString());
-//       print(await file.readAsString());
-//       file.writeAsStringSync('sadasd');
-      return 1;
-    } on FileSystemException {
-      return 0;
-    }
-  }
   static Future<File> _getLocalFile(String filename) async {
     // get the path to the document directory.
     // String dir = (await getApplicationDocumentsDirectory()).path;
@@ -151,4 +175,5 @@ class Global {
 //  持久化Profile信息
   static saveProfile() =>
       _prefs.setString("profile", jsonEncode(profile.toJson()));
+  static saveMessages() => _prefs.setString('messages', jsonEncode(messages.toJson()));
 }

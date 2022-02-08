@@ -3,7 +3,7 @@ class User {
   String nickname = '';
   String uid = '';
   String? invite = '';
-  String? avatar = '';
+  String? avatar = 'http://htm-download.oss-cn-hongkong.aliyuncs.com/default_head.gif';
   String? phone = '';
   int gold = 0;
   int diamond = 0;

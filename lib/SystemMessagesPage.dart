@@ -1,17 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:movies/data/SystemMessage.dart';
+import 'package:movies/global.dart';
 import 'package:movies/widgets.dart';
 
-class SystemMessages extends StatefulWidget {
-  SystemMessages({Key? key, this.title, this.iconData}) : super(key: key);
+class SystemMessagesPage extends StatefulWidget {
+  SystemMessagesPage({Key? key, this.title, this.iconData}) : super(key: key);
   String? title;
   IconData? iconData;
 
   @override
-  _SystemMessages createState() => _SystemMessages();
+  _SystemMessagesPage createState() => _SystemMessagesPage();
 }
 
-class _SystemMessages extends State<SystemMessages> {
+class _SystemMessagesPage extends State<SystemMessagesPage> {
   @override
   void initState() {
     // TODO: implement initState
@@ -44,15 +46,19 @@ class _SystemMessages extends State<SystemMessages> {
 
   List<Widget> _buildList() {
     List<Widget> lists = [];
-    lists.addAll(_buildItem());
+    List<SystemMessage> messages = Global.messages.systemMessage;
+    for(int i=0;i< messages.length; i++){
+      lists.addAll(_buildItem(messages[i].title,messages[i].date,messages[i].str.replaceAll(RegExp(r'\\n'), '\n')));
+    }
+    // lists.addAll(_buildItem());
     return lists;
   }
 
-  List<Widget> _buildItem() {
+  List<Widget> _buildItem(String? title, String? date, String? str) {
     return <Widget> [
       Column(
         children: [
-        Padding(padding: EdgeInsets.only(top: 30,bottom: 10),child: Text('2021-12-02'),),
+        Padding(padding: EdgeInsets.only(top: 30,bottom: 10),child: Text(date!),),
       ],),
       Card(
         color: Colors.white70,
@@ -62,11 +68,11 @@ class _SystemMessages extends State<SystemMessages> {
           children: [
             Container(
               padding: EdgeInsets.only(top: 10),
-              child: Text('系统公告'),
+              child: Text(title!),
             ),
             Container(
               padding: EdgeInsets.only(top: 10,left: 10),
-              child: Text('打响新年第一炮\n\n1、【虎年闹新春】活动上线了！\n分享好友，就有机会获得官方安排的【空降嫩模】，还有iPhone13等大奖等你免费领取，速速参与\n2、金币视频免费看VIP限时出售，快快抢购吧\n\n商务合作请POTATO/TELEGRAM搜索：@moyi6\n投稿认证请Telegram搜索：@shangwu91\n',style: TextStyle(color: Colors.black38),),
+              child: Text(str!,style: TextStyle(color: Colors.black38),),
             ),
           ],
         )

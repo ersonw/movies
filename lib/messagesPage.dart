@@ -1,19 +1,19 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:movies/global.dart';
 import 'package:movies/message_icon.dart';
 import 'package:movies/message_list_build.dart';
-import 'package:movies/system_messages.dart';
+import 'package:movies/SystemMessagesPage.dart';
 import 'package:movies/system_ttf.dart';
 
-class Messages extends StatefulWidget {
-  const Messages({Key? key}) : super(key: key);
+class MessagesPage extends StatefulWidget {
+  const MessagesPage({Key? key}) : super(key: key);
   static const String title = '消息中心';
   @override
-  _Messages createState() => _Messages();
+  _MessagesPage createState() => _MessagesPage();
 }
 
-class _Messages extends State<Messages>{
+class _MessagesPage extends State<MessagesPage>{
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -27,14 +27,14 @@ class _Messages extends State<Messages>{
     List<Widget> list = [];
     list.add(MessageListBuild(
       title: '系统公告',
-      text: '暂无消息',
+      text: (Global.messages.systemMessage.first.str.substring(0,18)).replaceAll('\\n', ' ') + '... '+ Global.messages.systemMessage.last.date,
       icon: MessageIcon.tongzhi,
       backgroundColor: Colors.blueAccent,
       tap: (){
 
         Navigator.of(context, rootNavigator: true).push<void>(
           CupertinoPageRoute(
-            builder: (context) => SystemMessages(title: '系统公告',iconData: MessageIcon.tongzhi,),
+            builder: (context) => SystemMessagesPage(title: '系统公告',iconData: MessageIcon.tongzhi,),
           ),
         );
       },

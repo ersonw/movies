@@ -5,7 +5,7 @@ import 'package:images_picker/images_picker.dart';
 import 'package:movies/antd_ttf.dart';
 import 'package:movies/functions.dart';
 import 'package:movies/image_form.dart';
-import 'package:movies/messages.dart';
+import 'package:movies/messagesPage.dart';
 import 'package:movies/profile_tab.dart';
 import 'package:movies/scan_button.dart';
 import 'package:movies/settings_tab.dart';
@@ -123,9 +123,9 @@ class _MyProfile extends State<MyProfile> {
                 // of the tab bar and everything.
                 Navigator.of(context, rootNavigator: true).push<void>(
                   CupertinoPageRoute(
-                    title: Messages.title,
+                    title: MessagesPage.title,
                     // fullscreenDialog: true,
-                    builder: (context) => const Messages(),
+                    builder: (context) => const MessagesPage(),
                   ),
                 );
               },
