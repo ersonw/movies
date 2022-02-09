@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:movies/index_page.dart';
 import 'package:movies/my_prfile.dart';
 import 'package:movies/news_tab.dart';
@@ -19,7 +20,6 @@ class _HomePageState extends State<HomePage> {
     return CupertinoTabScaffold(
       tabBar: CupertinoTabBar(
         items: const [
-
           BottomNavigationBarItem(
               icon: MyProfile.icon,
               label: MyProfile.title
@@ -54,6 +54,16 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     Global.MainContext = context;
     Global.checkVersion();
-    return _buildHomePage(context);
+    return Scaffold(
+      floatingActionButton:  FloatingActionButton(
+          child: Icon(Icons.search,color: Colors.white,size: 40,),
+          onPressed: (){
+            print('FloatingActionButton');
+          },
+          backgroundColor: Colors.yellow
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      body: _buildHomePage(context),
+    );
   }
 }

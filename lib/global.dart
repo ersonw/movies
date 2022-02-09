@@ -56,6 +56,37 @@ class Global {
     print(_messages);
     await _init();
   }
+  static String getDateTime(int date){
+    int t = ((DateTime.now().millisecondsSinceEpoch ~/ 1000) - date);
+    String str = '';
+    if(t > 60){
+      t = t ~/ 60;
+      if(t > 60){
+        t = t ~/ 60;
+        if(t > 24){
+          t = t ~/ 24;
+          if(t > 30){
+            t = t ~/ 30;
+            if(t > 12){
+              t = t ~/ 12;
+              str = '$t年前';
+            }else{
+              str = '$t月前';
+            }
+          }else{
+            str = '$t天前';
+          }
+        }else{
+          str = '$t小时前';
+        }
+      }else{
+        str = '$t分钟前';
+      }
+    }else{
+      str = '$t秒前';
+    }
+    return str;
+  }
   static Future<void> _init() async {
     if(profile.config.hash == null || profile.config.hash.isEmpty){
       getConfig();

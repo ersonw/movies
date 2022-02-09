@@ -67,8 +67,9 @@ ShowAlertDialog(BuildContext context, String? title, String? text) {
         );
       });
 }
-
-
+// static int currentTimeMillis() {
+// return new DateTime.now().millisecondsSinceEpoch;
+// }
 
 
 

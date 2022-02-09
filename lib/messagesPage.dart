@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:movies/KeFuMessagePage.dart';
 import 'package:movies/global.dart';
 import 'package:movies/message_icon.dart';
 import 'package:movies/message_list_build.dart';
@@ -44,6 +45,14 @@ class _MessagesPage extends State<MessagesPage>{
       text: '暂无消息',
       icon: MessageIcon.kefu,
       backgroundColor: Colors.purple,
+      tap: (){
+
+        Navigator.of(context, rootNavigator: true).push<void>(
+          CupertinoPageRoute(
+            builder: (context) => const KeFuMessagePage(),
+          ),
+        );
+      },
     ));
     list.add(MessageListBuild(
       title: '审核消息',

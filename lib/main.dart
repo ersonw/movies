@@ -29,7 +29,7 @@ class MyAdaptingApp extends StatelessWidget {
     return MaterialApp(
       routes: Routes,
       title: 'movies App',
-      debugShowCheckedModeBanner: false,
+      // debugShowCheckedModeBanner: false,
       theme: ThemeData(
         // Use the green theme for Material widgets.
         primarySwatch: Colors.blue,

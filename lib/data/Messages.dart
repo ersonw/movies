@@ -13,12 +13,13 @@ class Messages {
 
   Messages();
 
-  Messages.formJson(Map<String, dynamic> json)
-      : systemMessage = (json['systemMessage'] as List)
-            .map((i) => SystemMessage.formJson(i))
-            .toList();
+  Messages.formJson(Map<String, dynamic> json) :
+        systemMessage = (json['systemMessage'] as List).map((i) => SystemMessage.formJson(i)).toList(),
+        kefuMessage = (json['kefuMessage'] as List).map((i) => KefuMessage.formJson(i)).toList()
+  ;
 
   Map<String, dynamic> toJson() => {
         'systemMessage': systemMessage.map((e) => e.toJson()).toList(),
+        'kefuMessage': kefuMessage.map((e) => e.toJson()).toList(),
       };
 }
