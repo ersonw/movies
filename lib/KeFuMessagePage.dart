@@ -4,8 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:images_picker/images_picker.dart';
+import 'package:movies/MessagesChangeNotifier.dart';
 import 'package:movies/data/KefuMessage.dart';
 import 'package:movies/image_icon.dart';
+import 'package:movies/model/KeFuMessageModel.dart';
 
 import 'global.dart';
 
@@ -17,22 +19,31 @@ class KeFuMessagePage extends StatefulWidget {
 }
 
 class _KeFuMessagePage extends State<KeFuMessagePage> {
-  String _inputString = "";
-  TextEditingController _textEditingController = TextEditingController();
-  ScrollController _scrollController = ScrollController();
+  final TextEditingController _textEditingController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
   bool _isDown = false;
+  List<KefuMessage> messages = [];
+  final MessagesChangeNotifier _messagesChangeNotifier = MessagesChangeNotifier();
+  final KeFuMessageModel _keFuMessageModel = KeFuMessageModel();
 
   @override
   void initState() {
     super.initState();
+    _keFuMessageModel.read();
+    messages = _keFuMessageModel.kefuMessages;
+    _messagesChangeNotifier.addListener(() {
+      messages = _keFuMessageModel.kefuMessages;
+    });
     _textEditingController.addListener(() {
       // print(_controller.text);
     });
     // print(_scrollController.position.maxScrollExtent);
     _scrollController.addListener(() {
-      if(_scrollController.offset.compareTo(_scrollController.position.maxScrollExtent) == 0){
+      if (_scrollController.offset
+              .compareTo(_scrollController.position.maxScrollExtent) ==
+          0) {
         _isDown = true;
-      }else{
+      } else {
         _isDown = false;
       }
     });
@@ -79,7 +90,9 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
                         );
                         if (res != null) {
                           var image = res[0].thumbPath;
-                          sendPicture(image!);
+                          setState(() {
+                            sendPicture(image!);
+                          });
                         }
                       },
                       child: Image(image: ImageIcons.tuku)),
@@ -88,8 +101,7 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
                       margin: EdgeInsets.only(top: 10, bottom: 10),
                       decoration: BoxDecoration(
                           color: Color(0xfff6f8fb),
-                          borderRadius:
-                          BorderRadius.all(Radius.circular(20))),
+                          borderRadius: BorderRadius.all(Radius.circular(20))),
                       alignment: Alignment.center,
                       child: TextField(
                         controller: _textEditingController,
@@ -99,7 +111,11 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
                         // onSubmitted: (value) => {
                         //   setState(() => {_inputString = value})
                         // },
-                        onEditingComplete: () => {sendMessage()},
+                        onEditingComplete: () {
+                          setState(() {
+                            sendMessage();
+                          });
+                        },
                         inputFormatters: <TextInputFormatter>[
                           LengthLimitingTextInputFormatter(200)
                         ],
@@ -117,9 +133,13 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
                   TextButton(
                       style: ButtonStyle(
                         backgroundColor:
-                        MaterialStateProperty.all(Colors.amberAccent),
+                            MaterialStateProperty.all(Colors.amberAccent),
                       ),
-                      onPressed: () => sendMessage(),
+                      onPressed: () {
+                        setState(() {
+                          sendMessage();
+                        });
+                      },
                       child: Text(
                         "发送",
                         style: TextStyle(color: Colors.black),
@@ -134,106 +154,136 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
   }
 
   void sendMessage() {
-    if(_textEditingController.text.isNotEmpty){
+    if (_textEditingController.text.isNotEmpty) {
       KefuMessage message = KefuMessage();
       message.text = _textEditingController.text;
       message.date = DateTime.now().millisecondsSinceEpoch ~/ 1000;
       message.isMe = true;
-      Global.messages.kefuMessage.add(message);
+      _keFuMessageModel.add(message);
       _textEditingController.text = '';
       toDown();
     }
   }
 
   void sendPicture(String image) {
-    if(image.isNotEmpty){
+    if (image.isNotEmpty) {
       KefuMessage message = KefuMessage();
       message.image = image;
       message.date = DateTime.now().millisecondsSinceEpoch ~/ 1000;
       message.isMe = true;
-      Global.messages.kefuMessage.add(message);
+      _keFuMessageModel.add(message);
       toDown();
     }
   }
 
-  void toDown(){
-    Future.delayed(Duration(milliseconds: 500), ()  {
-      _scrollController.animateTo(_scrollController.position.maxScrollExtent, duration: Duration(milliseconds: 1000), curve: Curves.ease);
-    // _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+  void toDown() {
+    // Global.messages.kefuMessage = messages;
+    // Global.saveMessages();
+    Future.delayed(Duration(milliseconds: 500), () {
+      _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 1000), curve: Curves.ease);
+      // _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
     });
   }
+
   Widget _build() {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.keyboard_arrow_down_outlined,color: Colors.white,size: 40,),
-          onPressed: (){
+          child: Icon(
+            Icons.keyboard_arrow_down_outlined,
+            color: Colors.white,
+            size: 40,
+          ),
+          onPressed: () {
             toDown();
           },
-          backgroundColor: Colors.blue
+          backgroundColor: Colors.blue),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      body: ListView.builder(
+        controller: _scrollController,
+        itemCount: messages.length,
+        itemBuilder: (BuildContext _context, int index) {
+          return _buildList(index);
+        },
       ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        body: ListView.builder(
-            controller: _scrollController,
-            itemCount: Global.messages.kefuMessage.length,
-            itemBuilder: (BuildContext _context,int index) {
-              return _buildList(index);
-            },
-        ),
     );
   }
+
   Widget _buildList(int index) {
-    KefuMessage message = Global.messages.kefuMessage[index];
+    KefuMessage message = messages[index];
     return Column(
       // mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(Global.getDateTime(message.date)),
-        message.isMe ? Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  margin: EdgeInsets.only(right: 10),
-                  child: message.image == null ? Text(message.text!) :
-                  TextButton(
-                      onPressed: (){},
-                      child: Image.file(File(message.image!),width: 150,height: 150,)
+        message.isMe
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Card(
+                      margin: EdgeInsets.only(right: 10),
+                      child: Container(
+                        width: (MediaQuery.of(context).size.width) / 1.5,
+                        child: message.image == null
+                            ? Text(
+                                message.text!,
+                                textAlign: TextAlign.left,
+                              )
+                            : TextButton(
+                                onPressed: () {},
+                                child: Image.file(
+                                  File(message.image!),
+                                  width: 150,
+                                  height: 150,
+                                )),
+                      )),
+                  Container(
+                    width: 45,
+                    height: 45,
+                    // margin: EdgeInsets.only(left: vw()),
+                    decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(50.0),
+                        image: DecorationImage(
+                          // image: AssetImage('assets/image/default_head.gif'),
+                          image: NetworkImage(Global.profile.user.avatar!),
+                        )),
                   ),
-                ),
-              ],
-            ),
-            Container(
-              width: 45,
-              height: 45,
-              // margin: EdgeInsets.only(left: vw()),
-              decoration: BoxDecoration(
-                  color: Colors.grey,
-                  borderRadius: BorderRadius.circular(50.0),
-                  image: DecorationImage(
-                    // image: AssetImage('assets/image/default_head.gif'),
-                    image: NetworkImage(Global.profile.user.avatar!),
-                  )),
-            ),
-            // message.image == null ? Text(message.text!) : Image(image: NetworkImage(message.image!)),
-
-          ],
-        )  : Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Container(
-              width: 45,
-              height: 45,
-              // margin: EdgeInsets.only(left: vw()),
-              decoration: BoxDecoration(
-                  color: Colors.grey,
-                  borderRadius: BorderRadius.circular(50.0),
-                  image: DecorationImage(
-                    image: AssetImage('assets/image/16pic_8733770_b.jpg'),
-                  )),
-            ),
-          ],
-        ),
+                  // message.image == null ? Text(message.text!) : Image(image: NetworkImage(message.image!)),
+                ],
+              )
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 45,
+                    height: 45,
+                    // margin: EdgeInsets.only(left: vw()),
+                    decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(50.0),
+                        image: DecorationImage(
+                          image: AssetImage('assets/image/16pic_8733770_b.jpg'),
+                        )),
+                  ),
+                  Card(
+                      margin: EdgeInsets.only(right: 10),
+                      child: Container(
+                        width: (MediaQuery.of(context).size.width) / 1.5,
+                        child: message.image == null
+                            ? Text(
+                                message.text!,
+                                textAlign: TextAlign.left,
+                              )
+                            : TextButton(
+                                onPressed: () {},
+                                child: Image.file(
+                                  File(message.image!),
+                                  width: 150,
+                                  height: 150,
+                                )),
+                      )),
+                ],
+              ),
       ],
     );
   }

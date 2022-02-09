@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:movies/system_ttf.dart';
-
+import 'package:badges/badges.dart';
 class MessageListBuild extends StatefulWidget {
-  MessageListBuild({Key? key, this.text, this.tap, required this.title, this.icon, this.backgroundColor,this.color}) : super(key: key);
+  MessageListBuild({Key? key, this.newIn, this.text, this.tap,this.date, required this.title, this.icon, this.backgroundColor,this.color}) : super(key: key);
   String? text;
+  String? date;
+  int? newIn;
   IconData? icon;
   final void Function()? tap;
   String title;
@@ -17,11 +19,13 @@ class _MessageListBuild extends State<MessageListBuild> {
   @override
   Widget build(BuildContext context) {
     String? text = widget.text;
+    String? date = widget.date;
     IconData? icon = widget.icon;
     final void Function()? tap = widget.tap;
     String title = widget.title;
     Color? backgroundColor = widget.backgroundColor;
     Color? color = widget.color;
+    int newIn = widget.newIn ?? 0;
     return SafeArea(
       top: false,
       bottom: false,
@@ -41,10 +45,11 @@ class _MessageListBuild extends State<MessageListBuild> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CircleAvatar(
-                  backgroundColor: backgroundColor != null ? backgroundColor : Colors.blue,
-                  foregroundColor: color != null ? color : Colors.white,
-                  child: Icon(icon != null ? icon : SystemTtf.tishi,),
+                Badge(
+                  child: Icon(icon ?? SystemTtf.tishi, color: color ?? Colors.blue,size: 35,),
+                  badgeContent: Text('$newIn'),
+                  showBadge: newIn > 0,
+                  // badgeColor: backgroundColor ?? Colors.blue,
                 ),
                 const Padding(padding: EdgeInsets.only(left: 16)),
                 Expanded(
@@ -59,8 +64,14 @@ class _MessageListBuild extends State<MessageListBuild> {
                         ),
                       ),
                       const Padding(padding: EdgeInsets.only(top: 8)),
-                      Text(
-                        text!,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            text!,
+                          ),
+                          Text(date!),
+                        ],
                       ),
                     ],
                   ),
