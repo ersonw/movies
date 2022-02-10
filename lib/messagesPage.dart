@@ -92,7 +92,11 @@ class _MessagesPage extends State<MessagesPage>{
           CupertinoPageRoute(
             builder: (context) => const KeFuMessagePage(),
           ),
-        );
+        ).then((val) {
+          setState(() {
+//
+          });
+        });
       },
     ));
     // list.add(MessageListBuild(
