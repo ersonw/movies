@@ -2,11 +2,14 @@ import 'package:camera/camera.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:movies/MessagesChangeNotifier.dart';
+import 'package:movies/ProfileChangeNotifier.dart';
 import 'package:movies/data/Messages.dart';
 import 'package:movies/data/SystemMessage.dart';
 import 'package:movies/data/User.dart';
 import 'package:movies/data/Config.dart';
 import 'package:movies/data/Profile.dart';
+import 'package:movies/data/WebSocketMessage.dart';
 import 'package:movies/functions.dart';
 import 'package:movies/HttpManager.dart';
 import 'package:movies/network/NWApi.dart';
@@ -15,16 +18,23 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'data/Profile.dart';
+enum SocketStatus {
+  SocketStatusConnected, // 已连接
+  SocketStatusFailed, // 失败
+  SocketStatusClosed, // 连接关闭
+}
 class Global {
   // 是否为release版
   static bool get isRelease => bool.fromEnvironment("dart.vm.product");
   static late final cameras;
-  static late final firstCamera;
-  static late final lastCamera;
+  static bool _isLogin = false;
   static late BuildContext MainContext;
   static late final String uid;
+  static  WebSocketChannel?  channel = null;
+  static final ProfileChangeNotifier _profileChangeNotifier = ProfileChangeNotifier();
   static Profile profile = Profile();
   static Messages messages = Messages();
   static late SharedPreferences _prefs;
@@ -55,6 +65,53 @@ class Global {
     uid = await getUUID();
     print(_messages);
     await _init();
+    await initSock();
+    // await loginSocket();
+    _profileChangeNotifier.addListener(() {
+      if(!_isLogin){
+        loginSocket();
+      }
+    });
+  }
+  static Future<void> initSock()async {
+    if(channel?.sink.runtimeType.toString() == '_CompleterSink'){
+      return;
+    }
+    channel = WebSocketChannel.connect(
+        Uri.parse(NWApi.baseWs),
+    );
+    channel?.stream.listen(
+      channelListen,
+      onDone: () async{
+        // print(channel?.sink.runtimeType.toString());
+        _isLogin = false;
+        await Future.delayed(Duration(milliseconds: 5000), () => {});
+        initSock();
+      },
+      onError: (error) => {print(error)},
+    );
+  }
+  static Future<void> loginSocket()async {
+    WebSocketMessage _message = WebSocketMessage();
+    _message.code = WebSocketMessage.login;
+    _message.data = jsonEncode({ "token": profile.user.token });
+    channel?.sink.add(_message.toString());
+  }
+  static Future<void> channelListen(data)async {
+    // print(channel?.sink.runtimeType.toString());
+    if(_isLogin == false) loginSocket();
+    if(data == 'H') return;
+    WebSocketMessage message = WebSocketMessage.formJson(jsonDecode(data));
+    switch(message.code){
+      case WebSocketMessage.login_success:
+        _isLogin = true;
+        break;
+      case WebSocketMessage.login_fail:
+        _isLogin = false;
+        break;
+      default:
+        break;
+    }
   }
   static String getDateTime(int date){
     int t = ((DateTime.now().millisecondsSinceEpoch ~/ 1000) - date);
