@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:movies/functions.dart';
+import 'package:movies/model/UserModel.dart';
 import 'package:movies/network/entity/BaseEntity.dart';
 import 'package:movies/network/entity/BaseListEntity.dart';
 import 'package:movies/network/entity/ErrorEntity.dart';
@@ -20,8 +21,6 @@ class DioManager {
 //    if (dio == null) {
     /// 自定义Header
     Map<String, dynamic> httpHeaders = {
-//      'Accept': 'application/json,*/*',
-//      'Content-Type': 'application/json',
       'Token': Global.profile.user.token
     };
     BaseOptions options = BaseOptions(
@@ -60,8 +59,9 @@ class DioManager {
           ShowAlertDialog(Global.MainContext, '操作失败!', '${entity.message}');
         }
         if (entity.code == 106) {
-          Global.profile.user.token = '';
-          Global.saveProfile();
+          UserModel().token = '';
+          // Global.profile.user.token = '';
+          // Global.saveProfile();
         }
       } else {
         ShowAlertDialog(Global.MainContext, '操作失败!', '未知错误48');
@@ -72,8 +72,8 @@ class DioManager {
       if (e.response?.statusCode == 105) {
         ShowAlertDialog(Global.MainContext, '温馨提醒', '原因:未登录用户');
       } else if (e.response?.statusCode == 106) {
-        Global.profile.user.token = '';
-        Global.saveProfile();
+        UserModel().token = '';
+        // Global.saveProfile();
         ShowAlertDialog(Global.MainContext, '温馨提醒', '原因:登录已失效');
       } else {
         ShowAlertDialog(Global.MainContext, '网络错误!', '原因:${e.message}');

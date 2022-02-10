@@ -4,6 +4,8 @@ class WebSocketMessage {
   static const int login = 100;
   static const int login_success = 101;
   static const int login_fail = 102;
+  static const int message_kefu_send = 103;
+  static const int message_kefu_recevie = 104;
 
   WebSocketMessage();
 

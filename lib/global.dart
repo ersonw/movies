@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:movies/MessagesChangeNotifier.dart';
 import 'package:movies/ProfileChangeNotifier.dart';
+import 'package:movies/data/KefuMessage.dart';
 import 'package:movies/data/Messages.dart';
 import 'package:movies/data/SystemMessage.dart';
 import 'package:movies/data/User.dart';
@@ -12,6 +13,8 @@ import 'package:movies/data/Profile.dart';
 import 'package:movies/data/WebSocketMessage.dart';
 import 'package:movies/functions.dart';
 import 'package:movies/HttpManager.dart';
+import 'package:movies/model/KeFuMessageModel.dart';
+import 'package:movies/model/UserModel.dart';
 import 'package:movies/network/NWApi.dart';
 import 'package:movies/network/NWMethod.dart';
 import 'dart:convert';
@@ -35,6 +38,8 @@ class Global {
   static late final String uid;
   static  WebSocketChannel?  channel = null;
   static final ProfileChangeNotifier _profileChangeNotifier = ProfileChangeNotifier();
+  static final KeFuMessageModel _keFuMessageModel = KeFuMessageModel();
+  static final MessagesChangeNotifier _messagesChangeNotifier = MessagesChangeNotifier();
   static Profile profile = Profile();
   static Messages messages = Messages();
   static late SharedPreferences _prefs;
@@ -68,15 +73,14 @@ class Global {
     await initSock();
     // await loginSocket();
     _profileChangeNotifier.addListener(() {
-      if(!_isLogin){
+      if(UserModel().isLogin == false) {
+        getUserInfo();
+      }else if(_isLogin == false) {
         loginSocket();
       }
     });
   }
   static Future<void> initSock()async {
-    if(channel?.sink.runtimeType.toString() == '_CompleterSink'){
-      return;
-    }
     channel = WebSocketChannel.connect(
         Uri.parse(NWApi.baseWs),
     );
@@ -85,10 +89,13 @@ class Global {
       onDone: () async{
         // print(channel?.sink.runtimeType.toString());
         _isLogin = false;
-        await Future.delayed(Duration(milliseconds: 5000), () => {});
-        initSock();
+        await Future.delayed(const Duration(milliseconds: 5000), () {
+          initSock();
+        });
       },
-      onError: (error) => {print(error)},
+      onError: (error) async {
+        print(error);
+      },
     );
   }
   static Future<void> loginSocket()async {
@@ -97,9 +104,14 @@ class Global {
     _message.data = jsonEncode({ "token": profile.user.token });
     channel?.sink.add(_message.toString());
   }
+  static Future<void> sendKeFuMessage(KefuMessage message) async{}
   static Future<void> channelListen(data)async {
-    // print(channel?.sink.runtimeType.toString());
-    if(_isLogin == false) loginSocket();
+    // print(UserModel().isLogin);
+    if(UserModel().isLogin == false) {
+      getUserInfo();
+    }else if(_isLogin == false) {
+      loginSocket();
+    }
     if(data == 'H') return;
     WebSocketMessage message = WebSocketMessage.formJson(jsonDecode(data));
     switch(message.code){
@@ -108,10 +120,16 @@ class Global {
         break;
       case WebSocketMessage.login_fail:
         _isLogin = false;
+        UserModel().token = '';
+        // _profileChangeNotifier.notifyListeners();
+        break;
+      case WebSocketMessage.message_kefu_recevie:
+        _keFuMessageModel.add(KefuMessage.formJson(jsonDecode(message.data)));
         break;
       default:
         break;
     }
+    // print(_userModel.token);
   }
   static String getDateTime(int date){
     int t = ((DateTime.now().millisecondsSinceEpoch ~/ 1000) - date);
@@ -226,7 +244,7 @@ class Global {
         NWApi.getInfo,
         params: {'identifier': uid},
         success: (data){
-          // print("success data = $data");
+          print("success data = $data");
           if(data != null) {
             profile.user = User.fromJson(jsonDecode(data));
             saveProfile();

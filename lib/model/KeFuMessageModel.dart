@@ -18,7 +18,7 @@ class KeFuMessageModel extends MessagesChangeNotifier {
     }
     if (!have) {
       kefuMessages.add(message);
-      notifyListeners();
+      // notifyListeners();
     }
   }
 
