@@ -55,7 +55,7 @@ class SplashScreenState extends State<SplashPage> {
                   onPressed: () => _next(),
                   child: Text('[${widget.validTime}] 跳过'),
                 ),
-                margin: EdgeInsets.only(top: 20, right: 10),
+                margin: EdgeInsets.only(top: 50, right: 10),
               )
             ],
           )

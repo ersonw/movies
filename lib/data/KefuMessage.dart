@@ -11,8 +11,8 @@ class KefuMessage {
       : text = json['text'],
         image = json['image'],
         date = json['date'],
-        isRead = json['isRead'],
-        isMe = json['isMe'];
+        isRead = json['isRead'] ?? false,
+        isMe = json['isMe'] ?? false;
 
   Map<String, dynamic> toJson() =>
       {

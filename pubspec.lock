@@ -652,7 +652,7 @@ packages:
     source: hosted
     version: "4.5.1"
   xml2json:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: xml2json
       url: "https://pub.dartlang.org"

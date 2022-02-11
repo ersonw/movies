@@ -11,7 +11,7 @@ class SystemMessage {
       : date = json['date'],
         title = json['title'],
         str = json['str'],
-        isRead = json['isRead'],
+        isRead = json['isRead'] ?? false,
         id = json['id'];
 
   Map<String, dynamic> toJson() => {

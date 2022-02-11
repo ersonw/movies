@@ -167,15 +167,20 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
     }
   }
 
-  void sendPicture(String image) {
+  void sendPicture(String image) async{
     if (image.isNotEmpty) {
       KefuMessage message = KefuMessage();
       message.image = image;
       message.date = DateTime.now().millisecondsSinceEpoch ~/ 1000;
       message.isMe = true;
-      _keFuMessageModel.add(message);
-      UploadOssUtil.upload(File(image), Global.getNameByPath(image));
-      toDown();
+
+      String? images = await UploadOssUtil.upload(File(image), Global.getNameByPath(image));
+      if(images != null){
+        message.image = images;
+        _keFuMessageModel.add(message);
+        toDown();
+      }
+      print(images);
     }
   }
 
@@ -233,11 +238,7 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
                               )
                             : TextButton(
                                 onPressed: () {},
-                                child: Image.file(
-                                  File(message.image!),
-                                  width: 150,
-                                  height: 150,
-                                )),
+                                child: Image.network(message.image!,width: 150,height: 150,)),
                       )),
                   Container(
                     width: 45,
