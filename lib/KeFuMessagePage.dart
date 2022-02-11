@@ -8,6 +8,8 @@ import 'package:movies/MessagesChangeNotifier.dart';
 import 'package:movies/data/KefuMessage.dart';
 import 'package:movies/image_icon.dart';
 import 'package:movies/model/KeFuMessageModel.dart';
+import 'package:movies/utils/UploadOss.dart';
+import 'package:movies/utils/UploadOssUtil.dart';
 
 import 'global.dart';
 
@@ -172,6 +174,7 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
       message.date = DateTime.now().millisecondsSinceEpoch ~/ 1000;
       message.isMe = true;
       _keFuMessageModel.add(message);
+      UploadOssUtil.upload(File(image), Global.getNameByPath(image));
       toDown();
     }
   }
@@ -179,9 +182,9 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
   void toDown() {
     // Global.messages.kefuMessage = messages;
     // Global.saveMessages();
-    Future.delayed(Duration(milliseconds: 500), () {
+    Future.delayed(const Duration(milliseconds: 500), () {
       _scrollController.animateTo(_scrollController.position.maxScrollExtent,
-          duration: Duration(milliseconds: 1000), curve: Curves.ease);
+          duration: const Duration(milliseconds: 1000), curve: Curves.ease);
       // _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
     });
   }
@@ -189,7 +192,7 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
   Widget _build() {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-          child: Icon(
+          child: const Icon(
             Icons.keyboard_arrow_down_outlined,
             color: Colors.white,
             size: 40,

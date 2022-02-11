@@ -2,6 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:image_pickers/image_pickers.dart';
 import 'package:movies/MessagesChangeNotifier.dart';
 import 'package:movies/ProfileChangeNotifier.dart';
 import 'package:movies/data/KefuMessage.dart';
@@ -21,8 +22,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:video_compress/video_compress.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
-
+import 'package:movies/utils/UploadOss.dart';
 import 'data/Profile.dart';
 enum SocketStatus {
   SocketStatusConnected, // 已连接
@@ -30,6 +32,7 @@ enum SocketStatus {
   SocketStatusClosed, // 连接关闭
 }
 class Global {
+  static MediaInfo _compressedVideoInfo = MediaInfo(path: '');
   // 是否为release版
   static bool get isRelease => bool.fromEnvironment("dart.vm.product");
   static late final cameras;
@@ -277,6 +280,53 @@ class Global {
     // String dir = (await getApplicationSupportDirectory()).path;
     // print('$dir/$filename');
     return File('$dir/$filename');
+  }
+  static Future choseVideo() async{
+    List<Media> _listVideoPaths = await ImagePickers.pickerPaths(
+      galleryMode: GalleryMode.video,
+      selectCount: 1,
+    );
+    if(_listVideoPaths.isNotEmpty && _listVideoPaths[0].thumbPath != null){
+      UploadOss.upload(
+          file: File(_listVideoPaths[0].thumbPath!),
+          rootDir: "upload",
+          callback: (data) {
+            print(data);
+          },
+          onSendProgress: (int i){
+            print(i);
+          }
+      );
+    }
+  }
+  /*
+  * 根据本地路径获取名称
+  * */
+  static String getNameByPath(String filePath) {
+    // ignore: null_aware_before_operator
+    return filePath.substring(filePath.lastIndexOf("/")+1,filePath.length);
+  }
+  //压缩视频
+  static Future<void> runFlutterVideoCompressMethods(File videoFile) async {
+    final mediaInfo = await VideoCompress.compressVideo(
+      videoFile.path,
+      quality: VideoQuality.MediumQuality,
+      deleteOrigin: false,
+    );
+    _compressedVideoInfo = mediaInfo!;
+    // setState(() {
+    //   _compressedVideoInfo = mediaInfo;
+    // });
+  }
+  static Future<void> postFile(String path)async{
+    File file = File(path);
+    var sfile = await file.open();
+    var x = 0;
+    var fileSize = file.lengthSync();
+    var chunkSize = 1000000;
+    var val;
+    while (x < fileSize) {
+    }
   }
 //  持久化Profile信息
   static saveProfile() =>

@@ -35,17 +35,62 @@ class DioManager {
     dio = Dio(options);
 //    }
   }
-
+  Future<bool> upload<T>(String path, Map<String, dynamic> params) async {
+    try {
+      Response response = await dio.request(path, queryParameters: params, options: Options(method: NWMethodValues[NWMethod.POST]));
+      BaseEntity entity = BaseEntity<T>.fromJson(response.data);
+      if (entity.code == 200) {
+        return true;
+      }
+    } on DioError catch (e) {
+      // print(e.response?.statusCode);
+      if (e.response?.statusCode == 105) {
+        ShowAlertDialog(Global.MainContext, '上传文件', '原因:未登录用户');
+      } else if (e.response?.statusCode == 106) {
+        UserModel().token = '';
+        // Global.saveProfile();
+        ShowAlertDialog(Global.MainContext, '上传文件', '原因:登录已失效');
+      } else {
+        ShowAlertDialog(Global.MainContext, '网络错误!', '原因:${e.message}');
+      }
+    }
+    return false;
+  }
+  Future<String?> requestAsync<T>(NWMethod method, String path, Map<String, dynamic> params) async {
+    try {
+      Response response = await dio.request(path, queryParameters: params, options: Options(method: NWMethodValues[method]));
+      BaseEntity entity = BaseEntity<T>.fromJson(response.data);
+      if (entity.code == 200) {
+        return entity.data;
+      }
+    } on DioError catch (e) {
+      // print(e.response?.statusCode);
+      if (e.response?.statusCode == 105) {
+        ShowAlertDialog(Global.MainContext, '上传文件', '原因:未登录用户');
+      } else if (e.response?.statusCode == 106) {
+        UserModel().token = '';
+        // Global.saveProfile();
+        ShowAlertDialog(Global.MainContext, '上传文件', '原因:登录已失效');
+      } else {
+        ShowAlertDialog(Global.MainContext, '网络错误!', '原因:${e.message}');
+      }
+    }
+    return null;
+  }
   // 请求，返回参数为 T
   // method：请求方法，NWMethod.POST等
   // path：请求地址
   // params：请求参数
   // success：请求成功回调
   // error：请求失败回调
-  Future request<T>(NWMethod method, String path,
-      {required Map<String, dynamic> params,
-      required Function(String?) success,
-      required Function(ErrorEntity) error}) async {
+  Future request<T>(
+      NWMethod method,
+      String path,
+      {
+        required Map<String, dynamic> params,
+        Function(String?)? success,
+        Function(ErrorEntity)? error
+      }) async {
     try {
       Response response = await dio.request(path,
           queryParameters: params,
@@ -53,7 +98,7 @@ class DioManager {
       if (response != null) {
         BaseEntity entity = BaseEntity<T>.fromJson(response.data);
         if (entity.code == 200) {
-          success(entity.data);
+          success!(entity.data);
         } else {
 //          error(ErrorEntity(code: entity.code, message: entity.message));
           ShowAlertDialog(Global.MainContext, '操作失败!', '${entity.message}');
@@ -64,7 +109,7 @@ class DioManager {
           // Global.saveProfile();
         }
       } else {
-        ShowAlertDialog(Global.MainContext, '操作失败!', '未知错误48');
+        ShowAlertDialog(Global.MainContext, '操作失败!', '未知错误95');
 //        error(ErrorEntity(code: -1, message: "未知错误"));
       }
     } on DioError catch (e) {
@@ -83,34 +128,6 @@ class DioManager {
     }
   }
 
-  // 请求，返回参数为 List
-  // method：请求方法，NWMethod.POST等
-  // path：请求地址
-  // params：请求参数
-  // success：请求成功回调
-  // error：请求失败回调
-  Future requestList<T>(NWMethod method, String path,
-      {required Map<String, dynamic> params,
-      required Function(List<T>) success,
-      required Function(ErrorEntity) error}) async {
-    try {
-      Response response = await dio.request(path,
-          queryParameters: params,
-          options: Options(method: NWMethodValues[method]));
-      if (response != null) {
-        BaseListEntity entity = BaseListEntity<T>.fromJson(response.data);
-        if (entity.code == 200) {
-//          success(entity.data);
-        } else {
-          error(ErrorEntity(code: entity.code, message: entity.message));
-        }
-      } else {
-        error(ErrorEntity(code: -1, message: "未知错误"));
-      }
-    } on DioError catch (e) {
-      error(createErrorEntity(e));
-    }
-  }
 
   // 错误信息
   ErrorEntity createErrorEntity(DioError error) {

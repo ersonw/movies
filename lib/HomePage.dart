@@ -54,6 +54,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     Global.MainContext = context;
     Global.checkVersion();
+    // Global.choseVideo();
     return Scaffold(
       floatingActionButton:  FloatingActionButton(
           child: Icon(Icons.search,color: Colors.white,size: 40,),
