@@ -17,6 +17,7 @@ class UploadOssUtil {
     var response;
     //上传文件
     response = await client.putObject(fileData, fileKey);
+    print(response.statusCode);
     if(response.statusCode == 200){
       return 'http://${client.bucketName}.${client.endpoint}/$fileKey';
     }
