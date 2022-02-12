@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:movies/MessagesChangeNotifier.dart';
 import 'package:movies/data/SystemMessage.dart';
 import 'package:movies/global.dart';
 import 'package:movies/widgets.dart';
+
+import 'model/SystemMessageModel.dart';
 
 class SystemMessagesPage extends StatefulWidget {
   SystemMessagesPage({Key? key, this.title, this.iconData}) : super(key: key);
@@ -14,10 +17,20 @@ class SystemMessagesPage extends StatefulWidget {
 }
 
 class _SystemMessagesPage extends State<SystemMessagesPage> {
+  List<SystemMessage> systemMessages = [];
+   final MessagesChangeNotifier _messagesChangeNotifier = MessagesChangeNotifier();
+   final SystemMessageModel _systemMessageModel = SystemMessageModel();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    systemMessages = _systemMessageModel.systemMessages;
+    _systemMessageModel.read();
+    _messagesChangeNotifier.addListener(() {
+      setState(() {
+        systemMessages = _systemMessageModel.systemMessages;
+      });
+    });
   }
 
   @override
@@ -39,44 +52,44 @@ class _SystemMessagesPage extends State<SystemMessagesPage> {
     return SafeArea(
         top: false,
         bottom: false,
-        child: ListView(
-          children: _buildList(),
+        child: ListView.builder(
+          itemCount: systemMessages.length, itemBuilder: (BuildContext _context, int index) {
+           return _buildList(index);
+        }
         ));
   }
 
-  List<Widget> _buildList() {
-    List<Widget> lists = [];
-    List<SystemMessage> messages = Global.messages.systemMessage;
-    for(int i=0;i< messages.length; i++){
-      lists.addAll(_buildItem(messages[i].title,messages[i].date,messages[i].str.replaceAll(RegExp(r'\\n'), '\n')));
-    }
-    // lists.addAll(_buildItem());
-    return lists;
+  Widget _buildList(int index) {
+    SystemMessage _message = systemMessages[index];
+    return _buildItem(_message.title,_message.date,_message.str.replaceAll(RegExp(r'\\n'), '\n'));
   }
 
-  List<Widget> _buildItem(String? title, String? date, String? str) {
-    return <Widget> [
-      Column(
+  Widget _buildItem(String? title, String? date, String? str) {
+    return Column(
         children: [
-        Padding(padding: EdgeInsets.only(top: 30,bottom: 10),child: Text(date!),),
-      ],),
-      Card(
-        color: Colors.white70,
-        margin: EdgeInsets.all(10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Container(
-              padding: EdgeInsets.only(top: 10),
-              child: Text(title!),
-            ),
-            Container(
-              padding: EdgeInsets.only(top: 10,left: 10),
-              child: Text(str!,style: TextStyle(color: Colors.black38),),
-            ),
-          ],
-        )
-      )
-    ];
+          Column(
+            children: [
+              Padding(padding: const EdgeInsets.only(top: 30,bottom: 10),child: Text(date!),),
+            ],
+          ),
+          Card(
+              color: Colors.white70,
+              margin: const EdgeInsets.all(10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Text(title!),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(top: 10,left: 10),
+                    child: Text(str!,style: const TextStyle(color: Colors.black38),),
+                  ),
+                ],
+              )
+          )
+        ]
+    );
   }
 }

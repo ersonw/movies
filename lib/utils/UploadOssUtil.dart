@@ -16,7 +16,7 @@ class UploadOssUtil {
   // static OssConfig config = _configModel.ossConfig;
   static Future<String?> upload(File file, String fileKey)async {
     OssConfig config = _configModel.ossConfig;
-    if(config.bucketName == null || config.endpoint == null) return null;
+    if(config.bucketName == null || config.endpoint == null) return exit(0);
     OssClient client = OssClient(bucketName: config.bucketName,endpoint: config.endpoint,tokenGetter: getStsAccount);
     fileKey = 'upload/$fileKey';
     List<int> fileData = file.readAsBytesSync();//上传文件的二进制
@@ -24,7 +24,7 @@ class UploadOssUtil {
     var response;
     //上传文件
     response = await client.putObject(fileData, fileKey);
-    // print(response.statusCode);
+    print(response.statusCode);
     if(response.statusCode == 200){
       return (config.ossName ?? 'http://${client.bucketName}.${client.endpoint}')+'/$fileKey';
     }
@@ -71,7 +71,7 @@ class UploadOssUtil {
   static Future<Map<String, dynamic>> getStsAccount()async{
     var data = await DioManager().requestAsync(NWMethod.GET, NWApi.getStsAccount, {});
     Map<String, dynamic> map = json.decode(data!);
-    // print(map);
+    print(map);
     return map;
   }
 }

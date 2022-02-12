@@ -82,7 +82,7 @@ Future<bool> ShowAlertDialogBool(BuildContext context, String? title, String? te
                   Navigator.of(_context).pop();
                 }),
             CupertinoDialogAction(
-                child: const Text("继续"),
+                child: const Text("确定"),
                 onPressed: () {
                   _sure = true;
                   Navigator.of(_context).pop();

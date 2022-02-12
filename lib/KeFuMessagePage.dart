@@ -182,13 +182,17 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
       String? images = await UploadOssUtil.upload(File(image), Global.getNameByPath(image));
       if(images == null){
         message.status = WebSocketMessage.message_kefu_send_fail;
+        setState(() {
+          _keFuMessageModel.change(message);
+        });
       }else{
         message.image = images;
+        setState(() {
+          _keFuMessageModel.change(message);
+        });
         _sendToServer(message);
       }
-      setState(() {
-        _keFuMessageModel.change(message);
-      });
+
       toDown();
       // print(images);
     }
@@ -201,6 +205,22 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
   void _reSend(KefuMessage message) async {
     if(await ShowAlertDialogBool(context, '重新发送', '确定要重新发送此条消息吗？')){
       _keFuMessageModel.status(message.id, WebSocketMessage.message_kefu_sending);
+      setState(() {
+        _keFuMessageModel.change(message);
+      });
+      if(message.image?.contains('http') != true){
+        String? images = await UploadOssUtil.upload(File(message.image!), Global.getNameByPath(message.image!));
+        if(images != null){
+          message.image = images;
+          _sendToServer(message);
+        }else{
+          _keFuMessageModel.status(message.id, WebSocketMessage.message_kefu_send_fail);
+        }
+        setState(() {
+          _keFuMessageModel.change(message);
+        });
+        return;
+      }
       _sendToServer(message);
     }
   }
