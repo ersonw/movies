@@ -1,3 +1,5 @@
+import 'package:movies/data/OssConfig.dart';
+
 class Config {
   double version = 1.0;
   String hash = '';
@@ -5,25 +7,26 @@ class Config {
   String bootImage = '';
   String url = '';
   bool force = false;
+  OssConfig ossConfig = OssConfig();
 
   Config();
 
   Config.fromJson(Map<String, dynamic> json)
       : hash = json['hash'],
         url = json['url'],
-        force = json['force'],
+        force = json['force'] ?? false,
         version = json['version'],
-        autoLogin = json['autoLogin'],
-        bootImage = json['bootImage'];
+        autoLogin = json['autoLogin'] ?? false,
+        bootImage = json['bootImage'],
+        ossConfig = OssConfig.formJson(json['ossConfig'] ?? OssConfig().toJson());
 
-  Map toJson() {
-    Map map = {};
-    map['hash'] = hash;
-    map['url'] = url;
-    map['force'] = force;
-    map['version'] = version;
-    map['autoLogin'] = autoLogin;
-    map['bootImage'] = bootImage;
-    return map;
-  }
+  Map<String, dynamic> toJson() => {
+        'hash': hash,
+        'url': url,
+        'force': force,
+        'version': version,
+        'autoLogin': autoLogin,
+        'bootImage': bootImage,
+        'ossConfig': ossConfig.toJson(),
+      };
 }

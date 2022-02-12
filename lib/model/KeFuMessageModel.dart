@@ -9,17 +9,54 @@ class KeFuMessageModel extends MessagesChangeNotifier {
     notifyListeners();
   }
   //信息发生变化，更新用户信息并通知依赖它的子孙Widgets更新
-  void add(KefuMessage message) {
+  int getStatus(String id){
+    for (int i = 0; i < kefuMessages.length; i++) {
+      if (kefuMessages[i].id.contains(id)) {
+        notifyListeners();
+        return kefuMessages[i].status;
+      }
+    }
+    return 0;
+  }
+  void status(String id, int status){
+    for (int i = 0; i < kefuMessages.length; i++) {
+      if (kefuMessages[i].id.contains(id)) {
+        kefuMessages[i].status = status;
+        notifyListeners();
+        return;
+      }
+    }
+  }
+  void del(KefuMessage message){
+    for (int i = 0; i < kefuMessages.length; i++) {
+      if (kefuMessages[i].id.contains(message.id)) {
+        kefuMessages.removeAt(i);
+        notifyListeners();
+        return;
+      }
+    }
+  }
+  void change(KefuMessage message){
+    for (int i = 0; i < kefuMessages.length; i++) {
+      if (kefuMessages[i].id.contains(message.id)) {
+        kefuMessages[i] = message;
+        notifyListeners();
+        return;
+      }
+    }
+  }
+  int add(KefuMessage message) {
     bool have = false;
     for (int i = 0; i < kefuMessages.length; i++) {
-      if (kefuMessages[i] == message) {
+      if (kefuMessages[i] == message || kefuMessages[i].id.contains(message.id)) {
         have = true;
       }
     }
     if (!have) {
       kefuMessages.add(message);
-      // notifyListeners();
+      return kefuMessages.length - 2;
     }
+    return 0;
   }
 
   void read() {

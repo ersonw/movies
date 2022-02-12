@@ -2,6 +2,9 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:dio/dio.dart';
+import 'package:movies/data/OssConfig.dart';
+import 'package:movies/global.dart';
+import 'package:movies/model/ConfigModel.dart';
 import 'package:xml2json/xml2json.dart';
 import 'package:movies/HttpManager.dart';
 import 'package:movies/network/NWApi.dart';
@@ -9,17 +12,21 @@ import 'package:movies/network/NWMethod.dart';
 import 'package:oss_dart/oss_dart.dart';
 import 'dart:io';
 class UploadOssUtil {
-  static OssClient client = OssClient(bucketName: 'movies-test1',endpoint: 'oss-cn-hongkong.aliyuncs.com',tokenGetter: getStsAccount);
+  static final ConfigModel _configModel = ConfigModel();
+  // static OssConfig config = _configModel.ossConfig;
   static Future<String?> upload(File file, String fileKey)async {
+    OssConfig config = _configModel.ossConfig;
+    if(config.bucketName == null || config.endpoint == null) return null;
+    OssClient client = OssClient(bucketName: config.bucketName,endpoint: config.endpoint,tokenGetter: getStsAccount);
     fileKey = 'upload/$fileKey';
     List<int> fileData = file.readAsBytesSync();//上传文件的二进制
     // String fileKey = 'ABC.text';//上传文件名
     var response;
     //上传文件
     response = await client.putObject(fileData, fileKey);
-    print(response.statusCode);
+    // print(response.statusCode);
     if(response.statusCode == 200){
-      return 'http://${client.bucketName}.${client.endpoint}/$fileKey';
+      return (config.ossName ?? 'http://${client.bucketName}.${client.endpoint}')+'/$fileKey';
     }
     return null;
     //获取文件

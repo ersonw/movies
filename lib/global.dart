@@ -19,6 +19,8 @@ import 'package:movies/model/UserModel.dart';
 import 'package:movies/network/NWApi.dart';
 import 'package:movies/network/NWMethod.dart';
 import 'dart:convert';
+import 'package:convert/convert.dart';
+import 'package:crypto/crypto.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -72,6 +74,7 @@ class Global {
     cameras = await availableCameras();
     uid = await getUUID();
     print(_messages);
+    print(_profile);
     await _init();
     await initSock();
     // await loginSocket();
@@ -82,6 +85,22 @@ class Global {
         loginSocket();
       }
     });
+  }
+  static Size boundingTextSize(String text, TextStyle style,  {int maxLines = 2^31, double maxWidth = double.infinity}) {
+    if (text == null || text.isEmpty) {
+      return Size.zero;
+    }
+    final TextPainter textPainter = TextPainter(
+        textDirection: TextDirection.ltr,
+        text: TextSpan(text: text, style: style), maxLines: maxLines)
+      ..layout(maxWidth: maxWidth);
+    return textPainter.size;
+  }
+  static String generateMd5(String data) {
+    var content = Utf8Encoder().convert(data);
+    var digest = md5.convert(content);
+    // 这里其实就是 digest.toString()
+    return hex.encode(digest.bytes);
   }
   static Future<void> initSock()async {
     channel = WebSocketChannel.connect(
@@ -107,7 +126,16 @@ class Global {
     _message.data = jsonEncode({ "token": profile.user.token });
     channel?.sink.add(_message.toString());
   }
-  static Future<void> sendKeFuMessage(KefuMessage message) async{}
+  static Future<bool> sendKeFuMessage(KefuMessage message) async{
+    WebSocketMessage _message = WebSocketMessage();
+    _message.code = WebSocketMessage.message_kefu_sending;
+    _message.data = message.toString();
+    if(channel != null){
+      channel?.sink.add(_message.toString());
+      return true;
+    }
+    return false;
+  }
   static Future<void> channelListen(data)async {
     // print(UserModel().isLogin);
     if(UserModel().isLogin == false) {
@@ -126,8 +154,17 @@ class Global {
         UserModel().token = '';
         // _profileChangeNotifier.notifyListeners();
         break;
+      case WebSocketMessage.message_kefu_send_fail:
+        ShowAlertDialog(MainContext, '发送消息', message.message);
+        KefuMessage kefuMessage = KefuMessage.formJson(jsonDecode(message.data!));
+        _keFuMessageModel.status(kefuMessage.id, message.code);
+        break;
+      case WebSocketMessage.message_kefu_send_success:
+        KefuMessage kefuMessage = KefuMessage.formJson(jsonDecode(message.data!));
+        _keFuMessageModel.status(kefuMessage.id, message.code);
+        break;
       case WebSocketMessage.message_kefu_recevie:
-        _keFuMessageModel.add(KefuMessage.formJson(jsonDecode(message.data)));
+        _keFuMessageModel.add(KefuMessage.formJson(jsonDecode(message.data!)));
         break;
       default:
         break;
@@ -186,7 +223,7 @@ class Global {
           // print("success data = $data");
           if(data != null && data.isNotEmpty){
             Config config = Config.fromJson(jsonDecode(data));
-            if(config.hash != profile.config.hash){
+            if(config.hash.contains(profile.config.hash)){
               getConfig();
             }
             if(MainContext != null){
@@ -213,6 +250,7 @@ class Global {
             profile.config.force = config.force;
             profile.config.url = config.url;
             profile.config.bootImage = config.bootImage;
+            profile.config.ossConfig = config.ossConfig;
             saveProfile();
           }
         }, error:(error) {});

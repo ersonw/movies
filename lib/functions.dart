@@ -1,4 +1,4 @@
-import 'package:device_info/device_info.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'dart:io';
@@ -50,8 +50,8 @@ ShowOptionDialog(BuildContext context, String title, String? text,String? url, b
       });
 }
 
-ShowAlertDialog(BuildContext context, String? title, String? text) {
-  return showCupertinoDialog<void>(
+ShowAlertDialog(BuildContext context, String? title, String? text) async{
+  return await showCupertinoDialog<void>(
       context: context,
       builder: (_context) {
         return CupertinoAlertDialog(
@@ -66,6 +66,58 @@ ShowAlertDialog(BuildContext context, String? title, String? text) {
           ],
         );
       });
+}
+Future<bool> ShowAlertDialogBool(BuildContext context, String? title, String? text) async{
+  bool _sure = false;
+  await showCupertinoDialog<void>(
+      context: context,
+      builder: (_context) {
+        return CupertinoAlertDialog(
+          title: Text(title!),
+          content: Text(text!),
+          actions: [
+            CupertinoDialogAction(
+                child: const Text("取消"),
+                onPressed: () {
+                  Navigator.of(_context).pop();
+                }),
+            CupertinoDialogAction(
+                child: const Text("继续"),
+                onPressed: () {
+                  _sure = true;
+                  Navigator.of(_context).pop();
+                }),
+
+          ],
+        );
+      });
+  return _sure;
+}
+Future<bool> ShowPictureFullSceen(BuildContext context, String? title, String? text) async{
+  bool _sure = false;
+  await showCupertinoDialog<void>(
+      context: context,
+      builder: (_context) {
+        return CupertinoAlertDialog(
+          title: Text(title!),
+          content: Text(text!),
+          actions: [
+            CupertinoDialogAction(
+                child: const Text("取消"),
+                onPressed: () {
+                  Navigator.of(_context).pop();
+                }),
+            CupertinoDialogAction(
+                child: const Text("继续"),
+                onPressed: () {
+                  _sure = true;
+                  Navigator.of(_context).pop();
+                }),
+
+          ],
+        );
+      });
+  return _sure;
 }
 // static int currentTimeMillis() {
 // return new DateTime.now().millisecondsSinceEpoch;

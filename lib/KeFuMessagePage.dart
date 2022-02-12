@@ -6,11 +6,13 @@ import 'package:flutter/services.dart';
 import 'package:images_picker/images_picker.dart';
 import 'package:movies/MessagesChangeNotifier.dart';
 import 'package:movies/data/KefuMessage.dart';
+import 'package:movies/data/WebSocketMessage.dart';
+import 'package:movies/functions.dart';
 import 'package:movies/image_icon.dart';
 import 'package:movies/model/KeFuMessageModel.dart';
-import 'package:movies/utils/UploadOss.dart';
 import 'package:movies/utils/UploadOssUtil.dart';
 
+import 'PhotpGalleryPage.dart';
 import 'global.dart';
 
 class KeFuMessagePage extends StatefulWidget {
@@ -66,12 +68,12 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
             child: _build(),
           ),
           //这个就是固定低栏
-          Container(
+          SizedBox(
             width: double.infinity,
             height: 70.0,
             child: Container(
-              padding: EdgeInsets.fromLTRB(16.0, 7.0, 16.0, 7.0),
-              decoration: BoxDecoration(
+              padding: const EdgeInsets.fromLTRB(16.0, 7.0, 16.0, 7.0),
+              decoration: const BoxDecoration(
                   border: Border(
                       top: BorderSide(width: 1, color: Color(0xffe5e5e5)))),
               child: Row(
@@ -97,11 +99,11 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
                           });
                         }
                       },
-                      child: Image(image: ImageIcons.tuku)),
+                      child: const Image(image: ImageIcons.tuku)),
                   Expanded(
                     child: Container(
-                      margin: EdgeInsets.only(top: 10, bottom: 10),
-                      decoration: BoxDecoration(
+                      margin: const EdgeInsets.only(top: 10, bottom: 10),
+                      decoration: const BoxDecoration(
                           color: Color(0xfff6f8fb),
                           borderRadius: BorderRadius.all(Radius.circular(20))),
                       alignment: Alignment.center,
@@ -122,7 +124,7 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
                           LengthLimitingTextInputFormatter(200)
                         ],
                         // controller: _controller,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                             isDense: true,
                             contentPadding: EdgeInsets.only(
                                 left: 10, right: 10, top: 0, bottom: 0),
@@ -142,7 +144,7 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
                           sendMessage();
                         });
                       },
-                      child: Text(
+                      child: const Text(
                         "发送",
                         style: TextStyle(color: Colors.black),
                       ))
@@ -162,28 +164,58 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
       message.date = DateTime.now().millisecondsSinceEpoch ~/ 1000;
       message.isMe = true;
       _keFuMessageModel.add(message);
+      _sendToServer(message);
       _textEditingController.text = '';
       toDown();
     }
   }
-
   void sendPicture(String image) async{
     if (image.isNotEmpty) {
       KefuMessage message = KefuMessage();
       message.image = image;
       message.date = DateTime.now().millisecondsSinceEpoch ~/ 1000;
       message.isMe = true;
-
-      String? images = await UploadOssUtil.upload(File(image), Global.getNameByPath(image));
-      if(images != null){
-        message.image = images;
+      message.status = WebSocketMessage.message_kefu_sending;
+      setState(() {
         _keFuMessageModel.add(message);
-        toDown();
+      });
+      String? images = await UploadOssUtil.upload(File(image), Global.getNameByPath(image));
+      if(images == null){
+        message.status = WebSocketMessage.message_kefu_send_fail;
+      }else{
+        message.image = images;
+        _sendToServer(message);
       }
-      print(images);
+      setState(() {
+        _keFuMessageModel.change(message);
+      });
+      toDown();
+      // print(images);
     }
   }
-
+  void _sendToServer(KefuMessage message) async{
+    if(await Global.sendKeFuMessage(message) == false){
+      _keFuMessageModel.status(message.id,WebSocketMessage.message_kefu_send_fail);
+    }
+  }
+  void _reSend(KefuMessage message) async {
+    if(await ShowAlertDialogBool(context, '重新发送', '确定要重新发送此条消息吗？')){
+      _keFuMessageModel.status(message.id, WebSocketMessage.message_kefu_sending);
+      _sendToServer(message);
+    }
+  }
+  void _deleteMessage(KefuMessage _message){
+    setState(() {
+      _keFuMessageModel.del(_message);
+    });
+  }
+  void _cancelSending(KefuMessage _message) async {
+    if(await ShowAlertDialogBool(context, '取消发送', '确定要取消发送此条消息吗？')){
+      if(_keFuMessageModel.getStatus(_message.id) == WebSocketMessage.message_kefu_sending){
+        _deleteMessage(_message);
+      }
+    }
+  }
   void toDown() {
     // Global.messages.kefuMessage = messages;
     // Global.saveMessages();
@@ -193,7 +225,18 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
       // _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
     });
   }
-
+  void _showPicButton(KefuMessage _message){
+    Navigator.of(context).push(
+        PageRouteBuilder(
+            pageBuilder: (c, a, s) {
+              return PhotpGalleryPage(
+                index: 0,
+                photoList: [_message.image],
+              );
+            },
+        )
+    );
+  }
   Widget _build() {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -216,7 +259,124 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
       ),
     );
   }
-
+  Widget _buildSending(KefuMessage message){
+    Widget widget = Container();
+    switch(message.status){
+      case WebSocketMessage.message_kefu_sending:
+        widget = Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children:  [
+            SizedBox(
+              width: 36,
+              height: 36,
+              child: TextButton(
+                onPressed: () {
+                  _cancelSending(message);
+                },
+                child: const Icon(Icons.autorenew, color: Colors.black,),
+              ),
+            )
+          ],
+        );
+        break;
+      case WebSocketMessage.message_kefu_send_success:
+        // widget = Column(
+        //   mainAxisAlignment: MainAxisAlignment.center,
+        //   children:  const [
+        //     SizedBox(
+        //       width: 30,
+        //       height: 30,
+        //       child: Icon(Icons.check_circle, color: Colors.green,),
+        //     )
+        //   ],
+        // );
+        break;
+      case WebSocketMessage.message_kefu_send_fail:
+        widget = Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 36,
+              height: 36,
+              // margin: const EdgeInsets.only(right: 10),
+              child: TextButton(
+                onPressed: () {
+                  _reSend(message);
+                },
+                child: const Icon(Icons.info,color: Colors.red,),
+              ),
+            )
+          ],
+        );
+        break;
+      default:
+        break;
+    }
+    return widget;
+  }
+  Widget _showPic(KefuMessage _message){
+    String image = _message.image ?? '';
+    if(image.contains("http")){
+      return Image.network(
+        image,
+        width: 150,
+        height: 150,
+        errorBuilder: (context, url, StackTrace? error) {
+          // print(error!);
+          setState(() {
+            _keFuMessageModel.del(_message);
+          });
+          return const Icon(Icons.disabled_by_default,color: Colors.red,);
+        },
+      );
+    }
+    return Image.file(
+      File(image),
+      width: 150,
+      height: 150,
+      errorBuilder: (context, url, StackTrace? error) {
+        // print(error!);
+        setState(() {
+          _keFuMessageModel.del(_message);
+        });
+        return const Icon(Icons.disabled_by_default,color: Colors.red,);
+      },
+    );
+  }
+  Widget _showMessageCard(KefuMessage message){
+    if(message.text == null){
+      return Card(
+          margin: const EdgeInsets.all(10),
+          child: SizedBox(
+            // width: (MediaQuery.of(context).size.width) / 1.5,
+            child: TextButton(
+                onPressed: () {
+                  _showPicButton(message);
+                },
+                child: _showPic(message)),
+          ));
+    }else{
+      Size size = Global.boundingTextSize(message.text!,TextStyle());
+      double width = size.width + 20;
+      if(size.width > (MediaQuery.of(context).size.width) / 1.5){
+        width = (MediaQuery.of(context).size.width) / 1.5;
+      }
+      return Card(
+          margin: const EdgeInsets.only(right: 10),
+          child: Container(
+            margin: const EdgeInsets.only(left: 10,right: 10),
+            width: width,
+            child: TextButton(
+              onPressed: () {  },
+              child: Text(
+                message.text!,
+                textAlign: TextAlign.start,
+                style: TextStyle(color: Colors.black),
+              ),
+            ),
+          ));
+    }
+  }
   Widget _buildList(int index) {
     KefuMessage message = messages[index];
     return Column(
@@ -227,19 +387,8 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
             ? Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Card(
-                      margin: EdgeInsets.only(right: 10),
-                      child: Container(
-                        width: (MediaQuery.of(context).size.width) / 1.5,
-                        child: message.image == null
-                            ? Text(
-                                message.text!,
-                                textAlign: TextAlign.left,
-                              )
-                            : TextButton(
-                                onPressed: () {},
-                                child: Image.network(message.image!,width: 150,height: 150,)),
-                      )),
+                  _buildSending(message),
+                  _showMessageCard(message),
                   Container(
                     width: 45,
                     height: 45,
@@ -265,27 +414,11 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
                     decoration: BoxDecoration(
                         color: Colors.grey,
                         borderRadius: BorderRadius.circular(50.0),
-                        image: DecorationImage(
+                        image: const DecorationImage(
                           image: AssetImage('assets/image/16pic_8733770_b.jpg'),
                         )),
                   ),
-                  Card(
-                      margin: EdgeInsets.only(right: 10),
-                      child: Container(
-                        width: (MediaQuery.of(context).size.width) / 1.5,
-                        child: message.image == null
-                            ? Text(
-                                message.text!,
-                                textAlign: TextAlign.left,
-                              )
-                            : TextButton(
-                                onPressed: () {},
-                                child: Image.file(
-                                  File(message.image!),
-                                  width: 150,
-                                  height: 150,
-                                )),
-                      )),
+                  _showMessageCard(message),
                 ],
               ),
       ],
