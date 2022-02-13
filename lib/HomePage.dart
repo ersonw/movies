@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:movies/ExampleHomePage.dart';
+import 'package:movies/LockScreenCustom.dart';
 import 'package:movies/index_page.dart';
 import 'package:movies/my_prfile.dart';
 import 'package:movies/news_tab.dart';
@@ -54,10 +58,20 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     Global.MainContext = context;
     Global.checkVersion();
-    // Global.choseVideo();
+    // Global.showLockScreen();
+    Timer(const Duration(milliseconds: 100), (){
+      if(Global.profile.config.bootLock){
+        Navigator.of(context, rootNavigator: true).push<void>(
+          CupertinoPageRoute(
+            // fullscreenDialog: true,
+            builder: (context) => LockScreenCustom(LockScreenCustom.lock),
+          ),
+        );
+      }
+    });
     return Scaffold(
       floatingActionButton:  FloatingActionButton(
-          child: Icon(Icons.search,color: Colors.white,size: 40,),
+          child: const Icon(Icons.search,color: Colors.white,size: 40,),
           onPressed: (){
             print('FloatingActionButton');
           },
@@ -67,4 +81,5 @@ class _HomePageState extends State<HomePage> {
       body: _buildHomePage(context),
     );
   }
+
 }

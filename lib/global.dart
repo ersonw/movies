@@ -28,26 +28,29 @@ import 'package:video_compress/video_compress.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:movies/utils/UploadOss.dart';
 import 'data/Profile.dart';
-enum SocketStatus {
-  SocketStatusConnected, // 已连接
-  SocketStatusFailed, // 失败
-  SocketStatusClosed, // 连接关闭
-}
+import 'package:flutter/material.dart';
+import 'package:movies/model/ConfigModel.dart';
+import 'package:passcode_screen/circle.dart';
+import 'package:passcode_screen/keyboard.dart';
+import 'package:passcode_screen/passcode_screen.dart';
+
 class Global {
   static MediaInfo _compressedVideoInfo = MediaInfo(path: '');
+
   // 是否为release版
-  static bool get isRelease => bool.fromEnvironment("dart.vm.product");
+  static bool get isRelease => const bool.fromEnvironment("dart.vm.product");
   static late final cameras;
   static bool _isLogin = false;
   static late BuildContext MainContext;
   static late final String uid;
-  static  WebSocketChannel?  channel = null;
-  static final ProfileChangeNotifier _profileChangeNotifier = ProfileChangeNotifier();
+  static WebSocketChannel? channel = null;
+  static final ProfileChangeNotifier _profileChangeNotifier =
+      ProfileChangeNotifier();
   static final KeFuMessageModel _keFuMessageModel = KeFuMessageModel();
-  static final MessagesChangeNotifier _messagesChangeNotifier = MessagesChangeNotifier();
   static Profile profile = Profile();
   static Messages messages = Messages();
   static late SharedPreferences _prefs;
+
   //初始化全局信息，会在APP启动时执行
   static Future init() async {
     // bool data = await fetchData();
@@ -63,10 +66,10 @@ class Global {
       }
     }
     var _messages = _prefs.getString("messages");
-    if(_messages != null){
-      try{
+    if (_messages != null) {
+      try {
         messages = Messages.formJson(jsonDecode(_messages));
-      }catch(e){
+      } catch (e) {
         print(e);
       }
     }
@@ -79,36 +82,101 @@ class Global {
     await initSock();
     // await loginSocket();
     _profileChangeNotifier.addListener(() {
-      if(UserModel().isLogin == false) {
+      if (UserModel().isLogin == false) {
         getUserInfo();
-      }else if(_isLogin == false) {
+      } else if (_isLogin == false) {
         loginSocket();
       }
     });
   }
-  static Size boundingTextSize(String text, TextStyle style,  {int maxLines = 2^31, double maxWidth = double.infinity}) {
+
+  /// 获取缓存
+  static Future<double> loadApplicationCache() async {
+    /// 获取文件夹
+    Directory directory = await getApplicationDocumentsDirectory();
+
+    /// 获取缓存大小
+    double value = await getTotalSizeOfFilesInDir(directory);
+    return value;
+  }
+
+  /// 循环计算文件的大小（递归）
+  static Future<double> getTotalSizeOfFilesInDir(
+      final FileSystemEntity file) async {
+    if (file is File) {
+      int length = await file.length();
+      return double.parse(length.toString());
+    }
+    if (file is Directory) {
+      final List<FileSystemEntity>? children = file.listSync();
+      double total = 0;
+      if (children != null)
+        for (final FileSystemEntity child in children) {
+          total += await getTotalSizeOfFilesInDir(child);
+        }
+      return total;
+    }
+    return 0;
+  }
+
+  /// 缓存大小格式转换
+  static String formatSize(double? value) {
+    if (null == value) {
+      return '0';
+    }
+    List<String> unitArr = ['B', 'K', 'M', 'G'];
+    int index = 0;
+    while (value! > 1024) {
+      index++;
+      value = (value / 1024);
+    }
+    String size = value.toStringAsFixed(2);
+    return size + unitArr[index];
+  }
+  /// 删除缓存
+  static Future<void> clearApplicationCache() async {
+    Directory directory = await getApplicationDocumentsDirectory();
+    //删除缓存目录
+    await deleteDirectory(directory);
+  }
+
+  /// 递归方式删除目录
+  static Future<Null> deleteDirectory(FileSystemEntity file) async {
+    if (file is Directory) {
+      final List<FileSystemEntity> children = file.listSync();
+      for (final FileSystemEntity child in children) {
+        await deleteDirectory(child);
+      }
+    }
+    await file.delete();
+  }
+  static Size boundingTextSize(String text, TextStyle style,
+      {int maxLines = 2 ^ 31, double maxWidth = double.infinity}) {
     if (text == null || text.isEmpty) {
       return Size.zero;
     }
     final TextPainter textPainter = TextPainter(
         textDirection: TextDirection.ltr,
-        text: TextSpan(text: text, style: style), maxLines: maxLines)
+        text: TextSpan(text: text, style: style),
+        maxLines: maxLines)
       ..layout(maxWidth: maxWidth);
     return textPainter.size;
   }
+
   static String generateMd5(String data) {
     var content = Utf8Encoder().convert(data);
     var digest = md5.convert(content);
     // 这里其实就是 digest.toString()
     return hex.encode(digest.bytes);
   }
-  static Future<void> initSock()async {
+
+  static Future<void> initSock() async {
     channel = WebSocketChannel.connect(
-        Uri.parse(NWApi.baseWs),
+      Uri.parse(NWApi.baseWs),
     );
     channel?.stream.listen(
       channelListen,
-      onDone: () async{
+      onDone: () async {
         // print(channel?.sink.runtimeType.toString());
         _isLogin = false;
         await Future.delayed(const Duration(milliseconds: 5000), () {
@@ -120,32 +188,35 @@ class Global {
       },
     );
   }
-  static Future<void> loginSocket()async {
+
+  static Future<void> loginSocket() async {
     WebSocketMessage _message = WebSocketMessage();
     _message.code = WebSocketMessage.login;
-    _message.data = jsonEncode({ "token": profile.user.token });
+    _message.data = jsonEncode({"token": profile.user.token});
     channel?.sink.add(_message.toString());
   }
-  static Future<bool> sendKeFuMessage(KefuMessage message) async{
+
+  static Future<bool> sendKeFuMessage(KefuMessage message) async {
     WebSocketMessage _message = WebSocketMessage();
     _message.code = WebSocketMessage.message_kefu_sending;
     _message.data = message.toString();
-    if(channel != null){
+    if (channel != null) {
       channel?.sink.add(_message.toString());
       return true;
     }
     return false;
   }
-  static Future<void> channelListen(data)async {
+
+  static Future<void> channelListen(data) async {
     // print(UserModel().isLogin);
-    if(UserModel().isLogin == false) {
+    if (UserModel().isLogin == false) {
       getUserInfo();
-    }else if(_isLogin == false) {
+    } else if (_isLogin == false) {
       loginSocket();
     }
-    if(data == 'H') return;
+    if (data == 'H') return;
     WebSocketMessage message = WebSocketMessage.formJson(jsonDecode(data));
-    switch(message.code){
+    switch (message.code) {
       case WebSocketMessage.login_success:
         _isLogin = true;
         break;
@@ -156,11 +227,13 @@ class Global {
         break;
       case WebSocketMessage.message_kefu_send_fail:
         ShowAlertDialog(MainContext, '发送消息', message.message);
-        KefuMessage kefuMessage = KefuMessage.formJson(jsonDecode(message.data!));
+        KefuMessage kefuMessage =
+            KefuMessage.formJson(jsonDecode(message.data!));
         _keFuMessageModel.status(kefuMessage.id, message.code);
         break;
       case WebSocketMessage.message_kefu_send_success:
-        KefuMessage kefuMessage = KefuMessage.formJson(jsonDecode(message.data!));
+        KefuMessage kefuMessage =
+            KefuMessage.formJson(jsonDecode(message.data!));
         _keFuMessageModel.status(kefuMessage.id, message.code);
         break;
       case WebSocketMessage.message_kefu_recevie:
@@ -171,146 +244,147 @@ class Global {
     }
     // print(_userModel.token);
   }
-  static String getDateTime(int date){
+
+  static String getDateTime(int date) {
     int t = ((DateTime.now().millisecondsSinceEpoch ~/ 1000) - date);
     String str = '';
-    if(t > 60){
+    if (t > 60) {
       t = t ~/ 60;
-      if(t > 60){
+      if (t > 60) {
         t = t ~/ 60;
-        if(t > 24){
+        if (t > 24) {
           t = t ~/ 24;
-          if(t > 30){
+          if (t > 30) {
             t = t ~/ 30;
-            if(t > 12){
+            if (t > 12) {
               t = t ~/ 12;
               str = '$t年前';
-            }else{
+            } else {
               str = '$t月前';
             }
-          }else{
+          } else {
             str = '$t天前';
           }
-        }else{
+        } else {
           str = '$t小时前';
         }
-      }else{
+      } else {
         str = '$t分钟前';
       }
-    }else{
+    } else {
       str = '$t秒前';
     }
     return str;
   }
+
   static Future<void> _init() async {
-    if(profile.config.hash == null || profile.config.hash.isEmpty){
+    if (profile.config.hash == null || profile.config.hash.isEmpty) {
       getConfig();
     }
     // await checkVersion();
-    if(profile.config.autoLogin){
-      if(profile.user.token == null || profile.user.token.isEmpty){
+    if (profile.config.autoLogin) {
+      if (profile.user.token == null || profile.user.token.isEmpty) {
         await getUserInfo();
       }
     }
     getSystemMessage();
   }
+
   static Future<void> checkVersion() async {
-    DioManager().request(
-        NWMethod.GET,
-        NWApi.checkVersion,
-        params: {},
-        success: (data){
-          // print("success data = $data");
-          if(data != null && data.isNotEmpty){
-            Config config = Config.fromJson(jsonDecode(data));
-            if(config.hash.contains(profile.config.hash)){
-              getConfig();
-            }
-            if(MainContext != null){
-              if(config.version.compareTo(profile.config.version) > 0){
-                ShowOptionDialog(MainContext, '新版本上线', '目前版本：${profile.config.version}\n最新版本:${config.version}', config.url, config.force);
-              }
-            }
+    DioManager().request(NWMethod.GET, NWApi.checkVersion, params: {},
+        success: (data) {
+      // print("success data = $data");
+      if (data != null && data.isNotEmpty) {
+        Config config = Config.fromJson(jsonDecode(data));
+        if (config.hash.contains(profile.config.hash)) {
+          getConfig();
+        }
+        if (MainContext != null) {
+          if (config.version.compareTo(profile.config.version) > 0) {
+            ShowOptionDialog(
+                MainContext,
+                '新版本上线',
+                '目前版本：${profile.config.version}\n最新版本:${config.version}',
+                config.url,
+                config.force);
           }
-        }, error:(error) {
-          // print(error);
+        }
+      }
+    }, error: (error) {
+      // print(error);
     });
   }
+
   static Future<void> getConfig() async {
-    DioManager().request(
-        NWMethod.GET,
-        NWApi.baseConfig,
-        params: {},
-        success: (data){
-          // print("success data = $data");
-          if(data != null && data.isNotEmpty) {
-            Config config = Config.fromJson(jsonDecode(data));
-            profile.config.hash = config.hash;
-            profile.config.autoLogin = config.autoLogin;
-            profile.config.force = config.force;
-            profile.config.url = config.url;
-            profile.config.bootImage = config.bootImage;
-            profile.config.ossConfig = config.ossConfig;
-            saveProfile();
-          }
-        }, error:(error) {});
+    DioManager().request(NWMethod.GET, NWApi.baseConfig, params: {},
+        success: (data) {
+      // print("success data = $data");
+      if (data != null && data.isNotEmpty) {
+        Config config = Config.fromJson(jsonDecode(data));
+        profile.config.hash = config.hash;
+        profile.config.autoLogin = config.autoLogin;
+        profile.config.force = config.force;
+        profile.config.url = config.url;
+        profile.config.bootImage = config.bootImage;
+        profile.config.ossConfig = config.ossConfig;
+        saveProfile();
+      }
+    }, error: (error) {});
   }
+
   static Future<void> getSystemMessage() async {
-    DioManager().request(
-        NWMethod.GET,
-        NWApi.getSystemMessage,
-        params: {},
-        success: (data) async{
-          // print("success data = $data");
-          if(data != null && data.isNotEmpty) {
-            SystemMessage message = SystemMessage.formJson(jsonDecode(data));
-            bool have = false;
-            List<SystemMessage> systemMessages = messages.systemMessage;
-            for(int i=0; i< systemMessages.length; i++){
-              if(systemMessages[i].id == message.id){
-                have = true;
-              }
-            }
-            if(!have){
-              messages.systemMessage.add(message);
-            }
-            // messages.systemMessage = [];
-            saveMessages();
+    DioManager().request(NWMethod.GET, NWApi.getSystemMessage, params: {},
+        success: (data) async {
+      // print("success data = $data");
+      if (data != null && data.isNotEmpty) {
+        SystemMessage message = SystemMessage.formJson(jsonDecode(data));
+        bool have = false;
+        List<SystemMessage> systemMessages = messages.systemMessage;
+        for (int i = 0; i < systemMessages.length; i++) {
+          if (systemMessages[i].id == message.id) {
+            have = true;
           }
-        }, error:(error) {});
+        }
+        if (!have) {
+          messages.systemMessage.add(message);
+        }
+        // messages.systemMessage = [];
+        saveMessages();
+      }
+    }, error: (error) {});
   }
+
   static Future<void> getUserInfo() async {
-    DioManager().request(
-        NWMethod.POST,
-        NWApi.getInfo,
-        params: {'identifier': uid},
-        success: (data){
-          print("success data = $data");
-          if(data != null) {
-            profile.user = User.fromJson(jsonDecode(data));
-            saveProfile();
-          }
-        }, error:(error) {});
+    DioManager().request(NWMethod.POST, NWApi.getInfo,
+        params: {'identifier': uid}, success: (data) {
+      print("success data = $data");
+      if (data != null) {
+        profile.user = User.fromJson(jsonDecode(data));
+        saveProfile();
+      }
+    }, error: (error) {});
   }
-  static Future<String> getUUID() async{
+
+  static Future<String> getUUID() async {
     final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
     String uid = '';
     try {
       if (Platform.isAndroid) {
-        var build =  await deviceInfoPlugin.androidInfo;
+        var build = await deviceInfoPlugin.androidInfo;
         uid = build.androidId;
         // print(uid);
         //UUID for Android
       } else if (Platform.isIOS) {
-        var build =  await deviceInfoPlugin.iosInfo;
+        var build = await deviceInfoPlugin.iosInfo;
         uid = build.identifierForVendor;
       }
-    // ignore: nullable_type_in_catch_clause
+      // ignore: nullable_type_in_catch_clause
     } on PlatformException {
       print('Failed to get platform version');
     }
     return uid;
   }
+
   static Future<File> _getLocalFile(String filename) async {
     // get the path to the document directory.
     // String dir = (await getApplicationDocumentsDirectory()).path;
@@ -319,31 +393,33 @@ class Global {
     // print('$dir/$filename');
     return File('$dir/$filename');
   }
-  static Future choseVideo() async{
+
+  static Future choseVideo() async {
     List<Media> _listVideoPaths = await ImagePickers.pickerPaths(
       galleryMode: GalleryMode.video,
       selectCount: 1,
     );
-    if(_listVideoPaths.isNotEmpty && _listVideoPaths[0].thumbPath != null){
+    if (_listVideoPaths.isNotEmpty && _listVideoPaths[0].thumbPath != null) {
       UploadOss.upload(
           file: File(_listVideoPaths[0].thumbPath!),
           rootDir: "upload",
           callback: (data) {
             print(data);
           },
-          onSendProgress: (int i){
+          onSendProgress: (int i) {
             print(i);
-          }
-      );
+          });
     }
   }
+
   /*
   * 根据本地路径获取名称
   * */
   static String getNameByPath(String filePath) {
     // ignore: null_aware_before_operator
-    return filePath.substring(filePath.lastIndexOf("/")+1,filePath.length);
+    return filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length);
   }
+
   //压缩视频
   static Future<void> runFlutterVideoCompressMethods(File videoFile) async {
     final mediaInfo = await VideoCompress.compressVideo(
@@ -356,18 +432,21 @@ class Global {
     //   _compressedVideoInfo = mediaInfo;
     // });
   }
-  static Future<void> postFile(String path)async{
+
+  static Future<void> postFile(String path) async {
     File file = File(path);
     var sfile = await file.open();
     var x = 0;
     var fileSize = file.lengthSync();
     var chunkSize = 1000000;
     var val;
-    while (x < fileSize) {
-    }
+    while (x < fileSize) {}
   }
+
 //  持久化Profile信息
   static saveProfile() =>
       _prefs.setString("profile", jsonEncode(profile.toJson()));
-  static saveMessages() => _prefs.setString('messages', jsonEncode(messages.toJson()));
+
+  static saveMessages() =>
+      _prefs.setString('messages', jsonEncode(messages.toJson()));
 }

@@ -1,8 +1,10 @@
-
+import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'dart:io';
-
+import 'package:passcode_screen/circle.dart';
+import 'package:passcode_screen/keyboard.dart';
+import 'package:passcode_screen/passcode_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 ShowCopyDialog(BuildContext context, String title, String? text) {
@@ -119,9 +121,9 @@ Future<bool> ShowPictureFullSceen(BuildContext context, String? title, String? t
       });
   return _sure;
 }
-// static int currentTimeMillis() {
-// return new DateTime.now().millisecondsSinceEpoch;
-// }
+Future<void> lockScreen(BuildContext context)async {
+
+}
 
 
 

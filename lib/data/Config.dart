@@ -7,6 +7,8 @@ class Config {
   String bootImage = '';
   String url = '';
   bool force = false;
+  bool bootLock = false;
+  String? bootLockPasswd = '';
   OssConfig ossConfig = OssConfig();
 
   Config();
@@ -15,10 +17,13 @@ class Config {
       : hash = json['hash'],
         url = json['url'],
         force = json['force'] ?? false,
-        version = json['version'],
+        version = json['version'] ?? 1.0,
         autoLogin = json['autoLogin'] ?? false,
         bootImage = json['bootImage'],
-        ossConfig = OssConfig.formJson(json['ossConfig'] ?? OssConfig().toJson());
+        bootLock = json['bootLock'] ?? false,
+        bootLockPasswd = json['bootLockPasswd'],
+        ossConfig =
+            OssConfig.formJson(json['ossConfig'] ?? OssConfig().toJson());
 
   Map<String, dynamic> toJson() => {
         'hash': hash,
@@ -27,6 +32,8 @@ class Config {
         'version': version,
         'autoLogin': autoLogin,
         'bootImage': bootImage,
+        'bootLock': bootLock,
+        'bootLockPasswd': bootLockPasswd,
         'ossConfig': ossConfig.toJson(),
       };
 }

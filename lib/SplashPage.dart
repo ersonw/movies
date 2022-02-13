@@ -18,7 +18,9 @@ class SplashScreenState extends State<SplashPage> {
   void initState() {
     super.initState();
     Global.MainContext = context;
-    // Global.checkVersion();
+    Timer(Duration(milliseconds: 500), (){
+      _next();
+    });
     _timer = Timer.periodic(
         const Duration(seconds: 1),
         (Timer timer) => {
@@ -34,6 +36,7 @@ class SplashScreenState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Container(
       // color: Colors.transparent,
       decoration: BoxDecoration(

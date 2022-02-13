@@ -4,22 +4,21 @@ import 'package:photo_view/photo_view_gallery.dart';
 
 class PhotpGalleryPage extends StatefulWidget {
   final List photoList;
-  final int index;
-  PhotpGalleryPage({required this.photoList, required this.index});
+  int? index;
+  PhotpGalleryPage({required this.photoList, this.index});
   @override
   _PhotpGalleryPageState createState() => _PhotpGalleryPageState();
 }
 
 class _PhotpGalleryPageState extends State<PhotpGalleryPage> {
-  @override
   int currentIndex = 0;
   late int initialIndex; //初始index
   late int length;
   late int title;
   @override
   void initState() {
-    currentIndex = widget.index;
-    initialIndex = widget.index;
+    currentIndex = widget.index!;
+    initialIndex = widget.index!;
     length = widget.photoList.length;
     title = initialIndex + 1;
     super.initState();
@@ -35,11 +34,11 @@ class _PhotpGalleryPageState extends State<PhotpGalleryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${title} / ${length}'),
+        title: Text('$title / $length'),
         centerTitle: true,
       ),
       body: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: Colors.black,
           ),
           constraints: BoxConstraints.expand(
@@ -53,14 +52,14 @@ class _PhotpGalleryPageState extends State<PhotpGalleryPage> {
                 scrollPhysics: const BouncingScrollPhysics(),
                 builder: (BuildContext context, int index) {
                   return PhotoViewGalleryPageOptions(
-                    imageProvider: NetworkImage(widget.photoList[index]['image']),
+                    imageProvider: NetworkImage(widget.photoList[index]),
                     initialScale: PhotoViewComputedScale.contained * 1,
-                    heroTag: widget.photoList[index]['id'],
+                    heroTag: index,
                   );
                 },
                 itemCount: widget.photoList.length,
                 // loadingChild: widget.loadingChild,
-                backgroundDecoration: BoxDecoration(
+                backgroundDecoration: const BoxDecoration(
                   color: Colors.black,
                 ),
                 pageController: PageController(initialPage: initialIndex), //点进去哪页默认就显示哪一页
