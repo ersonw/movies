@@ -12,4 +12,6 @@ class ImageIcons {
   static const AssetImage income = AssetImage('assets/image/8e2307242822dac65070263b26fb6c0f-mine3.png');
   static const AssetImage zhipianrenjihua = AssetImage('assets/image/zhipianrenjihua.jpg');
   static const AssetImage tuku = AssetImage('assets/image/tuku.png');
+  static const AssetImage nan = AssetImage('assets/image/nan.png');
+  static const AssetImage nv = AssetImage('assets/image/nv.png');
 }

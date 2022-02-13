@@ -58,6 +58,7 @@ dependencies:
   xml2json: ^4.4.0
   photo_view:  ^0.4.2
   passcode_screen: ^2.0.1
+  fluttertoast: ^8.0.8
 
 flutter_native_splash:
   color: "#FFFFFF"

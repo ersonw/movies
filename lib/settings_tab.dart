@@ -31,14 +31,13 @@ class SettingsTab extends StatefulWidget {
 
 class _SettingsTabState extends State<SettingsTab> {
   final ConfigModel _configModel = ConfigModel();
-  final ProfileChangeNotifier _profileChangeNotifier = ProfileChangeNotifier();
   Config _config = Config();
   String _cacheSize = '';
   @override
   void initState() {
     super.initState();
     _config = _configModel.config;
-    _profileChangeNotifier.addListener(() {
+    _configModel.addListener(() {
       setState(() {
         _config = _configModel.config;
       });
@@ -117,6 +116,7 @@ class _SettingsTabState extends State<SettingsTab> {
                 if(await ShowAlertDialogBool(context, '重置锁屏密码', '密码一旦重置不可找回，如需开启锁屏可重新设置密码,确定要重置锁屏密码吗？')){
                   setState(() {
                     _configModel.lockPasswd = '';
+                    _configModel.lock = false;
                   });
                 }
               }

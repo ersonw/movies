@@ -2,6 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_pickers/image_pickers.dart';
 import 'package:movies/MessagesChangeNotifier.dart';
 import 'package:movies/ProfileChangeNotifier.dart';
@@ -29,10 +30,6 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:movies/utils/UploadOss.dart';
 import 'data/Profile.dart';
 import 'package:flutter/material.dart';
-import 'package:movies/model/ConfigModel.dart';
-import 'package:passcode_screen/circle.dart';
-import 'package:passcode_screen/keyboard.dart';
-import 'package:passcode_screen/passcode_screen.dart';
 
 class Global {
   static MediaInfo _compressedVideoInfo = MediaInfo(path: '');
@@ -90,6 +87,16 @@ class Global {
     });
   }
 
+  static void showWebColoredToast(String msg) {
+    Fluttertoast.showToast(
+      msg: msg,
+      toastLength: Toast.LENGTH_SHORT,
+      // webBgColor: '#FFFFFF',
+      // textColor: Colors.black,
+      timeInSecForIosWeb: 5,
+    );
+  }
+
   /// 获取缓存
   static Future<double> loadApplicationCache() async {
     /// 获取文件夹
@@ -133,6 +140,7 @@ class Global {
     String size = value.toStringAsFixed(2);
     return size + unitArr[index];
   }
+
   /// 删除缓存
   static Future<void> clearApplicationCache() async {
     Directory directory = await getApplicationDocumentsDirectory();
@@ -150,6 +158,7 @@ class Global {
     }
     await file.delete();
   }
+
   static Size boundingTextSize(String text, TextStyle style,
       {int maxLines = 2 ^ 31, double maxWidth = double.infinity}) {
     if (text == null || text.isEmpty) {

@@ -71,7 +71,7 @@ class UploadOssUtil {
   static Future<Map<String, dynamic>> getStsAccount()async{
     var data = await DioManager().requestAsync(NWMethod.GET, NWApi.getStsAccount, {});
     Map<String, dynamic> map = json.decode(data!);
-    print(map);
+    // print(map);
     return map;
   }
 }

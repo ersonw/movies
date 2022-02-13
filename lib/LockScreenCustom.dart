@@ -30,12 +30,13 @@ class _LockScreenCustom extends State<LockScreenCustom>{
   String title = '';
   String backText = '';
   bool _isAuthenticated = false;
+  int errorIndex = 3;
   late BuildContext _context;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    storedPasscode = _configModel.config.bootLockPasswd!;
+    storedPasscode = _configModel.config.bootLockPasswd ?? '';
     _configModel.addListener(() {
       setState(() {
         storedPasscode = _configModel.config.bootLockPasswd!;
@@ -85,51 +86,12 @@ class _LockScreenCustom extends State<LockScreenCustom>{
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            // Text('You are ${isAuthenticated ? '' : 'NOT'} authenticated'),
-            // _defaultLockScreenButton(context),
-            // _customColorsLockScreenButton(context)
           ],
         ),
       ),
     );
   }
-  _defaultLockScreenButton(BuildContext context) => MaterialButton(
-    color: Theme.of(context).primaryColor,
-    child: const Text('Open Default Lock Screen'),
-    onPressed: () {
-      _showLockScreen(
-        context,
-        opaque: false,
-        cancelButton: const Text(
-          'Cancel',
-          style: TextStyle(fontSize: 16, color: Colors.white),
-          semanticsLabel: 'Cancel',
-        ),
-      );
-    },
-  );
 
-  _customColorsLockScreenButton(BuildContext context) {
-    return MaterialButton(
-      color: Theme.of(context).primaryColor,
-      child: const Text('Open Custom Lock Screen'),
-      onPressed: () {
-        _showLockScreen(context,
-            opaque: false,
-            circleUIConfig: const CircleUIConfig(
-                borderColor: Colors.blue,
-                fillColor: Colors.blue,
-                circleSize: 30),
-            keyboardUIConfig: const KeyboardUIConfig(
-                digitBorderWidth: 2, primaryColor: Colors.blue),
-            cancelButton: const Icon(
-              Icons.arrow_back,
-              color: Colors.blue,
-            ),
-            digits: ['一', '二', '三', '四', '五', '六', '七', '八', '九', '零']);
-      },
-    );
-  }
 
   _showLockScreen(BuildContext context, {required bool opaque, CircleUIConfig? circleUIConfig, KeyboardUIConfig? keyboardUIConfig, required Widget cancelButton, List<String>? digits,}) {
     Navigator.push(
@@ -179,8 +141,9 @@ class _LockScreenCustom extends State<LockScreenCustom>{
     }
   }
   _setPasswd(String enteredPasscode) {
-    _verificationNotifier.add(true);
+
     if(storedPasscode.isEmpty){
+      _verificationNotifier.add(true);
       storedPasscode = enteredPasscode;
       title = '再次确认密码';
       setState(() => {_showIt()});
@@ -189,7 +152,7 @@ class _LockScreenCustom extends State<LockScreenCustom>{
         _configModel.lockPasswd = storedPasscode;
         _callBack();
       }else{
-        // Navigator.maybePop(context);
+        _verificationNotifier.add(true);
         title = '请设置6位数锁屏密码';
         storedPasscode = '';
         _showIt(fn: (){
@@ -198,14 +161,26 @@ class _LockScreenCustom extends State<LockScreenCustom>{
       }
     }
   }
-  _onPasscodeEntered(String enteredPasscode) {
+  _onPasscodeEntered(String enteredPasscode)async {
     enteredPasscode = Global.generateMd5(enteredPasscode);
 
     switch(widget.type){
       case LockScreenCustom.lock:
         bool isValid = storedPasscode == enteredPasscode;
         _verificationNotifier.add(isValid);
-        _callBack();
+        if(isValid){
+          _callBack();
+        }else{
+          setState(() {
+            --errorIndex;
+          });
+          if(errorIndex == 0){
+            await ShowAlertDialog(context, '锁屏密码', '您没有尝试机会了，下次再见！');
+            exit(0);
+          }else{
+            ShowAlertDialog(context, '锁屏密码', '您还有$errorIndex次机会，请谨慎操作！');
+          }
+        }
         break;
       case LockScreenCustom.changePasswd:
         _changePasswd(enteredPasscode);

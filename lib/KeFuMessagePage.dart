@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -198,6 +199,7 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
     }
   }
   void _sendToServer(KefuMessage message) async{
+    message.isRead = true;
     if(await Global.sendKeFuMessage(message) == false){
       _keFuMessageModel.status(message.id,WebSocketMessage.message_kefu_send_fail);
     }
@@ -225,8 +227,10 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
     }
   }
   void _deleteMessage(KefuMessage _message){
-    setState(() {
-      _keFuMessageModel.del(_message);
+    Timer(const Duration(microseconds: 500), (){
+      setState(() {
+        _keFuMessageModel.del(_message);
+      });
     });
   }
   void _cancelSending(KefuMessage _message) async {
@@ -334,6 +338,7 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
     }
     return widget;
   }
+
   Widget _showPic(KefuMessage _message){
     String image = _message.image ?? '';
     if(image.contains("http")){
@@ -343,9 +348,7 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
         height: 150,
         errorBuilder: (context, url, StackTrace? error) {
           // print(error!);
-          setState(() {
-            _keFuMessageModel.del(_message);
-          });
+          _deleteMessage(_message);
           return const Icon(Icons.disabled_by_default,color: Colors.red,);
         },
       );
@@ -356,9 +359,7 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
       height: 150,
       errorBuilder: (context, url, StackTrace? error) {
         // print(error!);
-        setState(() {
-          _keFuMessageModel.del(_message);
-        });
+        _deleteMessage(_message);
         return const Icon(Icons.disabled_by_default,color: Colors.red,);
       },
     );

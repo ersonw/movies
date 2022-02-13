@@ -60,7 +60,7 @@ class _HomePageState extends State<HomePage> {
     Global.checkVersion();
     // Global.showLockScreen();
     Timer(const Duration(milliseconds: 100), (){
-      if(Global.profile.config.bootLock){
+      if(Global.profile.config.bootLock && Global.profile.config.bootLockPasswd != null && Global.profile.config.bootLockPasswd != ''){
         Navigator.of(context, rootNavigator: true).push<void>(
           CupertinoPageRoute(
             // fullscreenDialog: true,

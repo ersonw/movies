@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:images_picker/images_picker.dart';
 import 'package:movies/antd_ttf.dart';
+import 'package:movies/data/User.dart';
 import 'package:movies/functions.dart';
 import 'package:movies/image_form.dart';
 import 'package:movies/messagesPage.dart';
+import 'package:movies/model/UserModel.dart';
 import 'package:movies/profile_tab.dart';
 import 'package:movies/scan_button.dart';
 import 'package:movies/settings_tab.dart';
@@ -14,6 +16,7 @@ import 'package:movies/web_view.dart';
 import 'package:movies/xiaoxiong_icon.dart';
 import 'package:movies/Take_picture_screen.dart';
 import 'package:qr_code_tools/qr_code_tools.dart';
+import 'AccountManager.dart';
 import 'GetQrcode.dart';
 import 'global.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -33,10 +36,18 @@ class MyProfile extends StatefulWidget {
 }
 
 class _MyProfile extends State<MyProfile> {
+  final UserModel _userModel = UserModel();
+  User _user = User();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _user = _userModel.user;
+    _userModel.addListener(() {
+      setState(() {
+        _user = _userModel.user;
+      });
+    });
   }
 
   @override
@@ -152,7 +163,12 @@ class _MyProfile extends State<MyProfile> {
       child: _buildBody(context),
     );
   }
-
+  _buildAvatar(){
+    if ((_userModel.avatar == null || _userModel.avatar == '') || _userModel.avatar?.contains('http') == false) {
+      return AssetImage('assets/image/default_head.gif');
+    }
+    return NetworkImage(_user.avatar!);
+  }
   Widget _buildBody(BuildContext context) {
     return SafeArea(
       child: Padding(
@@ -161,29 +177,46 @@ class _MyProfile extends State<MyProfile> {
           // mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // 头像用户名
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Container(
-                  width: 80,
-                  height: 80,
-                  // margin: EdgeInsets.only(left: vw()),
-                  decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(50.0),
-                      image: DecorationImage(
-                        // image: AssetImage('assets/image/default_head.gif'),
-                        image: NetworkImage(Global.profile.user.avatar!),
-                      )),
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context, rootNavigator: true).push<void>(
+                    CupertinoPageRoute(
+                      title: '账号管理',
+                      // fullscreenDialog: true,
+                      builder: (context) => const AccountManager(),
+                    ),
+                  );
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 80,
+                      height: 80,
+                      // margin: EdgeInsets.only(left: vw()),
+                      decoration: BoxDecoration(
+                          color: Colors.grey,
+                          borderRadius: BorderRadius.circular(50.0),
+                          image: DecorationImage(
+                            // image: AssetImage('assets/image/default_head.gif'),
+                            image: _buildAvatar(),
+                          )),
+                    ),
+                    Container(
+                        margin: const EdgeInsets.only(left: 10, top: 10),
+                        child: Text(
+                          _user.nickname,
+                          style:
+                          const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
+                        )),
+                    Container(
+                      margin: const EdgeInsets.only(left: 10),
+                      width: 35,
+                      height: 35,
+                      child: Image(image: _user.sex == 0 ? ImageIcons.nan : ImageIcons.nv,),
+                    )
+                  ],
                 ),
-                Container(
-                    margin: const EdgeInsets.only(left: 10, top: 10),
-                    child: Text(
-                      Global.profile.user.nickname,
-                      style:
-                      const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    )),
-              ],
             ),
             // 金币数
             Row(
