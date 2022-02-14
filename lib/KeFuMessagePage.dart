@@ -443,4 +443,10 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
       ],
     );
   }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _textEditingController.clear();
+  }
 }

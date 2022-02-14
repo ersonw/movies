@@ -11,6 +11,9 @@ class WebSocketMessage {
   static const int user_change = 107;
   static const int user_change_fail = 108;
   static const int user_change_success = 109;
+  static const int user_change_passwoed = 110;
+  static const int user_change_passwoed_fail = 111;
+  static const int user_change_passwoed_success = 112;
 
   WebSocketMessage();
 

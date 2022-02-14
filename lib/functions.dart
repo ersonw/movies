@@ -121,8 +121,8 @@ Future<bool> ShowPictureFullSceen(BuildContext context, String? title, String? t
       });
   return _sure;
 }
-Future<String?> ShowInputDialogAsync(BuildContext context, {String? title, String? text, String? hintText})async {
-  String? input = null;
+Future<String> ShowInputDialogAsync(BuildContext context, {String? title, String? text, String? hintText})async {
+  TextEditingController textEditingController = TextEditingController();
   await showCupertinoDialog(
       context: context,
       builder: (context) {
@@ -134,9 +134,7 @@ Future<String?> ShowInputDialogAsync(BuildContext context, {String? title, Strin
               children: <Widget>[
                 text == null ? Container():Text(text),
                 TextField(
-                  onSubmitted: (e) {
-                    input = e;
-                  },
+                  controller: textEditingController,
                   decoration: InputDecoration(
                       hintText: hintText ?? '请输入内容',
                       filled: true,
@@ -150,18 +148,20 @@ Future<String?> ShowInputDialogAsync(BuildContext context, {String? title, Strin
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('取消'),
+              child: const Text('取消'),
             ),
             CupertinoDialogAction(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('确定'),
+              child: const Text('确定'),
             ),
           ],
         );
       });
-  return input;
+  String t = textEditingController.text;
+  textEditingController.clear();
+  return t;
 }
 class BottomMenu {
   BottomMenu();

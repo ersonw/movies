@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:images_picker/images_picker.dart';
+import 'package:movies/ChangePasswordPage.dart';
 import 'package:movies/data/Config.dart';
 import 'package:movies/data/User.dart';
 import 'package:movies/functions.dart';
 import 'package:movies/image_icon.dart';
 import 'package:movies/system_ttf.dart';
+import 'package:movies/utils/JhPickerTool.dart';
 import 'global.dart';
 
 class AccountManager extends StatefulWidget {
@@ -71,7 +73,13 @@ class _AccountManager extends State<AccountManager> {
       _user.avatar!,
     );
   }
-
+  _changeSex(int sex){
+    if(sex == _user.sex) return;
+    setState(() {
+      _user.sex = sex;
+    });
+    Global.changeUserProfile(_user);
+  }
   _buildList() {
     return ListView(
       children: [
@@ -122,11 +130,12 @@ class _AccountManager extends State<AccountManager> {
         ),
         TextButton(
           onPressed: () async{
-            String? input = await ShowInputDialogAsync(context, hintText: '输入需要修改的昵称');
-            if(input != null){
-              _user.nickname = input;
+            String input = await ShowInputDialogAsync(context, hintText: '输入需要修改的昵称');
+            if(input == '') return;
+              setState(() {
+                _user.nickname = input;
+              });
               Global.changeUserProfile(_user);
-            }
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -149,17 +158,18 @@ class _AccountManager extends State<AccountManager> {
           ),
         ),
         TextButton(
-          onPressed: () {
+          onPressed: () async{
             List<BottomMenu> lists = [];
             BottomMenu botton = BottomMenu();
             botton.title = '男性';
-            botton.fn = () => _user.sex = 0;
+            botton.fn = () => _changeSex(0);
             lists.add(botton);
             botton = BottomMenu();
             botton.title = '女性';
-            botton.fn = () => _user.sex = 1;
+            botton.fn = () => _changeSex(1);
             lists.add(botton);
-            ShowBottomMenu(context, lists, text: '请选择性别');
+            await ShowBottomMenu(context, lists, text: '请选择性别');
+            
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -183,7 +193,13 @@ class _AccountManager extends State<AccountManager> {
         ),
         TextButton(
           onPressed: () async{
-
+            JhPickerTool.showDatePicker(context, dateType: DateType.YMD, value: DateTime.fromMillisecondsSinceEpoch(_user.birthday), clickCallBack: (t,p) {
+              if(_user.birthday == p) return;
+              setState(() {
+                _user.birthday = p;
+              });
+              Global.changeUserProfile(_user);
+            });
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -198,8 +214,41 @@ class _AccountManager extends State<AccountManager> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text(_user.nickname,style: TextStyle(color: Colors.grey,fontSize: 18),),
+                  Text(Global.getYearsOld(_user.birthday),style: const TextStyle(color: Colors.grey,fontSize: 18),),
                   const Icon(SystemTtf.you,size: 30,color: Colors.grey,),
+                ],
+              ),
+            ],
+          ),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context, rootNavigator: true).push<void>(
+              CupertinoPageRoute(
+                // fullscreenDialog: true,
+                title: '更改密码',
+                builder: (context) => const ChangePasswordPage(),
+              ),
+            );
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: const [
+                  Icon(
+                    SystemTtf.guanbi,
+                    color: Colors.grey,
+                    size: 30,
+                  ),
+                  Text('更换密码',style: TextStyle(color: Colors.black,fontSize: 18),)
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: const [
+                  Icon(SystemTtf.you,size: 30,color: Colors.grey,),
                 ],
               ),
             ],

@@ -75,18 +75,27 @@ class Global {
     WidgetsFlutterBinding.ensureInitialized();
     cameras = await availableCameras();
     uid = await getUUID();
-    print(_messages);
-    print(_profile);
+    // print(_messages);
+    // print(_profile);
     await _init();
     await initSock();
     // await loginSocket();
-    userModel.addListener(() {
-      if (UserModel().isLogin == false) {
-        getUserInfo();
-      } else if (_isLogin == false) {
-        loginSocket();
-      }
-    });
+    // userModel.addListener(() {
+    //   if (UserModel().isLogin == false) {
+    //     getUserInfo();
+    //   } else if (_isLogin == false) {
+    //     loginSocket();
+    //   }
+    // });
+  }
+  static void changePassword(String old, String news){
+    WebSocketMessage message = WebSocketMessage();
+    message.code = WebSocketMessage.user_change_passwoed;
+    Map<String, String> map = {};
+    map['old'] = old;
+    map['new'] = news;
+    message.data = jsonEncode(map);
+    channel?.sink.add(message.toString());
   }
   static void changeUserProfile(User user) async{
     if(user.avatar?.contains('http') == true){
@@ -257,6 +266,12 @@ class Global {
         showWebColoredToast('账号信息修改成功!');
         // getUserInfo();
         break;
+      case WebSocketMessage.user_change_passwoed_fail:
+        showWebColoredToast(message.message!);
+        break;
+      case WebSocketMessage.user_change_passwoed_success:
+        showWebColoredToast('密码修改成功!');
+        break;
       default:
         break;
     }
@@ -294,6 +309,17 @@ class Global {
     }
     return str;
   }
+  static String getYearsOld(int date) {
+
+    String str = '';
+    if (date> 0) {
+      int t = DateTime.now().year - DateTime.fromMillisecondsSinceEpoch(date).year;
+      str = '$t岁';
+    } else {
+      str = '0岁';
+    }
+    return str;
+  }
 
   static Future<void> _init() async {
     if (profile.config.hash == null || profile.config.hash.isEmpty) {
@@ -301,9 +327,7 @@ class Global {
     }
     // await checkVersion();
     if (profile.config.autoLogin) {
-      if (profile.user.token == null || profile.user.token.isEmpty) {
-        await getUserInfo();
-      }
+      await getUserInfo();
     }
     getSystemMessage();
   }
