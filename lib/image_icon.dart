@@ -14,4 +14,6 @@ class ImageIcons {
   static const AssetImage tuku = AssetImage('assets/image/tuku.png');
   static const AssetImage nan = AssetImage('assets/image/nan.png');
   static const AssetImage nv = AssetImage('assets/image/nv.png');
+  static const AssetImage sex = AssetImage('assets/image/sex.png');
+  static const AssetImage age = AssetImage('assets/image/age.png');
 }

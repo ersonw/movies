@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class User {
   String token = '';
   String nickname = '';
@@ -5,7 +7,7 @@ class User {
   int birthday = 0;
   String uid = '';
   String? invite = '';
-  String? avatar = 'http://htm-download.oss-cn-hongkong.aliyuncs.com/default_head.gif';
+  String? avatar = '';
   String? phone = '';
   int gold = 0;
   int diamond = 0;
@@ -24,20 +26,22 @@ class User {
         gold = json['gold'],
         diamond = json['diamond'];
 
-  Map toJson() {
-    Map map = {};
-    map['token'] = token;
-    map['nickname'] = nickname;
-    map['sex'] = sex;
-    map['birthday'] = birthday;
-    map['uid'] = uid;
-    map['invite'] = invite;
-    map['avatar'] = avatar;
-    map['phone'] = phone;
-    map['gold'] = gold;
-    map['diamond'] =
-    diamond;
-    return
-    map;
+  Map<String, dynamic> toJson() => {
+    'token': token,
+    'nickname': nickname,
+    'sex': sex,
+    'birthday': birthday,
+    'uid': uid,
+    'invite': invite,
+    'avatar': avatar,
+    'phone': phone,
+    'gold': gold,
+    'diamond': diamond,
+  };
+  @override
+  String toString() {
+    // TODO: implement toString
+    super.toString();
+    return jsonEncode(toJson());
   }
 }

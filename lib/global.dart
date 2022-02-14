@@ -15,6 +15,7 @@ import 'package:movies/data/Profile.dart';
 import 'package:movies/data/WebSocketMessage.dart';
 import 'package:movies/functions.dart';
 import 'package:movies/HttpManager.dart';
+import 'package:movies/model/ConfigModel.dart';
 import 'package:movies/model/KeFuMessageModel.dart';
 import 'package:movies/model/UserModel.dart';
 import 'package:movies/network/NWApi.dart';
@@ -22,6 +23,7 @@ import 'package:movies/network/NWMethod.dart';
 import 'dart:convert';
 import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart';
+import 'package:movies/utils/UploadOssUtil.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,9 +32,11 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:movies/utils/UploadOss.dart';
 import 'data/Profile.dart';
 import 'package:flutter/material.dart';
-
+final MessagesChangeNotifier messagesChangeNotifier = MessagesChangeNotifier();
+final KeFuMessageModel keFuMessageModel = KeFuMessageModel();
+final ConfigModel configModel = ConfigModel();
+final UserModel userModel = UserModel();
 class Global {
-  static MediaInfo _compressedVideoInfo = MediaInfo(path: '');
 
   // 是否为release版
   static bool get isRelease => const bool.fromEnvironment("dart.vm.product");
@@ -41,9 +45,7 @@ class Global {
   static late BuildContext MainContext;
   static late final String uid;
   static WebSocketChannel? channel = null;
-  static final ProfileChangeNotifier _profileChangeNotifier =
-      ProfileChangeNotifier();
-  static final KeFuMessageModel _keFuMessageModel = KeFuMessageModel();
+
   static Profile profile = Profile();
   static Messages messages = Messages();
   static late SharedPreferences _prefs;
@@ -78,7 +80,7 @@ class Global {
     await _init();
     await initSock();
     // await loginSocket();
-    _profileChangeNotifier.addListener(() {
+    userModel.addListener(() {
       if (UserModel().isLogin == false) {
         getUserInfo();
       } else if (_isLogin == false) {
@@ -86,7 +88,25 @@ class Global {
       }
     });
   }
+  static void changeUserProfile(User user) async{
+    if(user.avatar?.contains('http') == true){
+      //
+    }else{
+      String? images = await UploadOssUtil.upload(
+          File(user.avatar!), Global.getNameByPath(user.avatar!));
+      if (images == null) {
+        showWebColoredToast("头像上传失败！");
+        return;
+      }
+      user.avatar = images;
+      showWebColoredToast("头像上传成功！");
+    }
 
+    WebSocketMessage message = WebSocketMessage();
+    message.code = WebSocketMessage.user_change;
+    message.data = user.toString();
+    channel?.sink.add(message.toString());
+  }
   static void showWebColoredToast(String msg) {
     Fluttertoast.showToast(
       msg: msg,
@@ -96,8 +116,6 @@ class Global {
       timeInSecForIosWeb: 5,
     );
   }
-
-  /// 获取缓存
   static Future<double> loadApplicationCache() async {
     /// 获取文件夹
     Directory directory = await getApplicationDocumentsDirectory();
@@ -106,10 +124,7 @@ class Global {
     double value = await getTotalSizeOfFilesInDir(directory);
     return value;
   }
-
-  /// 循环计算文件的大小（递归）
-  static Future<double> getTotalSizeOfFilesInDir(
-      final FileSystemEntity file) async {
+  static Future<double> getTotalSizeOfFilesInDir(final FileSystemEntity file) async {
     if (file is File) {
       int length = await file.length();
       return double.parse(length.toString());
@@ -125,8 +140,6 @@ class Global {
     }
     return 0;
   }
-
-  /// 缓存大小格式转换
   static String formatSize(double? value) {
     if (null == value) {
       return '0';
@@ -140,16 +153,12 @@ class Global {
     String size = value.toStringAsFixed(2);
     return size + unitArr[index];
   }
-
-  /// 删除缓存
   static Future<void> clearApplicationCache() async {
     Directory directory = await getApplicationDocumentsDirectory();
     //删除缓存目录
     await deleteDirectory(directory);
   }
-
-  /// 递归方式删除目录
-  static Future<Null> deleteDirectory(FileSystemEntity file) async {
+  static Future<void> deleteDirectory(FileSystemEntity file) async {
     if (file is Directory) {
       final List<FileSystemEntity> children = file.listSync();
       for (final FileSystemEntity child in children) {
@@ -158,10 +167,8 @@ class Global {
     }
     await file.delete();
   }
-
-  static Size boundingTextSize(String text, TextStyle style,
-      {int maxLines = 2 ^ 31, double maxWidth = double.infinity}) {
-    if (text == null || text.isEmpty) {
+  static Size boundingTextSize(String text, TextStyle style, {int maxLines = 2 ^ 31, double maxWidth = double.infinity}) {
+    if (text.isEmpty) {
       return Size.zero;
     }
     final TextPainter textPainter = TextPainter(
@@ -171,14 +178,12 @@ class Global {
       ..layout(maxWidth: maxWidth);
     return textPainter.size;
   }
-
   static String generateMd5(String data) {
     var content = Utf8Encoder().convert(data);
     var digest = md5.convert(content);
     // 这里其实就是 digest.toString()
     return hex.encode(digest.bytes);
   }
-
   static Future<void> initSock() async {
     channel = WebSocketChannel.connect(
       Uri.parse(NWApi.baseWs),
@@ -197,14 +202,12 @@ class Global {
       },
     );
   }
-
   static Future<void> loginSocket() async {
     WebSocketMessage _message = WebSocketMessage();
     _message.code = WebSocketMessage.login;
-    _message.data = jsonEncode({"token": profile.user.token});
+    _message.data = jsonEncode({"token": userModel.token});
     channel?.sink.add(_message.toString());
   }
-
   static Future<bool> sendKeFuMessage(KefuMessage message) async {
     WebSocketMessage _message = WebSocketMessage();
     _message.code = WebSocketMessage.message_kefu_sending;
@@ -215,10 +218,9 @@ class Global {
     }
     return false;
   }
-
   static Future<void> channelListen(data) async {
     // print(UserModel().isLogin);
-    if (UserModel().isLogin == false) {
+    if (userModel.isLogin == false) {
       getUserInfo();
     } else if (_isLogin == false) {
       loginSocket();
@@ -231,22 +233,29 @@ class Global {
         break;
       case WebSocketMessage.login_fail:
         _isLogin = false;
-        UserModel().token = '';
-        // _profileChangeNotifier.notifyListeners();
+        userModel.token = '';
         break;
       case WebSocketMessage.message_kefu_send_fail:
-        ShowAlertDialog(MainContext, '发送消息', message.message);
+        showWebColoredToast(message.message!);
         KefuMessage kefuMessage =
             KefuMessage.formJson(jsonDecode(message.data!));
-        _keFuMessageModel.status(kefuMessage.id, message.code);
+        keFuMessageModel.status(kefuMessage.id, message.code);
         break;
       case WebSocketMessage.message_kefu_send_success:
         KefuMessage kefuMessage =
             KefuMessage.formJson(jsonDecode(message.data!));
-        _keFuMessageModel.status(kefuMessage.id, message.code);
+        keFuMessageModel.status(kefuMessage.id, message.code);
         break;
       case WebSocketMessage.message_kefu_recevie:
-        _keFuMessageModel.add(KefuMessage.formJson(jsonDecode(message.data!)));
+        keFuMessageModel.add(KefuMessage.formJson(jsonDecode(message.data!)));
+        break;
+      case WebSocketMessage.user_change_fail:
+        showWebColoredToast(message.message!);
+        getUserInfo();
+        break;
+      case WebSocketMessage.user_change_success:
+        showWebColoredToast('账号信息修改成功!');
+        // getUserInfo();
         break;
       default:
         break;
@@ -366,10 +375,9 @@ class Global {
   static Future<void> getUserInfo() async {
     DioManager().request(NWMethod.POST, NWApi.getInfo,
         params: {'identifier': uid}, success: (data) {
-      print("success data = $data");
+      // print("success data = $data");
       if (data != null) {
-        profile.user = User.fromJson(jsonDecode(data));
-        saveProfile();
+        userModel.user = User.fromJson(jsonDecode(data));
       }
     }, error: (error) {});
   }
@@ -436,7 +444,6 @@ class Global {
       quality: VideoQuality.MediumQuality,
       deleteOrigin: false,
     );
-    _compressedVideoInfo = mediaInfo!;
     // setState(() {
     //   _compressedVideoInfo = mediaInfo;
     // });

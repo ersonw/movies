@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:movies/ProfileChangeNotifier.dart';
 import 'package:movies/functions.dart';
 import 'package:movies/model/ConfigModel.dart';
 import 'package:passcode_screen/circle.dart';
@@ -25,7 +24,6 @@ class LockScreenCustom extends StatefulWidget {
 class _LockScreenCustom extends State<LockScreenCustom>{
   final StreamController<bool> _verificationNotifier =
   StreamController<bool>.broadcast();
-  final ConfigModel _configModel = ConfigModel();
   String storedPasscode = '';
   String title = '';
   String backText = '';
@@ -36,10 +34,10 @@ class _LockScreenCustom extends State<LockScreenCustom>{
   void initState() {
     // TODO: implement initState
     super.initState();
-    storedPasscode = _configModel.config.bootLockPasswd ?? '';
-    _configModel.addListener(() {
+    storedPasscode = configModel.config.bootLockPasswd ?? '';
+    configModel.addListener(() {
       setState(() {
-        storedPasscode = _configModel.config.bootLockPasswd!;
+        storedPasscode = configModel.config.bootLockPasswd!;
       });
     });
     switch(widget.type){
@@ -149,7 +147,7 @@ class _LockScreenCustom extends State<LockScreenCustom>{
       setState(() => {_showIt()});
     }else{
       if(storedPasscode == enteredPasscode){
-        _configModel.lockPasswd = storedPasscode;
+        configModel.lockPasswd = storedPasscode;
         _callBack();
       }else{
         _verificationNotifier.add(true);

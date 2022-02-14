@@ -18,16 +18,15 @@ class MessagesPage extends StatefulWidget {
 }
 
 class _MessagesPage extends State<MessagesPage>{
-  final MessagesChangeNotifier _messagesChangeNotifier = MessagesChangeNotifier();
   late Messages _messages;
   @override
   void initState() {
     super.initState();
-    _messages = _messagesChangeNotifier.messages;
-    _messagesChangeNotifier.addListener(() { 
+    _messages = messagesChangeNotifier.messages;
+    messagesChangeNotifier.addListener(() {
       setState(() {
         print('刷新了');
-        _messages = _messagesChangeNotifier.messages;
+        _messages = messagesChangeNotifier.messages;
       });
     });
   }

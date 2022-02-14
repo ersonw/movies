@@ -1,6 +1,4 @@
 import 'package:flutter/cupertino.dart';
-
-import 'HttpManager.dart';
 import 'data/Profile.dart';
 import 'global.dart';
 

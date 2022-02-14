@@ -11,6 +11,7 @@ import 'package:movies/SplashPage.dart';
 import 'package:movies/global.dart';
 import 'package:movies/HomePage.dart';
 import 'package:movies/routes.dart';
+import 'package:provider/provider.dart';
 import 'news_tab.dart';
 import 'profile_tab.dart';
 import 'settings_tab.dart';
@@ -26,6 +27,10 @@ class MyAdaptingApp extends StatelessWidget {
   Widget build(context) {
     // Either Material or Cupertino widgets work in either Material or Cupertino
     // Apps.
+    // return MultiProvider(
+    //   providers: [],
+    //   child: ,
+    // );
     return MaterialApp(
       routes: Routes,
       title: 'movies App',

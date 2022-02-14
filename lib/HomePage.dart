@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:movies/ExampleHomePage.dart';
 import 'package:movies/LockScreenCustom.dart';
 import 'package:movies/index_page.dart';
-import 'package:movies/my_prfile.dart';
+import 'package:movies/MyProfile.dart';
 import 'package:movies/news_tab.dart';
 
 import 'global.dart';

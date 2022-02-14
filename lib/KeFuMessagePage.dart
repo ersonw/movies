@@ -28,16 +28,14 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
   final ScrollController _scrollController = ScrollController();
   bool _isDown = false;
   List<KefuMessage> messages = [];
-  final MessagesChangeNotifier _messagesChangeNotifier = MessagesChangeNotifier();
-  final KeFuMessageModel _keFuMessageModel = KeFuMessageModel();
 
   @override
   void initState() {
     super.initState();
-    _keFuMessageModel.read();
-    messages = _keFuMessageModel.kefuMessages;
-    _messagesChangeNotifier.addListener(() {
-      messages = _keFuMessageModel.kefuMessages;
+    keFuMessageModel.read();
+    messages = keFuMessageModel.kefuMessages;
+    messagesChangeNotifier.addListener(() {
+      messages = keFuMessageModel.kefuMessages;
     });
     _textEditingController.addListener(() {
       // print(_controller.text);
@@ -164,7 +162,7 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
       message.text = _textEditingController.text;
       message.date = DateTime.now().millisecondsSinceEpoch ~/ 1000;
       message.isMe = true;
-      _keFuMessageModel.add(message);
+      keFuMessageModel.add(message);
       _sendToServer(message);
       _textEditingController.text = '';
       toDown();
@@ -178,18 +176,18 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
       message.isMe = true;
       message.status = WebSocketMessage.message_kefu_sending;
       setState(() {
-        _keFuMessageModel.add(message);
+        keFuMessageModel.add(message);
       });
       String? images = await UploadOssUtil.upload(File(image), Global.getNameByPath(image));
       if(images == null){
         message.status = WebSocketMessage.message_kefu_send_fail;
         setState(() {
-          _keFuMessageModel.change(message);
+          keFuMessageModel.change(message);
         });
       }else{
         message.image = images;
         setState(() {
-          _keFuMessageModel.change(message);
+          keFuMessageModel.change(message);
         });
         _sendToServer(message);
       }
@@ -201,14 +199,14 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
   void _sendToServer(KefuMessage message) async{
     message.isRead = true;
     if(await Global.sendKeFuMessage(message) == false){
-      _keFuMessageModel.status(message.id,WebSocketMessage.message_kefu_send_fail);
+      keFuMessageModel.status(message.id,WebSocketMessage.message_kefu_send_fail);
     }
   }
   void _reSend(KefuMessage message) async {
     if(await ShowAlertDialogBool(context, '重新发送', '确定要重新发送此条消息吗？')){
-      _keFuMessageModel.status(message.id, WebSocketMessage.message_kefu_sending);
+      keFuMessageModel.status(message.id, WebSocketMessage.message_kefu_sending);
       setState(() {
-        _keFuMessageModel.change(message);
+        keFuMessageModel.change(message);
       });
       if(message.image?.contains('http') != true){
         String? images = await UploadOssUtil.upload(File(message.image!), Global.getNameByPath(message.image!));
@@ -216,10 +214,10 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
           message.image = images;
           _sendToServer(message);
         }else{
-          _keFuMessageModel.status(message.id, WebSocketMessage.message_kefu_send_fail);
+          keFuMessageModel.status(message.id, WebSocketMessage.message_kefu_send_fail);
         }
         setState(() {
-          _keFuMessageModel.change(message);
+          keFuMessageModel.change(message);
         });
         return;
       }
@@ -229,13 +227,13 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
   void _deleteMessage(KefuMessage _message){
     Timer(const Duration(microseconds: 500), (){
       setState(() {
-        _keFuMessageModel.del(_message);
+        keFuMessageModel.del(_message);
       });
     });
   }
   void _cancelSending(KefuMessage _message) async {
     if(await ShowAlertDialogBool(context, '取消发送', '确定要取消发送此条消息吗？')){
-      if(_keFuMessageModel.getStatus(_message.id) == WebSocketMessage.message_kefu_sending){
+      if(keFuMessageModel.getStatus(_message.id) == WebSocketMessage.message_kefu_sending){
         _deleteMessage(_message);
       }
     }

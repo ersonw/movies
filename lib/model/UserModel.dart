@@ -18,9 +18,8 @@ class UserModel extends ProfileChangeNotifier {
     notifyListeners();
   }
   set user(User user) {
-    if (user != profile.user) {
-      profile.user = user;
-      notifyListeners();
-    }
+    // print('我已通知');
+    profile.user = user;
+    notifyListeners();
   }
 }

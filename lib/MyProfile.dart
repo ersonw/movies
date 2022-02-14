@@ -1,27 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:images_picker/images_picker.dart';
-import 'package:movies/antd_ttf.dart';
 import 'package:movies/data/User.dart';
 import 'package:movies/functions.dart';
-import 'package:movies/image_form.dart';
 import 'package:movies/messagesPage.dart';
-import 'package:movies/model/UserModel.dart';
 import 'package:movies/profile_tab.dart';
-import 'package:movies/scan_button.dart';
 import 'package:movies/settings_tab.dart';
 import 'package:movies/system_ttf.dart';
 import 'package:movies/web_view.dart';
 import 'package:movies/xiaoxiong_icon.dart';
-import 'package:movies/Take_picture_screen.dart';
 import 'package:qr_code_tools/qr_code_tools.dart';
 import 'AccountManager.dart';
 import 'GetQrcode.dart';
-import 'global.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
-
-// import 'package:fluttertoast/fluttertoast.dart';
 import 'global.dart';
 import 'image_icon.dart';
 
@@ -36,16 +26,15 @@ class MyProfile extends StatefulWidget {
 }
 
 class _MyProfile extends State<MyProfile> {
-  final UserModel _userModel = UserModel();
   User _user = User();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _user = _userModel.user;
-    _userModel.addListener(() {
+    _user = userModel.user;
+    userModel.addListener(() {
       setState(() {
-        _user = _userModel.user;
+        _user = userModel.user;
       });
     });
   }
@@ -64,66 +53,42 @@ class _MyProfile extends State<MyProfile> {
               padding: EdgeInsets.zero,
               child: Icon(SystemTtf.saoyisao, size: 42, color: Colors.grey,),
               onPressed: () {
-                showCupertinoModalPopup<void>(
-                  context: context,
-                  builder: (context) {
-                    return CupertinoActionSheet(
-                      // title: const Text('扫一扫'),
-                      // message: Text('请选择'),
-                      actions: [
-                        CupertinoActionSheetAction(
-                          child: const Text(
-                            '相机', style: TextStyle(color: Colors.black),),
-                          isDestructiveAction: true,
-                          onPressed: () async {
-                            Navigator.pop(context);
-                            Navigator.of(context, rootNavigator: true).push<void>(
-                                CupertinoPageRoute(
-                                    // builder: (context) => TakePictureScreen(cameras: Global.cameras, ),
-                                    builder: (context) => ScanQRPage(),
-                                ),
-                            );
-                          },
-                        ),
-                        CupertinoActionSheetAction(
-                          child: const Text('相册', style: TextStyle(color: Colors.black)),
-                          onPressed: () async {
-                            Navigator.pop(context);
-                            List<Media>? res = await ImagesPicker.pick(
-                              count: 1,
-                              pickType: PickType.image,
-                              language: Language.System,
-                              maxTime: 30,
-                              // maxSize: 500,
-//                               cropOpt: CropOption(
-//                                 aspectRatio: CropAspectRatio.custom,
-//                                 cropType: CropType.circle
-//                               ),
-                            );
-                            if (res != null) {
-                              var image = res[0].thumbPath;
-                              String data = await QrCodeToolsPlugin.decodeFrom(image);
-                              if(data.contains('http')){
-                                Navigator.push(context, CupertinoPageRoute(
-                                  // builder: (context) => TakePictureScreen(cameras: Global.cameras, ),
-                                  builder: (context) => WebViewExample(url: data),
-                                ),
-                                );
-                              }else{
-                                ShowCopyDialog(context, "二维码提取", data);
-                              }
-                            }
-                          },
-                        ),
-                      ],
-                      cancelButton: CupertinoActionSheetAction(
-                        child: const Text('取消'),
-                        isDefaultAction: true,
-                        onPressed: () => Navigator.pop(context),
+                List<BottomMenu> lists = [];
+                BottomMenu bottonMenu = BottomMenu();
+                bottonMenu.title = '相机';
+                bottonMenu.fn = (){
+                  Navigator.of(context, rootNavigator: true).push<void>(
+                    CupertinoPageRoute(
+                      // builder: (context) => TakePictureScreen(cameras: Global.cameras, ),
+                      builder: (context) => const ScanQRPage(),
+                    ),
+                  );
+                };
+                lists.add(bottonMenu);
+                bottonMenu = BottomMenu();
+                bottonMenu.title = '相册';
+                bottonMenu.fn = ()async{
+                  List<Media>? res = await ImagesPicker.pick(
+                    count: 1,
+                    pickType: PickType.image,
+                    language: Language.System,
+                  );
+                  if (res != null) {
+                    var image = res[0].thumbPath;
+                    String data = await QrCodeToolsPlugin.decodeFrom(image);
+                    if(data.contains('http')){
+                      Navigator.push(context, CupertinoPageRoute(
+                        // builder: (context) => TakePictureScreen(cameras: Global.cameras, ),
+                        builder: (context) => WebViewExample(url: data),
                       ),
-                    );
-                  },
-                );
+                      );
+                    }else{
+                      ShowCopyDialog(context, "二维码提取", data);
+                    }
+                  }
+                };
+                lists.add(bottonMenu);
+                ShowBottomMenu(context, lists);
               },
             ),
             CupertinoButton(
@@ -164,7 +129,7 @@ class _MyProfile extends State<MyProfile> {
     );
   }
   _buildAvatar(){
-    if ((_userModel.avatar == null || _userModel.avatar == '') || _userModel.avatar?.contains('http') == false) {
+    if ((_user.avatar == null || _user.avatar == '') || _user.avatar?.contains('http') == false) {
       return AssetImage('assets/image/default_head.gif');
     }
     return NetworkImage(_user.avatar!);
