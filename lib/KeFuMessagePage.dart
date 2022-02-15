@@ -317,7 +317,7 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
         widget = Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
+            SizedBox(
               width: 36,
               height: 36,
               // margin: const EdgeInsets.only(right: 10),

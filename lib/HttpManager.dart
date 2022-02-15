@@ -62,6 +62,8 @@ class DioManager {
       BaseEntity entity = BaseEntity<T>.fromJson(response.data);
       if (entity.code == 200) {
         return entity.data;
+      }else{
+        Global.showWebColoredToast(entity.message);
       }
     } on DioError catch (e) {
       // print(e.response?.statusCode);

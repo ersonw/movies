@@ -264,7 +264,7 @@ class _AccountManager extends State<AccountManager> {
               CupertinoPageRoute(
                 // fullscreenDialog: true,
                 title: _user.phone == null || _user.phone==''?"绑定手机": '更换手机',
-                builder: (context) => BindPhonePage( _user.phone == null || _user.phone==''? BindPhonePage.bind : BindPhonePage.change),
+                builder: (context) => const BindPhonePage(),
               ),
             );
           },

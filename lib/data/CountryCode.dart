@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 class CountryCode {
-  CountryCode();
+  CountryCode({required this.title,required this.code});
   String title;
   String code;
   CountryCode.formJson(Map<String, dynamic> json):
