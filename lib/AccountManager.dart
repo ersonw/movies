@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:images_picker/images_picker.dart';
+import 'package:movies/BindPhonePage.dart';
 import 'package:movies/ChangePasswordPage.dart';
 import 'package:movies/data/Config.dart';
 import 'package:movies/data/User.dart';
@@ -79,6 +80,9 @@ class _AccountManager extends State<AccountManager> {
       _user.sex = sex;
     });
     Global.changeUserProfile(_user);
+  }
+  String _getPhoneShort(){
+    return _user.phone != null && _user.phone !='' ? ('${_user.phone?.substring(0,4)}****${_user.phone?.substring(8)}') : '';
   }
   _buildList() {
     return ListView(
@@ -249,6 +253,36 @@ class _AccountManager extends State<AccountManager> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: const [
                   Icon(SystemTtf.you,size: 30,color: Colors.grey,),
+                ],
+              ),
+            ],
+          ),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context, rootNavigator: true).push<void>(
+              CupertinoPageRoute(
+                // fullscreenDialog: true,
+                title: _user.phone == null || _user.phone==''?"绑定手机": '更换手机',
+                builder: (context) => BindPhonePage( _user.phone == null || _user.phone==''? BindPhonePage.bind : BindPhonePage.change),
+              ),
+            );
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const Icon(Icons.phone_android_outlined,color: Colors.grey,size: 30,),
+                  Text(_user.phone == null || _user.phone==''?"绑定手机": '更换手机',style: const TextStyle(color: Colors.black,fontSize: 18),)
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(_getPhoneShort(),style: const TextStyle(color: Colors.redAccent,fontSize: 18),),
+                  const Icon(SystemTtf.you,size: 30,color: Colors.grey,),
                 ],
               ),
             ],
