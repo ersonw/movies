@@ -5,7 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:movies/CountryCodePage.dart';
+import 'package:movies/ForgotPasswordPage.dart';
 import 'package:movies/HttpManager.dart';
+import 'package:movies/KeFuMessagePage.dart';
 import 'package:movies/data/User.dart';
 import 'package:movies/global.dart';
 import 'package:movies/network/NWApi.dart';
@@ -20,8 +22,10 @@ class BindPhonePage extends StatefulWidget {
 }
 class _BindPhonePage extends State<BindPhonePage> {
   final TextEditingController _controllerPhone = TextEditingController();
+  final TextEditingController _controllerPhoneOld = TextEditingController();
   final TextEditingController _controllerCode = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
+  final FocusNode _commentFocus = FocusNode();
   Timer _timer = Timer(const Duration(milliseconds: 10),() => {});
 
   static const int newPhoneInput = 100;
@@ -33,8 +37,8 @@ class _BindPhonePage extends State<BindPhonePage> {
   int validTime = 120;
   String countryCode = '+86';
   String phone = '';
-  String countDownText = '重新发送';
 
+  String countDownText = '重新发送';
   String codeId = '';
   @override
   void initState() {
@@ -119,7 +123,31 @@ class _BindPhonePage extends State<BindPhonePage> {
       }
     }
   }
+  void _loginPhone() async{
+    Map<String, dynamic> parm = {
+      'identifier': Global.uid,
+      'phone': countryCode+_controllerPhone.text,
+      'passwd': Global.generateMd5(_controllerPassword.text),
+    };
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET,
+        NWApi.loginPhone,
+        {"data": jsonEncode(parm)}
+    ));
+    // print(result);
+    if(result != null){
+      Map<String, dynamic> map = jsonDecode(result);
+      if(map['verify'] == true){
+        Global.showWebColoredToast('登录成功!');
+        setState(() {
+          // userModel.user = User();
+          Global.getUserInfo().then((value) => _callBack());
+        });
+      }
+    }
+  }
   Widget _buildBindNewPhone(){
+
     return Column(
       children: [
         SizedBox(
@@ -151,14 +179,22 @@ class _BindPhonePage extends State<BindPhonePage> {
                   Expanded(
                     child: TextField(
                       // obscureText: true,
+                      focusNode: _commentFocus,
                       controller: _controllerPhone,
-                      // autofocus: true,
+                      autofocus: true,
                       keyboardType: TextInputType.phone,
                       textInputAction: TextInputAction.done,
                       // onSubmitted: (value) => {
                       //   setState(() => {_inputString = value})
                       // },
-                      onEditingComplete: () {},
+                      onEditingComplete: () {
+                        if(_controllerPhone.text.length > 6){
+                          _checkPhone();
+                          _commentFocus.unfocus();
+                        }else{
+                          Global.showWebColoredToast('手机号码格式不正确!');
+                        }
+                      },
                       inputFormatters: <TextInputFormatter>[
                         LengthLimitingTextInputFormatter(18)
                       ],
@@ -182,6 +218,7 @@ class _BindPhonePage extends State<BindPhonePage> {
               onPressed: () {
                 if(_controllerPhone.text.length > 6){
                   _checkPhone();
+                  _commentFocus.unfocus();
                 }else{
                   Global.showWebColoredToast('手机号码格式不正确!');
                 }
@@ -200,6 +237,7 @@ class _BindPhonePage extends State<BindPhonePage> {
     );
   }
   Widget _verifyCodeAndSetPassword(){
+    bool openBus = false;
     return Column(
       children: [
         SizedBox(
@@ -216,14 +254,18 @@ class _BindPhonePage extends State<BindPhonePage> {
                   Expanded(
                     child: TextField(
                       // obscureText: true,
+                      focusNode: _commentFocus,
                       controller: _controllerCode,
-                      // autofocus: true,
+                      autofocus: true,
                       keyboardType: TextInputType.phone,
                       textInputAction: TextInputAction.next,
                       // onSubmitted: (value) => {
                       //   setState(() => {_inputString = value})
                       // },
-                      onEditingComplete: () {},
+                      onEditingComplete: () {
+                        _commentFocus.unfocus();
+                        openBus = true;
+                      },
                       inputFormatters: <TextInputFormatter>[
                         LengthLimitingTextInputFormatter(18)
                       ],
@@ -267,14 +309,21 @@ class _BindPhonePage extends State<BindPhonePage> {
                   Expanded(
                     child: TextField(
                       obscureText: true,
+                      focusNode: _commentFocus,
                       controller: _controllerPassword,
-                      // autofocus: true,
+                      autofocus: openBus,
                       keyboardType: TextInputType.visiblePassword,
                       textInputAction: TextInputAction.done,
                       // onSubmitted: (value) => {
                       //   setState(() => {_inputString = value})
                       // },
                       onEditingComplete: () {
+                        if(_controllerPassword.text.length < 5){
+                          Global.showWebColoredToast('密码必须大于或者等于6位数!');
+                          return;
+                        }
+                        _commentFocus.unfocus();
+                        _bindPhone();
                       },
                       inputFormatters: <TextInputFormatter>[
                         LengthLimitingTextInputFormatter(18)
@@ -300,7 +349,14 @@ class _BindPhonePage extends State<BindPhonePage> {
               margin: const EdgeInsets.only(right: 40),
               child: TextButton(
                 onPressed: () {
-
+                  _commentFocus.unfocus();
+                  Navigator.of(context, rootNavigator: true).push<void>(
+                    CupertinoPageRoute(
+                      // fullscreenDialog: true,
+                      title: '找回密码',
+                      builder: (context) => const KeFuMessagePage(),
+                    ),
+                  );
                 },
                 child: const Text("收不到验证码？",style: TextStyle(color: Colors.grey),),
               ),
@@ -314,6 +370,7 @@ class _BindPhonePage extends State<BindPhonePage> {
                   Global.showWebColoredToast('密码必须大于或者等于6位数!');
                   return;
                 }
+                _commentFocus.unfocus();
                 _bindPhone();
               },
               child: Container(
@@ -343,6 +400,138 @@ class _BindPhonePage extends State<BindPhonePage> {
               alignment: Alignment.center,
               child: Row(
                 children: [
+                  Expanded(
+                    child: TextField(
+                      obscureText: true,
+                      focusNode: _commentFocus,
+                      controller: _controllerPassword,
+                      autofocus: true,
+                      keyboardType: TextInputType.visiblePassword,
+                      textInputAction: TextInputAction.done,
+                      // onSubmitted: (value) => {
+                      //   setState(() => {_inputString = value})
+                      // },
+                      onEditingComplete: () {
+                        if(_controllerPassword.text.isNotEmpty){
+                          _loginPhone();
+                          _commentFocus.unfocus();
+                        }
+                      },
+                      inputFormatters: <TextInputFormatter>[
+                        LengthLimitingTextInputFormatter(18)
+                      ],
+                      // controller: _controller,
+                      decoration: const InputDecoration(
+                          isDense: true,
+                          contentPadding: EdgeInsets.only(
+                              left: 10, right: 10, top: 0, bottom: 0),
+                          border: InputBorder.none,
+                          hintStyle: TextStyle(color: Color(0xffcccccc)),
+                          hintText: "登录密码"),
+                    ),
+                  ),
+                ],
+              )
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Container(
+              margin: const EdgeInsets.only(right: 40),
+              child: TextButton(
+                onPressed: () {
+                  _commentFocus.unfocus();
+                  Navigator.of(context, rootNavigator: true).push<void>(
+                    CupertinoPageRoute(
+                      // fullscreenDialog: true,
+                      title: '找回密码',
+                      builder: (context) => const ForgotPasswordPage(),
+                    ),
+                  );
+                },
+                child: const Text("忘记密码？",style: TextStyle(color: Colors.grey),),
+              ),
+            )
+          ],
+        ),
+        SizedBox(
+          child: TextButton(
+              onPressed: () {
+                if(_controllerPassword.text.isNotEmpty){
+                  _loginPhone();
+                  _commentFocus.unfocus();
+                }
+              },
+              child: Container(
+                height: 50,
+                margin: const EdgeInsets.only(left: 40, right: 40, top: 20),
+                decoration: const BoxDecoration(
+                    color: Color(0xfff6f8fb),
+                    borderRadius: BorderRadius.all(Radius.circular(20))),
+                alignment: Alignment.center,
+                child: const Text('立即登录',style: TextStyle(color: Colors.black,fontSize: 18,fontWeight: FontWeight.normal),),
+              )),
+        )
+      ],
+    );
+  }
+  Widget _changePhoneInput(){
+    return Column(
+      children: [
+        SizedBox(
+          // height: 70,
+          child: Container(
+              height: 50,
+              margin: const EdgeInsets.all(40),
+              decoration: const BoxDecoration(
+                  color: Color(0xfff6f8fb),
+                  borderRadius: BorderRadius.all(Radius.circular(20))),
+              alignment: Alignment.center,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      // obscureText: true,
+                      // focusNode: _commentFocus,
+                      controller: _controllerPhoneOld,
+                      autofocus: true,
+                      keyboardType: TextInputType.phone,
+                      textInputAction: TextInputAction.next,
+                      // onSubmitted: (value) => {
+                      //   setState(() => {_inputString = value})
+                      // },
+                      onEditingComplete: () {
+                        _commentFocus.nextFocus();
+                      },
+                      inputFormatters: <TextInputFormatter>[
+                        LengthLimitingTextInputFormatter(18)
+                      ],
+                      // controller: _controller,
+                      decoration: const InputDecoration(
+                          isDense: true,
+                          contentPadding: EdgeInsets.only(
+                              left: 10, right: 10, top: 0, bottom: 0),
+                          border: InputBorder.none,
+                          hintStyle: TextStyle(color: Color(0xffcccccc)),
+                          hintText: "请输入完整原手机号(包括+)"),
+                    ),
+                  ),
+                ],
+              )
+          ),
+        ),
+        SizedBox(
+          // height: 70,
+          child: Container(
+              height: 50,
+              margin: const EdgeInsets.only(left: 40,right: 40,bottom: 10),
+              decoration: const BoxDecoration(
+                  color: Color(0xfff6f8fb),
+                  borderRadius: BorderRadius.all(Radius.circular(20))),
+              alignment: Alignment.center,
+              child: Row(
+                children: [
                   TextButton(
                     onPressed: () {
                       Navigator.of(context, rootNavigator: true).push<void>(
@@ -361,14 +550,22 @@ class _BindPhonePage extends State<BindPhonePage> {
                   Expanded(
                     child: TextField(
                       // obscureText: true,
+                      focusNode: _commentFocus,
                       controller: _controllerPhone,
-                      // autofocus: true,
+                      autofocus: true,
                       keyboardType: TextInputType.phone,
                       textInputAction: TextInputAction.done,
                       // onSubmitted: (value) => {
                       //   setState(() => {_inputString = value})
                       // },
-                      onEditingComplete: () {},
+                      onEditingComplete: () {
+                        if(_controllerPhone.text.length > 6){
+                          _checkPhone();
+                          _commentFocus.unfocus();
+                        }else{
+                          Global.showWebColoredToast('手机号码格式不正确!');
+                        }
+                      },
                       inputFormatters: <TextInputFormatter>[
                         LengthLimitingTextInputFormatter(18)
                       ],
@@ -386,12 +583,21 @@ class _BindPhonePage extends State<BindPhonePage> {
               )
           ),
         ),
-        const Text('亲：点击国家代码可以切换的哟～',style: TextStyle(color: Colors.grey),),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children:  [
+            Container(
+              margin: const EdgeInsets.only(left: 40),
+              child: const Text('亲：点击国家代码可以切换的哟～',style: TextStyle(color: Colors.grey),),
+            )
+          ],
+        ),
         SizedBox(
           child: TextButton(
               onPressed: () {
                 if(_controllerPhone.text.length > 6){
                   _checkPhone();
+                  _commentFocus.unfocus();
                 }else{
                   Global.showWebColoredToast('手机号码格式不正确!');
                 }
@@ -422,11 +628,14 @@ class _BindPhonePage extends State<BindPhonePage> {
       case newPhoneInput:
         page = _buildBindNewPhone;
         break;
+      case changePhoneInput:
+        page = _changePhoneInput;
+        break;
       case verifyCodeAndSetPassword:
         page = _verifyCodeAndSetPassword;
         break;
       case verifyPasswordLogin:
-        _verifyPasswordLogin();
+        page = _verifyPasswordLogin;
         break;
       default:
         break;

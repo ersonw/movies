@@ -82,7 +82,7 @@ class _AccountManager extends State<AccountManager> {
     Global.changeUserProfile(_user);
   }
   String _getPhoneShort(){
-    return _user.phone != null && _user.phone !='' ? ('${_user.phone?.substring(0,4)}****${_user.phone?.substring(8)}') : '';
+    return _user.phone != null && _user.phone !='' ? ('${_user.phone?.substring(0,6)}****${_user.phone?.substring(12)}') : '';
   }
   _buildList() {
     return ListView(
