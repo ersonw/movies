@@ -104,7 +104,7 @@ class _ChangePasswordPage extends State<ChangePasswordPage> {
                             left: 10, right: 10, top: 0, bottom: 0),
                         border: InputBorder.none,
                         hintStyle: TextStyle(color: Color(0xffcccccc)),
-                        hintText: "输入新密码"),
+                        hintText: "设置密码(必须大于或者等于6位数)"),
                   ),
                 )
               ),
@@ -118,6 +118,10 @@ class _ChangePasswordPage extends State<ChangePasswordPage> {
                     }
                     if(_controllerSoure.text == _controllerNew.text){
                       Global.showWebColoredToast('新密码与旧密码相同!');
+                      return;
+                    }
+                    if(_controllerNew.text.length < 5){
+                      Global.showWebColoredToast('新密码必须大于或者等于6位数');
                       return;
                     }
                     Global.changePassword(_controllerSoure.text, _controllerNew.text);

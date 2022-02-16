@@ -15,13 +15,13 @@ class DioManager {
 
   factory DioManager() => _shared;
   late Dio dio;
+  String _token = '';
 
   DioManager._internal() {
-    // ignore: unnecessary_null_comparison
-//    if (dio == null) {
+    _token = userModel.token;
     /// 自定义Header
     Map<String, dynamic> httpHeaders = {
-      'Token': Global.profile.user.token
+      'Token': _token
     };
     BaseOptions options = BaseOptions(
       baseUrl: NWApi.baseApi,
@@ -33,7 +33,23 @@ class DioManager {
       receiveTimeout: 3000,
     );
     dio = Dio(options);
-//    }
+    userModel.addListener(() {
+      _token = userModel.token;
+      /// 自定义Header
+      Map<String, dynamic> httpHeaders = {
+        'Token': _token
+      };
+      BaseOptions options = BaseOptions(
+        baseUrl: NWApi.baseApi,
+        headers: httpHeaders,
+        contentType: Headers.jsonContentType,
+        responseType: ResponseType.json,
+        receiveDataWhenStatusError: false,
+        connectTimeout: 30000,
+        receiveTimeout: 3000,
+      );
+      dio = Dio(options);
+    });
   }
   Future<bool> upload<T>(String path, Map<String, dynamic> params) async {
     try {
@@ -57,6 +73,7 @@ class DioManager {
     return false;
   }
   Future<String?> requestAsync<T>(NWMethod method, String path, Map<String, dynamic> params) async {
+    // print(_token);
     try {
       Response response = await dio.request(path, queryParameters: params, options: Options(method: NWMethodValues[method]));
       BaseEntity entity = BaseEntity<T>.fromJson(response.data);

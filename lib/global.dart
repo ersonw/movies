@@ -325,11 +325,14 @@ class Global {
     if (profile.config.hash == null || profile.config.hash.isEmpty) {
       getConfig();
     }
-    // await checkVersion();
-    if (profile.config.autoLogin) {
-      await getUserInfo();
-    }
     getSystemMessage();
+    userModel.addListener(() {
+      if(userModel.isLogin){
+        // loginSocket();
+      }else{
+        getUserInfo().then((value) => loginSocket());
+      }
+    });
   }
 
   static Future<void> checkVersion() async {

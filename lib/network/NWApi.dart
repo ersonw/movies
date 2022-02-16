@@ -1,8 +1,8 @@
 class NWApi {
-  static const baseApi = "http://192.168.254.142:8015/api/";
-  static const baseWs = "ws://192.168.254.142:8015";
-  // static const baseWs = "ws://172.21.68.12:8015";
-  // static const baseApi = "http://172.21.68.12:8015/api/";
+  // static const baseApi = "http://192.168.254.142:8015/api/";
+  // static const baseWs = "ws://192.168.254.142:8015";
+  static const baseWs = "ws://172.21.68.12:8015";
+  static const baseApi = "http://172.21.68.12:8015/api/";
   static const uploadServer = '';
   static const ossName = '';
   static const baseConfig = "getConfig";
@@ -13,4 +13,6 @@ class NWApi {
   static const uploadFile = 'uploadFile';
   static const getStsAccount = 'user/getStsAccount';
   static const checkPhone = 'checkPhone';
+  static const sendSms = 'sendSms';
+  static const register = 'register';
 }

@@ -21,21 +21,21 @@ class BindPhonePage extends StatefulWidget {
 class _BindPhonePage extends State<BindPhonePage> {
   final TextEditingController _controllerPhone = TextEditingController();
   final TextEditingController _controllerCode = TextEditingController();
-  late Timer _timer;
+  final TextEditingController _controllerPassword = TextEditingController();
+  Timer _timer = Timer(const Duration(milliseconds: 10),() => {});
 
   static const int newPhoneInput = 100;
   static const int changePhoneInput = 101;
   static const int verifyCodeAndSetPassword = 102;
   static const int verifyPasswordLogin = 103;
-
+  User _user = User();
   int type = 0;
   int validTime = 120;
   String countryCode = '+86';
   String phone = '';
   String countDownText = '重新发送';
 
-  bool next = false;
-  User _user = User();
+  String codeId = '';
   @override
   void initState() {
     super.initState();
@@ -46,13 +46,15 @@ class _BindPhonePage extends State<BindPhonePage> {
       type = changePhoneInput;
     }
   }
-  void _checkPhone(String phone) async{
+  void _callBack(){
+    Navigator.pop(context);
+  }
+  void _checkPhone() async{
     String? result = (await DioManager().requestAsync(
-        NWMethod.POST,
+        NWMethod.GET,
         NWApi.checkPhone,
-        {"data": countryCode+phone}
+        {"data": countryCode+_controllerPhone.text}
     ));
-    print(result);
     if(result != null){
       Map<String, dynamic> map = jsonDecode(result);
       if(map['ready'] == true){
@@ -60,10 +62,13 @@ class _BindPhonePage extends State<BindPhonePage> {
           type = verifyPasswordLogin;
         });
       }else{
+        _sendSms();
         setState(() {
           type = verifyCodeAndSetPassword;
         });
       }
+    }else{
+      _controllerPhone.text = '';
     }
   }
   void _countDown(){
@@ -82,8 +87,37 @@ class _BindPhonePage extends State<BindPhonePage> {
           })
         });
   }
-  void _sendSms(){
-    _countDown();
+  void _sendSms() async{
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET,
+        NWApi.sendSms,
+        {"data": countryCode+_controllerPhone.text}
+    ));
+    if(result != null){
+      Map<String, dynamic> map = jsonDecode(result);
+      codeId = map['id'];
+      _countDown();
+    }
+  }
+  void _bindPhone() async{
+    Map<String, dynamic> parm = {
+      'id': codeId,
+    'identifier': Global.uid,
+    'code': _controllerCode.text,
+    'passwd': Global.generateMd5(_controllerPassword.text),
+    };
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET,
+        NWApi.register,
+        {"data": jsonEncode(parm)}
+    ));
+    if(result != null){
+      Map<String, dynamic> map = jsonDecode(result);
+      if(map['verify'] == true){
+        Global.showWebColoredToast('绑定成功!');
+        Global.getUserInfo().then((value) => _callBack());
+      }
+    }
   }
   Widget _buildBindNewPhone(){
     return Column(
@@ -147,9 +181,7 @@ class _BindPhonePage extends State<BindPhonePage> {
           child: TextButton(
               onPressed: () {
                 if(_controllerPhone.text.length > 6){
-                  phone = _controllerPhone.text;
-                  _controllerPhone.text = "";
-                  _checkPhone(phone);
+                  _checkPhone();
                 }else{
                   Global.showWebColoredToast('手机号码格式不正确!');
                 }
@@ -235,7 +267,7 @@ class _BindPhonePage extends State<BindPhonePage> {
                   Expanded(
                     child: TextField(
                       obscureText: true,
-                      controller: _controllerPhone,
+                      controller: _controllerPassword,
                       // autofocus: true,
                       keyboardType: TextInputType.visiblePassword,
                       textInputAction: TextInputAction.done,
@@ -254,7 +286,7 @@ class _BindPhonePage extends State<BindPhonePage> {
                               left: 10, right: 10, top: 0, bottom: 0),
                           border: InputBorder.none,
                           hintStyle: TextStyle(color: Color(0xffcccccc)),
-                          hintText: "设置密码"),
+                          hintText: "设置密码(必须大于或者等于6位数)"),
                     ),
                   ),
                 ],
@@ -267,7 +299,9 @@ class _BindPhonePage extends State<BindPhonePage> {
             Container(
               margin: const EdgeInsets.only(right: 40),
               child: TextButton(
-                onPressed: () {  },
+                onPressed: () {
+
+                },
                 child: const Text("收不到验证码？",style: TextStyle(color: Colors.grey),),
               ),
             )
@@ -276,6 +310,11 @@ class _BindPhonePage extends State<BindPhonePage> {
         SizedBox(
           child: TextButton(
               onPressed: () {
+                if(_controllerPassword.text.length < 5){
+                  Global.showWebColoredToast('密码必须大于或者等于6位数!');
+                  return;
+                }
+                _bindPhone();
               },
               child: Container(
                 height: 50,
@@ -285,6 +324,86 @@ class _BindPhonePage extends State<BindPhonePage> {
                     borderRadius: BorderRadius.all(Radius.circular(20))),
                 alignment: Alignment.center,
                 child: const Text('立即绑定',style: TextStyle(color: Colors.black,fontSize: 18,fontWeight: FontWeight.normal),),
+              )),
+        )
+      ],
+    );
+  }
+  Widget _verifyPasswordLogin(){
+    return Column(
+      children: [
+        SizedBox(
+          // height: 70,
+          child: Container(
+              height: 50,
+              margin: const EdgeInsets.all(40),
+              decoration: const BoxDecoration(
+                  color: Color(0xfff6f8fb),
+                  borderRadius: BorderRadius.all(Radius.circular(20))),
+              alignment: Alignment.center,
+              child: Row(
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context, rootNavigator: true).push<void>(
+                        CupertinoPageRoute(
+                          title: '国家代码选择',
+                          builder: (context) => CountryCodePage(callback: (String code) {
+                            setState(() {
+                              countryCode = code;
+                            });
+                          },),
+                        ),
+                      );
+                    },
+                    child: Text(countryCode,style: const TextStyle(color: Colors.black),),
+                  ),
+                  Expanded(
+                    child: TextField(
+                      // obscureText: true,
+                      controller: _controllerPhone,
+                      // autofocus: true,
+                      keyboardType: TextInputType.phone,
+                      textInputAction: TextInputAction.done,
+                      // onSubmitted: (value) => {
+                      //   setState(() => {_inputString = value})
+                      // },
+                      onEditingComplete: () {},
+                      inputFormatters: <TextInputFormatter>[
+                        LengthLimitingTextInputFormatter(18)
+                      ],
+                      // controller: _controller,
+                      decoration: const InputDecoration(
+                          isDense: true,
+                          contentPadding: EdgeInsets.only(
+                              left: 10, right: 10, top: 0, bottom: 0),
+                          border: InputBorder.none,
+                          hintStyle: TextStyle(color: Color(0xffcccccc)),
+                          hintText: "请输入手机号"),
+                    ),
+                  ),
+                ],
+              )
+          ),
+        ),
+        const Text('亲：点击国家代码可以切换的哟～',style: TextStyle(color: Colors.grey),),
+        SizedBox(
+          child: TextButton(
+              onPressed: () {
+                if(_controllerPhone.text.length > 6){
+                  _checkPhone();
+                }else{
+                  Global.showWebColoredToast('手机号码格式不正确!');
+                }
+              },
+              child: Container(
+                height: 50,
+                margin: const EdgeInsets.only(left: 40, right: 40, top: 20),
+                decoration: const BoxDecoration(
+                    color: Color(0xfff6f8fb),
+                    borderRadius: BorderRadius.all(Radius.circular(20))),
+                alignment: Alignment.center,
+                child: const Text('下一步',style: TextStyle(color: Colors.black,fontSize: 18,fontWeight: FontWeight.normal),),
               )),
         )
       ],
@@ -305,6 +424,9 @@ class _BindPhonePage extends State<BindPhonePage> {
         break;
       case verifyCodeAndSetPassword:
         page = _verifyCodeAndSetPassword;
+        break;
+      case verifyPasswordLogin:
+        _verifyPasswordLogin();
         break;
       default:
         break;
