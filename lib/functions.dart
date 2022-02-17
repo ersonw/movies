@@ -129,16 +129,18 @@ Future<String> ShowInputDialogAsync(BuildContext context, {String? title, String
         return CupertinoAlertDialog(
           title: Text(title ?? '温馨提示'),
           content: Card(
+            // color: Colors.white,
             elevation: 0.0,
             child: Column(
               children: <Widget>[
                 text == null ? Container():Text(text),
                 TextField(
                   controller: textEditingController,
+                  // style: TextStyle(color: Colors.white38),
                   decoration: InputDecoration(
                       hintText: hintText ?? '请输入内容',
                       filled: true,
-                      fillColor: Colors.grey.shade50),
+                      fillColor: Colors.transparent),
                 ),
               ],
             ),

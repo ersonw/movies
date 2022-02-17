@@ -32,7 +32,15 @@ class _SystemMessagesPage extends State<SystemMessagesPage> {
       });
     });
   }
+@override
+  void dispose() {
+    // TODO: implement dispose
 
+    // setState(() {
+    //   _systemMessageModel.read();
+    // });
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     String? title = widget.title;

@@ -25,7 +25,7 @@ class _MessagesPage extends State<MessagesPage>{
     _messages = messagesChangeNotifier.messages;
     messagesChangeNotifier.addListener(() {
       setState(() {
-        print('刷新了');
+        // print('刷新了');
         _messages = messagesChangeNotifier.messages;
       });
     });
@@ -64,7 +64,7 @@ class _MessagesPage extends State<MessagesPage>{
           CupertinoPageRoute(
             builder: (context) => SystemMessagesPage(title: '系统公告',iconData: MessageIcon.tongzhi,),
           ),
-        );
+        ).then((val) =>setState);
       },
     ));
     String kefumsg = _messages.kefuMessage.isNotEmpty && _messages.kefuMessage.last.text != null ? _messages.kefuMessage.last.text! : (_messages.kefuMessage.isNotEmpty && _messages.kefuMessage.last.image != null ? '[图片]' : '暂无消息');
@@ -91,11 +91,7 @@ class _MessagesPage extends State<MessagesPage>{
           CupertinoPageRoute(
             builder: (context) => const KeFuMessagePage(),
           ),
-        ).then((val) {
-          setState(() {
-//
-          });
-        });
+        ).then((val) =>setState);
       },
     ));
     // list.add(MessageListBuild(

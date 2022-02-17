@@ -32,6 +32,7 @@ class _BindPhonePage extends State<BindPhonePage> {
   static const int changePhoneInput = 101;
   static const int verifyCodeAndSetPassword = 102;
   static const int verifyPasswordLogin = 103;
+  static const int changePhoneVerifyCode = 104;
   User _user = User();
   int type = 0;
   int validTime = 120;
@@ -52,6 +53,76 @@ class _BindPhonePage extends State<BindPhonePage> {
   }
   void _callBack(){
     Navigator.pop(context);
+  }
+  void _phoneChange()async{
+    if(codeId.isEmpty){
+      Global.showWebColoredToast('未获取验证码或者验证码已过期!');
+      return;
+    }
+    if(_controllerCode.text.isEmpty){
+      Global.showWebColoredToast('未填写验证码!');
+      return;
+    }
+    if(_controllerPhone.text.isEmpty){
+      Global.showWebColoredToast('手机号错误!');
+      return;
+    }
+    Map<String, dynamic> parm = {
+      'id': codeId,
+      'code': _controllerCode.text,
+      'phone': countryCode+_controllerPhone.text,
+    };
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET,
+        NWApi.changePhone,
+        {"data": jsonEncode(parm)}
+    ));
+    if(result != null){
+      Map<String, dynamic> map = jsonDecode(result);
+      if(map['verify'] == true){
+        Global.showWebColoredToast('换绑成功!');
+        setState(() {
+          // userModel.user = User();
+          Global.getUserInfo().then((value) => _callBack());
+        });
+      }
+    }
+  }
+  void _checkPhoneChange()async{
+    if(_controllerPhoneOld.text.isEmpty){
+      Global.showWebColoredToast('原手机不可为空!');
+      return;
+    }
+    if(_controllerPhone.text.isEmpty){
+      Global.showWebColoredToast('新手机不可为空!');
+      return;
+    }
+    if(_controllerPhone.text.length < 6){
+      Global.showWebColoredToast('手机号格式不正确!');
+      return;
+    }
+    if(_controllerPhoneOld.text == countryCode+ _controllerPhone.text){
+      Global.showWebColoredToast('原手机与新手机一致!');
+      return;
+    }
+    Map<String, dynamic> parm = {
+      'phoneOld': _controllerPhoneOld.text,
+      'phone': countryCode+_controllerPhone.text,
+    };
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET,
+        NWApi.changePhoneCheck,
+        {"data": jsonEncode(parm)}
+    ));
+    if(result != null){
+      Map<String, dynamic> map = jsonDecode(result);
+      if(map['verify'] == true){
+        _sendSms();
+        setState(() {
+          type = changePhoneVerifyCode;
+        });
+      }
+    }
   }
   void _checkPhone() async{
     String? result = (await DioManager().requestAsync(
@@ -147,7 +218,6 @@ class _BindPhonePage extends State<BindPhonePage> {
     }
   }
   Widget _buildBindNewPhone(){
-
     return Column(
       children: [
         SizedBox(
@@ -179,7 +249,7 @@ class _BindPhonePage extends State<BindPhonePage> {
                   Expanded(
                     child: TextField(
                       // obscureText: true,
-                      focusNode: _commentFocus,
+                      //focusNode: _commentFocus,
                       controller: _controllerPhone,
                       autofocus: true,
                       keyboardType: TextInputType.phone,
@@ -254,7 +324,7 @@ class _BindPhonePage extends State<BindPhonePage> {
                   Expanded(
                     child: TextField(
                       // obscureText: true,
-                      focusNode: _commentFocus,
+                      //focusNode: _commentFocus,
                       controller: _controllerCode,
                       autofocus: true,
                       keyboardType: TextInputType.phone,
@@ -309,7 +379,7 @@ class _BindPhonePage extends State<BindPhonePage> {
                   Expanded(
                     child: TextField(
                       obscureText: true,
-                      focusNode: _commentFocus,
+                      //focusNode: _commentFocus,
                       controller: _controllerPassword,
                       autofocus: openBus,
                       keyboardType: TextInputType.visiblePassword,
@@ -403,7 +473,7 @@ class _BindPhonePage extends State<BindPhonePage> {
                   Expanded(
                     child: TextField(
                       obscureText: true,
-                      focusNode: _commentFocus,
+                      //focusNode: _commentFocus,
                       controller: _controllerPassword,
                       autofocus: true,
                       keyboardType: TextInputType.visiblePassword,
@@ -493,7 +563,7 @@ class _BindPhonePage extends State<BindPhonePage> {
                   Expanded(
                     child: TextField(
                       // obscureText: true,
-                      // focusNode: _commentFocus,
+                      // //focusNode: _commentFocus,
                       controller: _controllerPhoneOld,
                       autofocus: true,
                       keyboardType: TextInputType.phone,
@@ -550,7 +620,7 @@ class _BindPhonePage extends State<BindPhonePage> {
                   Expanded(
                     child: TextField(
                       // obscureText: true,
-                      focusNode: _commentFocus,
+                      //focusNode: _commentFocus,
                       controller: _controllerPhone,
                       autofocus: true,
                       keyboardType: TextInputType.phone,
@@ -596,7 +666,7 @@ class _BindPhonePage extends State<BindPhonePage> {
           child: TextButton(
               onPressed: () {
                 if(_controllerPhone.text.length > 6){
-                  _checkPhone();
+                  _checkPhoneChange();
                   _commentFocus.unfocus();
                 }else{
                   Global.showWebColoredToast('手机号码格式不正确!');
@@ -610,6 +680,102 @@ class _BindPhonePage extends State<BindPhonePage> {
                     borderRadius: BorderRadius.all(Radius.circular(20))),
                 alignment: Alignment.center,
                 child: const Text('下一步',style: TextStyle(color: Colors.black,fontSize: 18,fontWeight: FontWeight.normal),),
+              )),
+        )
+      ],
+    );
+  }
+  Widget _changePhoneVerifyCode(){
+    return Column(
+      children: [
+        SizedBox(
+          // height: 70,
+          child: Container(
+              height: 50,
+              margin: const EdgeInsets.all(40),
+              decoration: const BoxDecoration(
+                  color: Color(0xfff6f8fb),
+                  borderRadius: BorderRadius.all(Radius.circular(20))),
+              alignment: Alignment.center,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      // obscureText: true,
+                      //focusNode: _commentFocus,
+                      controller: _controllerCode,
+                      autofocus: true,
+                      keyboardType: TextInputType.phone,
+                      textInputAction: TextInputAction.next,
+                      // onSubmitted: (value) => {
+                      //   setState(() => {_inputString = value})
+                      // },
+                      onEditingComplete: () {
+                        _commentFocus.unfocus();
+                      },
+                      inputFormatters: <TextInputFormatter>[
+                        LengthLimitingTextInputFormatter(18)
+                      ],
+                      // controller: _controller,
+                      decoration: const InputDecoration(
+                          isDense: true,
+                          contentPadding: EdgeInsets.only(
+                              left: 10, right: 10, top: 0, bottom: 0),
+                          border: InputBorder.none,
+                          hintStyle: TextStyle(color: Color(0xffcccccc)),
+                          hintText: "请输入验证码"),
+                    ),
+                  ),
+                  TextButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(countDownText == '重新发送' ? Colors.yellow : Colors.transparent),
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
+                    ),
+                    onPressed: () {
+                      if(countDownText == '重新发送'){
+                        _sendSms();
+                      }
+                    },
+                    child: Text(countDownText,style: const TextStyle(color: Colors.black),),
+                  ),
+                ],
+              )
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Container(
+              margin: const EdgeInsets.only(right: 40),
+              child: TextButton(
+                onPressed: () {
+                  _commentFocus.unfocus();
+                  Navigator.of(context, rootNavigator: true).push<void>(
+                    CupertinoPageRoute(
+                      // fullscreenDialog: true,
+                      title: '反馈中心',
+                      builder: (context) => const KeFuMessagePage(),
+                    ),
+                  );
+                },
+                child: const Text("收不到验证码？",style: TextStyle(color: Colors.grey),),
+              ),
+            )
+          ],
+        ),
+        SizedBox(
+          child: TextButton(
+              onPressed: () {
+                _phoneChange();
+              },
+              child: Container(
+                height: 50,
+                margin: const EdgeInsets.only(left: 40, right: 40, top: 20),
+                decoration: const BoxDecoration(
+                    color: Color(0xfff6f8fb),
+                    borderRadius: BorderRadius.all(Radius.circular(20))),
+                alignment: Alignment.center,
+                child: const Text('立即更换',style: TextStyle(color: Colors.black,fontSize: 18,fontWeight: FontWeight.normal),),
               )),
         )
       ],
@@ -636,6 +802,9 @@ class _BindPhonePage extends State<BindPhonePage> {
         break;
       case verifyPasswordLogin:
         page = _verifyPasswordLogin;
+        break;
+      case changePhoneVerifyCode:
+        page = _changePhoneVerifyCode;
         break;
       default:
         break;

@@ -101,14 +101,16 @@ class Global {
     if(user.avatar?.contains('http') == true){
       //
     }else{
-      String? images = await UploadOssUtil.upload(
-          File(user.avatar!), Global.getNameByPath(user.avatar!));
-      if (images == null) {
-        showWebColoredToast("头像上传失败！");
-        return;
+      if(user.avatar != null && user.avatar != ''){
+        String? images = await UploadOssUtil.upload(
+            File(user.avatar!), Global.getNameByPath(user.avatar!));
+        if (images == null) {
+          showWebColoredToast("头像上传失败！");
+          return;
+        }
+        user.avatar = images;
+        showWebColoredToast("头像上传成功！");
       }
-      user.avatar = images;
-      showWebColoredToast("头像上传成功！");
     }
 
     WebSocketMessage message = WebSocketMessage();

@@ -357,7 +357,7 @@ class _ForgotPasswordPage extends State<ForgotPasswordPage>{
                     Navigator.of(context, rootNavigator: true).push<void>(
                       CupertinoPageRoute(
                         // fullscreenDialog: true,
-                        title: '找回密码',
+                        title: '反馈中心',
                         builder: (context) => const KeFuMessagePage(),
                       ),
                     );

@@ -11,6 +11,7 @@ class User {
   String? phone = '';
   int gold = 0;
   int diamond = 0;
+  int superior = 0;
 
   User();
 
@@ -24,6 +25,7 @@ class User {
         avatar = json['avatar'],
         phone = json['phone'],
         gold = json['gold'],
+        superior = json['superior'],
         diamond = json['diamond'];
 
   Map<String, dynamic> toJson() => {
@@ -37,6 +39,7 @@ class User {
     'phone': phone,
     'gold': gold,
     'diamond': diamond,
+    'superior': superior,
   };
   @override
   String toString() {
