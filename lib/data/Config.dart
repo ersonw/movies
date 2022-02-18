@@ -1,4 +1,8 @@
+import 'dart:convert';
+
+import 'package:movies/data/OnlinePay.dart';
 import 'package:movies/data/OssConfig.dart';
+import 'package:movies/data/VIPBuy.dart';
 
 class Config {
   double version = 1.0;
@@ -10,6 +14,8 @@ class Config {
   bool bootLock = false;
   String? bootLockPasswd = '';
   OssConfig ossConfig = OssConfig();
+  List<VIPBuy> vipBuys = [];
+  List<OnlinePay> onlinePays = [];
 
   Config();
 
@@ -22,6 +28,8 @@ class Config {
         bootImage = json['bootImage'],
         bootLock = json['bootLock'] ?? false,
         bootLockPasswd = json['bootLockPasswd'],
+        vipBuys = json['vipBuys'] ?? [],
+        onlinePays = json['onlinePays'] ?? [],
         ossConfig =
             OssConfig.formJson(json['ossConfig'] ?? OssConfig().toJson());
 
@@ -35,5 +43,13 @@ class Config {
         'bootLock': bootLock,
         'bootLockPasswd': bootLockPasswd,
         'ossConfig': ossConfig.toJson(),
+        'vipBuys': vipBuys.map((e) => e.toJson()).toList(),
+        'onlinePays': onlinePays.map((e) => e.toJson()).toList(),
       };
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    return jsonEncode(toJson());
+  }
 }

@@ -16,4 +16,7 @@ class ImageIcons {
   static const AssetImage nv = AssetImage('assets/image/nv.png');
   static const AssetImage sex = AssetImage('assets/image/sex.png');
   static const AssetImage age = AssetImage('assets/image/age.png');
+  static const AssetImage yue = AssetImage('assets/image/yue.jpg');
+  static const AssetImage alipay = AssetImage('assets/image/alipay.png');
+  static const AssetImage wechat = AssetImage('assets/image/wechat.png');
 }

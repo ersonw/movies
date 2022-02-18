@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:images_picker/images_picker.dart';
+import 'package:movies/VIPBuyPage.dart';
 import 'package:movies/data/User.dart';
 import 'package:movies/functions.dart';
 import 'package:movies/messagesPage.dart';
@@ -130,7 +131,7 @@ class _MyProfile extends State<MyProfile> {
   }
   _buildAvatar(){
     if ((_user.avatar == null || _user.avatar == '') || _user.avatar?.contains('http') == false) {
-      return AssetImage('assets/image/default_head.gif');
+      return const AssetImage('assets/image/default_head.gif');
     }
     return NetworkImage(_user.avatar!);
   }
@@ -333,9 +334,9 @@ class _MyProfile extends State<MyProfile> {
                     // Fluttertoast.showToast(msg: '点击我了');
                     Navigator.of(context, rootNavigator: true).push<void>(
                       CupertinoPageRoute(
-                        title: SettingsTab.title,
-                        fullscreenDialog: true,
-                        builder: (context) => const SettingsTab(),
+                        title: "VIP购买",
+                        // fullscreenDialog: true,
+                        builder: (context) => const VIPBuyPage(),
                       ),
                     );
                   }),

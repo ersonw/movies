@@ -84,9 +84,13 @@ class _AccountManager extends State<AccountManager> {
                 onPressed: ()async {
                  await Global.getUserInfo();
                  if(_user.phone != null && _user.phone != ''){
-                   _user.phone = '';
-                   Global.changeUserProfile(_user);
-                   Global.showWebColoredToast('手机号解除绑定成功!');
+                   if(await ShowAlertDialogBool(context, '解绑设备', '确认要解绑手机号吗?')){
+                     setState(() {
+                       _user.phone = '';
+                     });
+                     Global.changeUserProfile(_user);
+                     Global.showWebColoredToast('手机号解除绑定成功!');
+                   }
                  }
                 },
                 child: const Text('解除绑定',style: TextStyle(fontSize: 20,color: Colors.red),),
@@ -185,7 +189,7 @@ class _AccountManager extends State<AccountManager> {
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 25),
-                    child: const Text('昵称',style: TextStyle(color: Colors.black,fontSize: 18),),
+                    child: const Text('昵称',style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold)),
                   ),
                 ],
               ),
@@ -225,7 +229,7 @@ class _AccountManager extends State<AccountManager> {
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 25),
-                    child: const Text('性别',style: TextStyle(color: Colors.black,fontSize: 18),),
+                    child: const Text('性别',style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold)),
                   ),
 
 
@@ -263,7 +267,7 @@ class _AccountManager extends State<AccountManager> {
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 25),
-                    child: const Text('年龄',style: TextStyle(color: Colors.black,fontSize: 18),),
+                    child: const Text('年龄',style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold)),
                   ),
 
 
@@ -301,7 +305,7 @@ class _AccountManager extends State<AccountManager> {
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 25),
-                    child: const Text('更换密码',style: TextStyle(color: Colors.black,fontSize: 18),),
+                    child: const Text('更换密码',style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold)),
                   ),
                 ],
               ),
@@ -336,7 +340,7 @@ class _AccountManager extends State<AccountManager> {
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 25),
-                    child: Text(_user.phone == null || _user.phone==''?"绑定手机": '更换手机',style: const TextStyle(color: Colors.black,fontSize: 18),),
+                    child: Text(_user.phone == null || _user.phone==''?"绑定手机": '更换手机',style: const TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold)),
                   ),
 
 
@@ -374,7 +378,7 @@ class _AccountManager extends State<AccountManager> {
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 25),
-                    child: const Text('兑换码',style: TextStyle(color: Colors.black,fontSize: 16),),
+                    child: const Text('兑换码',style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold)),
                   ),
                 ],
               ),
@@ -392,7 +396,7 @@ class _AccountManager extends State<AccountManager> {
               color: Colors.grey,
               size: 30,
             ),
-            title: const Text('设置锁屏'),
+            title: const Text('设置锁屏',style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold)),
             // The Material switch has a platform adaptive constructor.
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
@@ -422,7 +426,7 @@ class _AccountManager extends State<AccountManager> {
               Icons.edit_road_outlined,
               size: 30,
             ),
-            title: const Text('修改锁屏密码'),
+            title: const Text('修改锁屏密码',style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold)),
             // The Material switch has a platform adaptive constructor.
             onTap: () {
               Navigator.of(context, rootNavigator: true).push<void>(
@@ -439,7 +443,7 @@ class _AccountManager extends State<AccountManager> {
               Icons.edit_road_outlined,
               size: 30,
             ),
-            title: const Text('重置锁屏密码'),
+            title: const Text('重置锁屏密码',style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold)),
             // The Material switch has a platform adaptive constructor.
             onTap: () async{
               if(configModel.lockPasswd == null || configModel.lockPasswd == ''){
@@ -459,7 +463,7 @@ class _AccountManager extends State<AccountManager> {
               Icons.delete_forever,
               size: 30,
             ),
-            title: const Text('清理缓存'),
+            title: const Text('清理缓存',style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold)),
             // The Material switch has a platform adaptive constructor.
             onTap: () async{
               if(await ShowAlertDialogBool(context, '清除缓存', '一键清除缓存将清除应用所有缓存，包括视频数据等等，确定继续吗？')){
@@ -475,7 +479,7 @@ class _AccountManager extends State<AccountManager> {
             Icons.fact_check,
             size: 25,
           ),
-          title: const Text('保存身份ID，账号防丢失'),
+          title: const Text('保存身份ID，账号防丢失',style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold)),
           // The Material switch has a platform adaptive constructor.
           onTap: () => ShowCopyDialog(context, '身份卡信息', _user.uid),
         ),
