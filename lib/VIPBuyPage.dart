@@ -18,9 +18,13 @@ class _VIPBuyPage extends State<VIPBuyPage>
     with SingleTickerProviderStateMixin {
   User _user = User();
   late TabController _innerTabController;
-  final _tabKey = ValueKey('tab');
+  final _tabKey = const ValueKey('tab');
+  int _tabIndex = 0;
 
   void handleTabChange() {
+    setState(() {
+      _tabIndex = _innerTabController.index;
+    });
     // print('Inner tab, previous: ${_innerTabController.previousIndex}, current: ${_innerTabController.index}');
     PageStorage.of(context)
         ?.writeState(context, _innerTabController.index, identifier: _tabKey);
@@ -135,6 +139,7 @@ class _VIPBuyPage extends State<VIPBuyPage>
                 border: Border.all(width: 2.0, color: Colors.red),
                 borderRadius: const BorderRadius.all(Radius.circular(5.0)),
                 image: DecorationImage(
+                  fit: BoxFit.fill,
                   image: ImageIcons.zhipianrenjihua,
                   //这里是从assets静态文件中获取的，也可以new NetworkImage(）从网络上获取
                   // centerSlice: Rect.fromLTRB(270.0, 180.0, 1360.0, 730.0),
@@ -204,9 +209,15 @@ class _VIPBuyPage extends State<VIPBuyPage>
         ],
     );
   }
-
+  _buildAgent(){
+    return ListView();
+  }
   _buildBody() {
-    return _buildOnline();
+    if(_tabIndex == 0){
+      return _buildOnline();
+    }else{
+      return _buildAgent();
+    }
   }
 
   @override
