@@ -220,26 +220,26 @@ _widgetIconImage(String image){
     },);
   }
 }
-Future<void> ShowOnlinePaySelect(BuildContext context,int type,double amount,{String? title, String? text}) async{
-  configModel.onlinePays = [];
-  if(configModel.onlinePays.length == 0){
-    OnlinePay onlinePay = OnlinePay();
-    onlinePay.id = 0;
-    onlinePay.title = '余额支付';
-    // onlinePay.iconImage = 'https://www.freeiconspng.com/uploads/wechat-icon-9.jpg';
-    List<OnlinePay> list = [];
-    list.add(onlinePay);
-    onlinePay = OnlinePay();
-    onlinePay.title = '微信支付';
-    onlinePay.iconImage = 'https://www.freeiconspng.com/uploads/wechat-icon-9.jpg';
-    list.add(onlinePay);
-    onlinePay = OnlinePay();
-    onlinePay.title = '支付宝支付';
-    onlinePay.iconImage = 'https://cdn4.iconfinder.com/data/icons/logos-and-brands/512/13_Alipay_logo_logos-1024.png';
-    list.add(onlinePay);
-
-    configModel.onlinePays = list;
-  }
+Future<void> ShowOnlinePaySelect(BuildContext context,int type,int amount,{String? title, String? text}) async{
+  // configModel.onlinePays = [];
+  // if(configModel.onlinePays.length == 0){
+  //   OnlinePay onlinePay = OnlinePay();
+  //   onlinePay.id = 0;
+  //   onlinePay.title = '余额支付';
+  //   // onlinePay.iconImage = 'https://www.freeiconspng.com/uploads/wechat-icon-9.jpg';
+  //   List<OnlinePay> list = [];
+  //   list.add(onlinePay);
+  //   onlinePay = OnlinePay();
+  //   onlinePay.title = '微信支付';
+  //   onlinePay.iconImage = 'https://www.freeiconspng.com/uploads/wechat-icon-9.jpg';
+  //   list.add(onlinePay);
+  //   onlinePay = OnlinePay();
+  //   onlinePay.title = '支付宝支付';
+  //   onlinePay.iconImage = 'https://cdn4.iconfinder.com/data/icons/logos-and-brands/512/13_Alipay_logo_logos-1024.png';
+  //   list.add(onlinePay);
+  //
+  //   configModel.onlinePays = list;
+  // }
    showCupertinoModalPopup<void>(
     context: context,
     builder: (_context) {

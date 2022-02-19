@@ -2,9 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movies/data/OnlinePay.dart';
 import 'package:movies/data/User.dart';
+import 'package:movies/data/VIPBuy.dart';
 import 'package:movies/functions.dart';
 import 'package:movies/global.dart';
-
+import 'dart:io';
 import 'image_icon.dart';
 
 class VIPBuyPage extends StatefulWidget {
@@ -17,6 +18,7 @@ class VIPBuyPage extends StatefulWidget {
 class _VIPBuyPage extends State<VIPBuyPage>
     with SingleTickerProviderStateMixin {
   User _user = User();
+  List<VIPBuy> _vipBuys = [];
   late TabController _innerTabController;
   final _tabKey = const ValueKey('tab');
   int _tabIndex = 0;
@@ -45,11 +47,15 @@ class _VIPBuyPage extends State<VIPBuyPage>
     userModel.addListener(() {
       _init();
     });
+    configModel.addListener(() {
+      _init();
+    });
   }
 
   void _init() {
     setState(() {
       _user = userModel.user;
+      _vipBuys = configModel.vipBuys;
     });
   }
 
@@ -123,90 +129,86 @@ class _VIPBuyPage extends State<VIPBuyPage>
           ],
         ));
   }
-
+  _buildOnlineImage(String image){
+    if(image == null || image == '') return  ImageIcons.zhipianrenjihua;
+    if(image.startsWith('http')){
+      return NetworkImage(image);
+    }
+    return FileImage(File(image));
+  }
   _buildOnline() {
-    return ListView(
-        children: [
-          InkWell(
+    return ListView.builder(
+      itemCount: _vipBuys.length,
+        itemBuilder:  (BuildContext ctxt, int index) {
+        VIPBuy vipBuy = _vipBuys[index];
+          return InkWell(
             onTap: () {
-              ShowOnlinePaySelect(context, OnlinePay.PAY_ONLINE_VIP, 100);
+              ShowOnlinePaySelect(ctxt, vipBuy.id, vipBuy.amount);
             },
             child: Container(
-              height: 100,
+              height: 130,
               margin: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 // color: Colors.grey,
                 border: Border.all(width: 2.0, color: Colors.red),
-                borderRadius: const BorderRadius.all(Radius.circular(5.0)),
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
                 image: DecorationImage(
                   fit: BoxFit.fill,
-                  image: ImageIcons.zhipianrenjihua,
-                  //这里是从assets静态文件中获取的，也可以new NetworkImage(）从网络上获取
-                  // centerSlice: Rect.fromLTRB(270.0, 180.0, 1360.0, 730.0),
+                  image: _buildOnlineImage(vipBuy.image),
                 ),
               ),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Column(
+                   vipBuy.isText ? Column(
                     children: [
-                      Container(
-                        margin: const EdgeInsets.only(left: 90, top: 10),
-                        child: Text(
-                          '新年特惠卡',
-                          style: TextStyle(
-                              color: Colors.yellow,
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold),
-                        ),
+                      Text(vipBuy.title,
+                        style: const TextStyle(
+                            color: Colors.yellow,
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold),
                       ),
-                      Container(
-                        // color: Colors.yellow,
-                        // margin: const EdgeInsets.only(left: 90),
-                          child: Text(
-                            '新年特惠卡',
-                            style: TextStyle(color: Colors.yellow, fontSize: 15),
-                          )),
+                      Text(
+                        vipBuy.describes,
+                        style: const TextStyle(color: Colors.yellow, fontSize: 15),
+                      ),
                     ],
-                  ),
+                  ) : Container(),
                   Column(
                     children: [
                       Row(
                         children: [
                           Container(
-                            margin: const EdgeInsets.only(top: 25),
-                            child: Text(
-                              '¥',
-                              style: TextStyle(color: Colors.brown, fontSize: 19),
+                            margin: const EdgeInsets.only(top: 30),
+                            child: Text(vipBuy.currency,
+                              style: const TextStyle(color: Colors.brown, fontSize: 19),
                             ),
                           ),
                           Container(
                             // color: Colors.yellow,
-                            margin: const EdgeInsets.only(right: 10, top: 10),
-                            child: Text(
-                              '100',
-                              style: TextStyle(color: Colors.brown, fontSize: 45),
+                            margin: const EdgeInsets.only(right: 10, top: 20),
+                            child: Text('${vipBuy.amount ~/ 100}',
+                              style: const TextStyle(color: Colors.brown, fontSize: 45),
                             ),
                           ),
                         ],
                       ),
                       Container(
                         margin: const EdgeInsets.all(1),
-                        child: Text(
-                          '原价¥200',
-                          style: TextStyle(
+                        child: vipBuy.original > 0 ? Text('原价${vipBuy.currency}${vipBuy.original ~/ 100}',
+                          style: const TextStyle(
                               color: Colors.brown,
                               fontSize: 15,
                               decoration: TextDecoration.lineThrough),
-                        ),
+                        ) : Container(),
                       ),
                     ],
                   ),
                 ],
               ),
             ),
-          )
-        ],
+          );
+        }
     );
   }
   _buildAgent(){

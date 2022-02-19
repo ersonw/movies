@@ -340,10 +340,10 @@ class Global {
   static Future<void> checkVersion() async {
     DioManager().request(NWMethod.GET, NWApi.checkVersion, params: {},
         success: (data) {
-      // print("success data = $data");
+      // print("success data = $data == ${configModel.config.hash}");
       if (data != null && data.isNotEmpty) {
         Config config = Config.fromJson(jsonDecode(data));
-        if (config.hash.contains(profile.config.hash)) {
+        if (config.hash != (configModel.config.hash)) {
           getConfig();
         }
         if (MainContext != null) {
@@ -374,6 +374,9 @@ class Global {
         profile.config.url = config.url;
         profile.config.bootImage = config.bootImage;
         profile.config.ossConfig = config.ossConfig;
+        profile.config.onlinePays = config.onlinePays;
+        profile.config.vipBuys = config.vipBuys;
+        print(config.vipBuys);
         saveProfile();
       }
     }, error: (error) {});

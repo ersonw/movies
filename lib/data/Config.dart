@@ -28,11 +28,10 @@ class Config {
         bootImage = json['bootImage'],
         bootLock = json['bootLock'] ?? false,
         bootLockPasswd = json['bootLockPasswd'],
-        vipBuys = json['vipBuys'] ?? [],
-        onlinePays = json['onlinePays'] ?? [],
+        vipBuys = json['vipBuys'] == null ? [] : (json['vipBuys'] as List).map((i) => VIPBuy.formJson(i)).toList(),
+        onlinePays = json['onlinePays'] == null ? [] : (json['onlinePays'] as List).map((i) => OnlinePay.formJson(i)).toList(),
         ossConfig =
             OssConfig.formJson(json['ossConfig'] ?? OssConfig().toJson());
-
   Map<String, dynamic> toJson() => {
         'hash': hash,
         'url': url,
