@@ -15,6 +15,7 @@ import 'AccountManager.dart';
 import 'GetQrcode.dart';
 import 'global.dart';
 import 'image_icon.dart';
+import 'dart:ui';
 
 class MyProfile extends StatefulWidget {
   static const title = '我的';
@@ -28,6 +29,9 @@ class MyProfile extends StatefulWidget {
 
 class _MyProfile extends State<MyProfile> {
   User _user = User();
+  final _width = window.physicalSize.width;
+  final _height = window.physicalSize.height;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -49,15 +53,18 @@ class _MyProfile extends State<MyProfile> {
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-
             CupertinoButton(
               padding: EdgeInsets.zero,
-              child: Icon(SystemTtf.saoyisao, size: 42, color: Colors.grey,),
+              child: Icon(
+                SystemTtf.saoyisao,
+                size: 42,
+                color: Colors.grey,
+              ),
               onPressed: () {
                 List<BottomMenu> lists = [];
                 BottomMenu bottonMenu = BottomMenu();
                 bottonMenu.title = '相机';
-                bottonMenu.fn = (){
+                bottonMenu.fn = () {
                   Navigator.of(context, rootNavigator: true).push<void>(
                     CupertinoPageRoute(
                       // builder: (context) => TakePictureScreen(cameras: Global.cameras, ),
@@ -68,7 +75,7 @@ class _MyProfile extends State<MyProfile> {
                 lists.add(bottonMenu);
                 bottonMenu = BottomMenu();
                 bottonMenu.title = '相册';
-                bottonMenu.fn = ()async{
+                bottonMenu.fn = () async {
                   List<Media>? res = await ImagesPicker.pick(
                     count: 1,
                     pickType: PickType.image,
@@ -77,13 +84,15 @@ class _MyProfile extends State<MyProfile> {
                   if (res != null) {
                     var image = res[0].thumbPath;
                     String data = await QrCodeToolsPlugin.decodeFrom(image);
-                    if(data.contains('http')){
-                      Navigator.push(context, CupertinoPageRoute(
-                        // builder: (context) => TakePictureScreen(cameras: Global.cameras, ),
-                        builder: (context) => WebViewExample(url: data),
-                      ),
+                    if (data.contains('http')) {
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          // builder: (context) => TakePictureScreen(cameras: Global.cameras, ),
+                          builder: (context) => WebViewExample(url: data),
+                        ),
                       );
-                    }else{
+                    } else {
                       ShowCopyDialog(context, "二维码提取", data);
                     }
                   }
@@ -94,7 +103,11 @@ class _MyProfile extends State<MyProfile> {
             ),
             CupertinoButton(
               padding: EdgeInsets.zero,
-              child: Icon(XiaoXiongIcon.xiaoxi, size: 30, color: Colors.grey,),
+              child: Icon(
+                XiaoXiongIcon.xiaoxi,
+                size: 30,
+                color: Colors.grey,
+              ),
               onPressed: () {
                 // This pushes the settings page as a full page modal dialog on top
                 // of the tab bar and everything.
@@ -107,10 +120,13 @@ class _MyProfile extends State<MyProfile> {
                 );
               },
             ),
-
             CupertinoButton(
               padding: EdgeInsets.zero,
-              child: const Icon(SystemTtf.shezhi, size: 42, color: Colors.grey,),
+              child: const Icon(
+                SystemTtf.shezhi,
+                size: 42,
+                color: Colors.grey,
+              ),
               onPressed: () {
                 // This pushes the settings page as a full page modal dialog on top
                 // of the tab bar and everything.
@@ -129,12 +145,15 @@ class _MyProfile extends State<MyProfile> {
       child: _buildBody(context),
     );
   }
-  _buildAvatar(){
-    if ((_user.avatar == null || _user.avatar == '') || _user.avatar?.contains('http') == false) {
+
+  _buildAvatar() {
+    if ((_user.avatar == null || _user.avatar == '') ||
+        _user.avatar?.contains('http') == false) {
       return const AssetImage('assets/image/default_head.gif');
     }
     return NetworkImage(_user.avatar!);
   }
+
   Widget _buildBody(BuildContext context) {
     return SafeArea(
       child: Padding(
@@ -144,45 +163,49 @@ class _MyProfile extends State<MyProfile> {
           children: [
             // 头像用户名
             TextButton(
-                onPressed: () {
-                  Navigator.of(context, rootNavigator: true).push<void>(
-                    CupertinoPageRoute(
-                      title: '账号管理',
-                      // fullscreenDialog: true,
-                      builder: (context) => const AccountManager(),
-                    ),
-                  );
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: 80,
-                      height: 80,
-                      // margin: EdgeInsets.only(left: vw()),
-                      decoration: BoxDecoration(
-                          color: Colors.grey,
-                          borderRadius: BorderRadius.circular(50.0),
-                          image: DecorationImage(
-                            // image: AssetImage('assets/image/default_head.gif'),
-                            image: _buildAvatar(),
-                          )),
-                    ),
-                    Container(
-                        margin: const EdgeInsets.only(left: 10, top: 10),
-                        child: Text(
-                          _user.nickname,
-                          style:
-                          const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).push<void>(
+                  CupertinoPageRoute(
+                    title: '账号管理',
+                    // fullscreenDialog: true,
+                    builder: (context) => const AccountManager(),
+                  ),
+                );
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 80,
+                    height: 80,
+                    // margin: EdgeInsets.only(left: vw()),
+                    decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(50.0),
+                        image: DecorationImage(
+                          // image: AssetImage('assets/image/default_head.gif'),
+                          image: _buildAvatar(),
                         )),
-                    Container(
-                      margin: const EdgeInsets.only(left: 10),
-                      width: 35,
-                      height: 35,
-                      child: Image(image: _user.sex == 0 ? ImageIcons.nan : ImageIcons.nv,),
-                    )
-                  ],
-                ),
+                  ),
+                  Container(
+                      margin: const EdgeInsets.only(left: 10, top: 10),
+                      child: Text(
+                        _user.nickname,
+                        style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black),
+                      )),
+                  Container(
+                    margin: const EdgeInsets.only(left: 10),
+                    width: 35,
+                    height: 35,
+                    child: Image(
+                      image: _user.sex == 0 ? ImageIcons.nan : ImageIcons.nv,
+                    ),
+                  )
+                ],
+              ),
             ),
             // 金币数
             Row(
@@ -202,10 +225,7 @@ class _MyProfile extends State<MyProfile> {
                           margin: const EdgeInsets.only(left: 10, top: 10),
                           child: const Text(
                             '金币',
-                            style: TextStyle(
-                                fontSize: 13,
-                                color: Colors.grey
-                            ),
+                            style: TextStyle(fontSize: 13, color: Colors.grey),
                           )),
                     ],
                   ),
@@ -224,10 +244,7 @@ class _MyProfile extends State<MyProfile> {
                           margin: const EdgeInsets.only(left: 10, top: 10),
                           child: const Text(
                             '钻石',
-                            style: TextStyle(
-                                fontSize: 13,
-                                color: Colors.grey
-                            ),
+                            style: TextStyle(fontSize: 13, color: Colors.grey),
                           )),
                     ],
                   ),
@@ -246,10 +263,7 @@ class _MyProfile extends State<MyProfile> {
                           margin: EdgeInsets.only(left: 10, top: 10),
                           child: Text(
                             '推荐数',
-                            style: TextStyle(
-                                fontSize: 13,
-                                color: Colors.grey
-                            ),
+                            style: TextStyle(fontSize: 13, color: Colors.grey),
                           )),
                     ],
                   ),
@@ -268,10 +282,7 @@ class _MyProfile extends State<MyProfile> {
                           margin: EdgeInsets.only(left: 10, top: 10),
                           child: Text(
                             '我的关注',
-                            style: TextStyle(
-                                fontSize: 13,
-                                color: Colors.grey
-                            ),
+                            style: TextStyle(fontSize: 13, color: Colors.grey),
                           )),
                     ],
                   ),
@@ -290,15 +301,11 @@ class _MyProfile extends State<MyProfile> {
                           margin: EdgeInsets.only(left: 10, top: 10),
                           child: Text(
                             '我的粉丝',
-                            style: TextStyle(
-                                fontSize: 13,
-                                color: Colors.grey
-                            ),
+                            style: TextStyle(fontSize: 13, color: Colors.grey),
                           )),
                     ],
                   ),
                 ),
-
               ],
             ),
             InkWell(
@@ -313,21 +320,20 @@ class _MyProfile extends State<MyProfile> {
                 );
               }),
               child: Container(
-                margin: EdgeInsets.only(top: 20),
+                margin: const EdgeInsets.only(top: 20),
                 width: 350,
                 height: 95,
                 decoration: BoxDecoration(
                     color: Colors.grey,
                     borderRadius: BorderRadius.circular(10.0),
-                    image: DecorationImage(
+                    image: const DecorationImage(
                       image: ImageIcons.zhipianrenjihua,
-                    )
-                ),
+                    )),
               ),
             ),
             // 三图片
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 InkWell(
                   onTap: (() {
@@ -341,40 +347,44 @@ class _MyProfile extends State<MyProfile> {
                     );
                   }),
                   child: Container(
-                    margin: EdgeInsets.only(top: 20),
-                    width: 110,
-                    height: 55,
+                    margin: const EdgeInsets.only(top: 10),
+                    width: (_width / 2.3 / 3),
+                    height: 70,
+                    decoration: BoxDecoration(
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(10.0),
+                        image: const DecorationImage(
+                          fit: BoxFit.fill,
+                          image: ImageIcons.vipBuy,
+                        )),
+                  ),
+                ),
+                InkWell(
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 10),
+                    width: (_width / 2.3 / 3),
+                    height: 70,
+                    decoration: BoxDecoration(
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(10.0),
+                        image: const DecorationImage(
+                          fit: BoxFit.fill,
+                          image: ImageIcons.promote,
+                        )),
+                  ),
+                ),
+                InkWell(
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 10),
+                    width: (_width / 2.3 / 3),
+                    height: 70,
                     decoration: BoxDecoration(
                         color: Colors.grey,
                         borderRadius: BorderRadius.circular(10.0),
-                        image: DecorationImage(
-                          image: ImageIcons.vipBuy,
-                        )
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 20),
-                  width: 110,
-                  height: 55,
-                  decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(10.0),
-                      image: DecorationImage(
-                        image: ImageIcons.promote,
-                      )
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 20),
-                  width: 110,
-                  height: 55,
-                  decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(10.0),
-                      image: DecorationImage(
-                        image: ImageIcons.income,
-                      )
+                        image: const DecorationImage(
+                          fit: BoxFit.fill,
+                          image: ImageIcons.income,
+                        )),
                   ),
                 ),
               ],

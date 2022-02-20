@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:movies/CrateOrderPage.dart';
 import 'package:movies/data/OnlinePay.dart';
 import 'package:movies/data/User.dart';
 import 'package:movies/data/VIPBuy.dart';
@@ -79,7 +80,7 @@ class _VIPBuyPage extends State<VIPBuyPage>
                 TextButton(
                   onPressed: () {},
                   child: const Text(
-                    "充值明细",
+                    "购买记录",
                     style: TextStyle(color: Colors.black, fontSize: 18),
                   ),
                 ),
@@ -143,14 +144,25 @@ class _VIPBuyPage extends State<VIPBuyPage>
         VIPBuy vipBuy = _vipBuys[index];
           return InkWell(
             onTap: () {
-              ShowOnlinePaySelect(ctxt, vipBuy.id, vipBuy.amount);
+              // ShowOnlinePaySelect(ctxt, OnlinePay.PAY_ONLINE_VIP,vipBuy.id, vipBuy.amount);
+              Navigator.of(context, rootNavigator: true).push<void>(
+                CupertinoPageRoute(
+                  // title: '确认订单',
+                  builder: (context) => CrateOrderPage(
+                    title: vipBuy.title,
+                    amount: vipBuy.amount,
+                    describes: vipBuy.describes,
+                    currency: vipBuy.currency,
+                  ),
+                ),
+              );
             },
             child: Container(
-              height: 130,
+              height: 120,
               margin: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 // color: Colors.grey,
-                border: Border.all(width: 2.0, color: Colors.red),
+                border: Border.all(width: 2.0, color: Colors.transparent),
                 borderRadius: const BorderRadius.all(Radius.circular(10)),
                 image: DecorationImage(
                   fit: BoxFit.fill,

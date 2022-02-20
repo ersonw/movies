@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +11,10 @@ import 'package:passcode_screen/circle.dart';
 import 'package:passcode_screen/keyboard.dart';
 import 'package:passcode_screen/passcode_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'HttpManager.dart';
+import 'network/NWApi.dart';
+import 'network/NWMethod.dart';
 
 ShowCopyDialog(BuildContext context, String title, String? text) {
   return showCupertinoDialog<void>(
@@ -202,7 +208,13 @@ Future<void> ShowBottomMenu(BuildContext context,List<BottomMenu> lists, {String
   );
 }
 _widgetIconImage(String image){
-  if(image.isNotEmpty){
+  if(image == null || image.isEmpty){
+    return Image.asset(ImageIcons.yue.keyName,width: 45,height: 45,errorBuilder: (context, url, StackTrace? error) {
+      // print(error!);
+      return const Text('！');
+    },);
+
+  }else{
     if(image.startsWith('http')){
       return Image.network(image,width: 45,height: 45,errorBuilder: (context, url, StackTrace? error) {
         // print(error!);
@@ -213,33 +225,30 @@ _widgetIconImage(String image){
       // print(error!);
       return const Text('！');
     },);
-  }else{
-    return Image.asset(ImageIcons.yue.keyName,width: 45,height: 45,errorBuilder: (context, url, StackTrace? error) {
-      // print(error!);
-      return const Text('！');
-    },);
   }
 }
-Future<void> ShowOnlinePaySelect(BuildContext context,int type,int amount,{String? title, String? text}) async{
-  // configModel.onlinePays = [];
-  // if(configModel.onlinePays.length == 0){
-  //   OnlinePay onlinePay = OnlinePay();
-  //   onlinePay.id = 0;
-  //   onlinePay.title = '余额支付';
-  //   // onlinePay.iconImage = 'https://www.freeiconspng.com/uploads/wechat-icon-9.jpg';
-  //   List<OnlinePay> list = [];
-  //   list.add(onlinePay);
-  //   onlinePay = OnlinePay();
-  //   onlinePay.title = '微信支付';
-  //   onlinePay.iconImage = 'https://www.freeiconspng.com/uploads/wechat-icon-9.jpg';
-  //   list.add(onlinePay);
-  //   onlinePay = OnlinePay();
-  //   onlinePay.title = '支付宝支付';
-  //   onlinePay.iconImage = 'https://cdn4.iconfinder.com/data/icons/logos-and-brands/512/13_Alipay_logo_logos-1024.png';
-  //   list.add(onlinePay);
-  //
-  //   configModel.onlinePays = list;
-  // }
+_getOrder(int type, int cid, int id, int amount) async{
+  Map<String, dynamic> parm = {
+    'id': id,
+    'cid': cid,
+    'type': type,
+    'amount': amount,
+  };
+  String? result = (await DioManager().requestAsync(
+      NWMethod.GET,
+      NWApi.getOrder,
+      {"data": jsonEncode(parm)}
+  ));
+  if(result != null){
+    print(result);
+    Map<String, dynamic> map = jsonDecode(result);
+    if(map['verify'] == true){
+      Global.showWebColoredToast('修改成功!');
+    }
+  }
+}
+Future<void> ShowOnlinePaySelect(BuildContext context,int type,int id,int amount,{String? title, String? text}) async{
+
    showCupertinoModalPopup<void>(
     context: context,
     builder: (_context) {
@@ -252,7 +261,7 @@ Future<void> ShowOnlinePaySelect(BuildContext context,int type,int amount,{Strin
               // mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  margin: EdgeInsets.only(left: 60),
+                  margin: const EdgeInsets.only(left: 60),
                   // color: Colors.transparent,
                   child: _widgetIconImage(e.iconImage),
                 ),
@@ -265,6 +274,7 @@ Future<void> ShowOnlinePaySelect(BuildContext context,int type,int amount,{Strin
             isDestructiveAction: true,
             onPressed: () async {
               Navigator.pop(_context);
+              _getOrder(type,id,e.id,amount);
             },
           );
         }).toList(),
