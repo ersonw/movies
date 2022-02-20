@@ -390,7 +390,7 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
               child: Text(
                 message.text!,
                 textAlign: TextAlign.start,
-                style: TextStyle(color: Colors.black),
+                style: const TextStyle(color: Colors.black),
               ),
             ),
           ));

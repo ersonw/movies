@@ -348,7 +348,7 @@ class _MyProfile extends State<MyProfile> {
                   }),
                   child: Container(
                     margin: const EdgeInsets.only(top: 10),
-                    width: (_width / 2.3 / 3),
+                    width: ((MediaQuery.of(context).size.width) / 3.5),
                     height: 70,
                     decoration: BoxDecoration(
                         color: Colors.transparent,
@@ -362,7 +362,7 @@ class _MyProfile extends State<MyProfile> {
                 InkWell(
                   child: Container(
                     margin: const EdgeInsets.only(top: 10),
-                    width: (_width / 2.3 / 3),
+                    width: ((MediaQuery.of(context).size.width) / 3.5),
                     height: 70,
                     decoration: BoxDecoration(
                         color: Colors.transparent,
@@ -376,7 +376,7 @@ class _MyProfile extends State<MyProfile> {
                 InkWell(
                   child: Container(
                     margin: const EdgeInsets.only(top: 10),
-                    width: (_width / 2.3 / 3),
+                    width: ((MediaQuery.of(context).size.width) / 3.5),
                     height: 70,
                     decoration: BoxDecoration(
                         color: Colors.grey,

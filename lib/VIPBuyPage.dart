@@ -1,13 +1,19 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movies/CrateOrderPage.dart';
+import 'package:movies/VIPBuyRecordsPage.dart';
 import 'package:movies/data/OnlinePay.dart';
 import 'package:movies/data/User.dart';
 import 'package:movies/data/VIPBuy.dart';
 import 'package:movies/functions.dart';
 import 'package:movies/global.dart';
 import 'dart:io';
+import 'HttpManager.dart';
 import 'image_icon.dart';
+import 'network/NWApi.dart';
+import 'network/NWMethod.dart';
 
 class VIPBuyPage extends StatefulWidget {
   const VIPBuyPage({Key? key}) : super(key: key);
@@ -78,7 +84,14 @@ class _VIPBuyPage extends State<VIPBuyPage>
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context, rootNavigator: true).push<void>(
+                      CupertinoPageRoute(
+                        // title: '确认订单',
+                        builder: (context) => const VIPBuyRecordsPage(),
+                      ),
+                    );
+                  },
                   child: const Text(
                     "购买记录",
                     style: TextStyle(color: Colors.black, fontSize: 18),
@@ -137,6 +150,42 @@ class _VIPBuyPage extends State<VIPBuyPage>
     }
     return FileImage(File(image));
   }
+  _crateOrder(int id) async{
+    Map<String, dynamic> parm = {
+      'id': id,
+    };
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET, NWApi.crateVipOrder, {"data": jsonEncode(parm)}));
+    if (result != null) {
+      print(result);
+      Map<String, dynamic> map = jsonDecode(result);
+      if(map['crate'] == true){
+        Navigator.of(context, rootNavigator: true).push<void>(
+          CupertinoPageRoute(
+            // title: '确认订单',
+            builder: (context) => CrateOrderPage(
+              type: OnlinePay.PAY_ONLINE_VIP,
+              order_id: map['id'],
+            ),
+          ),
+        );
+      }else{
+        bool sure = await ShowAlertDialogBool(context, '订单提醒', '您已存在未付订单，请先支付或取消该订单才可以继续，确定前往订单吗?');
+        if(sure){
+          Navigator.of(context, rootNavigator: true).push<void>(
+            CupertinoPageRoute(
+              // title: '确认订单',
+              builder: (context) => CrateOrderPage(
+                type: OnlinePay.PAY_ONLINE_VIP,
+                order_id: map['id'],
+              ),
+            ),
+          );
+        }
+      }
+    }
+  }
+
   _buildOnline() {
     return ListView.builder(
       itemCount: _vipBuys.length,
@@ -145,17 +194,7 @@ class _VIPBuyPage extends State<VIPBuyPage>
           return InkWell(
             onTap: () {
               // ShowOnlinePaySelect(ctxt, OnlinePay.PAY_ONLINE_VIP,vipBuy.id, vipBuy.amount);
-              Navigator.of(context, rootNavigator: true).push<void>(
-                CupertinoPageRoute(
-                  // title: '确认订单',
-                  builder: (context) => CrateOrderPage(
-                    title: vipBuy.title,
-                    amount: vipBuy.amount,
-                    describes: vipBuy.describes,
-                    currency: vipBuy.currency,
-                  ),
-                ),
-              );
+              _crateOrder(vipBuy.id);
             },
             child: Container(
               height: 120,

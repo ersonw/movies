@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:movies/data/CrateOrder.dart';
 import 'package:movies/data/OnlinePay.dart';
 import 'package:movies/functions.dart';
 import 'dart:io';
@@ -11,23 +12,38 @@ import 'network/NWApi.dart';
 import 'network/NWMethod.dart';
 
 class CrateOrderPage extends StatefulWidget {
-  CrateOrderPage({Key? key,required this.title,required this.amount,this.describes,this.currency}) : super(key: key);
-  String title;
-  String? describes;
-  String? currency;
-  int amount;
+  CrateOrderPage({Key? key, required this.type, required this.order_id})
+      : super(key: key);
+  int type;
+  String order_id;
+
   @override
   _CrateOrderPage createState() => _CrateOrderPage();
 }
 
 class _CrateOrderPage extends State<CrateOrderPage> {
   OnlinePay _onlinePay = OnlinePay();
+  CrateOrder _crateOrder = CrateOrder();
 
   @override
   void initState() {
     _onlinePay = configModel.onlinePays.first;
-
+    _initOrder();
     super.initState();
+  }
+
+  _initOrder() async {
+    Map<String, dynamic> parm = {
+      'type': widget.type,
+      'order_id': widget.order_id,
+    };
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET, NWApi.getOrder, {"data": jsonEncode(parm)}));
+    if (result != null) {
+      setState(() {
+        _crateOrder = CrateOrder.formJson(jsonDecode(result));
+      });
+    }
   }
 
   @override
@@ -52,79 +68,131 @@ class _CrateOrderPage extends State<CrateOrderPage> {
           children: [
             Container(
               decoration: const BoxDecoration(
-                border: Border(bottom: BorderSide(color: Colors.grey,width: 1)),
+                border:
+                    Border(bottom: BorderSide(color: Colors.grey, width: 1)),
               ),
               margin: const EdgeInsets.all(40),
               child: Row(
                 children: [
-                  const Text('交易名称：',style: TextStyle(fontSize: 20,color: Colors.black54),),
-                  Text(widget.title,style: const TextStyle(fontSize: 18,color: Colors.black),),
+                  const Text(
+                    '交易名称：',
+                    style: TextStyle(fontSize: 20, color: Colors.black54),
+                  ),
+                  Text(
+                    _crateOrder.title,
+                    style: const TextStyle(fontSize: 18, color: Colors.black),
+                  ),
                 ],
               ),
             ),
-            widget.describes != null ? Container(
-              decoration: const BoxDecoration(
-                border: Border(bottom: BorderSide(color: Colors.grey,width: 1)),
-              ),
-              margin: const EdgeInsets.only(left: 40,right: 40,top: 10),
-              child: Row(
-                children: [
-                  const Text('交易说明：',style: TextStyle(fontSize: 17,color: Colors.black54),),
-                  Text(widget.describes!,style: const TextStyle(fontSize: 15,color: Colors.black),),
-                ],
-              ),
-            ) : Container(),
-            Container(
-              decoration: const BoxDecoration(
-                border: Border(bottom: BorderSide(color: Colors.grey,width: 1)),
-              ),
-              margin: const EdgeInsets.all(40),
-              child: Row(
-                children: [
-                  const Text('交易金额：',style: TextStyle(fontSize: 20,color: Colors.black54),),
-                  Text('${widget.currency ?? '￥'}${widget.amount / 100}',style: const TextStyle(fontSize: 30,color: Colors.redAccent,fontWeight: FontWeight.bold),),
-                ],
-              ),
-            ),
-            Container(
-              decoration: const BoxDecoration(
-                border: Border(bottom: BorderSide(color: Colors.grey,width: 1)),
-              ),
-              margin: const EdgeInsets.all(40),
-              child: Row(
-                children: [
-                  const Text('支付方式：',style: TextStyle(fontSize: 20,color: Colors.black54),),
-                  TextButton(
-                    onPressed: () {
-                      _ShowOnlinePaySelect();
-                    },
+            _crateOrder.describes != null
+                ? Container(
+                    decoration: const BoxDecoration(
+                      border: Border(
+                          bottom: BorderSide(color: Colors.grey, width: 1)),
+                    ),
+                    margin: const EdgeInsets.only(left: 40, right: 40, top: 10),
                     child: Row(
                       children: [
-                        Container(
-                          // margin: const EdgeInsets.only(left: 60),
-                          // color: Colors.transparent,
-                          child: _widgetIconImage(_onlinePay.iconImage),
+                        const Text(
+                          '交易说明：',
+                          style: TextStyle(fontSize: 17, color: Colors.black54),
                         ),
-                        Container(
-                          margin: EdgeInsets.only(left: 10),
-                          child: Text(_onlinePay.title,style: const TextStyle(fontSize: 20,color: Colors.black54,fontWeight: FontWeight.bold),),
+                        Text(
+                          _crateOrder.describes!,
+                          style: const TextStyle(
+                              fontSize: 15, color: Colors.black),
                         ),
                       ],
-                    )
+                    ),
+                  )
+                : Container(),
+            Container(
+              decoration: const BoxDecoration(
+                border:
+                    Border(bottom: BorderSide(color: Colors.grey, width: 1)),
+              ),
+              margin: const EdgeInsets.all(40),
+              child: Row(
+                children: [
+                  const Text(
+                    '交易金额：',
+                    style: TextStyle(fontSize: 20, color: Colors.black54),
+                  ),
+                  Text(
+                    '${_crateOrder.currency ?? '￥'}${_crateOrder.amount / 100}',
+                    style: const TextStyle(
+                        fontSize: 30,
+                        color: Colors.redAccent,
+                        fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
             ),
             Container(
+              decoration: const BoxDecoration(
+                border:
+                    Border(bottom: BorderSide(color: Colors.grey, width: 1)),
+              ),
+              margin: const EdgeInsets.only(
+                  left: 40, right: 40, top: 10, bottom: 10),
+              child: Row(
+                children: [
+                  const Text(
+                    '支付方式：',
+                    style: TextStyle(fontSize: 20, color: Colors.black54),
+                  ),
+                  TextButton(
+                      onPressed: () {
+                        _ShowOnlinePaySelect();
+                      },
+                      child: Row(
+                        children: [
+                          Container(
+                            // margin: const EdgeInsets.only(left: 60),
+                            // color: Colors.transparent,
+                            child: _widgetIconImage(_onlinePay.iconImage),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(left: 10),
+                            child: Text(
+                              _onlinePay.title,
+                              style: const TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.black54,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ],
+                      )),
+                ],
+              ),
+            ),
+            _onlinePay.title.contains('余额')
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(left: 50),
+                        child: Text('余额:${userModel.user.diamond}'),
+                      ),
+                    ],
+                  )
+                : Container(),
+            Container(
               margin: const EdgeInsets.all(40),
-              width: (MediaQuery.of(context).size.width)  - 100,
+              width: (MediaQuery.of(context).size.width) - 100,
               child: TextButton(
-                onPressed: () {  },
+                onPressed: () {},
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.yellow),
-                  shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(5))),
+                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5))),
                 ),
-                child: const Text('提交订单',style: TextStyle(fontSize: 25,color: Colors.white),),
+                child: const Text(
+                  '提交订单',
+                  style: TextStyle(fontSize: 25, color: Colors.white),
+                ),
               ),
             ),
           ],
@@ -136,7 +204,8 @@ class _CrateOrderPage extends State<CrateOrderPage> {
       context: context,
       builder: (_context) {
         return CupertinoActionSheet(
-          title: const Text('选择支付方式',
+          title: const Text(
+            '选择支付方式',
             style: TextStyle(
                 color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
           ),
