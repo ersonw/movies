@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:movies/OrderRecordsPage.dart';
 import 'package:movies/data/CrateOrder.dart';
 import 'package:movies/data/OnlinePay.dart';
 import 'package:movies/functions.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'dart:io';
 import 'HttpManager.dart';
 import 'global.dart';
@@ -144,7 +147,7 @@ class _CrateOrderPage extends State<CrateOrderPage> {
                   ),
                   TextButton(
                       onPressed: () {
-                        _ShowOnlinePaySelect();
+                        _showOnlinePaySelect();
                       },
                       child: Row(
                         children: [
@@ -155,12 +158,21 @@ class _CrateOrderPage extends State<CrateOrderPage> {
                           ),
                           Container(
                             margin: const EdgeInsets.only(left: 10),
-                            child: Text(
-                              _onlinePay.title,
-                              style: const TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.black54,
-                                  fontWeight: FontWeight.bold),
+                            child: Row(
+                              children: [
+                                Text(_onlinePay.title,
+                                  style: const TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.black54,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                _onlinePay.title.contains('钻石') ? Text('(${userModel.user.diamond})',
+                                  style: const TextStyle(
+                                      fontSize: 15,
+                                      color: Colors.black54,
+                                      fontWeight: FontWeight.normal),
+                                ) : Container(),
+                              ],
                             ),
                           ),
                         ],
@@ -168,22 +180,19 @@ class _CrateOrderPage extends State<CrateOrderPage> {
                 ],
               ),
             ),
-            _onlinePay.title.contains('余额')
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(left: 50),
-                        child: Text('余额:${userModel.user.diamond}'),
-                      ),
-                    ],
-                  )
-                : Container(),
             Container(
               margin: const EdgeInsets.all(40),
               width: (MediaQuery.of(context).size.width) - 100,
               child: TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  if(_onlinePay.title.contains('钻石')){
+                    if(userModel.user.diamond < _crateOrder.amount){
+                      Global.showWebColoredToast('余额不足!');
+                      return;
+                    }
+                  }
+                  _postCrateOrder();
+                },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.yellow),
                   shape: MaterialStateProperty.all(RoundedRectangleBorder(
@@ -199,7 +208,7 @@ class _CrateOrderPage extends State<CrateOrderPage> {
         ));
   }
 
-  _ShowOnlinePaySelect() async {
+  _showOnlinePaySelect() async {
     showCupertinoModalPopup<void>(
       context: context,
       builder: (_context) {
@@ -282,20 +291,31 @@ class _CrateOrderPage extends State<CrateOrderPage> {
     }
   }
 
-  _getOrder(int type, int cid, int id, int amount) async {
+  _postCrateOrder() async {
     Map<String, dynamic> parm = {
-      'id': id,
-      'cid': cid,
-      'type': type,
-      'amount': amount,
+      'order_id': widget.order_id,
+      'type': widget.type,
+      'pid': _onlinePay.id,
     };
     String? result = (await DioManager().requestAsync(
-        NWMethod.GET, NWApi.getOrder, {"data": jsonEncode(parm)}));
+        NWMethod.GET, NWApi.postCrateOrder, {"data": jsonEncode(parm)}));
     if (result != null) {
       print(result);
       Map<String, dynamic> map = jsonDecode(result);
-      if (map['verify'] == true) {
-        Global.showWebColoredToast('修改成功!');
+      if(map['state'] == 'ok'){
+        if(map['url'] != null){
+          Navigator.pop(context);
+          launch(map['url']);
+        }else{
+          Navigator.of(context, rootNavigator: true).push<void>(
+            CupertinoPageRoute(
+              // title: '确认订单',
+              builder: (context) => OrderRecordsPage(),
+            ),
+          ).then((value) => Navigator.pop(context));
+        }
+      }else{
+        Global.showWebColoredToast(map['msg']);
       }
     }
   }

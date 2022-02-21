@@ -157,7 +157,7 @@ class _VIPBuyPage extends State<VIPBuyPage>
     String? result = (await DioManager().requestAsync(
         NWMethod.GET, NWApi.crateVipOrder, {"data": jsonEncode(parm)}));
     if (result != null) {
-      print(result);
+      // print(result);
       Map<String, dynamic> map = jsonDecode(result);
       if(map['crate'] == true){
         Navigator.of(context, rootNavigator: true).push<void>(
@@ -168,7 +168,14 @@ class _VIPBuyPage extends State<VIPBuyPage>
               order_id: map['id'],
             ),
           ),
-        );
+        ).then((value) {
+          Navigator.of(context, rootNavigator: true).push<void>(
+            CupertinoPageRoute(
+              title: '购买记录',
+              builder: (context) => const VIPBuyRecordsPage(),
+            ),
+          );
+        });
       }else{
         bool sure = await ShowAlertDialogBool(context, '订单提醒', '您已存在未付订单，请先支付或取消该订单才可以继续，确定前往订单吗?');
         if(sure){
@@ -179,6 +186,20 @@ class _VIPBuyPage extends State<VIPBuyPage>
                 type: OnlinePay.PAY_ONLINE_VIP,
                 order_id: map['id'],
               ),
+            ),
+          ).then((value) {
+            Navigator.of(context, rootNavigator: true).push<void>(
+              CupertinoPageRoute(
+                title: '购买记录',
+                builder: (context) => const VIPBuyRecordsPage(),
+              ),
+            );
+          });
+        }else{
+          Navigator.of(context, rootNavigator: true).push<void>(
+            CupertinoPageRoute(
+              title: '购买记录',
+              builder: (context) => const VIPBuyRecordsPage(),
             ),
           );
         }
