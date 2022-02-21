@@ -59,7 +59,14 @@ class _CrateOrderPage extends State<CrateOrderPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context, rootNavigator: true).push<void>(
+                      CupertinoPageRoute(
+                        title: '交易记录',
+                        builder: (context) => const OrderRecordsPage(),
+                      ),
+                    );
+                  },
                   child: const Text(
                     "交易记录",
                     style: TextStyle(color: Colors.black, fontSize: 18),
@@ -67,145 +74,154 @@ class _CrateOrderPage extends State<CrateOrderPage> {
                 ),
               ]),
         ),
-        child: Column(
-          children: [
-            Container(
-              decoration: const BoxDecoration(
-                border:
-                    Border(bottom: BorderSide(color: Colors.grey, width: 1)),
-              ),
-              margin: const EdgeInsets.all(40),
-              child: Row(
-                children: [
-                  const Text(
-                    '交易名称：',
-                    style: TextStyle(fontSize: 20, color: Colors.black54),
-                  ),
-                  Text(
-                    _crateOrder.title,
-                    style: const TextStyle(fontSize: 18, color: Colors.black),
-                  ),
-                ],
-              ),
-            ),
-            _crateOrder.describes != null
-                ? Container(
-                    decoration: const BoxDecoration(
-                      border: Border(
-                          bottom: BorderSide(color: Colors.grey, width: 1)),
+        child: Container(
+          // width: ((MediaQuery.of(context).size.width) / 1.5),
+          // margin: EdgeInsets.all(10),
+          child: Column(
+            children: [
+              Container(
+                decoration: const BoxDecoration(
+                  border:
+                  Border(bottom: BorderSide(color: Colors.grey, width: 1)),
+                ),
+                margin: const EdgeInsets.all(40),
+                child: Row(
+                  children: [
+                    const Text(
+                      '交易名称：',
+                      style: TextStyle(fontSize: 20, color: Colors.black54),
                     ),
-                    margin: const EdgeInsets.only(left: 40, right: 40, top: 10),
-                    child: Row(
-                      children: [
-                        const Text(
-                          '交易说明：',
-                          style: TextStyle(fontSize: 17, color: Colors.black54),
-                        ),
-                        Text(
-                          _crateOrder.describes!,
-                          style: const TextStyle(
-                              fontSize: 15, color: Colors.black),
-                        ),
-                      ],
+                    Text(
+                      _crateOrder.title,
+                      style: const TextStyle(fontSize: 18, color: Colors.black),
                     ),
-                  )
-                : Container(),
-            Container(
-              decoration: const BoxDecoration(
-                border:
-                    Border(bottom: BorderSide(color: Colors.grey, width: 1)),
+                  ],
+                ),
               ),
-              margin: const EdgeInsets.all(40),
-              child: Row(
-                children: [
-                  const Text(
-                    '交易金额：',
-                    style: TextStyle(fontSize: 20, color: Colors.black54),
-                  ),
-                  Text(
-                    '${_crateOrder.currency ?? '￥'}${_crateOrder.amount / 100}',
-                    style: const TextStyle(
-                        fontSize: 30,
-                        color: Colors.redAccent,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ],
+              _crateOrder.describes != null
+                  ? Container(
+                decoration: const BoxDecoration(
+                  border: Border(
+                      bottom: BorderSide(color: Colors.grey, width: 1)),
+                ),
+                margin: const EdgeInsets.only(left: 40, right: 40, top: 10),
+                child: Row(
+                  children: [
+                    const Text(
+                      '交易说明：',
+                      style: TextStyle(fontSize: 17, color: Colors.black54),
+                    ),
+                    Container(
+                      width: ((MediaQuery.of(context).size.width) / 2),
+                      child: Text(
+                        _crateOrder.describes!,
+                        style: const TextStyle(
+                            fontSize: 15, color: Colors.black),
+                      ),
+                    ),
+
+                  ],
+                ),
+              )
+                  : Container(),
+              Container(
+                decoration: const BoxDecoration(
+                  border:
+                  Border(bottom: BorderSide(color: Colors.grey, width: 1)),
+                ),
+                margin: const EdgeInsets.all(40),
+                child: Row(
+                  children: [
+                    const Text(
+                      '交易金额：',
+                      style: TextStyle(fontSize: 20, color: Colors.black54),
+                    ),
+                    Text(
+                      '${_crateOrder.currency ?? '￥'}${_crateOrder.amount / 100}',
+                      style: const TextStyle(
+                          fontSize: 30,
+                          color: Colors.redAccent,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Container(
-              decoration: const BoxDecoration(
-                border:
-                    Border(bottom: BorderSide(color: Colors.grey, width: 1)),
-              ),
-              margin: const EdgeInsets.only(
-                  left: 40, right: 40, top: 10, bottom: 10),
-              child: Row(
-                children: [
-                  const Text(
-                    '支付方式：',
-                    style: TextStyle(fontSize: 20, color: Colors.black54),
-                  ),
-                  TextButton(
-                      onPressed: () {
-                        _showOnlinePaySelect();
-                      },
-                      child: Row(
-                        children: [
-                          Container(
-                            // margin: const EdgeInsets.only(left: 60),
-                            // color: Colors.transparent,
-                            child: _widgetIconImage(_onlinePay.iconImage),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(left: 10),
-                            child: Row(
-                              children: [
-                                Text(_onlinePay.title,
-                                  style: const TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.black54,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                _onlinePay.title.contains('钻石') ? Text('(${userModel.user.diamond})',
-                                  style: const TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.black54,
-                                      fontWeight: FontWeight.normal),
-                                ) : Container(),
-                              ],
+              Container(
+                decoration: const BoxDecoration(
+                  border:
+                  Border(bottom: BorderSide(color: Colors.grey, width: 1)),
+                ),
+                margin: const EdgeInsets.only(
+                    left: 40, right: 40, top: 10, bottom: 10),
+                child: Row(
+                  children: [
+                    const Text(
+                      '支付方式：',
+                      style: TextStyle(fontSize: 20, color: Colors.black54),
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          _showOnlinePaySelect();
+                        },
+                        child: Row(
+                          children: [
+                            Container(
+                              // margin: const EdgeInsets.only(left: 60),
+                              // color: Colors.transparent,
+                              child: _widgetIconImage(_onlinePay.iconImage),
                             ),
-                          ),
-                        ],
-                      )),
-                ],
+                            Container(
+                              margin: const EdgeInsets.only(left: 10),
+                              child: Row(
+                                children: [
+                                  Text(_onlinePay.title,
+                                    style: const TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.black54,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  _onlinePay.title.contains('钻石') ? Text('(${userModel.user.diamond})',
+                                    style: const TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.black54,
+                                        fontWeight: FontWeight.normal),
+                                  ) : Container(),
+                                ],
+                              ),
+                            ),
+                          ],
+                        )),
+                  ],
+                ),
               ),
-            ),
-            Container(
-              margin: const EdgeInsets.all(40),
-              width: (MediaQuery.of(context).size.width) - 100,
-              child: TextButton(
-                onPressed: () {
-                  if(_onlinePay.title.contains('钻石')){
-                    if(userModel.user.diamond < _crateOrder.amount){
-                      Global.showWebColoredToast('余额不足!');
-                      return;
+              Container(
+                margin: const EdgeInsets.all(40),
+                width: (MediaQuery.of(context).size.width) - 100,
+                child: TextButton(
+                  onPressed: () {
+                    if(_onlinePay.title.contains('钻石')){
+                      if(userModel.user.diamond < _crateOrder.amount){
+                        Global.showWebColoredToast('余额不足!');
+                        return;
+                      }
                     }
-                  }
-                  _postCrateOrder();
-                },
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.yellow),
-                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5))),
-                ),
-                child: const Text(
-                  '提交订单',
-                  style: TextStyle(fontSize: 25, color: Colors.white),
+                    _postCrateOrder();
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.yellow),
+                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5))),
+                  ),
+                  child: const Text(
+                    '提交订单',
+                    style: TextStyle(fontSize: 25, color: Colors.white),
+                  ),
                 ),
               ),
-            ),
-          ],
-        ));
+            ],
+          ),
+        )
+    );
   }
 
   _showOnlinePaySelect() async {
@@ -310,7 +326,7 @@ class _CrateOrderPage extends State<CrateOrderPage> {
           Navigator.of(context, rootNavigator: true).push<void>(
             CupertinoPageRoute(
               // title: '确认订单',
-              builder: (context) => OrderRecordsPage(),
+              builder: (context) => const OrderRecordsPage(),
             ),
           ).then((value) => Navigator.pop(context));
         }

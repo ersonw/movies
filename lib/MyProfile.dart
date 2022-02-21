@@ -327,6 +327,7 @@ class _MyProfile extends State<MyProfile> {
                     color: Colors.grey,
                     borderRadius: BorderRadius.circular(10.0),
                     image: const DecorationImage(
+                      fit: BoxFit.fill,
                       image: ImageIcons.zhipianrenjihua,
                     )),
               ),

@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_pickers/image_pickers.dart';
+import 'package:movies/LoadingChangeNotifier.dart';
 import 'package:movies/MessagesChangeNotifier.dart';
-import 'package:movies/ProfileChangeNotifier.dart';
 import 'package:movies/data/KefuMessage.dart';
 import 'package:movies/data/Messages.dart';
 import 'package:movies/data/SystemMessage.dart';
@@ -30,12 +30,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_compress/video_compress.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:movies/utils/UploadOss.dart';
+import 'LoadingDialog.dart';
 import 'data/Profile.dart';
 import 'package:flutter/material.dart';
 final MessagesChangeNotifier messagesChangeNotifier = MessagesChangeNotifier();
 final KeFuMessageModel keFuMessageModel = KeFuMessageModel();
 final ConfigModel configModel = ConfigModel();
 final UserModel userModel = UserModel();
+final LoadingChangeNotifier loadingChangeNotifier = LoadingChangeNotifier();
 class Global {
 
   // 是否为release版
@@ -50,8 +52,14 @@ class Global {
   static Messages messages = Messages();
   static late SharedPreferences _prefs;
 
+  static bool isLoading = false;
   //初始化全局信息，会在APP启动时执行
   static Future init() async {
+    loadingChangeNotifier.addListener(() {
+      if(isLoading){
+        Navigator.push(MainContext, DialogRouter(LoadingDialog(false)));
+      }
+    });
     // bool data = await fetchData();
     // print(data);
     WidgetsFlutterBinding.ensureInitialized();
@@ -497,4 +505,20 @@ class Global {
 
   static saveMessages() =>
       _prefs.setString('messages', jsonEncode(messages.toJson()));
+
+  static Future<void> loading(bool load) async {
+    loadingChangeNotifier.isLoading = load;
+  }
+}
+class DialogRouter extends PageRouteBuilder{
+
+  final Widget page;
+
+  DialogRouter(this.page)
+      : super(
+    opaque: false,
+    barrierColor: Colors.black54,
+    pageBuilder: (context, animation, secondaryAnimation) => page,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) => child,
+  );
 }
