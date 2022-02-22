@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:images_picker/images_picker.dart';
+import 'package:movies/UserSharePage.dart';
 import 'package:movies/VIPBuyPage.dart';
 import 'package:movies/data/User.dart';
 import 'package:movies/functions.dart';
@@ -55,7 +56,7 @@ class _MyProfile extends State<MyProfile> {
           children: [
             CupertinoButton(
               padding: EdgeInsets.zero,
-              child: Icon(
+              child: const Icon(
                 SystemTtf.saoyisao,
                 size: 42,
                 color: Colors.grey,
@@ -83,7 +84,8 @@ class _MyProfile extends State<MyProfile> {
                   );
                   if (res != null) {
                     var image = res[0].thumbPath;
-                    String data = await QrCodeToolsPlugin.decodeFrom(image);
+                    String data = await QrCodeToolsPlugin.decodeFrom(image).catchError(() => {});
+                    if(data.isEmpty) return;
                     if (data.contains('http')) {
                       Navigator.push(
                         context,
@@ -320,12 +322,12 @@ class _MyProfile extends State<MyProfile> {
                 );
               }),
               child: Container(
-                margin: const EdgeInsets.only(top: 20),
-                width: 350,
+                margin: const EdgeInsets.all(10),
+                // width: (MediaQuery.of(context).size.width),
                 height: 95,
                 decoration: BoxDecoration(
                     color: Colors.grey,
-                    borderRadius: BorderRadius.circular(10.0),
+                    borderRadius: BorderRadius.circular(5.0),
                     image: const DecorationImage(
                       fit: BoxFit.fill,
                       image: ImageIcons.zhipianrenjihua,
@@ -361,6 +363,15 @@ class _MyProfile extends State<MyProfile> {
                   ),
                 ),
                 InkWell(
+                  onTap: () {
+                    Navigator.of(context, rootNavigator: true).push<void>(
+                      CupertinoPageRoute(
+                        title: "推广分享",
+                        // fullscreenDialog: true,
+                        builder: (context) => const UserSharePage(),
+                      ),
+                    );
+                  },
                   child: Container(
                     margin: const EdgeInsets.only(top: 10),
                     width: ((MediaQuery.of(context).size.width) / 3.5),
@@ -390,31 +401,113 @@ class _MyProfile extends State<MyProfile> {
                 ),
               ],
             ),
-            // const PreferenceCard(
-            //   header: 'MY INTENSITY PREFERENCE',
-            //   content: '🔥',
-            //   preferenceChoices: [
-            //     'Super heavy',
-            //     'Dial it to 11',
-            //     "Head bangin'",
-            //     '1000W',
-            //     'My neighbor hates me',
-            //   ],
-            // ),
-            // const PreferenceCard(
-            //   header: 'CURRENT MOOD',
-            //   content: '🤘🏾🚀',
-            //   preferenceChoices: [
-            //     'Over the moon',
-            //     'Basking in sunlight',
-            //     'Hello fellow Martians',
-            //     'Into the darkness',
-            //   ],
-            // ),
+            Container(
+              width: (MediaQuery.of(context).size.width),
+              // height: 200,
+              margin: const EdgeInsets.only(top: 20),
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                border: Border.all(width: 1.0, color: Colors.black12),
+                // color: Colors.white30,
+                // image: DecorationImage(
+                //   image: AssetImage(ImageIcons.button_y.assetName),
+                //   fit: BoxFit.fill,
+                // ),
+              ),
+              child: Container(
+                margin: const EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextButton(
+                          onPressed: () {  },
+                          child: Column(
+                            children: [
+                              Image.asset(ImageIcons.goumaizuanshi.assetName,width: 45,height: 45,),
+                              const Text('购买钻石',style: TextStyle(color: Colors.black,fontSize: 14),),
+                            ],
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {  },
+                          child: Column(
+                            children: [
+                              Image.asset(ImageIcons.goumaijinbi.assetName,width: 45,height: 45,),
+                              const Text('购买金币',style: TextStyle(color: Colors.black),),
+                            ],
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {  },
+                          child: Column(
+                            children: [
+                              Image.asset(ImageIcons.wodeshoucang.assetName,width: 45,height: 45,),
+                              const Text('我的收藏',style: TextStyle(color: Colors.black),),
+                            ],
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {  },
+                          child: Column(
+                            children: [
+                              Image.asset(ImageIcons.goumaizuanshi.assetName,width: 45,height: 45,),
+                              const Text('我的下载',style: TextStyle(color: Colors.black),),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextButton(
+                          onPressed: () {  },
+                          child: Column(
+                            children: [
+                              Image.asset(ImageIcons.kaichejinqun.assetName,width: 45,height: 45,),
+                              const Text('开车进群',style: TextStyle(color: Colors.black),),
+                            ],
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {  },
+                          child: Column(
+                            children: [
+                              Image.asset(ImageIcons.bangzhufankui.assetName,width: 45,height: 45,),
+                              const Text('帮助反馈',style: TextStyle(color: Colors.black),),
+                            ],
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {  },
+                          child: Column(
+                            children: [
+                              Image.asset(ImageIcons.guankanjilu.assetName,width: 45,height: 45,),
+                              const Text('观看记录',style: TextStyle(color: Colors.black),),
+                            ],
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {  },
+                          child: Column(
+                            children: [
+                              Image.asset(ImageIcons.yingyongzhongxin.assetName,width: 45,height: 45,),
+                              const Text('应用中心',style: TextStyle(color: Colors.black),),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
             Expanded(
               child: Container(),
             ),
-            const LogOutButton(),
+            // const LogOutButton(),
           ],
         ),
       ),

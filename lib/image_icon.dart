@@ -19,4 +19,13 @@ class ImageIcons {
   static const AssetImage yue = AssetImage('assets/image/yue.jpg');
   static const AssetImage alipay = AssetImage('assets/image/alipay.png');
   static const AssetImage wechat = AssetImage('assets/image/wechat.png');
+  static const AssetImage button_y = AssetImage('assets/image/button_y.jpg');
+  static const AssetImage yingyongzhongxin = AssetImage('assets/image/yingyongzhongxin.png');
+  static const AssetImage wodeshoucang = AssetImage('assets/image/wodeshoucang.png');
+  static const AssetImage kaichejinqun = AssetImage('assets/image/kaichejinqun.png');
+  static const AssetImage guankanjilu = AssetImage('assets/image/guankanjilu.png');
+  static const AssetImage goumaizuanshi = AssetImage('assets/image/goumaizuanshi.png');
+  static const AssetImage goumaijinbi = AssetImage('assets/image/goumaijinbi.png');
+  static const AssetImage bangzhufankui = AssetImage('assets/image/bangzhufankui.png');
+  static const AssetImage wode = AssetImage('assets/image/wode.png');
 }

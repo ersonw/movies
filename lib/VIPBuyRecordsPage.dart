@@ -44,8 +44,10 @@ class _VIPBuyRecordsPage extends State<VIPBuyRecordsPage> {
         isLoading = true;
       });
       Global.loading(isLoading);
+      ++page;
+      _init();
       await Future.delayed(const Duration(seconds: 3), () async{
-        print('加载更多');
+        // print('加载更多');
         isLoading = false;
         Global.loading(isLoading);
       });
@@ -53,7 +55,7 @@ class _VIPBuyRecordsPage extends State<VIPBuyRecordsPage> {
   }
   Future<void> _onRefresh() async {
     await Future.delayed(const Duration(seconds: 3), () {
-      page = 0;
+      page = 1;
       _init();
     });
   }
@@ -70,11 +72,17 @@ class _VIPBuyRecordsPage extends State<VIPBuyRecordsPage> {
         total = map['total'];
       }
       if (map['list'] != null) {
-        setState(() {
-          _vipBuyRecords = (map['list'] as List)
+        if(page > 1) {
+          _vipBuyRecords.addAll((map['list'] as List)
               .map((i) => VIPBuyRecords.formJson(i))
-              .toList();
-        });
+              .toList());
+        }else{
+          setState(() {
+            _vipBuyRecords = (map['list'] as List)
+                .map((i) => VIPBuyRecords.formJson(i))
+                .toList();
+          });
+        }
       }
     }
   }

@@ -49,7 +49,7 @@ class _OrderRecordsPage extends State<OrderRecordsPage> {
       }
       if (map['list'] != null) {
         setState(() {
-          if(page > 0){
+          if(page > 1){
             _orderRecords.addAll((map['list'] as List)
                 .map((i) => OrderRecords.formJson(i))
                 .toList());
@@ -70,8 +70,9 @@ class _OrderRecordsPage extends State<OrderRecordsPage> {
         isLoading = true;
       });
       Global.loading(isLoading);
+      ++page;
+      _init();
       await Future.delayed(const Duration(seconds: 3), () async{
-        print('加载更多');
         isLoading = false;
         Global.loading(isLoading);
       });
@@ -79,7 +80,7 @@ class _OrderRecordsPage extends State<OrderRecordsPage> {
   }
   Future<void> _onRefresh() async {
     await Future.delayed(const Duration(seconds: 3), () {
-      page = 0;
+      page = 1;
       _init();
     });
   }
