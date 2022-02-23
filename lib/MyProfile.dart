@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:images_picker/images_picker.dart';
+import 'package:movies/BuyDiamondPage.dart';
 import 'package:movies/UserSharePage.dart';
 import 'package:movies/VIPBuyPage.dart';
 import 'package:movies/data/User.dart';
@@ -422,7 +423,15 @@ class _MyProfile extends State<MyProfile> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         TextButton(
-                          onPressed: () {  },
+                          onPressed: () {
+                            Navigator.of(context, rootNavigator: true).push<void>(
+                              CupertinoPageRoute(
+                                title: '钻石钱包',
+                                // fullscreenDialog: true,
+                                builder: (context) => const BuyDiamondPage(),
+                              ),
+                            );
+                          },
                           child: Column(
                             children: [
                               Image.asset(ImageIcons.goumaizuanshi.assetName,width: 45,height: 45,),

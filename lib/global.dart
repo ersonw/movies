@@ -384,7 +384,8 @@ class Global {
         profile.config.ossConfig = config.ossConfig;
         profile.config.onlinePays = config.onlinePays;
         profile.config.vipBuys = config.vipBuys;
-        print(config.vipBuys);
+        profile.config.buyDiamonds = config.buyDiamonds;
+        print(config.buyDiamonds);
         saveProfile();
       }
     }, error: (error) {});

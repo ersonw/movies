@@ -12,10 +12,14 @@ class NWApi {
   static const getInfo = "user/info";
   static const getOrder = 'user/getOrder';
   static const crateVipOrder = 'user/crateVipOrder';
+  static const crateDiamondOrder = 'user/crateDiamondOrder';
   static const getVipOrder = 'user/getVipOrder';
+  static const getDiamondOrder = 'user/getDiamondOrder';
+  static const getDiamondRecords = 'user/getDiamondRecords';
   static const getOrders = 'user/getOrders';
   static const postCrateOrder = 'user/postCrateOrder';
-  static const cancelOrder = 'user/cancelOrder';
+  static const cancelVipOrder = 'user/cancelVipOrder';
+  static const cancelDiamondOrder = 'user/cancelDiamondOrder';
   static const checkVersion = 'checkVersion';
   static const getSystemMessage = 'getSystemMessage';
   static const uploadFile = 'uploadFile';

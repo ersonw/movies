@@ -91,7 +91,7 @@ class _VIPBuyRecordsPage extends State<VIPBuyRecordsPage> {
       'id': id,
     };
     String? result = (await DioManager().requestAsync(
-        NWMethod.GET, NWApi.cancelOrder, {"data": jsonEncode(parm)}));
+        NWMethod.GET, NWApi.cancelVipOrder, {"data": jsonEncode(parm)}));
     if (result != null) {
       Global.showWebColoredToast('取消成功！');
       setState(() {
