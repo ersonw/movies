@@ -3,10 +3,13 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movies/DiamondRecordsPage.dart';
+import 'package:movies/GoldRecordsPage.dart';
 import 'package:movies/data/BuyDiamond.dart';
+import 'package:movies/data/BuyGold.dart';
 import 'package:movies/global.dart';
 
 import 'BuyDiamondRecordsPage.dart';
+import 'BuyGoldRecordsPage.dart';
 import 'CrateOrderPage.dart';
 import 'HttpManager.dart';
 import 'data/OnlinePay.dart';
@@ -15,14 +18,14 @@ import 'image_icon.dart';
 import 'network/NWApi.dart';
 import 'network/NWMethod.dart';
 
-class BuyDiamondPage extends StatefulWidget {
-  const BuyDiamondPage({Key? key}) : super(key: key);
+class BuyGoldPage extends StatefulWidget {
+  const BuyGoldPage({Key? key}) : super(key: key);
 
   @override
-  _BuyDiamondPage createState() => _BuyDiamondPage();
+  _BuyGoldPage createState() => _BuyGoldPage();
 }
 
-class _BuyDiamondPage extends State<BuyDiamondPage>
+class _BuyGoldPage extends State<BuyGoldPage>
     with SingleTickerProviderStateMixin {
   late TabController _innerTabController;
   final _tabKey = const ValueKey('tab');
@@ -42,7 +45,7 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
     // TODO: implement initState
     super.initState();
     int initialIndex =
-        PageStorage.of(context)?.readState(context, identifier: _tabKey);
+    PageStorage.of(context)?.readState(context, identifier: _tabKey);
     _innerTabController = TabController(
         length: 2,
         vsync: this,
@@ -54,28 +57,7 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
   Widget build(BuildContext context) {
     // TODO: implement build
     return CupertinoPageScaffold(
-        navigationBar: CupertinoNavigationBar(
-          trailing: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context, rootNavigator: true).push<void>(
-                      CupertinoPageRoute(
-                        // title: '确认订单',
-                        builder: (context) => const BuyDiamondRecordsPage(),
-                      ),
-                    );
-                  },
-                  child: const Text(
-                    "充值记录",
-                    style: TextStyle(color: Colors.black, fontSize: 18),
-                  ),
-                ),
-              ]),
-        ),
+        navigationBar: const CupertinoNavigationBar(),
         child: Container(
           width: MediaQuery.of(context).size.width,
           decoration: const BoxDecoration(
@@ -105,7 +87,7 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
                           margin: const EdgeInsets.only(
                               left: 20, top: 10, bottom: 10),
                           child: const Text(
-                            '钻石余额',
+                            '金币余额',
                             style: TextStyle(
                                 color: Colors.grey,
                                 fontWeight: FontWeight.bold),
@@ -119,7 +101,7 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
                         Container(
                           margin: const EdgeInsets.only(left: 20),
                           child: Text(
-                            '${userModel.user.diamond}',
+                            '${userModel.user.gold}',
                             style: const TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.normal,
@@ -127,7 +109,7 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
                           ),
                         ),
                         Image.asset(
-                          ImageIcons.bgBuyDinmond.assetName,
+                          ImageIcons.GoldCoins.assetName,
                           width: 45,
                         ),
                       ],
@@ -138,10 +120,17 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.of(context, rootNavigator: true).push<void>(
+                                CupertinoPageRoute(
+                                  // title: '确认订单',
+                                  builder: (context) => const BuyGoldRecordsPage(),
+                                ),
+                              );
+                            },
                             style: ButtonStyle(
                               backgroundColor:
-                                  MaterialStateProperty.all(Colors.orange),
+                              MaterialStateProperty.all(Colors.orange),
                               shape: MaterialStateProperty.all(
                                   RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(5))),
@@ -150,7 +139,7 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
                               width: 150,
                               alignment: Alignment.center,
                               child: const Text(
-                                '去提现',
+                                '充值记录',
                                 style: TextStyle(
                                     color: Colors.black, fontSize: 18),
                               ),
@@ -161,13 +150,13 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
                               Navigator.of(context, rootNavigator: true).push<void>(
                                 CupertinoPageRoute(
                                   // title: '确认订单',
-                                  builder: (context) => const DiamondRecordsPage(),
+                                  builder: (context) => const GoldRecordsPage(),
                                 ),
                               );
                             },
                             style: ButtonStyle(
                               backgroundColor:
-                                  MaterialStateProperty.all(Colors.orange),
+                              MaterialStateProperty.all(Colors.orange),
                               shape: MaterialStateProperty.all(
                                   RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(5))),
@@ -211,7 +200,7 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
       'id': id,
     };
     String? result = (await DioManager().requestAsync(
-        NWMethod.GET, NWApi.crateDiamondOrder, {"data": jsonEncode(parm)}));
+        NWMethod.GET, NWApi.crateGoldOrder, {"data": jsonEncode(parm)}));
     if (result != null) {
       // print(result);
       Map<String, dynamic> map = jsonDecode(result);
@@ -220,7 +209,7 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
           CupertinoPageRoute(
             // title: '确认订单',
             builder: (context) => CrateOrderPage(
-              type: OnlinePay.PAY_ONLINE_DIAMOND,
+              type: OnlinePay.PAY_ONLINE_GOLD,
               order_id: map['id'],
             ),
           ),
@@ -228,7 +217,7 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
           Navigator.of(context, rootNavigator: true).push<void>(
             CupertinoPageRoute(
               title: '购买记录',
-              builder: (context) => const BuyDiamondRecordsPage(),
+              builder: (context) => const BuyGoldRecordsPage(),
             ),
           );
         });
@@ -247,7 +236,7 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
             Navigator.of(context, rootNavigator: true).push<void>(
               CupertinoPageRoute(
                 title: '购买记录',
-                builder: (context) => const BuyDiamondRecordsPage(),
+                builder: (context) => const BuyGoldRecordsPage(),
               ),
             );
           });
@@ -255,37 +244,37 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
           Navigator.of(context, rootNavigator: true).push<void>(
             CupertinoPageRoute(
               title: '购买记录',
-              builder: (context) => const BuyDiamondRecordsPage(),
+              builder: (context) => const BuyGoldRecordsPage(),
             ),
           );
         }
       }
     }
   }
-  _buildItemDiamond(BuyDiamond buyDiamond){
+  _buildItemDiamond(BuyGold buyGold){
     return InkWell(
       onTap: () {
-        _crateOrder(buyDiamond.id);
+        _crateOrder(buyGold.id);
       },
       child: Container(
         height: 150,
-        width: ((MediaQuery.of(context).size.width) / 3.5),
+        width: ((MediaQuery.of(context).size.width) / 2.2),
         margin: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           // color: Colors.white,
           borderRadius: const BorderRadius.all(Radius.circular(10)),
           border: Border.all(width: 1.0, color: Colors.black12),
-          image: DecorationImage(image: AssetImage(ImageIcons.bgBuyDinmond.assetName)),
+          image: DecorationImage(image: AssetImage(ImageIcons.GoldCoins.assetName)),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('${buyDiamond.diamond}钻石',style: const TextStyle(color: Colors.deepOrange,fontSize: 20),),
+            Text('${buyGold.gold}金币',style: const TextStyle(color: Colors.deepOrange,fontSize: 20),),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text('￥',style: TextStyle(color: Colors.black,fontSize: 15),),
-                Text('${buyDiamond.amount / 100}',style: const TextStyle(color: Colors.black,fontSize: 30),),
+                Text('${buyGold.amount / 100}',style: const TextStyle(color: Colors.black,fontSize: 30),),
               ],
             ),
           ],
@@ -295,20 +284,16 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
   }
   _buildOnline() {
     return ListView.builder(
-      itemCount: ((configModel.buyDiamonds.length) ~/ 3) +1,
+      itemCount: ((configModel.buyGolds.length) ~/ 2) +1,
       itemBuilder: (BuildContext _context, int index) {
         List<Widget> widget = [];
-        if(index*3 < configModel.buyDiamonds.length){
-          BuyDiamond buyDiamond = configModel.buyDiamonds[index*3];
-          widget.add(_buildItemDiamond(buyDiamond));
+        if(index*2 < configModel.buyGolds.length){
+          BuyGold buyGold = configModel.buyGolds[index*2];
+          widget.add(_buildItemDiamond(buyGold));
         }
-        if((index*3 +1) < configModel.buyDiamonds.length){
-          BuyDiamond buyDiamond = configModel.buyDiamonds[(index*3 +1)];
-          widget.add(_buildItemDiamond(buyDiamond));
-        }
-        if((index*3 +2) < configModel.buyDiamonds.length){
-          BuyDiamond buyDiamond = configModel.buyDiamonds[(index*3 +2)];
-          widget.add(_buildItemDiamond(buyDiamond));
+        if((index*2 +1) < configModel.buyGolds.length){
+          BuyGold buyGold = configModel.buyGolds[(index*2 +1)];
+          widget.add(_buildItemDiamond(buyGold));
         }
 
         return Row(

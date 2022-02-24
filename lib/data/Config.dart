@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:movies/data/BuyDiamond.dart';
+import 'package:movies/data/BuyGold.dart';
 import 'package:movies/data/OnlinePay.dart';
 import 'package:movies/data/OssConfig.dart';
 import 'package:movies/data/VIPBuy.dart';
@@ -18,6 +19,7 @@ class Config {
   List<VIPBuy> vipBuys = [];
   List<OnlinePay> onlinePays = [];
   List<BuyDiamond> buyDiamonds = [];
+  List<BuyGold> buyGolds = [];
 
   Config();
 
@@ -33,6 +35,7 @@ class Config {
         vipBuys = json['vipBuys'] == null ? [] : (json['vipBuys'] as List).map((i) => VIPBuy.formJson(i)).toList(),
         onlinePays = json['onlinePays'] == null ? [] : (json['onlinePays'] as List).map((i) => OnlinePay.formJson(i)).toList(),
         buyDiamonds = json['buyDiamonds'] == null ? [] : (json['buyDiamonds'] as List).map((i) => BuyDiamond.formJson(i)).toList(),
+        buyGolds = json['buyGolds'] == null ? [] : (json['buyGolds'] as List).map((i) => BuyGold.formJson(i)).toList(),
         ossConfig =
             OssConfig.formJson(json['ossConfig'] ?? OssConfig().toJson());
   Map<String, dynamic> toJson() => {
@@ -48,6 +51,7 @@ class Config {
         'vipBuys': vipBuys.map((e) => e.toJson()).toList(),
         'onlinePays': onlinePays.map((e) => e.toJson()).toList(),
         'buyDiamonds': buyDiamonds.map((e) => e.toJson()).toList(),
+        'buyGolds': buyGolds.map((e) => e.toJson()).toList(),
       };
 
   @override

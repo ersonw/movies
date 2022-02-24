@@ -14,6 +14,7 @@ import 'package:movies/web_view.dart';
 import 'package:movies/xiaoxiong_icon.dart';
 import 'package:qr_code_tools/qr_code_tools.dart';
 import 'AccountManager.dart';
+import 'BuyGoldPage.dart';
 import 'GetQrcode.dart';
 import 'global.dart';
 import 'image_icon.dart';
@@ -85,8 +86,9 @@ class _MyProfile extends State<MyProfile> {
                   );
                   if (res != null) {
                     var image = res[0].thumbPath;
-                    String data = await QrCodeToolsPlugin.decodeFrom(image).catchError(() => {});
-                    if(data.isEmpty) return;
+                    String data = await QrCodeToolsPlugin.decodeFrom(image)
+                        .catchError(() => {});
+                    if (data.isEmpty) return;
                     if (data.contains('http')) {
                       Navigator.push(
                         context,
@@ -214,13 +216,13 @@ class _MyProfile extends State<MyProfile> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
+                InkWell(
+                  onTap: () => _enterGold(),
                   child: Column(
                     children: [
                       Container(
                           margin: const EdgeInsets.only(left: 10, top: 10),
-                          child: Text(
-                            '${Global.profile.user.gold}',
+                          child: Text(Global.getNumbersToChinese(userModel.user.gold),
                             style: const TextStyle(
                                 fontSize: 25, fontWeight: FontWeight.bold),
                           )),
@@ -233,13 +235,13 @@ class _MyProfile extends State<MyProfile> {
                     ],
                   ),
                 ),
-                Container(
+                InkWell(
+                  onTap: () => _enterDiamond(),
                   child: Column(
                     children: [
                       Container(
                           margin: const EdgeInsets.only(left: 10, top: 10),
-                          child: Text(
-                            '${Global.profile.user.diamond}',
+                          child: Text(Global.getNumbersToChinese(userModel.user.diamond),
                             style: const TextStyle(
                                 fontSize: 25, fontWeight: FontWeight.bold),
                           )),
@@ -423,46 +425,67 @@ class _MyProfile extends State<MyProfile> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         TextButton(
-                          onPressed: () {
-                            Navigator.of(context, rootNavigator: true).push<void>(
-                              CupertinoPageRoute(
-                                title: '钻石钱包',
-                                // fullscreenDialog: true,
-                                builder: (context) => const BuyDiamondPage(),
+                          onPressed: () => _enterDiamond(),
+                          child: Column(
+                            children: [
+                              Image.asset(
+                                ImageIcons.goumaizuanshi.assetName,
+                                width: 45,
+                                height: 45,
                               ),
-                            );
-                          },
-                          child: Column(
-                            children: [
-                              Image.asset(ImageIcons.goumaizuanshi.assetName,width: 45,height: 45,),
-                              const Text('购买钻石',style: TextStyle(color: Colors.black,fontSize: 14),),
+                              const Text(
+                                '购买钻石',
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 14),
+                              ),
                             ],
                           ),
                         ),
                         TextButton(
-                          onPressed: () {  },
+                          onPressed: () => _enterGold(),
                           child: Column(
                             children: [
-                              Image.asset(ImageIcons.goumaijinbi.assetName,width: 45,height: 45,),
-                              const Text('购买金币',style: TextStyle(color: Colors.black),),
+                              Image.asset(
+                                ImageIcons.goumaijinbi.assetName,
+                                width: 45,
+                                height: 45,
+                              ),
+                              const Text(
+                                '购买金币',
+                                style: TextStyle(color: Colors.black),
+                              ),
                             ],
                           ),
                         ),
                         TextButton(
-                          onPressed: () {  },
+                          onPressed: () {},
                           child: Column(
                             children: [
-                              Image.asset(ImageIcons.wodeshoucang.assetName,width: 45,height: 45,),
-                              const Text('我的收藏',style: TextStyle(color: Colors.black),),
+                              Image.asset(
+                                ImageIcons.wodeshoucang.assetName,
+                                width: 45,
+                                height: 45,
+                              ),
+                              const Text(
+                                '我的收藏',
+                                style: TextStyle(color: Colors.black),
+                              ),
                             ],
                           ),
                         ),
                         TextButton(
-                          onPressed: () {  },
+                          onPressed: () {},
                           child: Column(
                             children: [
-                              Image.asset(ImageIcons.goumaizuanshi.assetName,width: 45,height: 45,),
-                              const Text('我的下载',style: TextStyle(color: Colors.black),),
+                              Image.asset(
+                                ImageIcons.goumaizuanshi.assetName,
+                                width: 45,
+                                height: 45,
+                              ),
+                              const Text(
+                                '我的下载',
+                                style: TextStyle(color: Colors.black),
+                              ),
                             ],
                           ),
                         ),
@@ -472,38 +495,66 @@ class _MyProfile extends State<MyProfile> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         TextButton(
-                          onPressed: () {  },
+                          onPressed: () {},
                           child: Column(
                             children: [
-                              Image.asset(ImageIcons.kaichejinqun.assetName,width: 45,height: 45,),
-                              const Text('开车进群',style: TextStyle(color: Colors.black),),
+                              Image.asset(
+                                ImageIcons.kaichejinqun.assetName,
+                                width: 45,
+                                height: 45,
+                              ),
+                              const Text(
+                                '开车进群',
+                                style: TextStyle(color: Colors.black),
+                              ),
                             ],
                           ),
                         ),
                         TextButton(
-                          onPressed: () {  },
+                          onPressed: () {},
                           child: Column(
                             children: [
-                              Image.asset(ImageIcons.bangzhufankui.assetName,width: 45,height: 45,),
-                              const Text('帮助反馈',style: TextStyle(color: Colors.black),),
+                              Image.asset(
+                                ImageIcons.bangzhufankui.assetName,
+                                width: 45,
+                                height: 45,
+                              ),
+                              const Text(
+                                '帮助反馈',
+                                style: TextStyle(color: Colors.black),
+                              ),
                             ],
                           ),
                         ),
                         TextButton(
-                          onPressed: () {  },
+                          onPressed: () {},
                           child: Column(
                             children: [
-                              Image.asset(ImageIcons.guankanjilu.assetName,width: 45,height: 45,),
-                              const Text('观看记录',style: TextStyle(color: Colors.black),),
+                              Image.asset(
+                                ImageIcons.guankanjilu.assetName,
+                                width: 45,
+                                height: 45,
+                              ),
+                              const Text(
+                                '观看记录',
+                                style: TextStyle(color: Colors.black),
+                              ),
                             ],
                           ),
                         ),
                         TextButton(
-                          onPressed: () {  },
+                          onPressed: () {},
                           child: Column(
                             children: [
-                              Image.asset(ImageIcons.yingyongzhongxin.assetName,width: 45,height: 45,),
-                              const Text('应用中心',style: TextStyle(color: Colors.black),),
+                              Image.asset(
+                                ImageIcons.yingyongzhongxin.assetName,
+                                width: 45,
+                                height: 45,
+                              ),
+                              const Text(
+                                '应用中心',
+                                style: TextStyle(color: Colors.black),
+                              ),
                             ],
                           ),
                         ),
@@ -522,4 +573,33 @@ class _MyProfile extends State<MyProfile> {
       ),
     );
   }
+
+  void _enterDiamond() {
+    Navigator.of(context, rootNavigator: true)
+        .push<void>(
+          CupertinoPageRoute(
+            title: '钻石钱包',
+            // fullscreenDialog: true,
+            builder: (context) => const BuyDiamondPage(),
+          ),
+        )
+        .then((value) => setState(() {
+              Global.getUserInfo();
+            }));
+  }
+  void _enterGold() {
+    Navigator.of(context, rootNavigator: true)
+        .push<void>(
+      CupertinoPageRoute(
+        title: '金币钱包',
+        // fullscreenDialog: true,
+        builder: (context) => const BuyGoldPage(),
+      ),
+    )
+        .then((value) => setState(() {
+      Global.getUserInfo();
+    }));
+  }
 }
+
+

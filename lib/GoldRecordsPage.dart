@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:movies/data/DiamondRecord.dart';
+import 'package:movies/data/GoldRecord.dart';
 import 'package:movies/data/VIPBuyRecords.dart';
 
 import 'CrateOrderPage.dart';
@@ -14,16 +15,16 @@ import 'global.dart';
 import 'network/NWApi.dart';
 import 'network/NWMethod.dart';
 
-class DiamondRecordsPage extends StatefulWidget {
-  const DiamondRecordsPage({Key? key}) : super(key: key);
+class GoldRecordsPage extends StatefulWidget {
+  const GoldRecordsPage({Key? key}) : super(key: key);
 
   @override
-  _DiamondRecordsPage createState() => _DiamondRecordsPage();
+  _GoldRecordsPage createState() => _GoldRecordsPage();
 }
 
-class _DiamondRecordsPage extends State<DiamondRecordsPage> {
+class _GoldRecordsPage extends State<GoldRecordsPage> {
   final ScrollController _controller = ScrollController();
-  List<DiamondRecord> _list = [];
+  List<GoldRecord> _list = [];
   int total = 0;
   int page = 1;
   bool isLoading = false;
@@ -66,7 +67,7 @@ class _DiamondRecordsPage extends State<DiamondRecordsPage> {
       'page': page,
     };
     String? result = (await DioManager().requestAsync(
-        NWMethod.GET, NWApi.getDiamondRecords, {"data": jsonEncode(parm)}));
+        NWMethod.GET, NWApi.getGoldRecords, {"data": jsonEncode(parm)}));
     if (result != null) {
       print(result);
       Map<String, dynamic> map = jsonDecode(result);
@@ -75,8 +76,8 @@ class _DiamondRecordsPage extends State<DiamondRecordsPage> {
       }
       if (map['list'] != null) {
         if(page > 1) {
-          List<DiamondRecord> list = (map['list'] as List)
-              .map((i) => DiamondRecord.formJson(i))
+          List<GoldRecord> list = (map['list'] as List)
+              .map((i) => GoldRecord.formJson(i))
               .toList();
           setState(() {
             _list.addAll(list);
@@ -84,7 +85,7 @@ class _DiamondRecordsPage extends State<DiamondRecordsPage> {
         }else{
           setState(() {
             _list = (map['list'] as List)
-                .map((i) => DiamondRecord.formJson(i))
+                .map((i) => GoldRecord.formJson(i))
                 .toList();
           });
         }
@@ -102,7 +103,7 @@ class _DiamondRecordsPage extends State<DiamondRecordsPage> {
             itemCount: _list.length,
             controller: _controller,
             itemBuilder: (BuildContext _context, int index) {
-              DiamondRecord records = _list[index];
+              GoldRecord records = _list[index];
               return Container(
                 // height: 150,
                   margin: const EdgeInsets.all(20),
@@ -128,7 +129,7 @@ class _DiamondRecordsPage extends State<DiamondRecordsPage> {
                             const Text('数量:',
                               style: TextStyle(
                                   color: Colors.brown, fontSize: 17),),
-                            Text('${'${records.diamond}'.startsWith('-') ? '': '+'}${records.diamond}', style: const TextStyle(
+                            Text('${'${records.gold}'.startsWith('-') ? '': '+'}${records.gold}', style: const TextStyle(
                                 color: Colors.red, fontSize: 30),)
                           ],
                         ),

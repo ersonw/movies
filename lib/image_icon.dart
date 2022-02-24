@@ -29,4 +29,5 @@ class ImageIcons {
   static const AssetImage bangzhufankui = AssetImage('assets/image/bangzhufankui.png');
   static const AssetImage wode = AssetImage('assets/image/wode.png');
   static const AssetImage bgBuyDinmond = AssetImage('assets/image/bgBuyDinmond.png');
+  static const AssetImage GoldCoins = AssetImage('assets/image/GoldCoins.png');
 }

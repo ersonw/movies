@@ -1,5 +1,6 @@
 import 'package:movies/ProfileChangeNotifier.dart';
 import 'package:movies/data/BuyDiamond.dart';
+import 'package:movies/data/BuyGold.dart';
 import 'package:movies/data/Config.dart';
 import 'package:movies/data/OnlinePay.dart';
 import 'package:movies/data/OssConfig.dart';
@@ -10,6 +11,7 @@ class ConfigModel extends ProfileChangeNotifier {
   OssConfig get ossConfig => profile.config.ossConfig;
   List<VIPBuy> get vipBuys => profile.config.vipBuys;
   List<BuyDiamond> get buyDiamonds => profile.config.buyDiamonds;
+  List<BuyGold> get buyGolds => profile.config.buyGolds;
   List<OnlinePay> get onlinePays => profile.config.onlinePays;
   bool  get lock => profile.config.bootLock;
   String? get lockPasswd => profile.config.bootLockPasswd;
@@ -28,6 +30,10 @@ class ConfigModel extends ProfileChangeNotifier {
   }
   set buyDiamonds(List<BuyDiamond> buyDiamonds){
     profile.config.buyDiamonds = buyDiamonds;
+    notifyListeners();
+  }
+  set buyGolds(List<BuyGold> buyGolds){
+    profile.config.buyGolds = buyGolds;
     notifyListeners();
   }
   set onlinePays(List<OnlinePay> onlinePays){

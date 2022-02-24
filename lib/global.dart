@@ -287,7 +287,19 @@ class Global {
     }
     // print(_userModel.token);
   }
-
+  static String getNumbersToChinese(int n){
+    if(n < 1000){
+      return '$n';
+    }else{
+      double d= n / 1000;
+      if(d < 10){
+        return '${d.toStringAsFixed(2)}K';
+      }else{
+        d= d / 10;
+        return '${d.toStringAsFixed(2)}W';
+      }
+    }
+  }
   static String getDateTime(int date) {
     int t = ((DateTime.now().millisecondsSinceEpoch ~/ 1000) - date);
     String str = '';
@@ -385,7 +397,8 @@ class Global {
         profile.config.onlinePays = config.onlinePays;
         profile.config.vipBuys = config.vipBuys;
         profile.config.buyDiamonds = config.buyDiamonds;
-        print(config.buyDiamonds);
+        profile.config.buyGolds = config.buyGolds;
+        print(config.buyGolds);
         saveProfile();
       }
     }, error: (error) {});
