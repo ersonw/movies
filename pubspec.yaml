@@ -67,6 +67,7 @@ dependencies:
   permission_handler: ^9.2.0
   image_gallery_saver: ^1.7.1
 
+
 flutter_native_splash:
   color: "#FFFFFF"
   image: assets/image/splash.png

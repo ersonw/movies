@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movies/ExampleHomePage.dart';
 import 'package:movies/LockScreenCustom.dart';
+import 'package:movies/RecommendedPage.dart';
 import 'package:movies/index_page.dart';
 import 'package:movies/MyProfile.dart';
 import 'package:movies/news_tab.dart';
@@ -25,23 +26,25 @@ class _HomePageState extends State<HomePage> {
       tabBar: CupertinoTabBar(
         items: const [
           BottomNavigationBarItem(
-              icon: MyProfile.icon,
-              label: MyProfile.title
+              icon: Icon(
+                Icons.recommend,
+              ),
+              label: "推荐"
           ),
           BottomNavigationBarItem(
-            label: NewsTab.title,
-            icon: NewsTab.iosIcon,
+              icon: MyProfile.icon,
+              label: MyProfile.title
           ),
         ],
       ),
       tabBuilder: (context, index) {
         switch (index) {
-          case 1:
+          case 0:
             return CupertinoTabView(
               // defaultTitle: IndexPage.title,
-              builder: (context) => IndexPage(key: songsTabKey),
+              builder: (context) => RecommendedPage(key: songsTabKey),
             );
-          case 0:
+          case 1:
             return CupertinoTabView(
               // defaultTitle: MyProfile.title,
               builder: (context) => const MyProfile(),

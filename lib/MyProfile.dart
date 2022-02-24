@@ -160,416 +160,414 @@ class _MyProfile extends State<MyProfile> {
   }
 
   Widget _buildBody(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          // mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // 头像用户名
-            TextButton(
-              onPressed: () {
-                Navigator.of(context, rootNavigator: true).push<void>(
-                  CupertinoPageRoute(
-                    title: '账号管理',
-                    // fullscreenDialog: true,
-                    builder: (context) => const AccountManager(),
-                  ),
-                );
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 80,
-                    height: 80,
-                    // margin: EdgeInsets.only(left: vw()),
-                    decoration: BoxDecoration(
-                        color: Colors.grey,
-                        borderRadius: BorderRadius.circular(50.0),
-                        image: DecorationImage(
-                          // image: AssetImage('assets/image/default_head.gif'),
-                          image: _buildAvatar(),
-                        )),
-                  ),
-                  Container(
-                      margin: const EdgeInsets.only(left: 10, top: 10),
-                      child: Text(
-                        _user.nickname,
-                        style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black),
+    return  Container(
+      margin: const EdgeInsets.all(15),
+      child: Column(
+        // mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // 头像用户名
+          TextButton(
+            onPressed: () {
+              Navigator.of(context, rootNavigator: true).push<void>(
+                CupertinoPageRoute(
+                  title: '账号管理',
+                  // fullscreenDialog: true,
+                  builder: (context) => const AccountManager(),
+                ),
+              );
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                  width: 80,
+                  height: 80,
+                  // margin: EdgeInsets.only(left: vw()),
+                  decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(50.0),
+                      image: DecorationImage(
+                        // image: AssetImage('assets/image/default_head.gif'),
+                        image: _buildAvatar(),
                       )),
-                  Container(
-                    margin: const EdgeInsets.only(left: 10),
-                    width: 35,
-                    height: 35,
-                    child: Image(
-                      image: _user.sex == 0 ? ImageIcons.nan : ImageIcons.nv,
-                    ),
-                  )
-                ],
-              ),
-            ),
-            // 金币数
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                InkWell(
-                  onTap: () => _enterGold(),
-                  child: Column(
-                    children: [
-                      Container(
-                          margin: const EdgeInsets.only(left: 10, top: 10),
-                          child: Text(Global.getNumbersToChinese(userModel.user.gold),
-                            style: const TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.bold),
-                          )),
-                      Container(
-                          margin: const EdgeInsets.only(left: 10, top: 10),
-                          child: const Text(
-                            '金币',
-                            style: TextStyle(fontSize: 13, color: Colors.grey),
-                          )),
-                    ],
-                  ),
-                ),
-                InkWell(
-                  onTap: () => _enterDiamond(),
-                  child: Column(
-                    children: [
-                      Container(
-                          margin: const EdgeInsets.only(left: 10, top: 10),
-                          child: Text(Global.getNumbersToChinese(userModel.user.diamond),
-                            style: const TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.bold),
-                          )),
-                      Container(
-                          margin: const EdgeInsets.only(left: 10, top: 10),
-                          child: const Text(
-                            '钻石',
-                            style: TextStyle(fontSize: 13, color: Colors.grey),
-                          )),
-                    ],
-                  ),
                 ),
                 Container(
-                  child: Column(
-                    children: [
-                      Container(
-                          margin: EdgeInsets.only(left: 10, top: 10),
-                          child: Text(
-                            '0',
-                            style: TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.bold),
-                          )),
-                      Container(
-                          margin: EdgeInsets.only(left: 10, top: 10),
-                          child: Text(
-                            '推荐数',
-                            style: TextStyle(fontSize: 13, color: Colors.grey),
-                          )),
-                    ],
-                  ),
-                ),
-                Container(
-                  child: Column(
-                    children: [
-                      Container(
-                          margin: EdgeInsets.only(left: 10, top: 10),
-                          child: Text(
-                            '0',
-                            style: TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.bold),
-                          )),
-                      Container(
-                          margin: EdgeInsets.only(left: 10, top: 10),
-                          child: Text(
-                            '我的关注',
-                            style: TextStyle(fontSize: 13, color: Colors.grey),
-                          )),
-                    ],
-                  ),
-                ),
-                Container(
-                  child: Column(
-                    children: [
-                      Container(
-                          margin: EdgeInsets.only(left: 10, top: 10),
-                          child: Text(
-                            '0',
-                            style: TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.bold),
-                          )),
-                      Container(
-                          margin: EdgeInsets.only(left: 10, top: 10),
-                          child: Text(
-                            '我的粉丝',
-                            style: TextStyle(fontSize: 13, color: Colors.grey),
-                          )),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            InkWell(
-              onTap: (() {
-                // Fluttertoast.showToast(msg: '点击我了');
-                Navigator.of(context, rootNavigator: true).push<void>(
-                  CupertinoPageRoute(
-                    title: SettingsTab.title,
-                    fullscreenDialog: true,
-                    builder: (context) => const SettingsTab(),
-                  ),
-                );
-              }),
-              child: Container(
-                margin: const EdgeInsets.all(10),
-                // width: (MediaQuery.of(context).size.width),
-                height: 95,
-                decoration: BoxDecoration(
-                    color: Colors.grey,
-                    borderRadius: BorderRadius.circular(5.0),
-                    image: const DecorationImage(
-                      fit: BoxFit.fill,
-                      image: ImageIcons.zhipianrenjihua,
+                    margin: const EdgeInsets.only(left: 10, top: 10),
+                    child: Text(
+                      _user.nickname,
+                      style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
                     )),
-              ),
-            ),
-            // 三图片
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                InkWell(
-                  onTap: (() {
-                    // Fluttertoast.showToast(msg: '点击我了');
-                    Navigator.of(context, rootNavigator: true).push<void>(
-                      CupertinoPageRoute(
-                        title: "VIP购买",
-                        // fullscreenDialog: true,
-                        builder: (context) => const VIPBuyPage(),
-                      ),
-                    );
-                  }),
-                  child: Container(
-                    margin: const EdgeInsets.only(top: 10),
-                    width: ((MediaQuery.of(context).size.width) / 3.5),
-                    height: 70,
-                    decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(10.0),
-                        image: const DecorationImage(
-                          fit: BoxFit.fill,
-                          image: ImageIcons.vipBuy,
-                        )),
+                Container(
+                  margin: const EdgeInsets.only(left: 10),
+                  width: 35,
+                  height: 35,
+                  child: Image(
+                    image: _user.sex == 0 ? ImageIcons.nan : ImageIcons.nv,
                   ),
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.of(context, rootNavigator: true).push<void>(
-                      CupertinoPageRoute(
-                        title: "推广分享",
-                        // fullscreenDialog: true,
-                        builder: (context) => const UserSharePage(),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.only(top: 10),
-                    width: ((MediaQuery.of(context).size.width) / 3.5),
-                    height: 70,
-                    decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(10.0),
-                        image: const DecorationImage(
-                          fit: BoxFit.fill,
-                          image: ImageIcons.promote,
-                        )),
-                  ),
-                ),
-                InkWell(
-                  child: Container(
-                    margin: const EdgeInsets.only(top: 10),
-                    width: ((MediaQuery.of(context).size.width) / 3.5),
-                    height: 70,
-                    decoration: BoxDecoration(
-                        color: Colors.grey,
-                        borderRadius: BorderRadius.circular(10.0),
-                        image: const DecorationImage(
-                          fit: BoxFit.fill,
-                          image: ImageIcons.income,
-                        )),
-                  ),
-                ),
+                )
               ],
             ),
-            Container(
-              width: (MediaQuery.of(context).size.width),
-              // height: 200,
-              margin: const EdgeInsets.only(top: 20),
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.all(Radius.circular(10)),
-                border: Border.all(width: 1.0, color: Colors.black12),
-                // color: Colors.white30,
-                // image: DecorationImage(
-                //   image: AssetImage(ImageIcons.button_y.assetName),
-                //   fit: BoxFit.fill,
-                // ),
-              ),
-              child: Container(
-                margin: const EdgeInsets.all(10),
+          ),
+          // 金币数
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              InkWell(
+                onTap: () => _enterGold(),
                 child: Column(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        TextButton(
-                          onPressed: () => _enterDiamond(),
-                          child: Column(
-                            children: [
-                              Image.asset(
-                                ImageIcons.goumaizuanshi.assetName,
-                                width: 45,
-                                height: 45,
-                              ),
-                              const Text(
-                                '购买钻石',
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 14),
-                              ),
-                            ],
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () => _enterGold(),
-                          child: Column(
-                            children: [
-                              Image.asset(
-                                ImageIcons.goumaijinbi.assetName,
-                                width: 45,
-                                height: 45,
-                              ),
-                              const Text(
-                                '购买金币',
-                                style: TextStyle(color: Colors.black),
-                              ),
-                            ],
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: Column(
-                            children: [
-                              Image.asset(
-                                ImageIcons.wodeshoucang.assetName,
-                                width: 45,
-                                height: 45,
-                              ),
-                              const Text(
-                                '我的收藏',
-                                style: TextStyle(color: Colors.black),
-                              ),
-                            ],
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: Column(
-                            children: [
-                              Image.asset(
-                                ImageIcons.goumaizuanshi.assetName,
-                                width: 45,
-                                height: 45,
-                              ),
-                              const Text(
-                                '我的下载',
-                                style: TextStyle(color: Colors.black),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        TextButton(
-                          onPressed: () {},
-                          child: Column(
-                            children: [
-                              Image.asset(
-                                ImageIcons.kaichejinqun.assetName,
-                                width: 45,
-                                height: 45,
-                              ),
-                              const Text(
-                                '开车进群',
-                                style: TextStyle(color: Colors.black),
-                              ),
-                            ],
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: Column(
-                            children: [
-                              Image.asset(
-                                ImageIcons.bangzhufankui.assetName,
-                                width: 45,
-                                height: 45,
-                              ),
-                              const Text(
-                                '帮助反馈',
-                                style: TextStyle(color: Colors.black),
-                              ),
-                            ],
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: Column(
-                            children: [
-                              Image.asset(
-                                ImageIcons.guankanjilu.assetName,
-                                width: 45,
-                                height: 45,
-                              ),
-                              const Text(
-                                '观看记录',
-                                style: TextStyle(color: Colors.black),
-                              ),
-                            ],
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: Column(
-                            children: [
-                              Image.asset(
-                                ImageIcons.yingyongzhongxin.assetName,
-                                width: 45,
-                                height: 45,
-                              ),
-                              const Text(
-                                '应用中心',
-                                style: TextStyle(color: Colors.black),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                    Container(
+                        margin: const EdgeInsets.only(left: 10, top: 10),
+                        child: Text(Global.getNumbersToChinese(userModel.user.gold),
+                          style: const TextStyle(
+                              fontSize: 25, fontWeight: FontWeight.bold),
+                        )),
+                    Container(
+                        margin: const EdgeInsets.only(left: 10, top: 10),
+                        child: const Text(
+                          '金币',
+                          style: TextStyle(fontSize: 13, color: Colors.grey),
+                        )),
                   ],
                 ),
               ),
+              InkWell(
+                onTap: () => _enterDiamond(),
+                child: Column(
+                  children: [
+                    Container(
+                        margin: const EdgeInsets.only(left: 10, top: 10),
+                        child: Text(Global.getNumbersToChinese(userModel.user.diamond),
+                          style: const TextStyle(
+                              fontSize: 25, fontWeight: FontWeight.bold),
+                        )),
+                    Container(
+                        margin: const EdgeInsets.only(left: 10, top: 10),
+                        child: const Text(
+                          '钻石',
+                          style: TextStyle(fontSize: 13, color: Colors.grey),
+                        )),
+                  ],
+                ),
+              ),
+              Container(
+                child: Column(
+                  children: [
+                    Container(
+                        margin: EdgeInsets.only(left: 10, top: 10),
+                        child: Text(
+                          '0',
+                          style: TextStyle(
+                              fontSize: 25, fontWeight: FontWeight.bold),
+                        )),
+                    Container(
+                        margin: EdgeInsets.only(left: 10, top: 10),
+                        child: Text(
+                          '推荐数',
+                          style: TextStyle(fontSize: 13, color: Colors.grey),
+                        )),
+                  ],
+                ),
+              ),
+              Container(
+                child: Column(
+                  children: [
+                    Container(
+                        margin: EdgeInsets.only(left: 10, top: 10),
+                        child: Text(
+                          '0',
+                          style: TextStyle(
+                              fontSize: 25, fontWeight: FontWeight.bold),
+                        )),
+                    Container(
+                        margin: EdgeInsets.only(left: 10, top: 10),
+                        child: Text(
+                          '我的关注',
+                          style: TextStyle(fontSize: 13, color: Colors.grey),
+                        )),
+                  ],
+                ),
+              ),
+              Container(
+                child: Column(
+                  children: [
+                    Container(
+                        margin: EdgeInsets.only(left: 10, top: 10),
+                        child: Text(
+                          '0',
+                          style: TextStyle(
+                              fontSize: 25, fontWeight: FontWeight.bold),
+                        )),
+                    Container(
+                        margin: EdgeInsets.only(left: 10, top: 10),
+                        child: Text(
+                          '我的粉丝',
+                          style: TextStyle(fontSize: 13, color: Colors.grey),
+                        )),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          InkWell(
+            onTap: (() {
+              // Fluttertoast.showToast(msg: '点击我了');
+              Navigator.of(context, rootNavigator: true).push<void>(
+                CupertinoPageRoute(
+                  title: SettingsTab.title,
+                  fullscreenDialog: true,
+                  builder: (context) => const SettingsTab(),
+                ),
+              );
+            }),
+            child: Container(
+              margin: const EdgeInsets.all(10),
+              // width: (MediaQuery.of(context).size.width),
+              height: 95,
+              decoration: BoxDecoration(
+                  color: Colors.grey,
+                  borderRadius: BorderRadius.circular(5.0),
+                  image: const DecorationImage(
+                    fit: BoxFit.fill,
+                    image: ImageIcons.zhipianrenjihua,
+                  )),
             ),
-            Expanded(
-              child: Container(),
+          ),
+          // 三图片
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              InkWell(
+                onTap: (() {
+                  // Fluttertoast.showToast(msg: '点击我了');
+                  Navigator.of(context, rootNavigator: true).push<void>(
+                    CupertinoPageRoute(
+                      title: "VIP购买",
+                      // fullscreenDialog: true,
+                      builder: (context) => const VIPBuyPage(),
+                    ),
+                  );
+                }),
+                child: Container(
+                  margin: const EdgeInsets.only(top: 10),
+                  width: ((MediaQuery.of(context).size.width) / 3.5),
+                  height: 70,
+                  decoration: BoxDecoration(
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.circular(10.0),
+                      image: const DecorationImage(
+                        fit: BoxFit.fill,
+                        image: ImageIcons.vipBuy,
+                      )),
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  Navigator.of(context, rootNavigator: true).push<void>(
+                    CupertinoPageRoute(
+                      title: "推广分享",
+                      // fullscreenDialog: true,
+                      builder: (context) => const UserSharePage(),
+                    ),
+                  );
+                },
+                child: Container(
+                  margin: const EdgeInsets.only(top: 10),
+                  width: ((MediaQuery.of(context).size.width) / 3.5),
+                  height: 70,
+                  decoration: BoxDecoration(
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.circular(10.0),
+                      image: const DecorationImage(
+                        fit: BoxFit.fill,
+                        image: ImageIcons.promote,
+                      )),
+                ),
+              ),
+              InkWell(
+                child: Container(
+                  margin: const EdgeInsets.only(top: 10),
+                  width: ((MediaQuery.of(context).size.width) / 3.5),
+                  height: 70,
+                  decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(10.0),
+                      image: const DecorationImage(
+                        fit: BoxFit.fill,
+                        image: ImageIcons.income,
+                      )),
+                ),
+              ),
+            ],
+          ),
+          Container(
+            width: (MediaQuery.of(context).size.width),
+            // height: 200,
+            margin: const EdgeInsets.only(top: 20),
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
+              border: Border.all(width: 1.0, color: Colors.black12),
+              // color: Colors.white30,
+              // image: DecorationImage(
+              //   image: AssetImage(ImageIcons.button_y.assetName),
+              //   fit: BoxFit.fill,
+              // ),
             ),
-            // const LogOutButton(),
-          ],
-        ),
+            child: Container(
+              margin: const EdgeInsets.all(10),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton(
+                        onPressed: () => _enterDiamond(),
+                        child: Column(
+                          children: [
+                            Image.asset(
+                              ImageIcons.goumaizuanshi.assetName,
+                              width: 45,
+                              height: 45,
+                            ),
+                            const Text(
+                              '购买钻石',
+                              style: TextStyle(
+                                  color: Colors.black, fontSize: 14),
+                            ),
+                          ],
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () => _enterGold(),
+                        child: Column(
+                          children: [
+                            Image.asset(
+                              ImageIcons.goumaijinbi.assetName,
+                              width: 45,
+                              height: 45,
+                            ),
+                            const Text(
+                              '购买金币',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ],
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {},
+                        child: Column(
+                          children: [
+                            Image.asset(
+                              ImageIcons.wodeshoucang.assetName,
+                              width: 45,
+                              height: 45,
+                            ),
+                            const Text(
+                              '我的收藏',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ],
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {},
+                        child: Column(
+                          children: [
+                            Image.asset(
+                              ImageIcons.goumaizuanshi.assetName,
+                              width: 45,
+                              height: 45,
+                            ),
+                            const Text(
+                              '我的下载',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton(
+                        onPressed: () {},
+                        child: Column(
+                          children: [
+                            Image.asset(
+                              ImageIcons.kaichejinqun.assetName,
+                              width: 45,
+                              height: 45,
+                            ),
+                            const Text(
+                              '开车进群',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ],
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {},
+                        child: Column(
+                          children: [
+                            Image.asset(
+                              ImageIcons.bangzhufankui.assetName,
+                              width: 45,
+                              height: 45,
+                            ),
+                            const Text(
+                              '帮助反馈',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ],
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {},
+                        child: Column(
+                          children: [
+                            Image.asset(
+                              ImageIcons.guankanjilu.assetName,
+                              width: 45,
+                              height: 45,
+                            ),
+                            const Text(
+                              '观看记录',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ],
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {},
+                        child: Column(
+                          children: [
+                            Image.asset(
+                              ImageIcons.yingyongzhongxin.assetName,
+                              width: 45,
+                              height: 45,
+                            ),
+                            const Text(
+                              '应用中心',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+            child: Container(),
+          ),
+          // const LogOutButton(),
+        ],
       ),
     );
   }
