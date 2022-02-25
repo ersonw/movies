@@ -127,8 +127,8 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
                           ),
                         ),
                         Image.asset(
-                          ImageIcons.bgBuyDinmond.assetName,
-                          width: 45,
+                          ImageIcons.diamond.assetName,
+                          width: 30,
                         ),
                       ],
                     ),

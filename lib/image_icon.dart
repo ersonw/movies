@@ -30,4 +30,11 @@ class ImageIcons {
   static const AssetImage wode = AssetImage('assets/image/wode.png');
   static const AssetImage bgBuyDinmond = AssetImage('assets/image/bgBuyDinmond.png');
   static const AssetImage GoldCoins = AssetImage('assets/image/GoldCoins.png');
+  static const AssetImage reason = AssetImage('assets/image/reason.png');
+  static const AssetImage top1Bg = AssetImage('assets/image/top1Bg.png');
+  static const AssetImage share = AssetImage('assets/image/share.png');
+  static const AssetImage star = AssetImage('assets/image/star.png');
+  static const AssetImage star_half = AssetImage('assets/image/star-half.png');
+  static const AssetImage nomalBg = AssetImage('assets/image/nomalBg.png');
+  static const AssetImage diamond = AssetImage('assets/image/diamond.png');
 }

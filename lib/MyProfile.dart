@@ -253,7 +253,7 @@ class _MyProfile extends State<MyProfile> {
                   ],
                 ),
               ),
-              Container(
+              InkWell(
                 child: Column(
                   children: [
                     Container(
@@ -272,7 +272,7 @@ class _MyProfile extends State<MyProfile> {
                   ],
                 ),
               ),
-              Container(
+              InkWell(
                 child: Column(
                   children: [
                     Container(
@@ -291,7 +291,7 @@ class _MyProfile extends State<MyProfile> {
                   ],
                 ),
               ),
-              Container(
+              InkWell(
                 child: Column(
                   children: [
                     Container(

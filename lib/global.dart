@@ -287,6 +287,65 @@ class Global {
     }
     // print(_userModel.token);
   }
+  static Widget buildPlayIcon(Function fn){
+    return InkWell(
+      onTap: () => fn(),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 60,
+                height: 60,
+                decoration: const BoxDecoration(
+                  color: Colors.black54,
+                  borderRadius: BorderRadius.all(Radius.circular(30)),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      // mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 0,
+                          height: 25,
+                          margin: const EdgeInsets.only(left: 20,right: 20),
+                          decoration: const BoxDecoration(
+                            border: Border(
+                              // 四个值 top right bottom left
+                              top: BorderSide(
+                                  color: Colors.white,
+                                  width: 12.5,
+                                  style: BorderStyle.solid),
+                              bottom: BorderSide(
+                                  color: Colors.white,
+                                  width: 12.5,
+                                  style: BorderStyle.solid),
+                              right: BorderSide(
+                                  color: Colors.transparent,
+                                  width: 0,
+                                  style: BorderStyle.solid),
+                              left: BorderSide(
+                                  color: Colors.transparent,
+                                  width: 24,
+                                  style: BorderStyle.solid),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
   static String getNumbersToChinese(int n){
     if(n < 1000){
       return '$n';

@@ -110,7 +110,7 @@ class _BuyGoldPage extends State<BuyGoldPage>
                         ),
                         Image.asset(
                           ImageIcons.GoldCoins.assetName,
-                          width: 45,
+                          width: 30,
                         ),
                       ],
                     ),
