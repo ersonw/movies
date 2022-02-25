@@ -96,7 +96,7 @@ class _RecommendedPage extends State<RecommendedPage> {
                         fontWeight: FontWeight.bold),
                   ),
                 ),
-                _buildPlay(recommended.diamond)
+                _buildPlay(recommended)
               ],
             ),
           ),
@@ -113,7 +113,7 @@ class _RecommendedPage extends State<RecommendedPage> {
                 children: [
                   Container(
                     margin: const EdgeInsets.only(left: 50),
-                    width: (MediaQuery.of(context).size.width) / 1.4,
+                    width: (MediaQuery.of(context).size.width) / 1.6,
                     child: Text(recommended.title,
                       style: const TextStyle(color: Colors.black,fontSize: 17,fontWeight: FontWeight.normal),),
                   )
@@ -289,19 +289,23 @@ class _RecommendedPage extends State<RecommendedPage> {
       Text("Tab2"),
     ]);
   }
-  _buildPlay(int diamond){
-    if(diamond == 0){
-      return Container(
-          width: 100,
-          height: 30,
-          margin: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(
-                Radius.circular(20)),
-            border:
-            Border.all(width: 1.0, color: Colors.red),
-          ),
-          child: InkWell(
+  _buildPlay(Recommended recommended){
+    int diamond = recommended.diamond;
+    if(diamond == 0) {
+      return InkWell(
+          onTap: (){
+            Global.showDialogVideo(recommended.title, recommended.image);
+          },
+          child: Container(
+            width: 100,
+            height: 30,
+            margin: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(
+                  Radius.circular(20)),
+              border:
+              Border.all(width: 1.0, color: Colors.red),
+            ),
             child: Container(
               margin: const EdgeInsets.only(left: 10),
               child: Row(
@@ -317,9 +321,14 @@ class _RecommendedPage extends State<RecommendedPage> {
                 ],
               ),
             ),
-          ));
+          )
+      );
     }
-    return Container(
+    return InkWell(
+      onTap: (){
+
+      },
+      child: Container(
         width: 100,
         height: 30,
         margin: const EdgeInsets.all(10),
@@ -327,18 +336,17 @@ class _RecommendedPage extends State<RecommendedPage> {
           borderRadius: const BorderRadius.all(Radius.circular(20)),
           border: Border.all(width: 1.0, color: Colors.orange),
         ),
-        child: InkWell(
-          child:  Container(
-            margin: const EdgeInsets.only(left: 10),
+        child: Container(
+          margin: const EdgeInsets.only(left: 10),
 
-            child: Row(
-              children: [
-                Image.asset(ImageIcons.diamond.assetName,width: 15,),
-                Text('$diamond钻石',style: const TextStyle(color: Colors.orange),),
-              ],
-            ),
+          child: Row(
+            children: [
+              Image.asset(ImageIcons.diamond.assetName,width: 15,),
+              Text('$diamond钻石',style: const TextStyle(color: Colors.orange),),
+            ],
           ),
-        )
+        ),
+      ),
     );
   }
   _buildStar(double m){

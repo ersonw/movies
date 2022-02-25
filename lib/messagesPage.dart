@@ -69,9 +69,9 @@ class _MessagesPage extends State<MessagesPage>{
     ));
     String kefumsg = _messages.kefuMessage.isNotEmpty && _messages.kefuMessage.last.text != null ? _messages.kefuMessage.last.text! : (_messages.kefuMessage.isNotEmpty && _messages.kefuMessage.last.image != null ? '[图片]' : '暂无消息');
     kefumsg = kefumsg.replaceAll('\\n', ' ');
-    if(kefumsg.length > 18){
-      kefumsg = kefumsg.substring(0,18) + '... ' ;
-    }
+    // if(kefumsg.length > 18){
+    //   kefumsg = kefumsg.substring(0,18) + '... ' ;
+    // }
     newIn = 0;
     for(int i=0;i< _messages.kefuMessage.length;i++){
       if(_messages.kefuMessage[i].isRead == false){

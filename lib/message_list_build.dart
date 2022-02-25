@@ -65,10 +65,13 @@ class _MessageListBuild extends State<MessageListBuild> {
                       ),
                       const Padding(padding: EdgeInsets.only(top: 8)),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            text!,
+                          SizedBox(
+                            width: (MediaQuery.of(context).size.width) / 1.8,
+                            child: Text(text!,
+                              style: TextStyle(color: Colors.grey,overflow: TextOverflow.clip),
+                            ),
                           ),
                           Text(date!),
                         ],

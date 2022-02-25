@@ -1,11 +1,14 @@
 import 'package:camera/camera.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:image_pickers/image_pickers.dart';
 import 'package:movies/LoadingChangeNotifier.dart';
 import 'package:movies/MessagesChangeNotifier.dart';
+import 'package:movies/SpreadVideoDialog.dart';
 import 'package:movies/data/KefuMessage.dart';
 import 'package:movies/data/Messages.dart';
 import 'package:movies/data/SystemMessage.dart';
@@ -33,6 +36,9 @@ import 'package:movies/utils/UploadOss.dart';
 import 'LoadingDialog.dart';
 import 'data/Profile.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'dart:ui' as ui;
+
 final MessagesChangeNotifier messagesChangeNotifier = MessagesChangeNotifier();
 final KeFuMessageModel keFuMessageModel = KeFuMessageModel();
 final ConfigModel configModel = ConfigModel();
@@ -581,6 +587,44 @@ class Global {
 
   static Future<void> loading(bool load) async {
     loadingChangeNotifier.isLoading = load;
+  }
+  static Future<void> showDialogVideo(String title, String image) async {
+    Navigator.push(MainContext, DialogRouter(SpreadVideoDialog(
+      title: title,
+      image: image,
+    )));
+  }
+  static Future<bool> requestPhotosPermission() async {
+    //获取当前的权限
+    var statusPhotos = await Permission.photos.status;
+    var statusCamera = await Permission.camera.status;
+    if (statusPhotos == PermissionStatus.granted && statusCamera == PermissionStatus.granted) {
+      //已经授权
+      return true;
+    } else {
+      //未授权则发起一次申请
+      statusPhotos = await Permission.photos.request();
+      statusCamera = await Permission.camera.request();
+      if (statusPhotos == PermissionStatus.granted && statusCamera == PermissionStatus.granted) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+  static Future<String?> capturePng(GlobalKey repaintKey) async {
+    try {
+      print('开始保存');
+      RenderRepaintBoundary boundary = repaintKey.currentContext?.findRenderObject()! as RenderRepaintBoundary;
+      ui.Image image = await boundary.toImage();
+      ByteData byteData = (await image.toByteData(format: ui.ImageByteFormat.png))!;
+      final result = await ImageGallerySaver.saveImage(byteData.buffer.asUint8List());
+      print(result); // result是图片地址
+      Global.showWebColoredToast(result);
+    } catch (e) {
+      print(e);
+    }
+    return null;
   }
 }
 class DialogRouter extends PageRouteBuilder{

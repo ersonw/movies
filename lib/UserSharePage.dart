@@ -3,11 +3,9 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:movies/UserShareRecordsPage.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'dart:ui' as ui;
 import 'global.dart';
 import 'image_icon.dart';
 
@@ -77,7 +75,7 @@ class _UserSharePage extends State<UserSharePage> {
               ),
               width: 200,
               height: 45,
-              margin: const EdgeInsets.only(left: 40, right: 40, bottom: 100),
+              margin: const EdgeInsets.only(left: 40, right: 40, bottom: 200),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -109,10 +107,10 @@ class _UserSharePage extends State<UserSharePage> {
                       ),
                       child: QrImage(
                         data: 'https://img2.woyaogexing.com/2019/09/06/f9afde08c5a4460cb08389a6c7f74c7a!600x600.jpeg',
-                        size: 200,
+                        size: 150,
                         version: QrVersions.auto,
                         embeddedImageStyle: QrEmbeddedImageStyle(
-                          size: const Size(50, 50),
+                          size: const Size(30, 30),
                         ),
                         embeddedImage: NetworkImage(
                             'https://img2.woyaogexing.com/2019/09/06/f9afde08c5a4460cb08389a6c7f74c7a!600x600.jpeg'),
@@ -122,7 +120,9 @@ class _UserSharePage extends State<UserSharePage> {
                   children: [
                     InkWell(
                       onTap: () async{
-                        await capturePng();
+                        if(await Global.requestPhotosPermission()){
+                          await Global.capturePng(repaintKey);
+                        }
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -135,7 +135,7 @@ class _UserSharePage extends State<UserSharePage> {
                             fit: BoxFit.fill,
                           ),
                         ),
-                        width: 200,
+                        width: 150,
                         height: 45,
                         margin: const EdgeInsets.only(right: 10),
                         child: Row(
@@ -145,15 +145,18 @@ class _UserSharePage extends State<UserSharePage> {
                               '保存分享二维码',
                               style: TextStyle(
                                   color: Colors.black,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold),
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.normal),
                             )
                           ],
                         ),
                       ),
                     ),
                     InkWell(
-                      onTap: () {},
+                      onTap: () async{
+                        await Clipboard.setData(ClipboardData(text: 'test'));
+                        Global.showWebColoredToast('复制成功！');
+                      },
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius:
@@ -165,7 +168,7 @@ class _UserSharePage extends State<UserSharePage> {
                             fit: BoxFit.fill,
                           ),
                         ),
-                        width: 200,
+                        width: 150,
                         height: 45,
                         margin: const EdgeInsets.only(right: 10, top: 20),
                         child: Row(
@@ -175,8 +178,8 @@ class _UserSharePage extends State<UserSharePage> {
                               '复制分享链接',
                               style: TextStyle(
                                   color: Colors.black,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold),
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.normal),
                             )
                           ],
                         ),
@@ -192,20 +195,7 @@ class _UserSharePage extends State<UserSharePage> {
     );
   }
 
-  Future<String?> capturePng() async {
-    try {
-      print('开始保存');
-      RenderRepaintBoundary boundary = repaintKey.currentContext?.findRenderObject()! as RenderRepaintBoundary;
-      ui.Image image = await boundary.toImage();
-      ByteData byteData = (await image.toByteData(format: ui.ImageByteFormat.png))!;
-      final result = await ImageGallerySaver.saveImage(byteData.buffer.asUint8List());
-      print(result); // result是图片地址
-      Global.showWebColoredToast('保存成功');
-    } catch (e) {
-      print(e);
-    }
-    return null;
-  }
+
 
   @override
   void dispose() {

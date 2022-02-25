@@ -130,6 +130,7 @@ Future<bool> ShowPictureFullSceen(BuildContext context, String? title, String? t
       });
   return _sure;
 }
+
 Future<String> ShowInputDialogAsync(BuildContext context, {String? title, String? text, String? hintText})async {
   TextEditingController textEditingController = TextEditingController();
   await showCupertinoDialog(

@@ -136,7 +136,7 @@ class _BuyGoldPage extends State<BuyGoldPage>
                                       borderRadius: BorderRadius.circular(5))),
                             ),
                             child: Container(
-                              width: 150,
+                              width: 140,
                               alignment: Alignment.center,
                               child: const Text(
                                 '充值记录',
@@ -162,7 +162,7 @@ class _BuyGoldPage extends State<BuyGoldPage>
                                       borderRadius: BorderRadius.circular(5))),
                             ),
                             child: Container(
-                              width: 150,
+                              width: 140,
                               alignment: Alignment.center,
                               child: const Text(
                                 '收支明细',
@@ -258,7 +258,7 @@ class _BuyGoldPage extends State<BuyGoldPage>
       },
       child: Container(
         height: 150,
-        width: ((MediaQuery.of(context).size.width) / 2.2),
+        width: ((MediaQuery.of(context).size.width) / 2.3),
         margin: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           // color: Colors.white,
@@ -274,7 +274,7 @@ class _BuyGoldPage extends State<BuyGoldPage>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text('￥',style: TextStyle(color: Colors.black,fontSize: 15),),
-                Text('${buyGold.amount / 100}',style: const TextStyle(color: Colors.black,fontSize: 30),),
+                Text('${buyGold.amount ~/ 100}',style: const TextStyle(color: Colors.black,fontSize: 30),),
               ],
             ),
           ],

@@ -147,7 +147,7 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
                                       borderRadius: BorderRadius.circular(5))),
                             ),
                             child: Container(
-                              width: 150,
+                              width: 140,
                               alignment: Alignment.center,
                               child: const Text(
                                 '去提现',
@@ -173,7 +173,7 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
                                       borderRadius: BorderRadius.circular(5))),
                             ),
                             child: Container(
-                              width: 150,
+                              width: 140,
                               alignment: Alignment.center,
                               child: const Text(
                                 '收支明细',
@@ -269,7 +269,7 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
       },
       child: Container(
         height: 150,
-        width: ((MediaQuery.of(context).size.width) / 3.5),
+        width: ((MediaQuery.of(context).size.width) / 3.6),
         margin: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           // color: Colors.white,
@@ -285,7 +285,7 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text('￥',style: TextStyle(color: Colors.black,fontSize: 15),),
-                Text('${buyDiamond.amount / 100}',style: const TextStyle(color: Colors.black,fontSize: 30),),
+                Text('${(buyDiamond.amount ~/ 100)}',style: const TextStyle(color: Colors.black,fontSize: 30),),
               ],
             ),
           ],
