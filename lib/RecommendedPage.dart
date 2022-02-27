@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:movies/PlayerPage.dart';
 import 'package:movies/image_icon.dart';
 
 import 'data/Recommended.dart';
@@ -133,7 +134,14 @@ class _RecommendedPage extends State<RecommendedPage> {
               ),
             ),
             child: Global.buildPlayIcon((){
-              print(recommended.title);
+              // print(recommended.title);
+              Navigator.of(context, rootNavigator: true).push<void>(
+                CupertinoPageRoute(
+                  // title: '金币钱包',
+                  // fullscreenDialog: true,
+                  builder: (context) => PlayerPage(id: recommended.vid),
+                ),
+              );
             }),
           ),
           Container(

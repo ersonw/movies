@@ -11,6 +11,7 @@ class Recommended {
   double face = 0;
   int type = 0;
   int diamond = 0;
+  int vid = 0;
 
   Recommended.formJson(Map<String, dynamic> json)
       : title = json['title'],

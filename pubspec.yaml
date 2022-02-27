@@ -66,6 +66,7 @@ dependencies:
     git: https://github.com/newcoremobile/ncindexlistview.git
   permission_handler: ^9.2.0
   image_gallery_saver: ^1.7.1
+  video_player: ^2.2.19
 
 
 flutter_native_splash:

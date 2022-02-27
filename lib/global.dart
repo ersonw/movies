@@ -324,7 +324,7 @@ class Global {
                               // 四个值 top right bottom left
                               top: BorderSide(
                                   color: Colors.white,
-                                  width: 12.5,
+                                  width: 13,
                                   style: BorderStyle.solid),
                               bottom: BorderSide(
                                   color: Colors.white,
