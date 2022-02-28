@@ -115,7 +115,7 @@ class _BuyGoldPage extends State<BuyGoldPage>
                       ],
                     ),
                     Container(
-                      margin: const EdgeInsets.all(20),
+                      margin: const EdgeInsets.only(top: 20,bottom: 20),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -123,7 +123,7 @@ class _BuyGoldPage extends State<BuyGoldPage>
                             onPressed: () {
                               Navigator.of(context, rootNavigator: true).push<void>(
                                 CupertinoPageRoute(
-                                  // title: '确认订单',
+                                  title: '充值记录',
                                   builder: (context) => const BuyGoldRecordsPage(),
                                 ),
                               );
@@ -216,7 +216,7 @@ class _BuyGoldPage extends State<BuyGoldPage>
         ).then((value) {
           Navigator.of(context, rootNavigator: true).push<void>(
             CupertinoPageRoute(
-              title: '购买记录',
+              title: '充值记录',
               builder: (context) => const BuyGoldRecordsPage(),
             ),
           );
@@ -235,7 +235,7 @@ class _BuyGoldPage extends State<BuyGoldPage>
           ).then((value) {
             Navigator.of(context, rootNavigator: true).push<void>(
               CupertinoPageRoute(
-                title: '购买记录',
+                title: '充值记录',
                 builder: (context) => const BuyGoldRecordsPage(),
               ),
             );
@@ -243,7 +243,7 @@ class _BuyGoldPage extends State<BuyGoldPage>
         }else{
           Navigator.of(context, rootNavigator: true).push<void>(
             CupertinoPageRoute(
-              title: '购买记录',
+              title: '充值记录',
               builder: (context) => const BuyGoldRecordsPage(),
             ),
           );

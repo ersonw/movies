@@ -76,7 +76,7 @@ class _CrateOrderPage extends State<CrateOrderPage> {
         ),
         child: Container(
           // width: ((MediaQuery.of(context).size.width) / 1.5),
-          // margin: EdgeInsets.all(10),
+          margin: const EdgeInsets.only(top: 40,left: 5,right: 5),
           child: Column(
             children: [
               Container(
@@ -84,7 +84,7 @@ class _CrateOrderPage extends State<CrateOrderPage> {
                   border:
                   Border(bottom: BorderSide(color: Colors.grey, width: 1)),
                 ),
-                margin: const EdgeInsets.all(40),
+                // margin: const EdgeInsets.only(top: 40,left: 5,right: 5),
                 child: Row(
                   children: [
                     const Text(
@@ -104,14 +104,14 @@ class _CrateOrderPage extends State<CrateOrderPage> {
                   border: Border(
                       bottom: BorderSide(color: Colors.grey, width: 1)),
                 ),
-                margin: const EdgeInsets.only(left: 40, right: 40, top: 10),
+                margin: const EdgeInsets.only(top: 40),
                 child: Row(
                   children: [
                     const Text(
                       '交易说明：',
                       style: TextStyle(fontSize: 17, color: Colors.black54),
                     ),
-                    Container(
+                    SizedBox(
                       width: ((MediaQuery.of(context).size.width) / 2),
                       child: Text(
                         _crateOrder.describes!,
@@ -129,7 +129,7 @@ class _CrateOrderPage extends State<CrateOrderPage> {
                   border:
                   Border(bottom: BorderSide(color: Colors.grey, width: 1)),
                 ),
-                margin: const EdgeInsets.all(40),
+                margin: const EdgeInsets.only(top: 40),
                 child: Row(
                   children: [
                     const Text(
@@ -151,8 +151,7 @@ class _CrateOrderPage extends State<CrateOrderPage> {
                   border:
                   Border(bottom: BorderSide(color: Colors.grey, width: 1)),
                 ),
-                margin: const EdgeInsets.only(
-                    left: 40, right: 40, top: 10, bottom: 10),
+                margin: const EdgeInsets.only(top: 40),
                 child: Row(
                   children: [
                     const Text(
@@ -176,11 +175,11 @@ class _CrateOrderPage extends State<CrateOrderPage> {
                                 children: [
                                   Text(_onlinePay.title,
                                     style: const TextStyle(
-                                        fontSize: 20,
+                                        fontSize: 15,
                                         color: Colors.black54,
                                         fontWeight: FontWeight.bold),
                                   ),
-                                  _onlinePay.title.contains('钻石') ? Text('(${userModel.user.diamond})',
+                                  _onlinePay.title.contains('钻石') ? Text('(${Global.getNumbersToChinese(userModel.user.diamond)})',
                                     style: const TextStyle(
                                         fontSize: 15,
                                         color: Colors.black54,
@@ -195,7 +194,7 @@ class _CrateOrderPage extends State<CrateOrderPage> {
                 ),
               ),
               Container(
-                margin: const EdgeInsets.all(40),
+                margin: const EdgeInsets.only(top: 40),
                 width: (MediaQuery.of(context).size.width) - 100,
                 child: TextButton(
                   onPressed: () {

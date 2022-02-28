@@ -334,7 +334,13 @@ class _RecommendedPage extends State<RecommendedPage> {
     }
     return InkWell(
       onTap: (){
-
+        Navigator.of(context, rootNavigator: true).push<void>(
+          CupertinoPageRoute(
+            // title: '金币钱包',
+            // fullscreenDialog: true,
+            builder: (context) => PlayerPage(id: recommended.vid),
+          ),
+        );
       },
       child: Container(
         width: 100,

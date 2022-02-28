@@ -365,6 +365,19 @@ class Global {
       }
     }
   }
+  // static String getNumbersToChinese(int n){
+  //   if(n < 1000){
+  //     return '$n';
+  //   }else{
+  //     int d= n ~/ 1000;
+  //     if(d < 10){
+  //       return '${d}K';
+  //     }else{
+  //       d= d ~/ 10;
+  //       return '${d}W';
+  //     }
+  //   }
+  // }
   static String getDateTime(int date) {
     int t = ((DateTime.now().millisecondsSinceEpoch ~/ 1000) - date);
     String str = '';

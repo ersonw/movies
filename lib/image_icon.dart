@@ -37,4 +37,9 @@ class ImageIcons {
   static const AssetImage star_half = AssetImage('assets/image/star-half.png');
   static const AssetImage nomalBg = AssetImage('assets/image/nomalBg.png');
   static const AssetImage diamond = AssetImage('assets/image/diamond.png');
+  static const AssetImage remommendIcon = AssetImage('assets/image/remommendIcon.png');
+  static const AssetImage actorIcon = AssetImage('assets/image/fa4b534d-a31f-48b9-b425-4363f244d402.png');
+  static const AssetImage icon_share = AssetImage('assets/image/icon_share.png');
+  static const AssetImage icon_download = AssetImage('assets/image/icon_download.png');
+  static const AssetImage zanIcon = AssetImage('assets/image/zanIcon.png');
 }

@@ -212,106 +212,102 @@ class _MyProfile extends State<MyProfile> {
             ),
           ),
           // 金币数
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              InkWell(
-                onTap: () => _enterGold(),
-                child: Column(
-                  children: [
-                    Container(
-                        margin: const EdgeInsets.only(left: 10, top: 10),
-                        child: Text(Global.getNumbersToChinese(userModel.user.gold),
-                          style: const TextStyle(
-                              fontSize: 25, fontWeight: FontWeight.bold),
-                        )),
-                    Container(
-                        margin: const EdgeInsets.only(left: 10, top: 10),
-                        child: const Text(
-                          '金币',
-                          style: TextStyle(fontSize: 13, color: Colors.grey),
-                        )),
-                  ],
-                ),
-              ),
-              InkWell(
-                onTap: () => _enterDiamond(),
-                child: Column(
-                  children: [
-                    Container(
-                        margin: const EdgeInsets.only(left: 10, top: 10),
-                        child: Text(Global.getNumbersToChinese(userModel.user.diamond),
-                          style: const TextStyle(
-                              fontSize: 25, fontWeight: FontWeight.bold),
-                        )),
-                    Container(
-                        margin: const EdgeInsets.only(left: 10, top: 10),
-                        child: const Text(
-                          '钻石',
-                          style: TextStyle(fontSize: 13, color: Colors.grey),
-                        )),
-                  ],
-                ),
-              ),
-              InkWell(
-                child: Column(
-                  children: [
-                    Container(
-                        margin: EdgeInsets.only(left: 10, top: 10),
-                        child: Text(
-                          '0',
-                          style: TextStyle(
-                              fontSize: 25, fontWeight: FontWeight.bold),
-                        )),
-                    Container(
-                        margin: EdgeInsets.only(left: 10, top: 10),
-                        child: Text(
-                          '推荐数',
-                          style: TextStyle(fontSize: 13, color: Colors.grey),
-                        )),
-                  ],
-                ),
-              ),
-              InkWell(
-                child: Column(
-                  children: [
-                    Container(
-                        margin: EdgeInsets.only(left: 10, top: 10),
-                        child: Text(
-                          '0',
-                          style: TextStyle(
-                              fontSize: 25, fontWeight: FontWeight.bold),
-                        )),
-                    Container(
-                        margin: EdgeInsets.only(left: 10, top: 10),
-                        child: Text(
-                          '我的关注',
-                          style: TextStyle(fontSize: 13, color: Colors.grey),
-                        )),
-                  ],
-                ),
-              ),
-              InkWell(
-                child: Column(
-                  children: [
-                    Container(
-                        margin: EdgeInsets.only(left: 10, top: 10),
-                        child: Text(
-                          '0',
-                          style: TextStyle(
-                              fontSize: 25, fontWeight: FontWeight.bold),
-                        )),
-                    Container(
-                        margin: EdgeInsets.only(left: 10, top: 10),
-                        child: Text(
-                          '我的粉丝',
-                          style: TextStyle(fontSize: 13, color: Colors.grey),
-                        )),
-                  ],
-                ),
-              ),
-            ],
-          ),
+         SizedBox(
+          width: ((MediaQuery.of(context).size.width) / 1.1),
+           child:  Row(
+             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+             children: [
+               const Padding(padding: EdgeInsets.only(top: 10,bottom: 10,left: 5,right: 5)),
+               InkWell(
+                 onTap: () => _enterGold(),
+                 child: Column(
+                   children: [
+                     Text(Global.getNumbersToChinese(userModel.user.gold),
+                       style: const TextStyle(
+                           fontSize: 20, fontWeight: FontWeight.bold),
+                     ),
+                     const Text(
+                       '金币',
+                       style: TextStyle(fontSize: 13, color: Colors.grey),
+                     ),
+                   ],
+                 ),
+               ),
+               InkWell(
+                 onTap: () => _enterDiamond(),
+                 child: Column(
+                   children: [
+                     Text(Global.getNumbersToChinese(userModel.user.diamond),
+                       style: const TextStyle(
+                           fontSize: 20, fontWeight: FontWeight.bold),
+                     ),
+                     const Text(
+                       '钻石',
+                       style: TextStyle(fontSize: 13, color: Colors.grey),
+                     ),
+                   ],
+                 ),
+               ),
+               InkWell(
+                 child: Column(
+                   children: [
+                     Container(
+                         // margin: EdgeInsets.only(left: 10, top: 10),
+                         child: Text(
+                           '0',
+                           style: TextStyle(
+                               fontSize: 25, fontWeight: FontWeight.bold),
+                         )),
+                     Container(
+                         // margin: EdgeInsets.only(left: 10, top: 10),
+                         child: Text(
+                           '推荐数',
+                           style: TextStyle(fontSize: 13, color: Colors.grey),
+                         )),
+                   ],
+                 ),
+               ),
+               InkWell(
+                 child: Column(
+                   children: [
+                     Container(
+                         // margin: EdgeInsets.only(left: 10, top: 10),
+                         child: Text(
+                           '0',
+                           style: TextStyle(
+                               fontSize: 25, fontWeight: FontWeight.bold),
+                         )),
+                     Container(
+                         // margin: EdgeInsets.only(left: 10, top: 10),
+                         child: Text(
+                           '我的关注',
+                           style: TextStyle(fontSize: 13, color: Colors.grey),
+                         )),
+                   ],
+                 ),
+               ),
+               InkWell(
+                 child: Column(
+                   children: [
+                     Container(
+                         // margin: EdgeInsets.only(left: 10, top: 10),
+                         child: Text(
+                           '0',
+                           style: TextStyle(
+                               fontSize: 25, fontWeight: FontWeight.bold),
+                         )),
+                     Container(
+                         // margin: EdgeInsets.only(left: 10, top: 10),
+                         child: Text(
+                           '我的粉丝',
+                           style: TextStyle(fontSize: 13, color: Colors.grey),
+                         )),
+                   ],
+                 ),
+               ),
+             ],
+           ),
+         ),
           InkWell(
             onTap: (() {
               // Fluttertoast.showToast(msg: '点击我了');
