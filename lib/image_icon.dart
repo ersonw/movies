@@ -42,4 +42,5 @@ class ImageIcons {
   static const AssetImage icon_share = AssetImage('assets/image/icon_share.png');
   static const AssetImage icon_download = AssetImage('assets/image/icon_download.png');
   static const AssetImage zanIcon = AssetImage('assets/image/zanIcon.png');
+  static const AssetImage like = AssetImage('assets/image/like.png');
 }

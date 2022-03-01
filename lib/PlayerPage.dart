@@ -25,7 +25,8 @@ class _PlayerPage extends State<PlayerPage> {
   Player _player = Player();
   late VideoPlayerValue value;
   bool showControls = false;
-  bool _canPlay = true;
+  bool _canPlay = false;
+  bool _isReport = true;
 
   @override
   void initState() {
@@ -79,15 +80,32 @@ class _PlayerPage extends State<PlayerPage> {
     return CupertinoPageScaffold(
       // resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xF5F5F5FF),
-      navigationBar: const CupertinoNavigationBar(
-        backgroundColor: Colors.transparent,
+      navigationBar:  CupertinoNavigationBar(
+        backgroundColor: Colors.black,
+        trailing: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            _isReport ? Container() : InkWell(
+              onTap: () {
+              },
+              child: Container(
+                color: Colors.transparent,
+                margin: const EdgeInsets.only(right: 20),
+                child: const Text('举报',style: TextStyle(color: Colors.black),),
+              ),
+            ),
+            InkWell(
+              child: Image.asset(ImageIcons.like.assetName,color: Colors.white,width: 36,),
+            ),
+          ],
+        ),
       ),
       // Use a FutureBuilder to display a loading spinner while waiting for the
       // VideoPlayerController to finish initializing.
       child:  Column(
         children: [
           Container(
-            margin: const EdgeInsets.only(top: 70),
+            // margin: const EdgeInsets.only(top: 70),
             child: _canPlay ? Hero(tag: 'player',
             child: FutureBuilder(
               future: _initializeVideoPlayerFuture,
@@ -260,7 +278,6 @@ class _PlayerPage extends State<PlayerPage> {
               },
             ),) : Container(
               decoration: BoxDecoration(
-                color: Colors.black54,
                 // borderRadius: const BorderRadius.all(Radius.circular(10)),
                 image: DecorationImage(
                   image: AssetImage(
@@ -269,50 +286,53 @@ class _PlayerPage extends State<PlayerPage> {
                   alignment: Alignment.center,
                 ),
               ),
-              height: 210,
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('开通Vip或可以观看完整版哦',style: TextStyle(color: Colors.white,fontSize: 20),),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        SizedBox(
-                          width: 120,
-                          child: TextButton(
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(Colors.red),
-                              shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
+              height: 250,
+              child: Container(
+                color: Colors.black87,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('开通Vip或可以观看完整版哦',style: TextStyle(color: Colors.white,fontSize: 20),),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          SizedBox(
+                            width: 120,
+                            child: TextButton(
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(Colors.red),
+                                shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
+                              ),
+                              onPressed: (){
+                                Navigator.of(context, rootNavigator: true).push<void>(
+                                  CupertinoPageRoute(
+                                    title: "VIP购买",
+                                    // fullscreenDialog: true,
+                                    builder: (context) => const VIPBuyPage(),
+                                  ),
+                                ).then((value) => setState);
+                              },
+                              child: const Text('开通VIP',style: TextStyle(color: Colors.white),),
                             ),
-                            onPressed: (){
-                              Navigator.of(context, rootNavigator: true).push<void>(
-                                CupertinoPageRoute(
-                                  title: "VIP购买",
-                                  // fullscreenDialog: true,
-                                  builder: (context) => const VIPBuyPage(),
-                                ),
-                              ).then((value) => setState);
-                            },
-                            child: const Text('开通VIP',style: TextStyle(color: Colors.white),),
                           ),
-                        ),
-                        SizedBox(
-                          width: 120,
-                          child: TextButton(
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(Colors.red),
-                              shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
+                          SizedBox(
+                            width: 120,
+                            child: TextButton(
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(Colors.red),
+                                shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
+                              ),
+                              onPressed: () {
+                                Global.showDialogVideo('[hongkongdoll]玩偶姐姐森林新篇章-第二集-欺骗-失身又失心', '');
+                              },
+                              child: const Text('立即分享',style: TextStyle(color: Colors.white),),
                             ),
-                            onPressed: () {
-                              Global.showDialogVideo('[hongkongdoll]玩偶姐姐森林新篇章-第二集-欺骗-失身又失心', '');
-                            },
-                            child: const Text('立即分享',style: TextStyle(color: Colors.white),),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
