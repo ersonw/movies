@@ -25,7 +25,7 @@ class _PlayerPage extends State<PlayerPage> {
   Player _player = Player();
   late VideoPlayerValue value;
   bool showControls = false;
-  bool _canPlay = false;
+  bool _canPlay = true;
   bool _isReport = true;
 
   @override
@@ -95,7 +95,7 @@ class _PlayerPage extends State<PlayerPage> {
               ),
             ),
             InkWell(
-              child: Image.asset(ImageIcons.like.assetName,color: Colors.white,width: 36,),
+              child: Icon(Icons.favorite_border,color: Colors.white,),
             ),
           ],
         ),
@@ -533,6 +533,11 @@ class _PlayerPage extends State<PlayerPage> {
                 fit: BoxFit.fill
               )
             ),
+            child: Global.buildPlayIcon((){
+              // Navigator.pop(context);
+              _controller.pause();
+              Global.playVideo(0);
+            }),
           ),
           Container(
             margin: const EdgeInsets.only(left: 10),

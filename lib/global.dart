@@ -34,6 +34,7 @@ import 'package:video_compress/video_compress.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:movies/utils/UploadOss.dart';
 import 'LoadingDialog.dart';
+import 'PlayerPage.dart';
 import 'data/Profile.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -293,63 +294,35 @@ class Global {
     }
     // print(_userModel.token);
   }
+  static void playVideo(int id){
+    Navigator.of(MainContext, rootNavigator: true).push<void>(
+      CupertinoPageRoute(
+        builder: (context) => PlayerPage(id: id),
+      ),
+    );
+  }
   static Widget buildPlayIcon(Function fn){
-    return InkWell(
-      onTap: () => fn(),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            InkWell(
+              onTap: () => fn(),
+              child: Container(
                 width: 60,
                 height: 60,
                 decoration: const BoxDecoration(
                   color: Colors.black54,
                   borderRadius: BorderRadius.all(Radius.circular(30)),
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Row(
-                      // mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 0,
-                          height: 25,
-                          margin: const EdgeInsets.only(left: 20,right: 20),
-                          decoration: const BoxDecoration(
-                            border: Border(
-                              // 四个值 top right bottom left
-                              top: BorderSide(
-                                  color: Colors.white,
-                                  width: 13,
-                                  style: BorderStyle.solid),
-                              bottom: BorderSide(
-                                  color: Colors.white,
-                                  width: 12.5,
-                                  style: BorderStyle.solid),
-                              right: BorderSide(
-                                  color: Colors.transparent,
-                                  width: 0,
-                                  style: BorderStyle.solid),
-                              left: BorderSide(
-                                  color: Colors.transparent,
-                                  width: 24,
-                                  style: BorderStyle.solid),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                child: const Icon(Icons.play_arrow,color: Colors.white,size: 36,),
               ),
-            ],
-          ),
-        ],
-      ),
+            ),
+          ],
+        ),
+      ],
     );
   }
   static String getNumbersToChinese(int n){
