@@ -1,12 +1,13 @@
 import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:movies/IndexPage.dart';
+import 'package:movies/IndexHomePage.dart';
 import 'package:movies/LockScreenCustom.dart';
 import 'package:movies/RecommendedPage.dart';
 import 'package:movies/image_icon.dart';
 import 'package:movies/MyProfile.dart';
+import 'package:movies/WolfFriendPage.dart';
+import 'package:movies/IndexPage.dart';
 
 import 'global.dart';
 
@@ -35,9 +36,19 @@ class _HomePageState extends State<HomePage> {
       ),
       tabBuilder: (context, index) {
         switch (index) {
-          case 2:
+          case 0:
             return CupertinoTabView(
               // defaultTitle: MyProfile.title,
+              builder: (context) => const IndexHomePage(),
+            );
+          case 1:
+            return CupertinoTabView(
+              // defaultTitle: IndexPage.title,
+              builder: (context) => const WolfFriendPage(),
+            );
+          case 2:
+            return CupertinoTabView(
+              // defaultTitle: IndexPage.title,
               builder: (context) => const IndexPage(),
             );
           case 3:

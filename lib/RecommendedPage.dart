@@ -49,21 +49,21 @@ class _RecommendedPage extends State<RecommendedPage> {
     return DefaultTabController(
         length: 2,
         child: CupertinoPageScaffold(
-          navigationBar: const CupertinoNavigationBar(
-            trailing: TabBar(
-              labelColor: Colors.black,
-              indicatorColor: Colors.yellow,
-              indicatorWeight: 6,
-              tabs: [
-                Tab(
-                  text: "每日推荐",
-                ),
-                Tab(
-                  text: "制片人",
-                ),
-              ],
-            ),
-          ),
+          // navigationBar: const CupertinoNavigationBar(
+          //   trailing: TabBar(
+          //     labelColor: Colors.black,
+          //     indicatorColor: Colors.yellow,
+          //     indicatorWeight: 6,
+          //     tabs: [
+          //       Tab(
+          //         text: "每日推荐",
+          //       ),
+          //       Tab(
+          //         text: "制片人",
+          //       ),
+          //     ],
+          //   ),
+          // ),
           child: _buildBody(context),
         ));
   }
