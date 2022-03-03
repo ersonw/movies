@@ -32,7 +32,6 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
     setState(() {
       _tabIndex = _innerTabController.index;
     });
-    // print('Inner tab, previous: ${_innerTabController.previousIndex}, current: ${_innerTabController.index}');
     PageStorage.of(context)
         ?.writeState(context, _innerTabController.index, identifier: _tabKey);
   }
