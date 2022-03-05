@@ -46,4 +46,5 @@ class ImageIcons {
   static const AssetImage index6 = AssetImage('assets/image/index6.png');
   static const AssetImage icon_incisive = AssetImage('assets/image/icon_incisive.png');
   static const AssetImage icon_isfirst = AssetImage('assets/image/icon_isfirst.png');
+  static const AssetImage icon_community_zan = AssetImage('assets/image/icon_community_zan.png');
 }
