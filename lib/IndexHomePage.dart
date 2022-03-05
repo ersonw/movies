@@ -16,9 +16,9 @@ class IndexHomePage extends StatefulWidget {
 
   @override
   _IndexHomePage createState() => _IndexHomePage();
-
 }
-class _IndexHomePage extends State<IndexHomePage>{
+
+class _IndexHomePage extends State<IndexHomePage> {
   final ScrollController _controller = ScrollController();
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _textEditingController = TextEditingController();
@@ -34,17 +34,20 @@ class _IndexHomePage extends State<IndexHomePage>{
   int _lastIndex = 0;
   int _secondIndex = 0;
   int _classPage = 1;
-  int _classTotal = 10;
+  int _classTotal = 20;
   bool _layout = true;
   List<ClassData> _classDatas = [];
+
   @override
   void initState() {
     ClassData classData = ClassData();
     classData.remommends = 10300;
     classData.play = 1030;
     classData.actor = '三上悠亚';
-    classData.title = '「明日花綺羅！請假裝被施了催眠樹！」邊演出連1mm都動不了的演技邊一心忍受超快感的性愛[中文字幕]SNIS-907 ';
-    classData.image = 'https://github1.oss-cn-hongkong.aliyuncs.com/7abc3392-2f02-4549-8b1d-a7d024030c60.jpeg';
+    classData.title =
+        '「明日花綺羅！請假裝被施了催眠樹！」邊演出連1mm都動不了的演技邊一心忍受超快感的性愛[中文字幕]SNIS-907 ';
+    classData.image =
+        'https://github1.oss-cn-hongkong.aliyuncs.com/7abc3392-2f02-4549-8b1d-a7d024030c60.jpeg';
     _classDatas.add(classData);
     _first.add('全部');
     _first.add('最新');
@@ -78,16 +81,20 @@ class _IndexHomePage extends State<IndexHomePage>{
     _last.add('學生');
     _last.add('五星級酒店女服務員');
     SwiperData _swiper = SwiperData();
-    _swiper.image = 'https://github1.oss-cn-hongkong.aliyuncs.com/7abc3392-2f02-4549-8b1d-a7d024030c60.jpeg';
+    _swiper.image =
+        'https://github1.oss-cn-hongkong.aliyuncs.com/7abc3392-2f02-4549-8b1d-a7d024030c60.jpeg';
     _swipers.add(_swiper);
     _swiper = SwiperData();
-    _swiper.image = 'https://github1.oss-cn-hongkong.aliyuncs.com/c030c05a-5ca4-4ad9-af02-6048ab526010.png';
+    _swiper.image =
+        'https://github1.oss-cn-hongkong.aliyuncs.com/c030c05a-5ca4-4ad9-af02-6048ab526010.png';
     _swipers.add(_swiper);
     _swiper = SwiperData();
-    _swiper.image = 'https://github1.oss-cn-hongkong.aliyuncs.com/ea92e9ee-4c0e-419d-bb2e-0142ef4efdbc.png';
+    _swiper.image =
+        'https://github1.oss-cn-hongkong.aliyuncs.com/ea92e9ee-4c0e-419d-bb2e-0142ef4efdbc.png';
     _swipers.add(_swiper);
     _swiper = SwiperData();
-    _swiper.image = 'https://github1.oss-cn-hongkong.aliyuncs.com/d95661e1-b1d2-4363-b263-ef60b965612d.png';
+    _swiper.image =
+        'https://github1.oss-cn-hongkong.aliyuncs.com/d95661e1-b1d2-4363-b263-ef60b965612d.png';
     _swipers.add(_swiper);
     _searchTags.add('強奸');
     _searchTags.add('潘甜甜');
@@ -143,15 +150,16 @@ class _IndexHomePage extends State<IndexHomePage>{
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
+        _classPage++;
         // _getMore();
-      }else if(_scrollController.position.pixels > 100){
-        if(!_showClassTop){
+      } else if (_scrollController.position.pixels > 100) {
+        if (!_showClassTop) {
           setState(() {
             _showClassTop = true;
           });
         }
-      }else if(_scrollController.position.pixels < 100){
-        if(_showClassTop){
+      } else if (_scrollController.position.pixels < 100) {
+        if (_showClassTop) {
           setState(() {
             _showClassTop = false;
           });
@@ -159,6 +167,7 @@ class _IndexHomePage extends State<IndexHomePage>{
       }
     });
   }
+
   Widget _buildFirst() {
     List<Widget> widgets = [];
     for (int i = 0; i < _first.length; i++) {
@@ -175,7 +184,7 @@ class _IndexHomePage extends State<IndexHomePage>{
           child: Container(
             // color: Colors.black,
             margin:
-            const EdgeInsets.only(top: 4, bottom: 4, left: 15, right: 15),
+                const EdgeInsets.only(top: 4, bottom: 4, left: 15, right: 15),
             child: Text(
               _first[i],
               style: const TextStyle(
@@ -196,6 +205,112 @@ class _IndexHomePage extends State<IndexHomePage>{
       ),
     );
   }
+
+  _showTotals() {
+    int totalIndex = 0;
+    // _fixedExtentScrollController.jumpTo(_classPage * 44);
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (_context) {
+        return Container(
+          color: Colors.white,
+          height: 260,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                height: 60,
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      TextButton(
+                        child: const Text(
+                          '取消',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(_context);
+                        },
+                      ),
+                      TextButton(
+                        child: const Text(
+                          '确定',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                          ),
+                        ),
+                        onPressed: () {
+                          if(_classPage-totalIndex > 0){
+                            setState(() {
+                              _classPage = _classPage-totalIndex;
+                            });
+                          }else{
+                            int i = _classTotal +(_classPage-totalIndex);
+                            setState(() {
+                              _classPage = i;
+                            });
+                          }
+                          Navigator.pop(_context);
+                        },
+                      ),
+                    ]),
+                decoration: BoxDecoration(
+                  border: Border(
+                      bottom: BorderSide(
+                          color: Colors.grey.withOpacity(0.1), width: 1)),
+                ),
+              ),
+              Expanded(
+                  child: Container(
+                color: Colors.white,
+                height: 200,
+                child: CupertinoPicker(
+                  children: _buildTotalItem(),
+                  looping: true,
+                  selectionOverlay: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(width: 1.0, color: Colors.black12),
+                    ),
+                  ),
+                  onSelectedItemChanged: (index) {
+                    totalIndex = index;
+                  },
+                  itemExtent: 44,
+                ),
+              )),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  _buildTotalItem() {
+    List<Widget> widgets = [];
+    for(int i=_classPage;i > 0;i--){
+      widgets.add(Center(
+        child: Text(
+          '$i',
+          style: const TextStyle(color: Colors.black87, fontSize: 16),
+          maxLines: 1,
+        ),
+      ));
+    }
+    for(int i=_classTotal;i>_classPage;i--){
+      widgets.add(Center(
+        child: Text(
+          '$i',
+          style: const TextStyle(color: Colors.black87, fontSize: 16),
+          maxLines: 1,
+        ),
+      ));
+    }
+    return widgets;
+  }
+
   Widget _buildSecond() {
     List<Widget> widgets = [];
     for (int i = 0; i < _second.length; i++) {
@@ -211,7 +326,7 @@ class _IndexHomePage extends State<IndexHomePage>{
           ),
           child: Container(
             margin:
-            const EdgeInsets.only(top: 4, bottom: 4, left: 15, right: 15),
+                const EdgeInsets.only(top: 4, bottom: 4, left: 15, right: 15),
             child: Text(
               _second[i],
               style: const TextStyle(
@@ -232,6 +347,7 @@ class _IndexHomePage extends State<IndexHomePage>{
       ),
     );
   }
+
   Widget _buildLast() {
     List<Widget> widgets = [];
     for (int i = 0; i < _last.length; i++) {
@@ -247,7 +363,7 @@ class _IndexHomePage extends State<IndexHomePage>{
           ),
           child: Container(
             margin:
-            const EdgeInsets.only(top: 4, bottom: 4, left: 15, right: 15),
+                const EdgeInsets.only(top: 4, bottom: 4, left: 15, right: 15),
             child: Text(
               _last[i],
               style: const TextStyle(
@@ -268,13 +384,15 @@ class _IndexHomePage extends State<IndexHomePage>{
       ),
     );
   }
-  _buildClassList(){
-    if(_layout){
+
+  _buildClassList() {
+    if (_layout) {
       return _buildClassListWithLayout();
     }
     return _buildClassListWithoutLayout();
   }
-  _buildClassSingleItem(int index){
+
+  _buildClassSingleItem(int index) {
     // ClassData classData = _classDatas[index];
     return Column(
       children: [
@@ -289,14 +407,21 @@ class _IndexHomePage extends State<IndexHomePage>{
               alignment: Alignment.center,
             ),
           ),
-          child: Global.buildPlayIcon((){}),
+          child: Global.buildPlayIcon(() {}),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(
               width: ((MediaQuery.of(context).size.width) / 1.1),
-              child: Text(_classDatas[0].title,style: const TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.bold,overflow: TextOverflow.ellipsis),),
+              child: Text(
+                _classDatas[0].title,
+                style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    overflow: TextOverflow.ellipsis),
+              ),
             ),
           ],
         ),
@@ -304,18 +429,24 @@ class _IndexHomePage extends State<IndexHomePage>{
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
-              margin: const EdgeInsets.only(top: 10,bottom: 20),
+              margin: const EdgeInsets.only(top: 10, bottom: 20),
               width: ((MediaQuery.of(context).size.width) / 2),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('主演${_classDatas[0].actor}',style: const TextStyle(color: Colors.grey,fontSize: 12),),
-                  Text('${Global.getNumbersToChinese(_classDatas[0].play)}次播放',style: const TextStyle(color: Colors.grey,fontSize: 12),),
+                  Text(
+                    '主演${_classDatas[0].actor}',
+                    style: const TextStyle(color: Colors.grey, fontSize: 12),
+                  ),
+                  Text(
+                    '${Global.getNumbersToChinese(_classDatas[0].play)}次播放',
+                    style: const TextStyle(color: Colors.grey, fontSize: 12),
+                  ),
                 ],
               ),
             ),
             Container(
-              margin: const EdgeInsets.only(top: 10,bottom: 20),
+              margin: const EdgeInsets.only(top: 10, bottom: 20),
               width: ((MediaQuery.of(context).size.width) / 2.5),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -337,7 +468,8 @@ class _IndexHomePage extends State<IndexHomePage>{
       ],
     );
   }
-  _buildClassItem(int index){
+
+  _buildClassItem(int index) {
     List<Widget> widgets = [];
     widgets.add(_buildClassDoubleItem(_classDatas[0]));
     widgets.add(_buildClassDoubleItem(_classDatas[0]));
@@ -346,7 +478,8 @@ class _IndexHomePage extends State<IndexHomePage>{
       children: widgets,
     );
   }
-  _buildClassDoubleItem(ClassData classData){
+
+  _buildClassDoubleItem(ClassData classData) {
     return Column(
       children: [
         Container(
@@ -360,30 +493,41 @@ class _IndexHomePage extends State<IndexHomePage>{
               alignment: Alignment.center,
             ),
           ),
-          child: Global.buildPlayIcon((){}),
+          child: Global.buildPlayIcon(() {}),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
               width: ((MediaQuery.of(context).size.width) / 2.2),
-              margin: const EdgeInsets.only(top: 5,bottom: 15),
-              child: Text(classData.title,style: const TextStyle(color: Colors.black,fontWeight: FontWeight.bold,overflow: TextOverflow.ellipsis,fontSize: 15),),
+              margin: const EdgeInsets.only(top: 5, bottom: 15),
+              child: Text(
+                classData.title,
+                style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    overflow: TextOverflow.ellipsis,
+                    fontSize: 15),
+              ),
             )
           ],
         ),
       ],
     );
   }
-  _buildClassListWithLayout(){
+
+  _buildClassListWithLayout() {
     List<Widget> widgets = [];
-    for(int i=0;i<(20 / 2) +1;i++){
+    for (int i = 0; i < (20 / 2) + 1; i++) {
       widgets.add(_buildClassItem(i));
     }
     widgets.add(Center(
       child: Container(
-        margin: const EdgeInsets.only(top: 30,bottom: 30),
-        child: const Text('我也是有底线的哦！',style: TextStyle(color: Colors.grey,fontSize: 15),),
+        margin: const EdgeInsets.only(top: 30, bottom: 30),
+        child: const Text(
+          '我也是有底线的哦！',
+          style: TextStyle(color: Colors.grey, fontSize: 15),
+        ),
       ),
     ));
 
@@ -391,146 +535,164 @@ class _IndexHomePage extends State<IndexHomePage>{
       children: widgets,
     );
   }
-  _buildClassListWithoutLayout(){
+
+  _buildClassListWithoutLayout() {
     List<Widget> widgets = [];
-    for(int i=0;i<20;i++){
+    for (int i = 0; i < 20; i++) {
       widgets.add(_buildClassSingleItem(i));
     }
     widgets.add(Center(
       child: Container(
-        margin: const EdgeInsets.only(top: 30,bottom: 30),
-        child: const Text('我也是有底线的哦！',style: TextStyle(color: Colors.grey,fontSize: 15),),
+        margin: const EdgeInsets.only(top: 30, bottom: 30),
+        child: const Text(
+          '我也是有底线的哦！',
+          style: TextStyle(color: Colors.grey, fontSize: 15),
+        ),
       ),
     ));
     return Column(
       children: widgets,
     );
   }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return DefaultTabController(initialIndex: 1,length: 3, child: CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
-        trailing: Container(
-          margin: const EdgeInsets.only(left: 90,right: 90),
-          child: const TabBar(
-            labelStyle: TextStyle(fontSize: 20),
-            labelColor: Colors.red,
-            labelPadding: EdgeInsets.only(left: 0, right: 0),
-            unselectedLabelColor: Colors.black,
-            indicator: RoundUnderlineTabIndicator(
-                borderSide: BorderSide(
-                  width: 9,
-                  color: Colors.red,
-                )
-            ),
-            tabs: [
-              Tab(text: '搜索',),
-              Tab(text: '精选',),
-              Tab(text: '分类',),
-            ],
-          ),
-        ),
-      ),
+    return CupertinoPageScaffold(
       child: Container(
         margin: const EdgeInsets.all(10),
-        child: TabBarView(children: [
-          _buildSearch(),
-          _buildList(),
-          _buildClassification(),
-        ]),
+        child: DefaultTabController(
+            initialIndex: 1,
+            length: 3,
+            child: Column(
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(left: 90, right: 90,top: 20),
+                  child: const TabBar(
+                    labelStyle: TextStyle(fontSize: 20),
+                    labelColor: Colors.red,
+                    labelPadding: EdgeInsets.only(left: 0, right: 0),
+                    unselectedLabelColor: Colors.black,
+                    indicator: RoundUnderlineTabIndicator(
+                        borderSide: BorderSide(
+                          width: 9,
+                          color: Colors.red,
+                        )),
+                    tabs: [
+                      Tab(
+                        text: '搜索',
+                      ),
+                      Tab(
+                        text: '精选',
+                      ),
+                      Tab(
+                        text: '分类',
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(child: TabBarView(children: [
+                  _buildSearch(),
+                  _buildList(),
+                  _buildClassification(),
+                ]),),
+              ],
+            )),
       ),
-    ));
+    );
   }
-  Widget _buildClassification(){
+
+  Widget _buildClassification() {
     return Column(
       children: [
-        _showClassTop ?
-        Container(
-          margin: const EdgeInsets.only(top: 10,bottom: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                margin: const EdgeInsets.only(right: 10),
-                decoration: const BoxDecoration(
-                  color: Colors.yellow,
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                ),
-                child: Container(
-                  width: ((MediaQuery.of(context).size.width) / 6),
-                  margin:
-                  const EdgeInsets.only(top: 4, bottom: 4, left: 15, right: 15),
-                  child: Text(
-                    _first[_firstIndex],
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 15,
-                      overflow: TextOverflow.ellipsis,
+        _showClassTop
+            ? Container(
+                margin: const EdgeInsets.only(top: 10, bottom: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(right: 10),
+                      decoration: const BoxDecoration(
+                        color: Colors.yellow,
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                      ),
+                      child: Container(
+                        width: ((MediaQuery.of(context).size.width) / 6),
+                        margin: const EdgeInsets.only(
+                            top: 4, bottom: 4, left: 15, right: 15),
+                        child: Text(
+                          _first[_firstIndex],
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 15,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(right: 10),
-                decoration: const BoxDecoration(
-                  color: Colors.yellow,
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                ),
-                child: Container(
-                  width: ((MediaQuery.of(context).size.width) / 6),
-                  margin:
-                  const EdgeInsets.only(top: 4, bottom: 4, left: 15, right: 15),
-                  child: Text(
-                    _second[_secondIndex],
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 15,
-                      overflow: TextOverflow.ellipsis,
+                    Container(
+                      margin: const EdgeInsets.only(right: 10),
+                      decoration: const BoxDecoration(
+                        color: Colors.yellow,
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                      ),
+                      child: Container(
+                        width: ((MediaQuery.of(context).size.width) / 6),
+                        margin: const EdgeInsets.only(
+                            top: 4, bottom: 4, left: 15, right: 15),
+                        child: Text(
+                          _second[_secondIndex],
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 15,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(right: 10),
-                decoration: const BoxDecoration(
-                  color: Colors.yellow,
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                ),
-                child: Container(
-                  width: ((MediaQuery.of(context).size.width) / 6),
-                  margin:
-                  const EdgeInsets.only(top: 4, bottom: 4, left: 15, right: 15),
-                  child: Text(
-                    _last[_lastIndex],
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 15,
-                      overflow: TextOverflow.ellipsis,
+                    Container(
+                      margin: const EdgeInsets.only(right: 10),
+                      decoration: const BoxDecoration(
+                        color: Colors.yellow,
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                      ),
+                      child: Container(
+                        width: ((MediaQuery.of(context).size.width) / 6),
+                        margin: const EdgeInsets.only(
+                            top: 4, bottom: 4, left: 15, right: 15),
+                        child: Text(
+                          _last[_lastIndex],
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 15,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
                     ),
-                    textAlign: TextAlign.center,
-                  ),
+                  ],
                 ),
-              ),
-            ],
-          ),) : Container(),
-        Expanded(child:
-        ListView(
+              )
+            : Container(),
+        Expanded(
+            child: ListView(
           controller: _scrollController,
           children: [
             Container(
-              margin: const EdgeInsets.only( bottom: 15),
+              margin: const EdgeInsets.only(bottom: 15),
               child: _buildFirst(),
             ),
             Container(
-              margin: const EdgeInsets.only( bottom: 15),
+              margin: const EdgeInsets.only(bottom: 15),
               child: _buildSecond(),
             ),
             Container(
-                margin: const EdgeInsets.only( bottom: 15),
-                child: _buildLast(),
+              margin: const EdgeInsets.only(bottom: 15),
+              child: _buildLast(),
             ),
             SizedBox(
               width: ((MediaQuery.of(context).size.width) / 1),
@@ -539,24 +701,40 @@ class _IndexHomePage extends State<IndexHomePage>{
                 children: [
                   Row(
                     children: [
-                      const Text('选择页数',style: TextStyle(color: Colors.black,fontSize: 12),),
+                      const Text(
+                        '选择页数',
+                        style: TextStyle(color: Colors.black, fontSize: 12),
+                      ),
                       Container(
                         margin: const EdgeInsets.only(left: 10),
                         child: InkWell(
-                          onTap: (){},
-                          child: Text('当前第$_classPage页',style: const TextStyle(color: Colors.grey,fontSize: 12),),
+                          onTap: () {
+                            _showTotals();
+                          },
+                          child: Text(
+                            '当前第$_classPage页',
+                            style: const TextStyle(
+                                color: Colors.grey, fontSize: 12),
+                          ),
                         ),
                       ),
                     ],
                   ),
                   InkWell(
-                    onTap: () =>setState(() {
+                    onTap: () => setState(() {
                       _layout = !_layout;
                     }),
                     child: Row(
                       children: const [
-                        Text('切换布局',style: TextStyle(color: Colors.grey,fontSize: 12),),
-                        Icon(Icons.layers_outlined,size: 20,color: Colors.grey,),
+                        Text(
+                          '切换布局',
+                          style: TextStyle(color: Colors.grey, fontSize: 12),
+                        ),
+                        Icon(
+                          Icons.layers_outlined,
+                          size: 20,
+                          color: Colors.grey,
+                        ),
                       ],
                     ),
                   ),
@@ -573,25 +751,31 @@ class _IndexHomePage extends State<IndexHomePage>{
       ],
     );
   }
-  Widget _buildHotTags(){
+
+  Widget _buildHotTags() {
     List<Widget> lists = [];
     lists.add(Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Container(
           margin: const EdgeInsets.only(top: 30),
-          child: const Text('热门标签',style: TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.bold),),
+          child: const Text(
+            '热门标签',
+            style: TextStyle(
+                color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
+          ),
         ),
       ],
     ));
-    for(int i=0;i< ((_searchTags.length / 4) + 1); i++){
+    for (int i = 0; i < ((_searchTags.length / 4) + 1); i++) {
       lists.add(_buildHotTag(i));
     }
     return Column(
       children: lists,
     );
   }
-  _callSearchPage(String words){
+
+  _callSearchPage(String words) {
     Navigator.of(context, rootNavigator: true).push<void>(
       CupertinoPageRoute(
         title: '搜索',
@@ -600,9 +784,10 @@ class _IndexHomePage extends State<IndexHomePage>{
       ),
     );
   }
-  _addRecord(String words){
-    for(int i=0;i< _Records.length;i++){
-      if(_Records[i] == words){
+
+  _addRecord(String words) {
+    for (int i = 0; i < _Records.length; i++) {
+      if (_Records[i] == words) {
         _Records.removeAt(i);
         return _addRecord(words);
       }
@@ -610,106 +795,119 @@ class _IndexHomePage extends State<IndexHomePage>{
     _Records.add(words);
     _callSearchPage(words);
   }
-  Widget _buildHotTag(int i){
+
+  Widget _buildHotTag(int i) {
     List<Widget> lists = [];
-    if(i*4 < _searchTags.length){
+    if (i * 4 < _searchTags.length) {
       lists.add(InkWell(
-        onTap: () =>setState(() {
-          _addRecord(_searchTags[i*4]);
+        onTap: () => setState(() {
+          _addRecord(_searchTags[i * 4]);
         }),
         child: Container(
             width: ((MediaQuery.of(context).size.width) / 5),
             height: 30,
-            margin: const EdgeInsets.only(top: 5,left: 10),
+            margin: const EdgeInsets.only(top: 5, left: 10),
             decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(15)),
-                color: Color(0xFFD6D6D6)
-            ),
+                color: Color(0xFFD6D6D6)),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  margin: const EdgeInsets.only(left: 3,right: 3),
-                  child: Text(_searchTags[i*4],style: const TextStyle(fontSize: 15,overflow: TextOverflow.ellipsis),textAlign: TextAlign.center,),
+                  margin: const EdgeInsets.only(left: 3, right: 3),
+                  child: Text(
+                    _searchTags[i * 4],
+                    style: const TextStyle(
+                        fontSize: 15, overflow: TextOverflow.ellipsis),
+                    textAlign: TextAlign.center,
+                  ),
                 )
               ],
-            )
-        ),
+            )),
       ));
     }
-    if(i*4+1 < _searchTags.length){
+    if (i * 4 + 1 < _searchTags.length) {
       lists.add(InkWell(
-        onTap: () =>setState(() {
-            _addRecord(_searchTags[i*4+1]);
-          }),
-        child: Container(
-            width: ((MediaQuery.of(context).size.width) / 5),
-            height: 30,
-            margin: const EdgeInsets.only(top: 5,left: 10),
-            decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(15)),
-                color: Color(0xFFD6D6D6)
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(left: 3,right: 3),
-                  child: Text(_searchTags[i*4+1],style: const TextStyle(fontSize: 15,overflow: TextOverflow.ellipsis),textAlign: TextAlign.center,),
-                )
-              ],
-            )
-        ),
-      ));
-    }
-    if(i*4+2 < _searchTags.length){
-      lists.add(InkWell(
-        onTap: () =>setState(() {
-          _addRecord(_searchTags[i*4+2]);
+        onTap: () => setState(() {
+          _addRecord(_searchTags[i * 4 + 1]);
         }),
         child: Container(
             width: ((MediaQuery.of(context).size.width) / 5),
             height: 30,
-            margin: const EdgeInsets.only(top: 5,left: 10),
+            margin: const EdgeInsets.only(top: 5, left: 10),
             decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(15)),
-                color: Color(0xFFD6D6D6)
-            ),
+                color: Color(0xFFD6D6D6)),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  margin: const EdgeInsets.only(left: 3,right: 3),
-                  child: Text(_searchTags[i*4+2],style: const TextStyle(fontSize: 15,overflow: TextOverflow.ellipsis),textAlign: TextAlign.center,),
+                  margin: const EdgeInsets.only(left: 3, right: 3),
+                  child: Text(
+                    _searchTags[i * 4 + 1],
+                    style: const TextStyle(
+                        fontSize: 15, overflow: TextOverflow.ellipsis),
+                    textAlign: TextAlign.center,
+                  ),
                 )
               ],
-            )
-        ),
+            )),
       ));
     }
-    if(i*4+3 < _searchTags.length){
+    if (i * 4 + 2 < _searchTags.length) {
       lists.add(InkWell(
-        onTap: () =>setState(() {
-          _addRecord(_searchTags[i*4+3]);
+        onTap: () => setState(() {
+          _addRecord(_searchTags[i * 4 + 2]);
         }),
         child: Container(
             width: ((MediaQuery.of(context).size.width) / 5),
             height: 30,
-            margin: const EdgeInsets.only(top: 5,left: 10),
+            margin: const EdgeInsets.only(top: 5, left: 10),
             decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(15)),
-                color: Color(0xFFD6D6D6)
-            ),
+                color: Color(0xFFD6D6D6)),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  margin: const EdgeInsets.only(left: 3,right: 3),
-                  child: Text(_searchTags[i*4+3],style: const TextStyle(fontSize: 15,overflow: TextOverflow.ellipsis),textAlign: TextAlign.center,),
+                  margin: const EdgeInsets.only(left: 3, right: 3),
+                  child: Text(
+                    _searchTags[i * 4 + 2],
+                    style: const TextStyle(
+                        fontSize: 15, overflow: TextOverflow.ellipsis),
+                    textAlign: TextAlign.center,
+                  ),
                 )
               ],
-            )
-        ),
+            )),
+      ));
+    }
+    if (i * 4 + 3 < _searchTags.length) {
+      lists.add(InkWell(
+        onTap: () => setState(() {
+          _addRecord(_searchTags[i * 4 + 3]);
+        }),
+        child: Container(
+            width: ((MediaQuery.of(context).size.width) / 5),
+            height: 30,
+            margin: const EdgeInsets.only(top: 5, left: 10),
+            decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(15)),
+                color: Color(0xFFD6D6D6)),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(left: 3, right: 3),
+                  child: Text(
+                    _searchTags[i * 4 + 3],
+                    style: const TextStyle(
+                        fontSize: 15, overflow: TextOverflow.ellipsis),
+                    textAlign: TextAlign.center,
+                  ),
+                )
+              ],
+            )),
       ));
     }
     return Row(
@@ -717,129 +915,147 @@ class _IndexHomePage extends State<IndexHomePage>{
       children: lists,
     );
   }
-  Widget _buildRecords(){
+
+  Widget _buildRecords() {
     List<Widget> lists = [];
     lists.add(Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Container(
           margin: const EdgeInsets.only(top: 30),
-          child: const Text('搜索历史',style: TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.bold),),
+          child: const Text(
+            '搜索历史',
+            style: TextStyle(
+                color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
+          ),
         ),
       ],
     ));
-    for(int i=0;i< ((_Records.length / 4) + 1); i++){
+    for (int i = 0; i < ((_Records.length / 4) + 1); i++) {
       lists.add(_buildRecord(i));
     }
-    if(lists.length > 2){
+    if (lists.length > 2) {
       return Column(
         children: lists,
       );
-    }else{
+    } else {
       return Container();
     }
   }
-  Widget _buildRecord(int i){
+
+  Widget _buildRecord(int i) {
     List<Widget> lists = [];
     List<String> _records = _Records.reversed.toList();
-    if(i*4 < _Records.length){
+    if (i * 4 < _Records.length) {
       lists.add(InkWell(
-        onTap: () =>setState(() {
-          _addRecord(_records[i*4]);
+        onTap: () => setState(() {
+          _addRecord(_records[i * 4]);
         }),
         child: Container(
             width: ((MediaQuery.of(context).size.width) / 5),
             height: 30,
-            margin: const EdgeInsets.only(top: 5,left: 10),
+            margin: const EdgeInsets.only(top: 5, left: 10),
             decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(15)),
-                color: Color(0xFFD6D6D6)
-            ),
+                color: Color(0xFFD6D6D6)),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  margin: const EdgeInsets.only(left: 3,right: 3),
-                  child: Text(_records[i*4],style: const TextStyle(fontSize: 15,overflow: TextOverflow.ellipsis),textAlign: TextAlign.center,),
+                  margin: const EdgeInsets.only(left: 3, right: 3),
+                  child: Text(
+                    _records[i * 4],
+                    style: const TextStyle(
+                        fontSize: 15, overflow: TextOverflow.ellipsis),
+                    textAlign: TextAlign.center,
+                  ),
                 )
               ],
-            )
-        ),
+            )),
       ));
     }
-    if(i*4+1 < _Records.length){
+    if (i * 4 + 1 < _Records.length) {
       lists.add(InkWell(
-        onTap: () =>setState(() {
-          _addRecord(_records[i*4+1]);
+        onTap: () => setState(() {
+          _addRecord(_records[i * 4 + 1]);
         }),
         child: Container(
             width: ((MediaQuery.of(context).size.width) / 5),
             height: 30,
-            margin: const EdgeInsets.only(top: 5,left: 10),
+            margin: const EdgeInsets.only(top: 5, left: 10),
             decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(15)),
-                color: Color(0xFFD6D6D6)
-            ),
+                color: Color(0xFFD6D6D6)),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  margin: const EdgeInsets.only(left: 3,right: 3),
-                  child: Text(_records[i*4+1],style: const TextStyle(fontSize: 15,overflow: TextOverflow.ellipsis),textAlign: TextAlign.center,),
+                  margin: const EdgeInsets.only(left: 3, right: 3),
+                  child: Text(
+                    _records[i * 4 + 1],
+                    style: const TextStyle(
+                        fontSize: 15, overflow: TextOverflow.ellipsis),
+                    textAlign: TextAlign.center,
+                  ),
                 )
               ],
-            )
-        ),
+            )),
       ));
     }
-    if(i*4+2 < _Records.length){
+    if (i * 4 + 2 < _Records.length) {
       lists.add(InkWell(
-        onTap: () =>setState(() {
-          _addRecord(_records[i*4+2]);
+        onTap: () => setState(() {
+          _addRecord(_records[i * 4 + 2]);
         }),
         child: Container(
             width: ((MediaQuery.of(context).size.width) / 5),
             height: 30,
-            margin: const EdgeInsets.only(top: 5,left: 10),
+            margin: const EdgeInsets.only(top: 5, left: 10),
             decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(15)),
-                color: Color(0xFFD6D6D6)
-            ),
+                color: Color(0xFFD6D6D6)),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  margin: const EdgeInsets.only(left: 3,right: 3),
-                  child: Text(_records[i*4+2],style: const TextStyle(fontSize: 15,overflow: TextOverflow.ellipsis),textAlign: TextAlign.center,),
+                  margin: const EdgeInsets.only(left: 3, right: 3),
+                  child: Text(
+                    _records[i * 4 + 2],
+                    style: const TextStyle(
+                        fontSize: 15, overflow: TextOverflow.ellipsis),
+                    textAlign: TextAlign.center,
+                  ),
                 )
               ],
-            )
-        ),
+            )),
       ));
     }
-    if(i*4+3 < _Records.length){
+    if (i * 4 + 3 < _Records.length) {
       lists.add(InkWell(
-        onTap: () =>setState(() {
-          _addRecord(_records[i*4+3]);
+        onTap: () => setState(() {
+          _addRecord(_records[i * 4 + 3]);
         }),
         child: Container(
             width: ((MediaQuery.of(context).size.width) / 5),
             height: 30,
-            margin: const EdgeInsets.only(top: 5,left: 10),
+            margin: const EdgeInsets.only(top: 5, left: 10),
             decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(15)),
-                color: Color(0xFFD6D6D6)
-            ),
+                color: Color(0xFFD6D6D6)),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  margin: const EdgeInsets.only(left: 3,right: 3),
-                  child: Text(_records[i*4+3],style: const TextStyle(fontSize: 15,overflow: TextOverflow.ellipsis),textAlign: TextAlign.center,),
+                  margin: const EdgeInsets.only(left: 3, right: 3),
+                  child: Text(
+                    _records[i * 4 + 3],
+                    style: const TextStyle(
+                        fontSize: 15, overflow: TextOverflow.ellipsis),
+                    textAlign: TextAlign.center,
+                  ),
                 )
               ],
-            )
-        ),
+            )),
       ));
     }
     return Row(
@@ -847,17 +1063,21 @@ class _IndexHomePage extends State<IndexHomePage>{
       children: lists,
     );
   }
-  Widget _buildSearch(){
+
+  Widget _buildSearch() {
     return Column(
       children: [
         Container(
           decoration: const BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(10)),
-              color: Color(0xFFFAFAFA)
-          ),
+              color: Color(0xFFFAFAFA)),
           child: Row(
             children: [
-              const Icon(Icons.search,color: Colors.grey,size: 27,),
+              const Icon(
+                Icons.search,
+                color: Colors.grey,
+                size: 27,
+              ),
               Expanded(
                 child: TextField(
                   controller: _textEditingController,
@@ -865,7 +1085,7 @@ class _IndexHomePage extends State<IndexHomePage>{
                   textInputAction: TextInputAction.done,
                   focusNode: _commentFocus,
                   onEditingComplete: () {
-                    if(_textEditingController.text.length > 1){
+                    if (_textEditingController.text.length > 1) {
                       _commentFocus.unfocus();
                       setState(() {
                         _addRecord(_textEditingController.text);
@@ -887,21 +1107,25 @@ class _IndexHomePage extends State<IndexHomePage>{
                 ),
               ),
               TextButton(
-                  onPressed: (){
-                    if(_textEditingController.text.length > 1){
-                      _commentFocus.unfocus();
-                      setState(() {
-                        _addRecord(_textEditingController.text);
-                      });
-                      _textEditingController.text = '';
-                    }
-                  },
-                  child: const Text('搜索',style: TextStyle(color: Colors.redAccent,fontSize: 18),),
+                onPressed: () {
+                  if (_textEditingController.text.length > 1) {
+                    _commentFocus.unfocus();
+                    setState(() {
+                      _addRecord(_textEditingController.text);
+                    });
+                    _textEditingController.text = '';
+                  }
+                },
+                child: const Text(
+                  '搜索',
+                  style: TextStyle(color: Colors.redAccent, fontSize: 18),
+                ),
               ),
             ],
           ),
         ),
-        Expanded(child: ListView(
+        Expanded(
+            child: ListView(
           children: [
             _buildRecords(),
             _buildHotTags(),
@@ -912,10 +1136,11 @@ class _IndexHomePage extends State<IndexHomePage>{
       ],
     );
   }
-  Widget _buildSwiper(BuildContext context,int index){
+
+  Widget _buildSwiper(BuildContext context, int index) {
     SwiperData _swiper = _swipers[index];
     return InkWell(
-      onTap: (){
+      onTap: () {
         print('test');
       },
       child: Container(
@@ -932,6 +1157,7 @@ class _IndexHomePage extends State<IndexHomePage>{
       ),
     );
   }
+
   _buildList() {
     List<Widget> widgets = [];
     widgets.add(SizedBox(
@@ -939,18 +1165,18 @@ class _IndexHomePage extends State<IndexHomePage>{
       height: 200,
       child: Swiper(
         itemCount: _swipers.length,
-        itemBuilder : _buildSwiper,
+        itemBuilder: _buildSwiper,
         pagination: const SwiperPagination(),
         control: const SwiperControl(color: Colors.white),
       ),
     ));
     widgets.add(Container(
-      margin: const EdgeInsets.only(top: 20,bottom: 20),
+      margin: const EdgeInsets.only(top: 20, bottom: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           InkWell(
-            onTap: (){},
+            onTap: () {},
             child: Container(
               height: 63,
               width: ((MediaQuery.of(context).size.width) / 5),
@@ -961,14 +1187,22 @@ class _IndexHomePage extends State<IndexHomePage>{
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: const [
-                  Icon(Icons.local_fire_department,color: Colors.red,size: 30,),
-                  Text('精品专区',style: TextStyle(color: Colors.brown,fontSize: 10),textAlign: TextAlign.center,)
+                  Icon(
+                    Icons.local_fire_department,
+                    color: Colors.red,
+                    size: 30,
+                  ),
+                  Text(
+                    '精品专区',
+                    style: TextStyle(color: Colors.brown, fontSize: 10),
+                    textAlign: TextAlign.center,
+                  )
                 ],
               ),
             ),
           ),
           InkWell(
-            onTap: (){},
+            onTap: () {},
             child: Container(
               height: 63,
               width: ((MediaQuery.of(context).size.width) / 5),
@@ -979,14 +1213,22 @@ class _IndexHomePage extends State<IndexHomePage>{
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: const [
-                  Icon(Icons.local_movies_outlined,color: Colors.black,size: 30,),
-                  Text('制片厂',style: TextStyle(color: Colors.brown,fontSize: 10),textAlign: TextAlign.center,)
+                  Icon(
+                    Icons.local_movies_outlined,
+                    color: Colors.black,
+                    size: 30,
+                  ),
+                  Text(
+                    '制片厂',
+                    style: TextStyle(color: Colors.brown, fontSize: 10),
+                    textAlign: TextAlign.center,
+                  )
                 ],
               ),
             ),
           ),
           InkWell(
-            onTap: (){},
+            onTap: () {},
             child: Container(
               height: 63,
               width: ((MediaQuery.of(context).size.width) / 5),
@@ -997,14 +1239,22 @@ class _IndexHomePage extends State<IndexHomePage>{
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: const [
-                  Icon(Icons.assistant_rounded,color: Colors.purple,size: 30,),
-                  Text('女优列表',style: TextStyle(color: Colors.brown,fontSize: 10),textAlign: TextAlign.center,)
+                  Icon(
+                    Icons.assistant_rounded,
+                    color: Colors.purple,
+                    size: 30,
+                  ),
+                  Text(
+                    '女优列表',
+                    style: TextStyle(color: Colors.brown, fontSize: 10),
+                    textAlign: TextAlign.center,
+                  )
                 ],
               ),
             ),
           ),
           InkWell(
-            onTap: (){},
+            onTap: () {},
             child: Container(
               height: 63,
               width: ((MediaQuery.of(context).size.width) / 5),
@@ -1015,8 +1265,15 @@ class _IndexHomePage extends State<IndexHomePage>{
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: const [
-                  Text('👑',style: TextStyle(fontSize: 20),),
-                  Text('热门榜单',style: TextStyle(color: Colors.brown,fontSize: 10),textAlign: TextAlign.center,)
+                  Text(
+                    '👑',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  Text(
+                    '热门榜单',
+                    style: TextStyle(color: Colors.brown, fontSize: 10),
+                    textAlign: TextAlign.center,
+                  )
                 ],
               ),
             ),
@@ -1042,22 +1299,27 @@ class _IndexHomePage extends State<IndexHomePage>{
       children: widgets,
     );
   }
-  Widget _buildOriginals(String title){
+
+  Widget _buildOriginals(String title) {
     List<Widget> widgets = [];
     widgets.add(Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Text(title,style: const TextStyle(color: Colors.black,fontSize: 20),)
+        Text(
+          title,
+          style: const TextStyle(color: Colors.black, fontSize: 20),
+        )
       ],
     ));
-    for(int i=0; i< 2; i++){
+    for (int i = 0; i < 2; i++) {
       widgets.add(_buildOriginal());
     }
     return Column(
       children: widgets,
     );
   }
-  Widget _buildOriginal(){
+
+  Widget _buildOriginal() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -1080,22 +1342,36 @@ class _IndexHomePage extends State<IndexHomePage>{
                       alignment: Alignment.center,
                     ),
                   ),
-                  child: Global.buildPlayIcon((){}),
+                  child: Global.buildPlayIcon(() {}),
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 10),
-                  child: Text('[91制片厂]《肉感精油spa》痉挛停不下来 性感开发精油按摩 ',style: TextStyle(fontSize: 15,overflow: TextOverflow.ellipsis),),
+                  child: Text(
+                    '[91制片厂]《肉感精油spa》痉挛停不下来 性感开发精油按摩 ',
+                    style: TextStyle(
+                        fontSize: 15, overflow: TextOverflow.ellipsis),
+                  ),
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 5),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('524 次播放',style: TextStyle(color: Colors.grey,fontSize: 12),),
+                      Text(
+                        '524 次播放',
+                        style: TextStyle(color: Colors.grey, fontSize: 12),
+                      ),
                       Row(
                         children: [
-                          Image.asset(ImageIcons.remommendIcon.assetName,width: 45,height: 15,),
-                          Text('0人',style: TextStyle(color: Colors.grey,fontSize: 13),),
+                          Image.asset(
+                            ImageIcons.remommendIcon.assetName,
+                            width: 45,
+                            height: 15,
+                          ),
+                          Text(
+                            '0人',
+                            style: TextStyle(color: Colors.grey, fontSize: 13),
+                          ),
                         ],
                       ),
                     ],
@@ -1124,22 +1400,36 @@ class _IndexHomePage extends State<IndexHomePage>{
                       alignment: Alignment.center,
                     ),
                   ),
-                  child: Global.buildPlayIcon((){}),
+                  child: Global.buildPlayIcon(() {}),
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 10),
-                  child: Text('[91制片厂]《肉感精油spa》痉挛停不下来 性感开发精油按摩 ',style: TextStyle(fontSize: 15,overflow: TextOverflow.ellipsis),),
+                  child: Text(
+                    '[91制片厂]《肉感精油spa》痉挛停不下来 性感开发精油按摩 ',
+                    style: TextStyle(
+                        fontSize: 15, overflow: TextOverflow.ellipsis),
+                  ),
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 5),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('524 次播放',style: TextStyle(color: Colors.grey,fontSize: 12),),
+                      Text(
+                        '524 次播放',
+                        style: TextStyle(color: Colors.grey, fontSize: 12),
+                      ),
                       Row(
                         children: [
-                          Image.asset(ImageIcons.remommendIcon.assetName,width: 45,height: 15,),
-                          Text('0人',style: TextStyle(color: Colors.grey,fontSize: 13),),
+                          Image.asset(
+                            ImageIcons.remommendIcon.assetName,
+                            width: 45,
+                            height: 15,
+                          ),
+                          Text(
+                            '0人',
+                            style: TextStyle(color: Colors.grey, fontSize: 13),
+                          ),
                         ],
                       ),
                     ],
@@ -1152,9 +1442,13 @@ class _IndexHomePage extends State<IndexHomePage>{
       ],
     );
   }
+
   @override
   void dispose() {
     // TODO: implement dispose
+    _scrollController.dispose();
+    _textEditingController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 }
