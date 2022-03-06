@@ -2,15 +2,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'RoundUnderlineTabIndicator.dart';
+import 'global.dart';
+import 'image_icon.dart';
 
 class UserInfoPage extends StatefulWidget {
   UserInfoPage({Key? key,required this.uid}) : super(key: key);
   int uid;
+
   @override
   _UserInfoPage createState() => _UserInfoPage();
 
 }
 class _UserInfoPage extends State<UserInfoPage> {
+  double _topHeight = 350;
   @override
   void initState() {
     // TODO: implement initState
@@ -30,15 +34,87 @@ class _UserInfoPage extends State<UserInfoPage> {
     }
     return NetworkImage(avatar);
   }
-
+  Widget _buildListItem(int index){
+    return Container(
+      margin: const EdgeInsets.all(10),
+      child: Row(
+        children: [
+          Stack(
+            alignment: Alignment.bottomRight,
+            children: [
+              Container(
+                width: 150,
+                height: 100,
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage('assets/image/124f0bbd-3255-49da-ac85-09df9db02e36.jpeg'),
+                        fit: BoxFit.fill
+                    )
+                ),
+                child: Global.buildPlayIcon((){
+                  Global.playVideo(0);
+                }),
+              ),
+              Container(
+                // height: 30,
+                // width: 60,
+                decoration: const BoxDecoration(
+                  color: Colors.black54,
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                ),
+                child: Container(
+                  margin: const EdgeInsets.only(left: 6,right: 6,top: 3.0,bottom: 3),
+                  child: Text('00:30',style: TextStyle(color: Colors.white,fontSize: 10),),
+                ),
+              ),
+            ],
+          ),
+          Container(
+            margin: const EdgeInsets.only(left: 10),
+            height: 100,
+            width: ((MediaQuery.of(context).size.width) / 2.2),
+            // color: Colors.black54,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('办公室内玩弄斯斯文文的加班女同事',style: TextStyle(fontSize: 15),),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Text('1391',style: TextStyle(color: Colors.black,fontSize: 13),),
+                        Text('播放',style: TextStyle(color: Colors.grey,fontSize: 13),),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Image.asset(ImageIcons.icon_community_zan.assetName,width: 45,height: 15,),
+                        Text('99990人',style: TextStyle(color: Colors.grey,fontSize: 13),),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  Widget _buildPostItem(int index){
+    return Container();
+  }
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(
-        backgroundColor: Colors.transparent,
-      ),
-      child: DefaultTabController(
+    return Scaffold(
+      // appBar:  AppBar(
+      //   backgroundColor: Colors.black54,
+      //   shadowColor: Colors.transparent,
+      //   // foregroundColor: Colors.transparent,
+      // ),
+      body: DefaultTabController(
         length: 2,
         child: Column(
           children: [
@@ -52,6 +128,20 @@ class _UserInfoPage extends State<UserInfoPage> {
                     ),
                   ),
                   height: 190,
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 30,left: 5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      InkWell(
+                        onTap: (){
+                          Navigator.pop(context);
+                        },
+                        child: const Icon(Icons.arrow_back,color: Colors.white,size: 30,),
+                      ),
+                    ],
+                  ),
                 ),
                 Container(
                   margin: const EdgeInsets.only(left: 10,right: 10),
@@ -197,8 +287,8 @@ class _UserInfoPage extends State<UserInfoPage> {
             Expanded(
               child: TabBarView(
                 children: [
-                  Text('1'),
-                  Text('2'),
+                  ListView.builder(itemCount: 10 ,itemBuilder: (BuildContext _context,int index) => _buildListItem(index)),
+                  ListView.builder(itemCount: 10 ,itemBuilder: (BuildContext _context,int index) => _buildPostItem(index)),
                 ],
               ),
             ),
