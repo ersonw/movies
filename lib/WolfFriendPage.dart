@@ -129,48 +129,9 @@ class _WolfFriendPage extends State<WolfFriendPage>{
               ),
               Expanded(child: TabBarView(
                   children: [
-                    Column(
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.only(top: 10),
-                          decoration: const BoxDecoration(
-                            border: Border(bottom: BorderSide(color: Colors.grey, width: .5)),
-                          ),
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                width: (MediaQuery.of(context).size.width),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text('狼友推荐的第79部大片',style: TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.bold),),
-                                    Text('共1623人推荐',style: TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.bold),),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                height: 240,
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                  image: DecorationImage(
-                                    image: AssetImage(
-                                        'assets/image/d95661e1-b1d2-4363-b263-ef60b965612d.png'),
-                                    fit: BoxFit.fill,
-                                    alignment: Alignment.center,
-                                  ),
-                                ),
-                                child: Global.buildPlayIcon((){
-                                  Global.playVideo(0);
-                                }),
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(top: 10,bottom: 10),
-                                child: _buildSubComment(_comments),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                    ListView.builder(
+                      itemCount: 10,
+                      itemBuilder: (BuildContext _context, int index) => _buildListItem(index),
                     ),
                     Container(),
                     Container(),
@@ -179,6 +140,47 @@ class _WolfFriendPage extends State<WolfFriendPage>{
             ],
           ),
         ),
+      ),
+    );
+  }
+  _buildListItem(int index){
+    return Container(
+      margin: const EdgeInsets.only(top: 10),
+      decoration: const BoxDecoration(
+        border: Border(bottom: BorderSide(color: Colors.grey, width: .5)),
+      ),
+      child: Column(
+        children: [
+          SizedBox(
+            width: (MediaQuery.of(context).size.width),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('狼友推荐的第79部大片',style: TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.bold),),
+                Text('共1623人推荐',style: TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.bold),),
+              ],
+            ),
+          ),
+          Container(
+            height: 240,
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
+              image: DecorationImage(
+                image: AssetImage(
+                    'assets/image/d95661e1-b1d2-4363-b263-ef60b965612d.png'),
+                fit: BoxFit.fill,
+                alignment: Alignment.center,
+              ),
+            ),
+            child: Global.buildPlayIcon((){
+              Global.playVideo(0);
+            }),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 10,bottom: 10),
+            child: _buildSubComment(_comments),
+          ),
+        ],
       ),
     );
   }

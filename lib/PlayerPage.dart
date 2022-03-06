@@ -80,26 +80,6 @@ class _PlayerPage extends State<PlayerPage> {
     return CupertinoPageScaffold(
       // resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xF5F5F5FF),
-      navigationBar:  CupertinoNavigationBar(
-        backgroundColor: Colors.black,
-        trailing: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            _isReport ? Container() : InkWell(
-              onTap: () {
-              },
-              child: Container(
-                color: Colors.transparent,
-                margin: const EdgeInsets.only(right: 20),
-                child: const Text('举报',style: TextStyle(color: Colors.black),),
-              ),
-            ),
-            InkWell(
-              child: Icon(Icons.favorite_border,color: Colors.white,),
-            ),
-          ],
-        ),
-      ),
       // Use a FutureBuilder to display a loading spinner while waiting for the
       // VideoPlayerController to finish initializing.
       child:  Column(
@@ -121,17 +101,51 @@ class _PlayerPage extends State<PlayerPage> {
                       alignment: Alignment.bottomCenter,
                       children: [
                         VideoPlayer(_controller),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(left: 5, right: 20,top: 30),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      InkWell(
+                                        onTap: (){
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Icon(Icons.arrow_back,color: Colors.grey,size: 30,),
+                                      ),
+                                    ],
+                                  ),
+                                  InkWell(
+                                    onTap: (){},
+                                    child: const Icon(Icons.favorite_border,color: Colors.grey,),
+                                    // child: Icon(Icons.favorite_outlined,color: Colors.red,),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                         // ClosedCaption(text: _controller.value.caption.text),
                         AnimatedSwitcher(
                           duration: const Duration(milliseconds: 50),
                           reverseDuration: const Duration(milliseconds: 200),
                           child: _controller.value.isPlaying ?
-                          InkWell(
-                              onTap: () {
-                                _showControls();
-                              },
-                              child: Container()
-                          ) :  Center(
+                              Container(
+                                margin: const EdgeInsets.only(top: 60),
+                                // color: Colors.black54,
+                                child: InkWell(
+                                  onTap: () {
+                                    _showControls();
+                                  },
+                                  child: Container(),
+                                ),
+                              )
+                           :  Center(
                               child: InkWell(
                                 onTap: () {
                                   setState(() {
@@ -258,21 +272,58 @@ class _PlayerPage extends State<PlayerPage> {
                 } else {
                   // If the VideoPlayerController is still initializing, show a
                   // loading spinner.
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: Colors.black54,
-                      // borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      image: DecorationImage(
-                        image: AssetImage(
-                            'assets/image/06b6f2f7-484e-41e1-82e8-4b31d199e813.jpg'),
-                        fit: BoxFit.fill,
-                        alignment: Alignment.center,
+                  return Stack(
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(left: 5, right: 20,top: 30),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    InkWell(
+                                      onTap: (){
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Icon(Icons.arrow_back,color: Colors.grey,size: 30,),
+                                    ),
+                                  ],
+                                ),
+                                _isReport ? Container() : InkWell(
+                                  onTap: () {
+                                  },
+                                  child: Container(
+                                    color: Colors.transparent,
+                                    margin: const EdgeInsets.only(right: 20),
+                                    child: const Text('举报',style: TextStyle(color: Colors.black),),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    height: 200,
-                    child: const Center(
-                      child: CircularProgressIndicator(),
-                    ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.black54,
+                          // borderRadius: const BorderRadius.all(Radius.circular(10)),
+                          image: DecorationImage(
+                            image: AssetImage(
+                                'assets/image/06b6f2f7-484e-41e1-82e8-4b31d199e813.jpg'),
+                            fit: BoxFit.fill,
+                            alignment: Alignment.center,
+                          ),
+                        ),
+                        height: 200,
+                        child: const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                    ],
                   );
                 }
               },

@@ -31,11 +31,13 @@ class _PhotpGalleryPageState extends State<PhotpGalleryPage> {
     });
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('$title / $length'),
         centerTitle: true,
+        backgroundColor: Colors.black54,
       ),
       body: Container(
           decoration: const BoxDecoration(

@@ -325,6 +325,10 @@ class Global {
       ],
     );
   }
+  static String getTimeToString(int t){
+    DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(t);
+    return '${dateTime.year}-${dateTime.month}-${dateTime.day} ${dateTime.hour}:${dateTime.minute}';
+  }
   static String getNumbersToChinese(int n){
     if(n < 1000){
       return '$n';

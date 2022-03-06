@@ -355,7 +355,7 @@ class _SearchPage extends State<SearchPage>
                 borderRadius: const BorderRadius.all(Radius.circular(30)),
                 border: Border.all(width: 1.0, color: Colors.grey),
               ),
-              child: const Center(child: Text('已搜藏',style: TextStyle(color: Colors.grey,fontSize: 12),textAlign: TextAlign.center,),),
+              child: const Center(child: Text('收藏',style: TextStyle(color: Colors.grey,fontSize: 12),textAlign: TextAlign.center,),),
             ),
           ) :
           InkWell(
@@ -369,7 +369,7 @@ class _SearchPage extends State<SearchPage>
                 borderRadius: const BorderRadius.all(Radius.circular(30)),
                 border: Border.all(width: 1.0, color: Colors.yellow),
               ),
-              child: const Center(child: Text('搜藏',style: TextStyle(color: Colors.yellow,fontSize: 12),textAlign: TextAlign.center,),),
+              child: const Center(child: Text('收藏',style: TextStyle(color: Colors.yellow,fontSize: 12),textAlign: TextAlign.center,),),
             ),
           ),
         ],
