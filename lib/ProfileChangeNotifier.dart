@@ -5,6 +5,7 @@ import 'global.dart';
 class ProfileChangeNotifier extends ChangeNotifier {
   Profile get profile => Global.profile;
 
+
   @override
   void notifyListeners() {
     Global.saveProfile(); //保存Profile变更

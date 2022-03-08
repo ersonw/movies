@@ -15,7 +15,12 @@ class ConfigModel extends ProfileChangeNotifier {
   List<OnlinePay> get onlinePays => profile.config.onlinePays;
   bool  get lock => profile.config.bootLock;
   String? get lockPasswd => profile.config.bootLockPasswd;
+  List<String> get searchRecords => profile.searchRecords;
 
+  set searchRecords(List<String> searchRecords){
+    profile.searchRecords = searchRecords;
+    notifyListeners();
+  }
   set config(Config conf){
     profile.config = conf;
     notifyListeners();

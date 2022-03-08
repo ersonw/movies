@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:movies/PlayerPage.dart';
 import 'package:movies/image_icon.dart';
 
+import 'RoundUnderlineTabIndicator.dart';
 import 'data/Recommended.dart';
 import 'global.dart';
 
@@ -46,26 +47,11 @@ class _RecommendedPage extends State<RecommendedPage> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-        length: 2,
-        child: CupertinoPageScaffold(
-          // navigationBar: const CupertinoNavigationBar(
-          //   trailing: TabBar(
-          //     labelColor: Colors.black,
-          //     indicatorColor: Colors.yellow,
-          //     indicatorWeight: 6,
-          //     tabs: [
-          //       Tab(
-          //         text: "每日推荐",
-          //       ),
-          //       Tab(
-          //         text: "制片人",
-          //       ),
-          //     ],
-          //   ),
-          // ),
-          child: _buildBody(context),
-        ));
+    return CupertinoPageScaffold(
+      child: DefaultTabController(
+          length: 2,
+          child: _buildBody(context)),
+    );
   }
   Widget _buildItem(BuildContext context, int index){
     Recommended recommended = _recommendeds[index];
@@ -80,7 +66,7 @@ class _RecommendedPage extends State<RecommendedPage> {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(recommended.type == 0 ? ImageIcons.top1Bg.assetName : ImageIcons.nomalBg.assetName),
+                image: AssetImage(index == 0 ? ImageIcons.top1Bg.assetName : ImageIcons.nomalBg.assetName),
                 alignment: Alignment.topLeft,
               ),
             ),
@@ -88,11 +74,11 @@ class _RecommendedPage extends State<RecommendedPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  margin: const EdgeInsets.all(10),
+                  margin: const EdgeInsets.all(5),
                   child: Text(
-                    '${recommended.type == 0 ? '编辑推荐':'至臻推荐'}.${index +1}',
-                    style:  TextStyle(
-                        color: recommended.type == 0 ? Colors.black54 : Colors.yellow,
+                    '${index == 0 ? 'TOP':'至臻'}.${index +1}',
+                    style:  const TextStyle(
+                        color: Colors.yellow,
                         fontSize: 18,
                         fontWeight: FontWeight.bold),
                   ),
@@ -194,108 +180,79 @@ class _RecommendedPage extends State<RecommendedPage> {
       ),
     );
   }
-  _buildPlayIcon(Function fn){
-    return InkWell(
-      onTap: () => fn(),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+  _buildBody(BuildContext context) {
+    return Column(
+      children: [
+        // Container(
+        //   margin: const EdgeInsets.only(left: 54, right: 54,top: 30),
+        //   child: const TabBar(
+        //     // isScrollable: true,
+        //     labelStyle: TextStyle(fontSize: 18),
+        //     unselectedLabelStyle: TextStyle(fontSize: 15),
+        //     padding: EdgeInsets.only(right: 0),
+        //     indicatorPadding: EdgeInsets.only(right: 0),
+        //     labelColor: Colors.red,
+        //     labelPadding: EdgeInsets.only(left: 0, right: 0),
+        //     unselectedLabelColor: Colors.black,
+        //     indicator: RoundUnderlineTabIndicator(
+        //         borderSide: BorderSide(
+        //           width: 9,
+        //           color: Colors.red,
+        //         )),
+        //     tabs: [
+        //       Tab(
+        //         text: '今日推荐',
+        //       ),
+        //       Tab(
+        //         text: '制片厂',
+        //       ),
+        //     ],
+        //   ),
+        // ),
+        Expanded(child: TabBarView(
             children: [
               Container(
-                width: 60,
-                height: 60,
-                decoration: const BoxDecoration(
-                  color: Colors.black54,
-                  borderRadius: BorderRadius.all(Radius.circular(30)),
-                ),
+                margin: const EdgeInsets.only(left: 10, right: 10, top: 20),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Row(
-                      // mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 0,
-                          height: 25,
-                          margin: const EdgeInsets.only(left: 20,right: 20),
-                          decoration: const BoxDecoration(
-                            border: Border(
-                              // 四个值 top right bottom left
-                              top: BorderSide(
-                                  color: Colors.white,
-                                  width: 12.5,
-                                  style: BorderStyle.solid),
-                              bottom: BorderSide(
-                                  color: Colors.white,
-                                  width: 12.5,
-                                  style: BorderStyle.solid),
-                              right: BorderSide(
-                                  color: Colors.transparent,
-                                  width: 0,
-                                  style: BorderStyle.solid),
-                              left: BorderSide(
-                                  color: Colors.transparent,
-                                  width: 24,
-                                  style: BorderStyle.solid),
+                    Expanded(
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: const [
+                                Text(
+                                  '今日推荐',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 27,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
                             ),
-                          ),
-                        ),
-                      ],
-                    ),
+                            Row(
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.only(top: 20),
+                                  child: const Text('资深编辑，一生心血！每日精选推荐！经典必藏！'),
+                                )
+                              ],
+                            ),
+                            Expanded(
+                              child: ListView.builder(
+                                itemBuilder: _buildItem,
+                                itemCount: _recommendeds.length,
+                              ),
+                            ),
+                          ],
+                        ))
                   ],
                 ),
               ),
-            ],
-          ),
-        ],
-      ),
+              Text("Tab2"),
+            ])),
+      ],
     );
-  }
-  _buildBody(BuildContext context) {
-    return TabBarView(
-        children: [
-      Container(
-        margin: const EdgeInsets.only(left: 10, right: 10, top: 20),
-        child: Column(
-          children: [
-            Expanded(
-                child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text(
-                      '今日推荐',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 27,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(top: 20),
-                      child: const Text('资深编辑，一生心血！每日精选推荐！经典必藏！'),
-                    )
-                  ],
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    itemBuilder: _buildItem,
-                    itemCount: _recommendeds.length,
-                  ),
-                ),
-              ],
-            ))
-          ],
-        ),
-      ),
-      Text("Tab2"),
-    ]);
   }
   _buildPlay(Recommended recommended){
     int diamond = recommended.diamond;

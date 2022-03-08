@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,10 +8,13 @@ import 'package:movies/SearchPage.dart';
 import 'package:movies/data/ClassData.dart';
 import 'package:movies/data/SearchList.dart';
 
+import 'HttpManager.dart';
 import 'RoundUnderlineTabIndicator.dart';
 import 'data/SwiperData.dart';
 import 'global.dart';
 import 'image_icon.dart';
+import 'network/NWApi.dart';
+import 'network/NWMethod.dart';
 
 class IndexHomePage extends StatefulWidget {
   const IndexHomePage({Key? key}) : super(key: key);
@@ -40,6 +45,8 @@ class _IndexHomePage extends State<IndexHomePage> {
 
   @override
   void initState() {
+
+
     ClassData classData = ClassData();
     classData.remommends = 10300;
     classData.play = 1030;
@@ -96,57 +103,14 @@ class _IndexHomePage extends State<IndexHomePage> {
     _swiper.image =
         'https://github1.oss-cn-hongkong.aliyuncs.com/d95661e1-b1d2-4363-b263-ef60b965612d.png';
     _swipers.add(_swiper);
-    _searchTags.add('強奸');
-    _searchTags.add('潘甜甜');
-    _searchTags.add('探花');
-    _searchTags.add('黑人');
-    _searchTags.add('媽媽');
-    _searchTags.add('偷拍');
-    _searchTags.add('按摩');
-    _searchTags.add('絲襪');
-    _searchTags.add('玩偶姐姐');
-    _searchTags.add('亂倫');
-    _searchTags.add('巨乳');
-    _searchTags.add('强奸');
-    _searchTags.add('換妻');
-    _searchTags.add('人妻');
-    _searchTags.add('蘿莉');
-    _searchTags.add('丝袜');
-    _searchTags.add('空姐');
-    _searchTags.add('人妖');
-    _searchTags.add('學生');
-    _searchTags.add('五星級酒店女服務員');
-    _searchTags.add('萝莉');
-    _searchTags.add('母狗');
-    _searchTags.add('明星');
-    _searchTags.add('內射');
-    _searchTags.add('乱伦');
-    _searchTags.add('妈妈');
-    _searchTags.add('学生');
-    _searchTags.add('狗頭蘿莉');
-    _searchTags.add('COS');
-    _searchTags.add('姐姐');
-    _searchTags.add('自慰');
-    _searchTags.add('繼母');
-    _searchTags.add('黑鬼');
-    _searchTags.add('换妻');
-    _searchTags.add('口交');
-    _searchTags.add('足交');
-    _searchTags.add('少婦');
-    _searchTags.add('无码');
-    _searchTags.add('3D');
-    _searchTags.add('自拍');
-    _searchTags.add('約炮');
-    _searchTags.add('少妇');
-    _searchTags.add('电话');
-    _searchTags.add('無碼');
-    _searchTags.add('约炮');
-    _searchTags.add('動漫');
-    _searchTags.add('三上悠亞');
-    _searchTags.add('調教');
-    _searchTags.add('製服');
-    _searchTags.add('玩偶');
+    _initSearchTags();
+    _Records = configModel.searchRecords;
     super.initState();
+    configModel.addListener(() {
+      setState(() {
+        _Records = configModel.searchRecords;
+      });
+    });
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
@@ -167,7 +131,16 @@ class _IndexHomePage extends State<IndexHomePage> {
       }
     });
   }
-
+  _initSearchTags() async{
+    Map<String, dynamic> parm = {};
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET, NWApi.gethotTags, {"data": jsonEncode(parm)}));
+    if (result != null) {
+      setState(() {
+        _searchTags = (jsonDecode(result)['list'] as List).map((e) => e.toString()).toList();
+      });
+    }
+  }
   Widget _buildFirst() {
     List<Widget> widgets = [];
     for (int i = 0; i < _first.length; i++) {
@@ -782,7 +755,7 @@ class _IndexHomePage extends State<IndexHomePage> {
         // fullscreenDialog: true,
         builder: (context) => SearchPage(title: words),
       ),
-    );
+    ).then((value) => _initSearchTags());
   }
 
   _addRecord(String words) {
@@ -793,6 +766,7 @@ class _IndexHomePage extends State<IndexHomePage> {
       }
     }
     _Records.add(words);
+    configModel.searchRecords = _Records;
     _callSearchPage(words);
   }
 
@@ -918,18 +892,25 @@ class _IndexHomePage extends State<IndexHomePage> {
 
   Widget _buildRecords() {
     List<Widget> lists = [];
-    lists.add(Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Container(
-          margin: const EdgeInsets.only(top: 30),
-          child: const Text(
+    lists.add(Container(
+      // color: Colors.black54,
+      margin: const EdgeInsets.only(top: 30),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text(
             '搜索历史',
             style: TextStyle(
                 color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
           ),
-        ),
-      ],
+          InkWell(
+            onTap: (){
+              configModel.searchRecords = [];
+            },
+            child: const Icon(Icons.delete_forever,color: Colors.red,size: 24,),
+          ),
+        ],
+      ),
     ));
     for (int i = 0; i < ((_Records.length / 4) + 1); i++) {
       lists.add(_buildRecord(i));
