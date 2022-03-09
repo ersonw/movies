@@ -2,18 +2,28 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:movies/data/Player.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'global.dart';
 
 class SpreadVideoDialog extends Dialog {
-  String title;
-  String image;
+  Player player;
+  String domian = configModel.config.domain;
   GlobalKey repaintKey = GlobalKey();
-  SpreadVideoDialog({Key? key, required this.title, required this.image})
+  SpreadVideoDialog({Key? key,required this.player})
       : super(key: key);
-
+  _buildAvatar() {
+    if ((userModel.avatar == null || userModel.avatar == '') ||
+        userModel.avatar?.contains('http') == false) {
+      return const AssetImage('assets/image/default_head.gif');
+    }
+    return NetworkImage(userModel.avatar!);
+  }
   @override
   Widget build(BuildContext context) {
+    if(domian != null && !domian.endsWith('/')){
+      domian+'/';
+    }
     return Center(
       child: Material(
 
@@ -56,22 +66,19 @@ class SpreadVideoDialog extends Dialog {
                       decoration: BoxDecoration(
                         borderRadius: const BorderRadius.all(Radius.circular(10)),
                         image: DecorationImage(
-                          image: AssetImage(
-                              'assets/image/06b6f2f7-484e-41e1-82e8-4b31d199e813.jpg'),
+                          image: NetworkImage(player.pic),
                           fit: BoxFit.fill,
                           alignment: Alignment.center,
                         ),
                       ),
-                      child: Global.buildPlayIcon(() {
-                        print(title);
-                      }),
+                      // child: Global.buildPlayIcon(() {}),
                     ),
                     Row(
                       children: [
                         Container(
                           margin: const EdgeInsets.all(10),
                           width: (MediaQuery.of(context).size.width) / 1.3,
-                          child: Text(title,
+                          child: Text(player.title,
                             style: const TextStyle(color: Colors.black,fontSize: 17,fontWeight: FontWeight.normal,overflow: TextOverflow.ellipsis),),
                         )
                       ],
@@ -91,13 +98,13 @@ class SpreadVideoDialog extends Dialog {
                             // ),
                           ),
                           child: QrImage(
-                            data: 'https://img2.woyaogexing.com/2019/09/06/f9afde08c5a4460cb08389a6c7f74c7a!600x600.jpeg',
+                            data: '$domian${player.id}@${userModel.user.invite}',
                             size: 130,
                             version: QrVersions.auto,
                             embeddedImageStyle: QrEmbeddedImageStyle(
-                              size: const Size(50, 50),
+                              size: const Size(36, 36),
                             ),
-                            // embeddedImage: NetworkImage('https://img2.woyaogexing.com/2019/09/06/f9afde08c5a4460cb08389a6c7f74c7a!600x600.jpeg'),
+                            embeddedImage: _buildAvatar(),
                           ),
                         ),
                         Container(
@@ -112,7 +119,7 @@ class SpreadVideoDialog extends Dialog {
                               ),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width) / 2.7,
-                                child: Text('https://img2.woyaogexing.com/2019/09/06'),
+                                child: Text('$domian${player.id}-${userModel.user.invite}'),
                               ),
                               SizedBox(
                                 width: 120,
@@ -122,7 +129,7 @@ class SpreadVideoDialog extends Dialog {
                                     shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
                                   ),
                                   onPressed: () async{
-                                    await Clipboard.setData(ClipboardData(text: 'test'));
+                                    await Clipboard.setData(ClipboardData(text: '$domian${player.id}-${userModel.user.invite}'));
                                     Global.showWebColoredToast('复制成功！');
                                   },
                                   child: const Text('复制链接',style: TextStyle(color: Colors.black),),

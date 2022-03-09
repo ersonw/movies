@@ -11,6 +11,7 @@ class Config {
   String hash = '';
   bool autoLogin = false;
   String bootImage = '';
+  String domain = '';
   String url = '';
   bool force = false;
   bool bootLock = false;
@@ -26,6 +27,7 @@ class Config {
   Config.fromJson(Map<String, dynamic> json)
       : hash = json['hash'],
         url = json['url'],
+  domain = json['domain'],
         force = json['force'] ?? false,
         version = json['version'] ?? 1.0,
         autoLogin = json['autoLogin'] ?? false,
@@ -41,6 +43,7 @@ class Config {
   Map<String, dynamic> toJson() => {
         'hash': hash,
         'url': url,
+    'domain': domain,
         'force': force,
         'version': version,
         'autoLogin': autoLogin,

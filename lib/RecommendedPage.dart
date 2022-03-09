@@ -259,7 +259,7 @@ class _RecommendedPage extends State<RecommendedPage> {
     if(diamond == 0) {
       return InkWell(
           onTap: (){
-            Global.showDialogVideo(recommended.title, recommended.image);
+            // Global.showDialogVideo(recommended.title, recommended.image);
           },
           child: Container(
             width: 100,

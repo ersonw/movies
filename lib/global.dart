@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:camera/camera.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
@@ -33,8 +35,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_compress/video_compress.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:movies/utils/UploadOss.dart';
+import 'DialogVideoRecommended.dart';
 import 'LoadingDialog.dart';
 import 'PlayerPage.dart';
+import 'RestartWidget.dart';
+import 'data/Player.dart';
 import 'data/Profile.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -229,10 +234,18 @@ class Global {
     );
   }
   static Future<void> loginSocket() async {
-    WebSocketMessage _message = WebSocketMessage();
-    _message.code = WebSocketMessage.login;
-    _message.data = jsonEncode({"token": userModel.token});
-    channel?.sink.add(_message.toString());
+    Timer(const Duration(seconds: 10), () {
+      if(!_isLogin){
+        if (userModel.isLogin) {
+          WebSocketMessage _message = WebSocketMessage();
+          _message.code = WebSocketMessage.login;
+          _message.data = jsonEncode({"token": userModel.token});
+          channel?.sink.add(_message.toString());
+        }else{
+          getUserInfo();
+        }
+      }
+    });
   }
   static Future<bool> sendKeFuMessage(KefuMessage message) async {
     WebSocketMessage _message = WebSocketMessage();
@@ -245,12 +258,7 @@ class Global {
     return false;
   }
   static Future<void> channelListen(data) async {
-    // print(UserModel().isLogin);
-    if (userModel.isLogin == false) {
-      getUserInfo();
-    } else if (_isLogin == false) {
-      loginSocket();
-    }
+    loginSocket();
     if (data == 'H') return;
     WebSocketMessage message = WebSocketMessage.formJson(jsonDecode(data));
     switch (message.code) {
@@ -462,13 +470,14 @@ class Global {
         profile.config.autoLogin = config.autoLogin;
         profile.config.force = config.force;
         profile.config.url = config.url;
+        profile.config.domain = config.domain;
         profile.config.bootImage = config.bootImage;
         profile.config.ossConfig = config.ossConfig;
         profile.config.onlinePays = config.onlinePays;
         profile.config.vipBuys = config.vipBuys;
         profile.config.buyDiamonds = config.buyDiamonds;
         profile.config.buyGolds = config.buyGolds;
-        print(config.buyGolds);
+        print(config);
         saveProfile();
       }
     }, error: (error) {});
@@ -502,6 +511,7 @@ class Global {
       // print("success data = $data");
       if (data != null) {
         userModel.user = User.fromJson(jsonDecode(data));
+        RestartWidget.restartApp(MainContext);
       }
     }, error: (error) {});
   }
@@ -593,10 +603,14 @@ class Global {
   static Future<void> loading(bool load) async {
     loadingChangeNotifier.isLoading = load;
   }
-  static Future<void> showDialogVideo(String title, String image) async {
+  static Future<void> showDialogVideo(Player player) async {
     Navigator.push(MainContext, DialogRouter(SpreadVideoDialog(
-      title: title,
-      image: image,
+      player: player,
+    )));
+  }
+  static Future<void> showDialogVideoRecommended(Player player) async {
+    Navigator.push(MainContext, DialogRouter(DialogVideoRecommended(
+      player: player,
     )));
   }
   static Future<bool> requestPhotosPermission() async {

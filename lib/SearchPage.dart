@@ -40,14 +40,14 @@ class _SearchPage extends State<SearchPage>
 
   @override
   void initState() {
-    SearchList searchList = SearchList();
-    searchList.image =
-        'https://github1.oss-cn-hongkong.aliyuncs.com/8aa3d840-8a60-4e85-8bf1-418ab5518be5.png';
-    searchList.number = '12321312312321321312';
-    searchList.title = '[HongKongDoll]甜美游戏陪玩2 下';
-    searchList.play = 1500;
-    searchList.remommends = 30000;
-    _avLists.add(searchList);
+    // SearchList searchList = SearchList();
+    // searchList.image =
+    //     'https://github1.oss-cn-hongkong.aliyuncs.com/8aa3d840-8a60-4e85-8bf1-418ab5518be5.png';
+    // searchList.number = '12321312312321321312';
+    // searchList.title = '[HongKongDoll]甜美游戏陪玩2 下';
+    // searchList.play = 1500;
+    // searchList.remommends = 30000;
+    // _avLists.add(searchList);
     SearchActor searchActor = SearchActor();
     searchActor.name = '潘甜甜';
     searchActor.work = 0;
@@ -83,7 +83,7 @@ class _SearchPage extends State<SearchPage>
     String? result = (await DioManager().requestAsync(
         NWMethod.GET, NWApi.getSearchs, {"data": jsonEncode(parm)}));
     if (result != null) {
-      print(result);
+      // print(result);
       switch(_tabIndex){
         case 0:
           setState(() {

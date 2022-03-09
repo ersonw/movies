@@ -72,6 +72,7 @@ class _PlayerPage extends State<PlayerPage> {
     };
     String? result = (await DioManager().requestAsync(
         NWMethod.GET, NWApi.getPlayer, {"data": jsonEncode(parm)}));
+    print(result);
     if (result == null) {
       return;
     }
@@ -201,7 +202,8 @@ class _PlayerPage extends State<PlayerPage> {
             ),
           ],
         ),
-      ) : Column(
+      ) :
+      Column(
         children: [
           Container(
             // margin: const EdgeInsets.only(top: 70),
@@ -757,9 +759,7 @@ class _PlayerPage extends State<PlayerPage> {
                                                   BorderRadius.circular(16))),
                                     ),
                                     onPressed: () {
-                                      Global.showDialogVideo(
-                                          '[hongkongdoll]玩偶姐姐森林新篇章-第二集-欺骗-失身又失心',
-                                          '');
+                                      Global.showDialogVideo(_player);
                                     },
                                     child: const Text(
                                       '立即分享',
@@ -856,8 +856,8 @@ class _PlayerPage extends State<PlayerPage> {
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                const Text(
+                              children: const [
+                                Text(
                                   '演员信息',
                                   style:  TextStyle(fontSize: 20),
                                 )
@@ -950,7 +950,7 @@ class _PlayerPage extends State<PlayerPage> {
                         ),
                         InkWell(
                           onTap: () {
-                            Global.showDialogVideo(_player.title, _player.pic);
+                            Global.showDialogVideo(_player);
                           },
                           child: Column(
                             children: [
@@ -971,7 +971,7 @@ class _PlayerPage extends State<PlayerPage> {
                 ),
                 InkWell(
                   onTap: () {
-                    print('test');
+                    Global.showDialogVideoRecommended(_player);
                   },
                   child: Container(
                     width: 63,
@@ -1044,7 +1044,7 @@ class _PlayerPage extends State<PlayerPage> {
           Container(
             margin: const EdgeInsets.only(left: 10),
             height: 100,
-            width: ((MediaQuery.of(context).size.width) / 2.2),
+            width: ((MediaQuery.of(context).size.width) / 2.5),
             // color: Colors.black54,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1053,7 +1053,7 @@ class _PlayerPage extends State<PlayerPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     SizedBox(
-                        width: ((MediaQuery.of(context).size.width) / 2.2),
+                        width: ((MediaQuery.of(context).size.width) / 2.5),
                         child: Text(
                           list.title,
                           style: const TextStyle(fontSize: 15),

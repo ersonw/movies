@@ -322,6 +322,8 @@ class _CrateOrderPage extends State<CrateOrderPage> {
           Navigator.pop(context);
           launch(map['url']);
         }else{
+
+          // Global.getUserInfo().then((value) => setState(() =>{}));
           Navigator.of(context, rootNavigator: true).push<void>(
             CupertinoPageRoute(
               // title: '确认订单',
