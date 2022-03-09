@@ -75,7 +75,7 @@ class DialogVideoRecommended extends Dialog {
                       alignment: Alignment.center,
                     ),
                   ),
-                  // child: Global.buildPlayIcon(() {}),
+                  child: Global.buildPlayIcon(() {}),
                 ),
                 Row(
                   children: [
