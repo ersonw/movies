@@ -1,4 +1,7 @@
 import 'dart:convert';
+import 'dart:math';
+
+import 'SearchActor.dart';
 
 class Player {
   Player();
@@ -6,18 +9,27 @@ class Player {
   int id = 0;
   String title = '';
   int play = 0;
-  String duration = '';
-  String actor = '';
+  int duration = 0;
+  SearchActor actor = SearchActor();
   int recommendations = 0;
   String tag = '';
+  String playUrl = '';
+  String downloadUrl = '';
+  String pic = '';
+  int diamond = 0;
+  bool favorite = false;
 
   Player.formJson(Map<String, dynamic> json)
       : id = json['id'],
         title = json['title'],
         play = json['play'],
         duration = json['duration'],
-        actor = json['actor'],
+        actor = SearchActor.formJson(json['actor']),
         recommendations = json['recommendations'],
+        playUrl = json['playUrl'],
+        downloadUrl = json['downloadUrl'],
+        pic = json['pic'],
+        diamond = json['diamond'],
         tag = json['tag'];
 
   Map<String, dynamic> toJson() => {
@@ -25,9 +37,13 @@ class Player {
         'title': title,
         'play': play,
         'duration': duration,
-        'actor': actor,
+        'actor': actor.toJson(),
         'recommendations': recommendations,
         'tag': tag,
+        'pic': pic,
+        'playUrl': playUrl,
+        'downloadUrl': downloadUrl,
+        'diamond': diamond,
       };
 
   @override

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,8 +8,11 @@ import 'package:movies/data/SearchList.dart';
 import 'package:movies/data/UserList.dart';
 import 'package:movies/image_icon.dart';
 import 'dart:io';
+import 'HttpManager.dart';
 import 'RoundUnderlineTabIndicator.dart';
 import 'global.dart';
+import 'network/NWApi.dart';
+import 'network/NWMethod.dart';
 
 class SearchPage extends StatefulWidget {
   SearchPage({Key? key, required this.title}) : super(key: key);
@@ -25,6 +30,7 @@ class _SearchPage extends State<SearchPage>
   final ScrollController _scrollController = ScrollController();
   final _tabKey = const ValueKey('tab');
   int _tabIndex = 0;
+  int _page = 1;
 
   List<SearchList> _avLists = [];
   List<SearchList> _workLists = [];
@@ -59,15 +65,37 @@ class _SearchPage extends State<SearchPage>
         vsync: this,
         initialIndex: initialIndex != null ? initialIndex : 0);
     _innerTabController.addListener(handleTabChange);
+    _search();
+    super.initState();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
         // _getMore();
       }
     });
-    super.initState();
   }
+  _search() async{
+    Map<String, dynamic> parm = {
+      'type': _tabIndex,
+      'text': _textEditingController.text,
+      'page': _page,
+    };
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET, NWApi.getSearchs, {"data": jsonEncode(parm)}));
+    if (result != null) {
+      print(result);
+      switch(_tabIndex){
+        case 0:
+          setState(() {
+            _avLists = (jsonDecode(result)['list'] as List).map((e) => SearchList.formJson(e)).toList();
+          });
+          break;
+        default:
+          break;
+      }
 
+    }
+  }
   void handleTabChange() {
     setState(() {
       _tabIndex = _innerTabController.index;
@@ -424,16 +452,34 @@ class _SearchPage extends State<SearchPage>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  searchList.title,
-                  style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 15,
-                      overflow: TextOverflow.ellipsis),
-                ),
-                Text(
-                  '番号:${searchList.number}',
-                  style: const TextStyle(color: Colors.grey, fontSize: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                  SizedBox(
+                    width: ((MediaQuery.of(context).size.width) / 2.2),
+                    child: Text(
+                      searchList.title,
+                      style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 15,
+                          overflow: TextOverflow.ellipsis),
+                    ),
+                  ),
+                ],),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: ((MediaQuery.of(context).size.width) / 2.2),
+                      child: Text(
+                        '番号:${searchList.number}',
+                        style: const TextStyle(
+                            color: Colors.grey,
+                            fontSize: 10,
+                            overflow: TextOverflow.ellipsis),
+                      ),
+                    ),
+                  ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

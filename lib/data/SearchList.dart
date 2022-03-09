@@ -16,9 +16,10 @@ class SearchList {
       : title = json['title'],
         id = json['id'],
         image = json['image'],
-        number = json['number'],
+        number = json['number'] ?? '',
         play = json['play'],
-        account = json['account']
+        account = json['account'],
+        remommends = json['remommends']
   ;
 
   Map<String, dynamic> toJson() =>
@@ -29,6 +30,7 @@ class SearchList {
         'number': number,
         'play': play,
         'account': account,
+        'remommends': remommends,
       };
 
   @override

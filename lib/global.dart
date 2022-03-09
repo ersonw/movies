@@ -325,20 +325,35 @@ class Global {
       ],
     );
   }
+  static String inSecondsTostring(int seconds) {
+    if (seconds < 60) {
+      return '00:$seconds';
+    } else {
+      int i = seconds ~/ 60;
+      double d = seconds / 60;
+      if (d < 60) {
+        return '$i:${((d - i) * 60).toStringAsFixed(0)}';
+      } else {
+        int ih = i ~/ 60;
+        double id = i / 60;
+        return '$ih:${((id - ih) * 60).toStringAsFixed(0)}:${((d - i) * 60).toStringAsFixed(0)}';
+      }
+    }
+  }
   static String getTimeToString(int t){
     DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(t);
     return '${dateTime.year}-${dateTime.month}-${dateTime.day} ${dateTime.hour}:${dateTime.minute}';
   }
   static String getNumbersToChinese(int n){
-    if(n < 1000){
+    if(n < 9999){
       return '$n';
     }else{
-      double d= n / 1000;
-      if(d < 10){
-        return '${d.toStringAsFixed(2)}K';
-      }else{
-        d= d / 10;
+      double d= n / 10000;
+      if(d < 999){
         return '${d.toStringAsFixed(2)}W';
+      }else{
+        d= d / 1000;
+        return '${d.toStringAsFixed(2)}KW';
       }
     }
   }

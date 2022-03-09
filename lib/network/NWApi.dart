@@ -34,4 +34,7 @@ class NWApi {
   static const loginPhone = 'login';
   static const forgotPasswd = 'forgotPasswd';
   static const gethotTags = 'video/hotTags';
+  static const getSearchs = 'video/search';
+  static const getPlayer = 'video/player';
+  static const getRandom = 'video/random';
 }

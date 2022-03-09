@@ -1066,7 +1066,7 @@ class _IndexHomePage extends State<IndexHomePage> {
                   textInputAction: TextInputAction.done,
                   focusNode: _commentFocus,
                   onEditingComplete: () {
-                    if (_textEditingController.text.length > 1) {
+                    if (_textEditingController.text.isNotEmpty) {
                       _commentFocus.unfocus();
                       setState(() {
                         _addRecord(_textEditingController.text);
@@ -1089,7 +1089,7 @@ class _IndexHomePage extends State<IndexHomePage> {
               ),
               TextButton(
                 onPressed: () {
-                  if (_textEditingController.text.length > 1) {
+                  if (_textEditingController.text.isNotEmpty) {
                     _commentFocus.unfocus();
                     setState(() {
                       _addRecord(_textEditingController.text);
