@@ -8,6 +8,7 @@ class Comment {
   String nickname = '';
   String avatar = '';
   bool isFirst = false;
+  bool isLike = false;
   String context = '';
   int likes = 0;
 
@@ -17,6 +18,7 @@ class Comment {
         nickname = json['nickname'],
         avatar = json['avatar'],
         isFirst = json['isFirst'],
+  isLike = json['isLike'],
         context = json['context'],
         likes = json['likes'];
 
@@ -26,6 +28,7 @@ class Comment {
         'nickname': nickname,
         'avatar': avatar,
         'isFirst': isFirst,
+    'isLike': isLike,
         'context': context,
         'likes': likes,
       };

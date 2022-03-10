@@ -58,7 +58,7 @@ class Global {
   static bool _isLogin = false;
   static late BuildContext MainContext;
   static late final String uid;
-  static WebSocketChannel? channel = null;
+  static WebSocketChannel? channel;
 
   static Profile profile = Profile();
   static Messages messages = Messages();
@@ -380,6 +380,9 @@ class Global {
         return '${d.toStringAsFixed(2)}KW';
       }
     }
+  }
+  static void handlerInvite(String data){
+    print(data);
   }
   // static String getNumbersToChinese(int n){
   //   if(n < 1000){

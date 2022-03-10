@@ -1,12 +1,18 @@
+import 'dart:convert';
+
 import 'package:movies/UserInfoPage.dart';
 import 'package:movies/data/Comment.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:movies/data/WolfFriend.dart';
 import 'package:movies/image_icon.dart';
 
+import 'HttpManager.dart';
 import 'RoundUnderlineTabIndicator.dart';
 import 'global.dart';
+import 'network/NWApi.dart';
+import 'network/NWMethod.dart';
 
 class WolfFriendPage extends StatefulWidget {
   const WolfFriendPage({Key? key}) : super(key: key);
@@ -15,28 +21,112 @@ class WolfFriendPage extends StatefulWidget {
   _WolfFriendPage createState() => _WolfFriendPage();
 
 }
-class _WolfFriendPage extends State<WolfFriendPage>{
-  List<Comment> _comments = [];
+class _WolfFriendPage extends State<WolfFriendPage>  with SingleTickerProviderStateMixin {
+  late  TabController _innerTabController;
+  final ScrollController _controller = ScrollController();
+  final _tabKey = const ValueKey('tab');
+  List<WolfFriend> _list = [];
+  int type = 0;
+  int page = 0;
+  int total = 1;
+  String loading = '加载更多!';
+  // bool post = false;
   @override
   void initState() {
     // TODO: implement initState
-    Comment comment = Comment();
-    comment.avatar = 'http://github1.oss-cn-hongkong.aliyuncs.com/a8ac8dbc-47bc-423b-b881-b30583fb1042.png';
-    comment.likes = 1024;
-    comment.context = '工会主席的讲话精神是重要的是的风格不同的时候就可以吗';
-    comment.nickname = '好久不见';
-    _comments.add(comment);
-    comment = Comment();
-    comment.isFirst = true;
-    comment.avatar = 'http://github1.oss-cn-hongkong.aliyuncs.com/2942af7c-5541-418e-a9e5-baed6d301158.png';
-    comment.likes = 1024;
-    comment.context = '好看';
-    comment.nickname = 'CC';
-    _comments.add(comment);
-    _comments.add(comment);
     super.initState();
+    int initialIndex = PageStorage.of(context)?.readState(context, identifier: _tabKey);
+    _innerTabController = TabController(
+        length: 3,
+        vsync: this,
+        initialIndex: initialIndex != null ? initialIndex : 0);
+    _innerTabController.addListener(handleTabChange);
+    _controller.addListener(() {
+      if (_controller.position.pixels ==
+          _controller.position.maxScrollExtent) {
+        page++;
+        _init();
+      }
+    });
+    _init();
   }
-  _showComments(List<Comment> comments){
+  void handleTabChange() {
+    type = _innerTabController.index;
+    page = 0;
+    _init();
+    PageStorage.of(context)?.writeState(context, _innerTabController.index, identifier: _tabKey);
+  }
+  _init() async{
+    // if(post) return;
+    if(page < total) {
+      loading = '加载更多!';
+      page++;
+      // post = true;
+    }else{
+      setState(() {
+        loading = '我也是有底线的哦!';
+      });
+      return;
+    }
+    String ty = '';
+    switch(type){
+      case 0:
+        ty = 'today';
+        break;
+      case 1:
+        ty = 'week';
+        break;
+      case 2:
+        ty = 'all';
+        break;
+    }
+    Map<String, dynamic> parm = {
+      'page': page,
+      'type': ty,
+    };
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET, NWApi.recommendVideos, {"data": jsonEncode(parm)}));
+    print(result);
+    // post = false;
+    if (result == null) {
+      return;
+    }
+    Map<String, dynamic> map = jsonDecode(result);
+    total = map['total'];
+    List<WolfFriend> list = (map['list'] as List).map((e) => WolfFriend.formJson(e)).toList();
+    setState(() {
+      if(page > 1){
+        _list.addAll(list);
+      }else{
+        _list = list;
+      }
+    });
+  }
+  _favorite(id) async{
+    Map<String, dynamic> parm = {
+      'id': id,
+    };
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET, NWApi.likeComment, {"data": jsonEncode(parm)}));
+    print(result);
+    if (result == null) {
+      return;
+    }
+    Map<String, dynamic> map = jsonDecode(result);
+    if(map['verify'] != null && map['verify'] == true){
+      // if(comment.isLike){
+      //   Global.showWebColoredToast('取消点赞成功！');
+      // }else{
+      //   Global.showWebColoredToast('点赞成功！');
+      // }
+      // setState(() {
+      //   comment.isLike = !comment.isLike;
+      // });
+      page--;
+      _init();
+    }
+  }
+  _showComments(List<Comment> comments, int id){
     showCupertinoModalPopup<void>(
         context: context,
         builder: (_context)
@@ -75,9 +165,9 @@ class _WolfFriendPage extends State<WolfFriendPage>{
                 itemCount: comments.length,
                 itemBuilder: (BuildContext __context, int index){
                   if(index == 0){
-                    return _buildCommentItem(comments[index],incisive: true);
+                    return _buildCommentItem(comments[index],id,incisive: true);
                   }else{
-                    return _buildCommentItem(comments[index]);
+                    return _buildCommentItem(comments[index],id);
                   }
                 },
               )),
@@ -92,58 +182,89 @@ class _WolfFriendPage extends State<WolfFriendPage>{
   Widget build(BuildContext context) {
     // TODO: implement build
     return CupertinoPageScaffold(
-      child: DefaultTabController(
-        length: 3,
-        child: Container(
-          margin: const EdgeInsets.only(left: 10,right: 10),
-          child: Column(
-            children: [
-              Container(
-                margin: const EdgeInsets.only(left: 54, right: 54,top: 30),
-                child: const TabBar(
-                  // isScrollable: true,
-                  labelStyle: TextStyle(fontSize: 18),
-                  unselectedLabelStyle: TextStyle(fontSize: 15),
-                  padding: EdgeInsets.only(right: 0),
-                  indicatorPadding: EdgeInsets.only(right: 0),
-                  labelColor: Colors.red,
-                  labelPadding: EdgeInsets.only(left: 0, right: 0),
-                  unselectedLabelColor: Colors.black,
-                  indicator: RoundUnderlineTabIndicator(
-                      borderSide: BorderSide(
-                        width: 9,
-                        color: Colors.red,
-                      )),
-                  tabs: [
-                    Tab(
-                      text: '今日推荐',
-                    ),
-                    Tab(
-                      text: '周榜',
-                    ),
-                    Tab(
-                      text: '总榜',
-                    ),
-                  ],
-                ),
+      child: Container(
+        margin: const EdgeInsets.only(left: 10,right: 10),
+        child: Column(
+          children: [
+            Container(
+              margin: const EdgeInsets.only(left: 54, right: 54,top: 30),
+              child:  TabBar(
+                controller: _innerTabController,
+                // isScrollable: true,
+                labelStyle: const TextStyle(fontSize: 18),
+                unselectedLabelStyle: const TextStyle(fontSize: 15),
+                padding: const EdgeInsets.only(right: 0),
+                indicatorPadding: const EdgeInsets.only(right: 0),
+                labelColor: Colors.red,
+                labelPadding: const EdgeInsets.only(left: 0, right: 0),
+                unselectedLabelColor: Colors.black,
+                indicator: const RoundUnderlineTabIndicator(
+                    borderSide: BorderSide(
+                      width: 9,
+                      color: Colors.red,
+                    )),
+                tabs: const [
+                  Tab(
+                    text: '今日推荐',
+                  ),
+                  Tab(
+                    text: '周榜',
+                  ),
+                  Tab(
+                    text: '总榜',
+                  ),
+                ],
               ),
-              Expanded(child: TabBarView(
-                  children: [
-                    ListView.builder(
-                      itemCount: 10,
-                      itemBuilder: (BuildContext _context, int index) => _buildListItem(index),
-                    ),
-                    Container(),
-                    Container(),
-                  ]
-              )),
-            ],
-          ),
+            ),
+            Expanded(child: TabBarView(
+                controller: _innerTabController,
+                children: [
+                  ListView.builder(
+                    controller: _controller,
+                    itemCount: _list.length+1,
+                    itemBuilder: (BuildContext _context, int index) => _buildListItem(index),
+                  ),
+                  ListView.builder(
+                    controller: _controller,
+                    itemCount: _list.length+1,
+                    itemBuilder: (BuildContext _context, int index) => _buildListItem(index),
+                  ),
+                  ListView.builder(
+                    controller: _controller,
+                    itemCount: _list.length+1,
+                    itemBuilder: (BuildContext _context, int index) => _buildListItem(index),
+                  ),
+                ]
+            )),
+            // Expanded(child: ListView.builder(
+            //   controller: _controller,
+            //   itemCount: _list.length+1,
+            //   itemBuilder: (BuildContext _context, int index) => _buildListItem(index),
+            // ),),
+          ],
         ),
       ),
     );
   }
   _buildListItem(int index){
+    if(index >= _list.length){
+      return _list.length > 1 ? Container(
+        height: 30,
+        margin: const EdgeInsets.all(30),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(loading,style: const TextStyle(color: Colors.grey,fontSize: 20),),
+              ],
+            )
+          ],
+        ),
+      ) : Container();
+    }
+    WolfFriend wolfFriend = _list[index];
     return Container(
       margin: const EdgeInsets.only(top: 10),
       decoration: const BoxDecoration(
@@ -156,8 +277,8 @@ class _WolfFriendPage extends State<WolfFriendPage>{
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('狼友推荐的第79部大片',style: TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.bold),),
-                Text('共1623人推荐',style: TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.bold),),
+                Text('狼友推荐的第${wolfFriend.id}部大片',style: const TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.bold),),
+                Text('共${wolfFriend.recommends}人推荐',style: const TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.bold),),
               ],
             ),
           ),
@@ -166,96 +287,105 @@ class _WolfFriendPage extends State<WolfFriendPage>{
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(Radius.circular(10)),
               image: DecorationImage(
-                image: AssetImage(
-                    'assets/image/d95661e1-b1d2-4363-b263-ef60b965612d.png'),
+                image: NetworkImage(wolfFriend.image),
                 fit: BoxFit.fill,
                 alignment: Alignment.center,
               ),
             ),
             child: Global.buildPlayIcon((){
-              Global.playVideo(0);
+              Global.playVideo(wolfFriend.vid);
             }),
           ),
           Container(
-            margin: EdgeInsets.only(top: 10,bottom: 10),
-            child: _buildSubComment(_comments),
+            margin: const EdgeInsets.only(top: 10,bottom: 10),
+            child: _buildSubComment(wolfFriend.comments,wolfFriend.id),
           ),
         ],
       ),
     );
   }
-  _buildCommentItem(Comment comment, {bool incisive = false}){
+  _buildCommentItem(Comment comment,int id, {bool incisive = false}){
     return Container(
       margin: const EdgeInsets.only(top: 5,bottom: 5),
       width: (MediaQuery.of(context).size.width),
       // color: Colors.black54,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              InkWell(
-                onTap: (){
-                  Navigator.of(context, rootNavigator: true).push<void>(
-                    CupertinoPageRoute(
-                      // title: "推广分享",
-                      // fullscreenDialog: true,
-                      builder: (context) => UserInfoPage(uid: comment.uid),
-                    ),
-                  );
-                },
-                child: Container(
-                  height: 36,
-                  width: 36,
-                  margin: const EdgeInsets.only(right: 10),
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    image: DecorationImage(
-                      image: _buildAvatar(comment.avatar),
-                      fit: BoxFit.fill,
-                      alignment: Alignment.center,
+              Row(
+                children: [
+                  InkWell(
+                    onTap: (){
+                      Navigator.of(context, rootNavigator: true).push<void>(
+                        CupertinoPageRoute(
+                          // title: "推广分享",
+                          // fullscreenDialog: true,
+                          builder: (context) => UserInfoPage(uid: comment.uid),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      height: 36,
+                      width: 36,
+                      margin: const EdgeInsets.only(right: 10),
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.all(Radius.circular(50)),
+                        image: DecorationImage(
+                          image: _buildAvatar(comment.avatar),
+                          fit: BoxFit.fill,
+                          alignment: Alignment.center,
+                        ),
+                      ),
                     ),
                   ),
+                  Container(
+                    width: (MediaQuery.of(context).size.width) / 3,
+                    margin: const EdgeInsets.only(right: 10),
+                    child: Text(comment.nickname,style: const TextStyle(color: Colors.black,fontSize: 15,overflow: TextOverflow.ellipsis),),
+                  ),
+                  comment.isFirst ? Container(
+                    margin: const EdgeInsets.only(right: 10),
+                    child: Image.asset(ImageIcons.icon_isfirst.assetName,width: 36,),
+                  ) : Container(),
+                  incisive ?
+                  Container(
+                    margin: const EdgeInsets.only(right: 10),
+                    child: Image.asset(ImageIcons.icon_incisive.assetName,width: 45,),
+                  ) : Container(),
+                ],
+              ),
+              InkWell(
+                onTap: (){
+                  _favorite(id);
+                },
+                child: Row(
+                  children: [
+                    Image.asset(ImageIcons.icon_community_zan.assetName,width: 18,height: 18,color: comment.isLike ? Colors.red : Colors.black45,),
+                    Text(Global.getNumbersToChinese(comment.likes),style: const TextStyle(fontSize: 15),),
+                  ],
                 ),
               ),
-              Container(
-                width: (MediaQuery.of(context).size.width) / 3,
-                margin: const EdgeInsets.only(right: 10),
-                child: Text(comment.nickname+comment.nickname+comment.nickname,style: const TextStyle(color: Colors.black,fontSize: 15,overflow: TextOverflow.ellipsis),),
-              ),
-              comment.isFirst ? Container(
-                margin: const EdgeInsets.only(right: 10),
-                child: Image.asset(ImageIcons.icon_isfirst.assetName,width: 36,),
-              ) : Container(),
-              incisive ?
-              Container(
-                margin: const EdgeInsets.only(right: 10),
-                child: Image.asset(ImageIcons.icon_incisive.assetName,width: 45,),
-              ) : Container(),
             ],
           ),
-          InkWell(
-            onTap: (){},
-            child: Row(
-              children: [
-                Image.asset(ImageIcons.icon_community_zan.assetName,width: 18,height: 18,),
-                Text(Global.getNumbersToChinese(comment.likes),style: const TextStyle(fontSize: 15),),
-              ],
-            ),
+          SizedBox(
+            width: (MediaQuery.of(context).size.width) / 1.3,
+            child: Text(comment.context,style: const TextStyle(color: Colors.black45,fontSize: 13),),
           ),
         ],
       ),
     );
   }
-  _buildSubComment(List<Comment> comments){
+  _buildSubComment(List<Comment> comments, int id){
     List<Widget> widgets = [];
     if(comments.isNotEmpty){
-      widgets.add(_buildCommentItem(comments.first, incisive: true));
-      if(comments.length > 1) widgets.add(_buildCommentItem(comments[1]));
+      widgets.add(_buildCommentItem(comments.first, id,incisive: true));
+      if(comments.length > 1) widgets.add(_buildCommentItem(comments[1],id));
       if(comments.length > 2) {
         widgets.add(InkWell(
           onTap: (){
-            _showComments(comments);
+            _showComments(comments,id);
           },
           child: Container(
             margin: const EdgeInsets.only(top: 5,bottom: 5),

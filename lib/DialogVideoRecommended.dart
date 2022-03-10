@@ -1,11 +1,16 @@
+import 'dart:convert';
+
 import 'package:date_format/date_format.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'HttpManager.dart';
 import 'data/Player.dart';
 import 'global.dart';
+import 'network/NWApi.dart';
+import 'network/NWMethod.dart';
 
 class DialogVideoRecommended extends Dialog {
   Player player;
@@ -87,7 +92,7 @@ class DialogVideoRecommended extends Dialog {
                     )
                   ],
                 ),
-                Row(
+                player.tag != null ? Row(
                   children: [
                     Container(
                       margin: const EdgeInsets.all(10),
@@ -96,7 +101,7 @@ class DialogVideoRecommended extends Dialog {
                         style: const TextStyle(color: Colors.grey,fontSize: 15,fontWeight: FontWeight.normal,overflow: TextOverflow.ellipsis),),
                     )
                   ],
-                ),
+                ) : Container(),
                 SingleChildScrollView(
                   child: InkWell(
                     child:  Container(
@@ -133,13 +138,16 @@ class DialogVideoRecommended extends Dialog {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     InkWell(
+                      onTap: (){
+                        _close(context);
+                      },
                       child: Container(
                         width: 120,
-                        height: 30,
+                        height: 45,
                         margin: const EdgeInsets.all(10),
                         decoration: const BoxDecoration(
                           color: Colors.black12,
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
+                          borderRadius: BorderRadius.all(Radius.circular(27)),
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -150,18 +158,21 @@ class DialogVideoRecommended extends Dialog {
                       ),
                     ),
                     InkWell(
+                      onTap: (){
+                        _post(context);
+                      },
                       child: Container(
                         width: 120,
-                        height: 30,
+                        height: 45,
                         margin: const EdgeInsets.all(10),
                         decoration: const BoxDecoration(
                           color: Colors.red,
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
+                          borderRadius: BorderRadius.all(Radius.circular(27)),
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: const [
-                            Text('确认推荐',style: TextStyle(fontSize: 15,color: Colors.white),textAlign: TextAlign.center,),
+                            Text('推荐',style: TextStyle(fontSize: 15,color: Colors.white),textAlign: TextAlign.center,),
                           ],
                         ),
                       ),
@@ -174,5 +185,30 @@ class DialogVideoRecommended extends Dialog {
         ),
       ],
     );
+  }
+  _post(BuildContext context) async{
+    if(_textEditingController.text.isNotEmpty){
+      Map<String, dynamic> parm = {
+        'id': player.id,
+        'reason': _textEditingController.text,
+      };
+      String? result = (await DioManager().requestAsync(
+          NWMethod.GET, NWApi.recommendVideo, {"data": jsonEncode(parm)}));
+    print(result);
+    if (result == null) {
+    return;
+    }
+    Map<String, dynamic> map = jsonDecode(result);
+    if(map['verify'] != null ){
+      if(map['verify'] == true){
+        Global.showWebColoredToast('推荐成功!');
+      }else if(map['msg'] != null){
+        Global.showWebColoredToast(map['msg']);
+      }
+    }
+      _close(context);
+    }else{
+      Global.showWebColoredToast('必须填写推荐理由!');
+    }
   }
 }

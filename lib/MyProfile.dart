@@ -71,7 +71,11 @@ class _MyProfile extends State<MyProfile> {
                   Navigator.of(context, rootNavigator: true).push<void>(
                     CupertinoPageRoute(
                       // builder: (context) => TakePictureScreen(cameras: Global.cameras, ),
-                      builder: (context) => const ScanQRPage(),
+                      builder: (context) =>  ScanQRPage(
+                        fn: (data){
+                          if(data != null) Global.handlerInvite(data);
+                        },
+                      ),
                     ),
                   );
                 };
@@ -87,8 +91,14 @@ class _MyProfile extends State<MyProfile> {
                   if (res != null) {
                     var image = res[0].thumbPath;
                     String data = await QrCodeToolsPlugin.decodeFrom(image)
-                        .catchError(() => {});
-                    if (data.isEmpty) return;
+                        .catchError((Object o, StackTrace s)  {
+                          print(o.toString());
+                    });
+                    if (data == null || data.isEmpty) return;
+                    if(data.startsWith(configModel.config.domain)){
+                      Global.handlerInvite(data);
+                      return;
+                    }
                     if (data.contains('http')) {
                       Navigator.push(
                         context,

@@ -5,9 +5,11 @@ import 'package:movies/web_view.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'dart:io';
 
-class ScanQRPage extends StatefulWidget {
-  const ScanQRPage({Key? key}) : super(key: key);
+import 'global.dart';
 
+class ScanQRPage extends StatefulWidget {
+   ScanQRPage({Key? key,this.fn}) : super(key: key);
+  Function? fn;
   @override
   _ScanQRPageState createState() => _ScanQRPageState();
 }
@@ -33,7 +35,7 @@ class _ScanQRPageState extends State<ScanQRPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('扫一扫二维码'),
+        title: const Text('扫一扫二维码'),
         backgroundColor: Colors.transparent,
       ),
       // backgroundColor: Colors.grey,
@@ -62,14 +64,14 @@ class _ScanQRPageState extends State<ScanQRPage> {
                   child: Container(
                     width: 50,
                     height: 50,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Colors.black26,
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         IconButton(
-                            icon: Icon(
+                            icon: const Icon(
                               Icons.flip_camera_ios,
                               color: Colors.white,
                             ),
@@ -77,7 +79,7 @@ class _ScanQRPageState extends State<ScanQRPage> {
                               await controller.flipCamera();
                             }),
                         IconButton(
-                            icon: Icon(
+                            icon: const Icon(
                               Icons.flash_on,
                               color: Colors.white,
                             ),
@@ -100,7 +102,7 @@ class _ScanQRPageState extends State<ScanQRPage> {
               child: Center(
                 child: Text(
                   text,
-                  style: TextStyle(color: Colors.green, fontSize: 20),
+                  style: const TextStyle(color: Colors.green, fontSize: 20),
                 ),
               ),
             ),
@@ -123,6 +125,10 @@ class _ScanQRPageState extends State<ScanQRPage> {
           return;
         }
         Navigator.pop(context);
+        if(str.startsWith(configModel.config.domain)){
+          widget.fn!(str);
+          return;
+        }
         if(str.contains('http')){
           // print(str);
           Navigator.push(context, CupertinoPageRoute(
