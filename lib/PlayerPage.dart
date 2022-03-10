@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:movies/BuyDiamondPage.dart';
 import 'package:movies/data/Player.dart';
+import 'package:movies/functions.dart';
 import 'package:movies/image_icon.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
@@ -132,7 +133,51 @@ class _PlayerPage extends State<PlayerPage> {
     }
     return FileImage(File(avatar));
   }
-
+  _favorite() async{
+    Map<String, dynamic> parm = {
+      'id': widget.id,
+    };
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET, NWApi.favoriteVideo, {"data": jsonEncode(parm)}));
+    print(result);
+    if (result == null) {
+    return;
+    }
+    Map<String, dynamic> map = jsonDecode(result);
+    if(map['verify'] != null && map['verify'] == true){
+      if(_player.favorite){
+        Global.showWebColoredToast('取消收藏成功！');
+      }else{
+        Global.showWebColoredToast('收藏成功！');
+      }
+      setState(() {
+        _player.favorite = !_player.favorite;
+      });
+    }
+  }
+  _buyVideo() async {
+    if(await ShowAlertDialogBool(context, '购买付费视频', '确定花费 ${_player.diamond}钻石 购买本视频吗？')){
+      Map<String, dynamic> parm = {
+        'id': widget.id,
+      };
+      String? result = (await DioManager().requestAsync(
+          NWMethod.GET, NWApi.buyVideo, {"data": jsonEncode(parm)}));
+      print(result);
+      if (result == null) {
+        return;
+      }
+      Map<String, dynamic> map = jsonDecode(result);
+      if(map['verify'] != null){
+        if(map['verify'] == true){
+          _initPlayer();
+        }else if(map['msg'] != null){
+          Global.showWebColoredToast(map['msg']);
+        }else{
+          Global.showWebColoredToast('未知错误，请刷新重试!');
+        }
+      }
+    }
+  }
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -141,7 +186,8 @@ class _PlayerPage extends State<PlayerPage> {
       backgroundColor: const Color(0xF5F5F5FF),
       // Use a FutureBuilder to display a loading spinner while waiting for the
       // VideoPlayerController to finish initializing.
-      child: _showError ? Container(
+      child: _showError ?
+      Container(
         decoration: const BoxDecoration(
             color: Colors.black54
         ),
@@ -251,7 +297,9 @@ class _PlayerPage extends State<PlayerPage> {
                                             ],
                                           ),
                                           InkWell(
-                                            onTap: () {},
+                                            onTap: () {
+                                              _favorite();
+                                            },
                                             child:  Icon(
                                               _player.favorite ? Icons.favorite : Icons.favorite_border,
                                               color: _player.favorite ? Colors.red : Colors.grey,
@@ -637,7 +685,7 @@ class _PlayerPage extends State<PlayerPage> {
                                                   BorderRadius.circular(16))),
                                     ),
                                     onPressed: () {
-
+                                      _buyVideo();
                                     },
                                     child:  Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
@@ -904,7 +952,7 @@ class _PlayerPage extends State<PlayerPage> {
                           margin: const EdgeInsets.only(
                               left: 5, right: 5, bottom: 20),
                           child: Container(
-                            margin: EdgeInsets.only(left: 5,right: 5),
+                            margin: const EdgeInsets.only(left: 5,right: 5),
                             child: _buildLists(),
                           )),
                     ],

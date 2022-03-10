@@ -130,13 +130,13 @@ class DialogVideoRecommended extends Dialog {
                   ),
                 ),
                 Row(
-                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     InkWell(
                       child: Container(
                         width: 120,
                         height: 30,
-                        margin: const EdgeInsets.only(top: 5,bottom: 20,left: 20),
+                        margin: const EdgeInsets.all(10),
                         decoration: const BoxDecoration(
                           color: Colors.black12,
                           borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -153,7 +153,7 @@ class DialogVideoRecommended extends Dialog {
                       child: Container(
                         width: 120,
                         height: 30,
-                        margin: const EdgeInsets.only(top: 5,bottom: 20,left: 20),
+                        margin: const EdgeInsets.all(10),
                         decoration: const BoxDecoration(
                           color: Colors.red,
                           borderRadius: BorderRadius.all(Radius.circular(15)),

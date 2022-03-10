@@ -333,18 +333,34 @@ class Global {
       ],
     );
   }
+  static void showDownloadPage(String downloadUrl, String title) async{
+
+    // Navigator.of(MainContext, rootNavigator: true).push<void>(
+    //   CupertinoPageRoute(
+    //     title: "下载管理",
+    //     // fullscreenDialog: true,
+    //     builder: (context) => DownloadVideoPage(
+    //       downloadUrl: downloadUrl,
+    //       title: title,
+    //     ),
+    //   ),
+    // );
+  }
   static String inSecondsTostring(int seconds) {
     if (seconds < 60) {
-      return '00:$seconds';
+      return '00:${seconds < 10 ? '0$seconds' : seconds}';
     } else {
       int i = seconds ~/ 60;
       double d = seconds / 60;
       if (d < 60) {
-        return '$i:${((d - i) * 60).toStringAsFixed(0)}';
+        int t = ((d - i) * 60).toInt();
+        return '${i < 10 ? '0$i': i}:${t < 10 ? '0$t': t}';
       } else {
         int ih = i ~/ 60;
         double id = i / 60;
-        return '$ih:${((id - ih) * 60).toStringAsFixed(0)}:${((d - i) * 60).toStringAsFixed(0)}';
+        int t1 = ((id - ih) * 60).toInt();
+        int t2 = ((d - i) * 60).toInt();
+        return '${ih < 10 ? '0$ih' : ih }:${t1 < 10 ? '0$t1' : t1}:${t2 < 10 ? '0$t2' : t2}';
       }
     }
   }
