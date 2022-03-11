@@ -87,7 +87,10 @@ class _DownloadsManager extends State<DownloadsManager>{
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text(download.title,style: const TextStyle(fontSize: 15 ,color: Colors.black,overflow: TextOverflow.ellipsis),),
+                        SizedBox(
+                          width: ((MediaQuery.of(context).size.width) / 1.5),
+                          child: Text(download.title,style: const TextStyle(fontSize: 15 ,color: Colors.black,overflow: TextOverflow.ellipsis),),
+                        ),
                       ],
                     ),
                     Row(
