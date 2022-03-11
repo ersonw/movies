@@ -71,6 +71,7 @@ dependencies:
   auto_orientation: ^2.2.1
   wakelock: ^0.6.1+1
   flutter_swiper: ^1.1.6
+  flutter_slidable: ^1.2.0
 
 flutter_native_splash:
   color: "#FFFFFF"

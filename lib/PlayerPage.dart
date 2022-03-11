@@ -455,8 +455,7 @@ class _PlayerPage extends State<PlayerPage> {
                                                     children: [
                                                       InkWell(
                                                         onTap: () {
-                                                          Navigator.of(context).push(
-                                                              MaterialPageRoute(
+                                                          Navigator.of(context).push(MaterialPageRoute(
                                                                   builder:
                                                                       (context) {
                                                             return VideoFullPage(
@@ -972,7 +971,7 @@ class _PlayerPage extends State<PlayerPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         InkWell(
-                          onTap: () {
+                          onTap: () async{
                             if(_player.downloadUrl==null || _player.downloadUrl.isEmpty){
                               if(_player.diamond > 0){
                                 Global.showWebColoredToast("无法下载未购买影片！");
@@ -981,7 +980,10 @@ class _PlayerPage extends State<PlayerPage> {
                               }
                               return;
                             }
-
+                            Global.downloadFunction(_player.downloadUrl, _player.title);
+                            if(await ShowAlertDialogBool(context, '提交下载', "已提交后台下载！是否转到下载管理？")){
+                              Global.showDownloadPage();
+                            }
                           },
                           child: Column(
                             children: [

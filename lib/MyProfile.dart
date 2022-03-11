@@ -479,7 +479,7 @@ class _MyProfile extends State<MyProfile> {
                         ),
                       ),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () => Global.showDownloadPage(),
                         child: Column(
                           children: [
                             Image.asset(

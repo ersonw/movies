@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:image_pickers/image_pickers.dart';
+import 'package:movies/DownloadsManager.dart';
 import 'package:movies/LoadingChangeNotifier.dart';
 import 'package:movies/MessagesChangeNotifier.dart';
 import 'package:movies/SpreadVideoDialog.dart';
@@ -36,9 +37,11 @@ import 'package:video_compress/video_compress.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:movies/utils/UploadOss.dart';
 import 'DialogVideoRecommended.dart';
+import 'DownloadFile.dart';
 import 'LoadingDialog.dart';
 import 'PlayerPage.dart';
 import 'RestartWidget.dart';
+import 'data/Download.dart';
 import 'data/Player.dart';
 import 'data/Profile.dart';
 import 'package:flutter/material.dart';
@@ -333,18 +336,15 @@ class Global {
       ],
     );
   }
-  static void showDownloadPage(String downloadUrl, String title) async{
+  static void showDownloadPage() async{
 
-    // Navigator.of(MainContext, rootNavigator: true).push<void>(
-    //   CupertinoPageRoute(
-    //     title: "下载管理",
-    //     // fullscreenDialog: true,
-    //     builder: (context) => DownloadVideoPage(
-    //       downloadUrl: downloadUrl,
-    //       title: title,
-    //     ),
-    //   ),
-    // );
+    Navigator.of(MainContext, rootNavigator: true).push<void>(
+      CupertinoPageRoute(
+        title: "下载管理",
+        // fullscreenDialog: true,
+        builder: (context) => const DownloadsManager(),
+      ),
+    );
   }
   static String inSecondsTostring(int seconds) {
     if (seconds < 60) {
@@ -384,19 +384,6 @@ class Global {
   static void handlerInvite(String data){
     print(data);
   }
-  // static String getNumbersToChinese(int n){
-  //   if(n < 1000){
-  //     return '$n';
-  //   }else{
-  //     int d= n ~/ 1000;
-  //     if(d < 10){
-  //       return '${d}K';
-  //     }else{
-  //       d= d ~/ 10;
-  //       return '${d}W';
-  //     }
-  //   }
-  // }
   static String getDateTime(int date) {
     int t = ((DateTime.now().millisecondsSinceEpoch ~/ 1000) - date);
     String str = '';
@@ -439,7 +426,6 @@ class Global {
     }
     return str;
   }
-
   static Future<void> _init() async {
     if (profile.config.hash == null || profile.config.hash.isEmpty) {
       getConfig();
@@ -453,7 +439,6 @@ class Global {
       }
     });
   }
-
   static Future<void> checkVersion() async {
     DioManager().request(NWMethod.GET, NWApi.checkVersion, params: {},
         success: (data) {
@@ -478,7 +463,6 @@ class Global {
       // print(error);
     });
   }
-
   static Future<void> getConfig() async {
     DioManager().request(NWMethod.GET, NWApi.baseConfig, params: {},
         success: (data) {
@@ -501,7 +485,6 @@ class Global {
       }
     }, error: (error) {});
   }
-
   static Future<void> getSystemMessage() async {
     DioManager().request(NWMethod.GET, NWApi.getSystemMessage, params: {},
         success: (data) async {
@@ -523,7 +506,6 @@ class Global {
       }
     }, error: (error) {});
   }
-
   static Future<void> getUserInfo() async {
     DioManager().request(NWMethod.POST, NWApi.getInfo,
         params: {'identifier': uid}, success: (data) {
@@ -534,7 +516,6 @@ class Global {
       }
     }, error: (error) {});
   }
-
   static Future<String> getUUID() async {
     final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
     String uid = '';
@@ -554,7 +535,6 @@ class Global {
     }
     return uid;
   }
-
   static Future<File> _getLocalFile(String filename) async {
     // get the path to the document directory.
     // String dir = (await getApplicationDocumentsDirectory()).path;
@@ -563,7 +543,6 @@ class Global {
     // print('$dir/$filename');
     return File('$dir/$filename');
   }
-
   static Future choseVideo() async {
     List<Media> _listVideoPaths = await ImagePickers.pickerPaths(
       galleryMode: GalleryMode.video,
@@ -581,7 +560,6 @@ class Global {
           });
     }
   }
-
   /*
   * 根据本地路径获取名称
   * */
@@ -589,7 +567,6 @@ class Global {
     // ignore: null_aware_before_operator
     return filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length);
   }
-
   //压缩视频
   static Future<void> runFlutterVideoCompressMethods(File videoFile) async {
     final mediaInfo = await VideoCompress.compressVideo(
@@ -601,7 +578,6 @@ class Global {
     //   _compressedVideoInfo = mediaInfo;
     // });
   }
-
   static Future<void> postFile(String path) async {
     File file = File(path);
     var sfile = await file.open();
@@ -611,14 +587,10 @@ class Global {
     var val;
     while (x < fileSize) {}
   }
-
 //  持久化Profile信息
-  static saveProfile() =>
-      _prefs.setString("profile", jsonEncode(profile.toJson()));
+  static saveProfile() => _prefs.setString("profile", jsonEncode(profile.toJson()));
 
-  static saveMessages() =>
-      _prefs.setString('messages', jsonEncode(messages.toJson()));
-
+  static saveMessages() => _prefs.setString('messages', jsonEncode(messages.toJson()));
   static Future<void> loading(bool load) async {
     loadingChangeNotifier.isLoading = load;
   }
@@ -632,18 +604,108 @@ class Global {
       player: player,
     )));
   }
+  static void handlerDownload(Download download) async{
+    File f = File(download.path);
+    List<String> paths = download.path.split('/');
+    paths.removeAt(paths.length - 1);
+    String path = paths.join('/');
+    // print(path);
+    if(!await File(path).exists()){
+      Directory(path).createSync();
+    }
+    if (!await f.exists()) {
+      // Directory(savePaths).createSync();
+    }
+    // Directory(download.path).deleteSync();
+    await DownloadFile.download(
+      url: download.url,
+      savePath: download.path,
+      onReceiveProgress: (received, total) {
+        if (total != -1) {
+          download.progress = received / total;
+          configModel.changeDownload(download);
+          // print("下载1已接收：" +
+          //     received.toString() +
+          //     "总共：" +
+          //     total.toString() +
+          //     "进度：+${(received / total * 100).floor()}%");
+        }
+      },
+      done: () {
+        download.finish = true;
+        configModel.changeDownload(download);
+        print("下载1完成");
+      },
+      failed: (e) {
+        download.error = true;
+        configModel.changeDownload(download);
+        // File file = File(download.path);
+        // if(file.existsSync()){
+        //   file.deleteSync();
+        // }
+        print("下载1失败：" + e.toString());
+      },
+    );
+  }
+  static void downloadFunction(String downloadUrl, String title) async{
+    Download download = Download();
+    /// 申请写文件权限
+    bool isPermiss =  await Global.requestPhotosPermission();
+    if(isPermiss) {
+      ///手机储存目录
+      String? savePath = await getPhoneLocalPath();
+      if(savePath != null) savePath = "$savePath/videos/";
+      String appName = downloadUrl.split('/').last;
+      String savePaths = "$savePath$appName";
+
+      download.title = title;
+      download.url = downloadUrl;
+      download.path = savePaths;
+      if(configModel.exists(download)) return;
+      configModel.addDownload(download);
+      handlerDownload(download);
+      ///创建DIO
+      // Dio dio = Dio();
+
+      ///参数一 文件的网络储存URL
+      ///参数二 下载的本地目录文件
+      ///参数三 下载监听
+      // Response response = await dio.download(
+      //     widget.url, "$savePath$appName", onReceiveProgress: (received, total) {
+      //   if (total != -1) {
+      //     ///当前下载的百分比例
+      //     print((received / total * 100).toStringAsFixed(0) + "%");
+      //     CircularProgressIndicator(value: currentProgress,); //进度 0-1
+      //     currentProgress = received / total;
+      //     // setState(() {
+      //     //   currentProgress = received / total;
+      //     // });
+      //   }
+      // });
+    }else{
+      ///提示用户请同意权限申请
+    }
+  }
+  static Future<String?> getPhoneLocalPath() async {
+    final directory = Theme.of(MainContext).platform == TargetPlatform.android
+        ? await getExternalStorageDirectory()
+        : await getApplicationDocumentsDirectory();
+    return directory?.path;
+  }
   static Future<bool> requestPhotosPermission() async {
     //获取当前的权限
     var statusPhotos = await Permission.photos.status;
     var statusCamera = await Permission.camera.status;
-    if (statusPhotos == PermissionStatus.granted && statusCamera == PermissionStatus.granted) {
+    var storageStatus = await Permission.storage.status;
+    if (statusPhotos == PermissionStatus.granted && statusCamera == PermissionStatus.granted && storageStatus == PermissionStatus.granted) {
       //已经授权
       return true;
     } else {
       //未授权则发起一次申请
       statusPhotos = await Permission.photos.request();
       statusCamera = await Permission.camera.request();
-      if (statusPhotos == PermissionStatus.granted && statusCamera == PermissionStatus.granted) {
+      storageStatus = await Permission.storage.request();
+      if (statusPhotos == PermissionStatus.granted && statusCamera == PermissionStatus.granted && storageStatus == PermissionStatus.granted) {
         return true;
       } else {
         return false;
@@ -657,8 +719,8 @@ class Global {
       ui.Image image = await boundary.toImage();
       ByteData byteData = (await image.toByteData(format: ui.ImageByteFormat.png))!;
       final result = await ImageGallerySaver.saveImage(byteData.buffer.asUint8List());
-      print(result); // result是图片地址
-      Global.showWebColoredToast(result);
+      result != null ? Global.showWebColoredToast('保存成功：${result['filePath']}') : print(result);
+      return result['filePath'];
     } catch (e) {
       print(e);
     }

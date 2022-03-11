@@ -86,13 +86,13 @@ class _WolfFriendPage extends State<WolfFriendPage>  with SingleTickerProviderSt
     };
     String? result = (await DioManager().requestAsync(
         NWMethod.GET, NWApi.recommendVideos, {"data": jsonEncode(parm)}));
-    print(result);
+    // print(result);
     // post = false;
     if (result == null) {
       return;
     }
     Map<String, dynamic> map = jsonDecode(result);
-    total = map['total'];
+    total = map['total'] > 0 ? map['total'] : 1;
     List<WolfFriend> list = (map['list'] as List).map((e) => WolfFriend.formJson(e)).toList();
     setState(() {
       if(page > 1){
@@ -102,9 +102,11 @@ class _WolfFriendPage extends State<WolfFriendPage>  with SingleTickerProviderSt
       }
     });
   }
-  _favorite(id) async{
+  _favorite(int _index, int index) async{
+    WolfFriend wolfFriend = _list[index];
+    Comment comment = wolfFriend.comments[_index];
     Map<String, dynamic> parm = {
-      'id': id,
+      'id': comment.id,
     };
     String? result = (await DioManager().requestAsync(
         NWMethod.GET, NWApi.likeComment, {"data": jsonEncode(parm)}));
@@ -114,19 +116,22 @@ class _WolfFriendPage extends State<WolfFriendPage>  with SingleTickerProviderSt
     }
     Map<String, dynamic> map = jsonDecode(result);
     if(map['verify'] != null && map['verify'] == true){
-      // if(comment.isLike){
-      //   Global.showWebColoredToast('取消点赞成功！');
-      // }else{
-      //   Global.showWebColoredToast('点赞成功！');
-      // }
-      // setState(() {
-      //   comment.isLike = !comment.isLike;
-      // });
-      page--;
-      _init();
+      if(comment.isLike){
+        _list[index].comments[_index].likes--;
+        Global.showWebColoredToast('取消点赞成功！');
+      }else{
+        _list[index].comments[_index].likes++;
+        Global.showWebColoredToast('点赞成功！');
+      }
+      setState(() {
+        _list[index].comments[_index].isLike = !comment.isLike;
+      });
+      // page--;
+      // _init();
     }
   }
-  _showComments(List<Comment> comments, int id){
+  _showComments(int index){
+    List<Comment> comments = _list[index].comments;
     showCupertinoModalPopup<void>(
         context: context,
         builder: (_context)
@@ -163,11 +168,11 @@ class _WolfFriendPage extends State<WolfFriendPage>  with SingleTickerProviderSt
               ),
               Expanded(child: ListView.builder(
                 itemCount: comments.length,
-                itemBuilder: (BuildContext __context, int index){
+                itemBuilder: (BuildContext __context, int _index){
                   if(index == 0){
-                    return _buildCommentItem(comments[index],id,incisive: true);
+                    return _buildCommentItem(comments,_index,index,incisive: true);
                   }else{
-                    return _buildCommentItem(comments[index],id);
+                    return _buildCommentItem(comments,_index,index);
                   }
                 },
               )),
@@ -298,13 +303,14 @@ class _WolfFriendPage extends State<WolfFriendPage>  with SingleTickerProviderSt
           ),
           Container(
             margin: const EdgeInsets.only(top: 10,bottom: 10),
-            child: _buildSubComment(wolfFriend.comments,wolfFriend.id),
+            child: _buildSubComment(wolfFriend.comments,index),
           ),
         ],
       ),
     );
   }
-  _buildCommentItem(Comment comment,int id, {bool incisive = false}){
+  _buildCommentItem(List<Comment> comments, int _index,int index, {bool incisive = false}){
+    Comment comment = comments[_index];
     return Container(
       margin: const EdgeInsets.only(top: 5,bottom: 5),
       width: (MediaQuery.of(context).size.width),
@@ -358,13 +364,16 @@ class _WolfFriendPage extends State<WolfFriendPage>  with SingleTickerProviderSt
               ),
               InkWell(
                 onTap: (){
-                  _favorite(id);
+                  _favorite(_index, index);
                 },
-                child: Row(
-                  children: [
-                    Image.asset(ImageIcons.icon_community_zan.assetName,width: 18,height: 18,color: comment.isLike ? Colors.red : Colors.black45,),
-                    Text(Global.getNumbersToChinese(comment.likes),style: const TextStyle(fontSize: 15),),
-                  ],
+                child: Container(
+                  margin: const EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      Image.asset(ImageIcons.icon_community_zan.assetName,width: 18,height: 18,color: comment.isLike ? Colors.red : Colors.black45,),
+                      Text(Global.getNumbersToChinese(comment.likes),style: const TextStyle(fontSize: 15),),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -377,15 +386,15 @@ class _WolfFriendPage extends State<WolfFriendPage>  with SingleTickerProviderSt
       ),
     );
   }
-  _buildSubComment(List<Comment> comments, int id){
+  _buildSubComment(List<Comment> comments, int index){
     List<Widget> widgets = [];
     if(comments.isNotEmpty){
-      widgets.add(_buildCommentItem(comments.first, id,incisive: true));
-      if(comments.length > 1) widgets.add(_buildCommentItem(comments[1],id));
+      widgets.add(_buildCommentItem(comments,0, index,incisive: true));
+      if(comments.length > 1) widgets.add(_buildCommentItem(comments,1,index));
       if(comments.length > 2) {
         widgets.add(InkWell(
           onTap: (){
-            _showComments(comments,id);
+            _showComments(index);
           },
           child: Container(
             margin: const EdgeInsets.only(top: 5,bottom: 5),

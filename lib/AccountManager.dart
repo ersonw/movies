@@ -24,6 +24,7 @@ class _AccountManager extends State<AccountManager> {
   User _user = User();
   Config _config = Config();
   String _cacheSize = '';
+  bool alive = true;
   void _changeUser(){
     setState(() {
       _user = userModel.user;
@@ -37,13 +38,8 @@ class _AccountManager extends State<AccountManager> {
   @override
   void dispose() {
     // TODO: implement dispose
+    alive = false;
     super.dispose();
-    userModel.removeListener(() {
-      _changeUser();
-    });
-    configModel.removeListener(() {
-      _changeUser();
-    });
   }
   @override
   void initState() {
@@ -52,10 +48,14 @@ class _AccountManager extends State<AccountManager> {
     _user = userModel.user;
     _config = configModel.config;
     userModel.addListener(() {
-      _changeUser();
+      if(alive){
+        _changeUser();
+      }
     });
     configModel.addListener(() {
-      _changeConfig();
+      if(alive){
+        _changeConfig();
+      }
     });
     _initCache();
   }
