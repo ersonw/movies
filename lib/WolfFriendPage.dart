@@ -110,7 +110,7 @@ class _WolfFriendPage extends State<WolfFriendPage>  with SingleTickerProviderSt
     };
     String? result = (await DioManager().requestAsync(
         NWMethod.GET, NWApi.likeComment, {"data": jsonEncode(parm)}));
-    print(result);
+    // print(result);
     if (result == null) {
       return;
     }

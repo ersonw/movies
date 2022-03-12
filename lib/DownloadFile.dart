@@ -23,7 +23,7 @@ class DownloadFile {
       downloadStart = f.lengthSync();
       fileExists = true;
     }
-    print("开始：$downloadStart");
+    // print("开始：$downloadStart");
     if (fileExists && downloadingUrls.containsKey(url)) {
       return;
     }
@@ -43,7 +43,7 @@ class DownloadFile {
           },
         ),
       );
-      print("开始：$downloadStart == ${await _getContentLength(response)}");
+      // print("开始：$downloadStart == ${await _getContentLength(response)}");
       File file = File(savePath);
       RandomAccessFile raf = file.openSync(mode: FileMode.append);
       int received = downloadStart;

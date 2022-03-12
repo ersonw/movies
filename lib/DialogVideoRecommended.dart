@@ -194,7 +194,7 @@ class DialogVideoRecommended extends Dialog {
       };
       String? result = (await DioManager().requestAsync(
           NWMethod.GET, NWApi.recommendVideo, {"data": jsonEncode(parm)}));
-    print(result);
+    // print(result);
     if (result == null) {
     return;
     }

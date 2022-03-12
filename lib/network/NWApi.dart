@@ -32,6 +32,8 @@ class NWApi {
   static const sendSms = 'sendSms';
   static const register = 'register';
   static const loginPhone = 'login';
+  static const carousels = 'carousels';
+  static const featureds = 'featureds';
   static const forgotPasswd = 'forgotPasswd';
   static const gethotTags = 'video/hotTags';
   static const getSearchs = 'video/search';

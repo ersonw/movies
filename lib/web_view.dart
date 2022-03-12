@@ -5,8 +5,8 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 class WebViewExample extends StatefulWidget {
   final String url;
-
-  const WebViewExample ({Key? key, required this.url}) : super(key: key);
+  bool? inline;
+  WebViewExample ({Key? key, required this.url, this.inline}) : super(key: key);
 
   @override
   WebViewExampleState createState() => WebViewExampleState();
@@ -22,9 +22,11 @@ class WebViewExampleState extends State<WebViewExample> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(backgroundColor: Colors.transparent, title: Text('网页访问'),),
-      body: WebView(
+    return CupertinoPageScaffold(
+      // appBar: AppBar(backgroundColor: Colors.transparent, title: const Text('网页访问'),),
+      // navigationBar: widget.inline == true ? const CupertinoNavigationBar(previousPageTitle: '',) : const CupertinoNavigationBar(),
+      navigationBar: const CupertinoNavigationBar(),
+      child: WebView(
         javascriptMode: JavascriptMode.unrestricted,
         initialUrl: widget.url,
       ),

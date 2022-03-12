@@ -11,6 +11,7 @@ import 'package:video_player/video_player.dart';
 import 'VideoFullPage.dart';
 import 'data/Download.dart';
 import 'global.dart';
+import 'image_icon.dart';
 class DownloadsManager extends StatefulWidget {
    const DownloadsManager({Key? key}) : super(key: key);
 
@@ -28,11 +29,17 @@ class _DownloadsManager extends State<DownloadsManager>{
   void initState() {
     // TODO: implement initState
     downloads = configModel.downloads;
-    // Download download = Download();
-    // download.title = '打算几点啦山地马拉松满打满算离开地面萨大妈来的撒';
-    // download.progress = 0.7;
-    // download.error = true;
-    // downloads.add(download);
+    for(int i=0;i< downloads.length;i++){
+      if(!(File(downloads[i].path).existsSync())){
+        downloads[i].progress=0;
+        downloads[i].finish = false;
+        // downloads[i].error = true;
+        configModel.changeDownload(downloads[i]);
+        // Global.handlerDownload(downloads[i]);
+      }
+    }
+    _controller = VideoPlayerController.asset(ImageIcons.loading_38959.assetName);
+    _initializeVideoPlayerFuture = _controller.initialize();
     super.initState();
     configModel.addListener(() {
       if(alive){
@@ -48,6 +55,8 @@ class _DownloadsManager extends State<DownloadsManager>{
     // TODO: implement dispose
     // DownloadFile.cancelDownload(widget.url);
     alive = false;
+    _controller.removeListener(() { });
+    _controller.dispose();
     super.dispose();
   }
   @override
@@ -96,7 +105,7 @@ class _DownloadsManager extends State<DownloadsManager>{
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('状态: ${download.error ? '错误': download.finish ? '已完成': '未完成'}',
+                        Text('状态: ${download.error ? '暂停': download.finish ? '已完成': '未完成'}',
                           style: const TextStyle(fontSize: 12,color: Colors.grey,),
                         ),
                         const Text('提示:左滑更多选项哦!',
@@ -144,7 +153,7 @@ class _DownloadsManager extends State<DownloadsManager>{
             label: '删除',
           ),
           SlidableAction(
-            onPressed: (BuildContext _context){},
+            onPressed: (BuildContext _context) => _exportDownload(download),
             backgroundColor: Colors.blueAccent,
             foregroundColor: Colors.white,
             icon: Icons.exit_to_app_outlined,
@@ -154,8 +163,17 @@ class _DownloadsManager extends State<DownloadsManager>{
       ),
     );
   }
+  _exportDownload(Download download) async{
+    if((File(download.path)).existsSync()){
+
+    }else{
+      Global.showWebColoredToast('源文件不存在！');
+    }
+  }
   _reDownload(Download download) async{
     if(await ShowAlertDialogBool(context, '下载提示', '正在尝试重试下载任务，是否继续？')){
+      download.error = false;
+      configModel.changeDownload(download);
       Global.handlerDownload(download);
     }
   }
@@ -180,10 +198,12 @@ class _DownloadsManager extends State<DownloadsManager>{
         }));
   }
   _cancelDownload(Download download) async{
-    if(await ShowAlertDialogBool(context, '下载提示', '正在尝试取消下载任务，是否继续？')){
+    if(await ShowAlertDialogBool(context, '下载提示', '正在尝试暂停下载任务，是否继续？')){
+      download.error = true;
       DownloadFile.cancelDownload(download.url);
-      configModel.removeDownload(download.url);
-      Global.showWebColoredToast('取消下载任务完成！');
+      configModel.changeDownload(download);
+      // configModel.removeDownload(download.url);
+      Global.showWebColoredToast('暂停下载任务完成！');
     }
   }
   _deleteDownload(Download download) async{

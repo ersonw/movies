@@ -100,13 +100,7 @@ class _MyProfile extends State<MyProfile> {
                       return;
                     }
                     if (data.contains('http')) {
-                      Navigator.push(
-                        context,
-                        CupertinoPageRoute(
-                          // builder: (context) => TakePictureScreen(cameras: Global.cameras, ),
-                          builder: (context) => WebViewExample(url: data),
-                        ),
-                      );
+                      Global.openWebview(data);
                     } else {
                       ShowCopyDialog(context, "二维码提取", data);
                     }

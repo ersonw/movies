@@ -7,9 +7,11 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:movies/SearchPage.dart';
 import 'package:movies/data/ClassData.dart';
 import 'package:movies/data/SearchList.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'HttpManager.dart';
 import 'RoundUnderlineTabIndicator.dart';
+import 'data/Featured.dart';
 import 'data/SwiperData.dart';
 import 'global.dart';
 import 'image_icon.dart';
@@ -23,14 +25,17 @@ class IndexHomePage extends StatefulWidget {
   _IndexHomePage createState() => _IndexHomePage();
 }
 
-class _IndexHomePage extends State<IndexHomePage> {
+class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStateMixin {
   final ScrollController _controller = ScrollController();
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _textEditingController = TextEditingController();
+  late  TabController _innerTabController;
+  final _tabKey = const ValueKey('tab');
   final FocusNode _commentFocus = FocusNode();
   List<SwiperData> _swipers = [];
   List<String> _searchTags = [];
   List<String> _Records = [];
+  List<Featured> _featureds = [];
   bool _showClassTop = false;
   final List<String> _first = [];
   final List<String> _second = [];
@@ -42,7 +47,19 @@ class _IndexHomePage extends State<IndexHomePage> {
   int _classTotal = 20;
   bool _layout = true;
   List<ClassData> _classDatas = [];
-
+  void handleTabChange() {
+    switch(_innerTabController.index){
+      case 0:
+        _initSearchTags();
+        break;
+      case 1:
+        _initFeatured();
+        break;
+      case 2:
+        break;
+    }
+    PageStorage.of(context)?.writeState(context, _innerTabController.index, identifier: _tabKey);
+  }
   @override
   void initState() {
 
@@ -87,24 +104,16 @@ class _IndexHomePage extends State<IndexHomePage> {
     _last.add('人妖');
     _last.add('學生');
     _last.add('五星級酒店女服務員');
-    SwiperData _swiper = SwiperData();
-    _swiper.image =
-        'https://github1.oss-cn-hongkong.aliyuncs.com/7abc3392-2f02-4549-8b1d-a7d024030c60.jpeg';
-    _swipers.add(_swiper);
-    _swiper = SwiperData();
-    _swiper.image =
-        'https://github1.oss-cn-hongkong.aliyuncs.com/c030c05a-5ca4-4ad9-af02-6048ab526010.png';
-    _swipers.add(_swiper);
-    _swiper = SwiperData();
-    _swiper.image =
-        'https://github1.oss-cn-hongkong.aliyuncs.com/ea92e9ee-4c0e-419d-bb2e-0142ef4efdbc.png';
-    _swipers.add(_swiper);
-    _swiper = SwiperData();
-    _swiper.image =
-        'https://github1.oss-cn-hongkong.aliyuncs.com/d95661e1-b1d2-4363-b263-ef60b965612d.png';
-    _swipers.add(_swiper);
+    _initCarousel();
     _initSearchTags();
+    _initFeatured();
     _Records = configModel.searchRecords;
+    int initialIndex = PageStorage.of(context)?.readState(context, identifier: _tabKey);
+    _innerTabController = TabController(
+        length: 3,
+        vsync: this,
+        initialIndex: initialIndex != null ? initialIndex : 1);
+    _innerTabController.addListener(handleTabChange);
     super.initState();
     configModel.addListener(() {
       setState(() {
@@ -130,6 +139,28 @@ class _IndexHomePage extends State<IndexHomePage> {
         }
       }
     });
+  }
+  _initFeatured()async{
+    Map<String, dynamic> parm = {};
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET, NWApi.featureds, {"data": jsonEncode(parm)}));
+    // print(result);
+    if (result != null) {
+      setState(() {
+        _featureds = (jsonDecode(result)['list'] as List).map((e) => Featured.formJson(e)).toList();
+      });
+    }
+  }
+  _initCarousel()async{
+    Map<String, dynamic> parm = {};
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET, NWApi.carousels, {"data": jsonEncode(parm)}));
+    // print(result);
+    if (result != null) {
+    setState(() {
+    _swipers = (jsonDecode(result)['list'] as List).map((e) => SwiperData.formJson(e)).toList();
+    });
+    }
   }
   _initSearchTags() async{
     Map<String, dynamic> parm = {};
@@ -534,43 +565,44 @@ class _IndexHomePage extends State<IndexHomePage> {
     return CupertinoPageScaffold(
       child: Container(
         margin: const EdgeInsets.all(10),
-        child: DefaultTabController(
-            initialIndex: 1,
-            length: 3,
-            child: Column(
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(left: 90, right: 90,top: 20),
-                  child: const TabBar(
-                    labelStyle: TextStyle(fontSize: 20),
-                    labelColor: Colors.red,
-                    labelPadding: EdgeInsets.only(left: 0, right: 0),
-                    unselectedLabelColor: Colors.black,
-                    indicator: RoundUnderlineTabIndicator(
-                        borderSide: BorderSide(
-                          width: 9,
-                          color: Colors.red,
-                        )),
-                    tabs: [
-                      Tab(
-                        text: '搜索',
-                      ),
-                      Tab(
-                        text: '精选',
-                      ),
-                      Tab(
-                        text: '分类',
-                      ),
-                    ],
+        child: Column(
+          children: [
+            Container(
+              margin: const EdgeInsets.only(left: 90, right: 90,top: 20),
+              child:  TabBar(
+                controller: _innerTabController,
+                labelStyle: const TextStyle(fontSize: 20),
+                labelColor: Colors.red,
+                labelPadding: const EdgeInsets.only(left: 0, right: 0),
+                unselectedLabelColor: Colors.black,
+                indicator: const RoundUnderlineTabIndicator(
+                    borderSide: BorderSide(
+                      width: 9,
+                      color: Colors.red,
+                    )),
+                tabs: const [
+                  Tab(
+                    text: '搜索',
                   ),
-                ),
-                Expanded(child: TabBarView(children: [
+                  Tab(
+                    text: '精选',
+                  ),
+                  Tab(
+                    text: '分类',
+                  ),
+                ],
+              ),
+            ),
+            Expanded(child: TabBarView(
+              controller: _innerTabController,
+                children: [
                   _buildSearch(),
                   _buildList(),
                   _buildClassification(),
-                ]),),
-              ],
-            )),
+                ]),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -1117,12 +1149,25 @@ class _IndexHomePage extends State<IndexHomePage> {
       ],
     );
   }
-
+  _handlerSwiper(SwiperData data){
+    switch(data.type){
+      case SwiperData.OPEN_WEB_OUTSIDE:
+        launch(data.url);
+        break;
+      case SwiperData.OPEN_WEB_INSIDE:
+        Global.openWebview(data.url, inline: true);
+        break;
+      case SwiperData.OPEN_VIDEO:
+        break;
+      case SwiperData.OPEN_INLINE:
+        break;
+    }
+  }
   Widget _buildSwiper(BuildContext context, int index) {
     SwiperData _swiper = _swipers[index];
     return InkWell(
       onTap: () {
-        print('test');
+        _handlerSwiper(_swiper);
       },
       child: Container(
         height: 200,
@@ -1141,7 +1186,8 @@ class _IndexHomePage extends State<IndexHomePage> {
 
   _buildList() {
     List<Widget> widgets = [];
-    widgets.add(SizedBox(
+    if(_swipers.isNotEmpty) {
+      widgets.add(SizedBox(
       // color: Colors.black,
       height: 200,
       child: Swiper(
@@ -1151,6 +1197,7 @@ class _IndexHomePage extends State<IndexHomePage> {
         control: const SwiperControl(color: Colors.white),
       ),
     ));
+    }
     widgets.add(Container(
       margin: const EdgeInsets.only(top: 20, bottom: 20),
       child: Row(
@@ -1262,165 +1309,106 @@ class _IndexHomePage extends State<IndexHomePage> {
         ],
       ),
     ));
-    widgets.add(_buildOriginals('国产原创AV'));
-    widgets.add(_buildOriginals('热门流出视频'));
-    widgets.add(_buildOriginals('JK萝莉-粉嫩的花季少女'));
-    widgets.add(_buildOriginals('原创入驻-妮可爱'));
-    widgets.add(_buildOriginals('精选偷拍'));
-    widgets.add(_buildOriginals('网红精选-万粉优质网黄'));
-    widgets.add(_buildOriginals('精选探花'));
-    widgets.add(_buildOriginals('HongKongDoll-香港娃娃'));
-    widgets.add(_buildOriginals('优选女优'));
-    widgets.add(_buildOriginals('欧美精选-好莱坞色情大片'));
-    widgets.add(_buildOriginals('李宗瑞经典视频合集'));
-    widgets.add(_buildOriginals('恐怖情色大片'));
-    widgets.add(_buildOriginals('AI换脸-明星淫梦'));
+    for(int i=0;i< _featureds.length;i++){
+      widgets.add(_buildFeaturedList(_featureds[i]));
+    }
     return ListView(
       controller: _controller,
       children: widgets,
     );
   }
 
-  Widget _buildOriginals(String title) {
+  Widget _buildFeaturedList(Featured featured) {
     List<Widget> widgets = [];
     widgets.add(Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text(
-          title,
+          featured.title,
           style: const TextStyle(color: Colors.black, fontSize: 20),
         )
       ],
     ));
-    for (int i = 0; i < 2; i++) {
-      widgets.add(_buildOriginal());
+    for (int i = 0; i < (featured.videos.length / 2)+1; i++) {
+      List<Widget> rows = [];
+      if(i*2 < featured.videos.length){
+        rows.add(_buildFeaturedItem(featured.videos[i*2]));
+      }
+      if((i*2)+1 < featured.videos.length){
+        rows.add(_buildFeaturedItem(featured.videos[(i*2)+1]));
+      }
+      if(rows.isNotEmpty) {
+        widgets.add(Row(
+        mainAxisAlignment: rows.length > 1 ? MainAxisAlignment.spaceBetween : MainAxisAlignment.start,
+        children: rows,
+      ));
+      }
     }
     return Column(
       children: widgets,
     );
   }
 
-  Widget _buildOriginal() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Container(
-          width: ((MediaQuery.of(context).size.width) / 2.2),
-          margin: const EdgeInsets.only(top: 10, bottom: 20),
-          child: InkWell(
-            onTap: () {},
-            child: Column(
-              children: [
-                Container(
-                  height: 120,
-                  // margin: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    image: DecorationImage(
-                      image: AssetImage(
-                          'assets/image/d95661e1-b1d2-4363-b263-ef60b965612d.png'),
-                      fit: BoxFit.fill,
-                      alignment: Alignment.center,
-                    ),
-                  ),
-                  child: Global.buildPlayIcon(() {}),
+  Widget _buildFeaturedItem(Video video) {
+    return Container(
+      width: ((MediaQuery.of(context).size.width) / 2.2),
+      margin: const EdgeInsets.only(top: 10, bottom: 20),
+      child: InkWell(
+        onTap: () {
+          Global.playVideo(video.id);
+        },
+        child: Column(
+          children: [
+            Container(
+              height: 120,
+              // margin: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                image: DecorationImage(
+                  image: NetworkImage(video.image),
+                  fit: BoxFit.fill,
+                  alignment: Alignment.center,
                 ),
-                Container(
-                  margin: const EdgeInsets.only(top: 10),
-                  child: Text(
-                    '[91制片厂]《肉感精油spa》痉挛停不下来 性感开发精油按摩 ',
-                    style: TextStyle(
-                        fontSize: 15, overflow: TextOverflow.ellipsis),
+              ),
+              // child: Global.buildPlayIcon(() {}),
+            ),
+            Container(
+              width: ((MediaQuery.of(context).size.width) / 2.2),
+              margin: const EdgeInsets.only(top: 10),
+              child: Text(
+                video.title,
+                style: const TextStyle(
+                    fontSize: 15, overflow: TextOverflow.ellipsis),
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '${Global.getNumbersToChinese(video.play)} 次播放',
+                    style: const TextStyle(color: Colors.grey, fontSize: 12),
                   ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  Row(
                     children: [
-                      Text(
-                        '524 次播放',
-                        style: TextStyle(color: Colors.grey, fontSize: 12),
+                      Image.asset(
+                        ImageIcons.remommendIcon.assetName,
+                        width: 45,
+                        height: 15,
                       ),
-                      Row(
-                        children: [
-                          Image.asset(
-                            ImageIcons.remommendIcon.assetName,
-                            width: 45,
-                            height: 15,
-                          ),
-                          Text(
-                            '0人',
-                            style: TextStyle(color: Colors.grey, fontSize: 13),
-                          ),
-                        ],
+                      Text(
+                        '${Global.getNumbersToChinese(video.recommendations)}人',
+                        style: const TextStyle(color: Colors.grey, fontSize: 13),
                       ),
                     ],
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
+          ],
         ),
-        Container(
-          width: ((MediaQuery.of(context).size.width) / 2.2),
-          margin: const EdgeInsets.only(top: 10, bottom: 20),
-          child: InkWell(
-            onTap: () {},
-            child: Column(
-              children: [
-                Container(
-                  height: 120,
-                  // margin: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    image: DecorationImage(
-                      image: AssetImage(
-                          'assets/image/d95661e1-b1d2-4363-b263-ef60b965612d.png'),
-                      fit: BoxFit.fill,
-                      alignment: Alignment.center,
-                    ),
-                  ),
-                  child: Global.buildPlayIcon(() {}),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 10),
-                  child: Text(
-                    '[91制片厂]《肉感精油spa》痉挛停不下来 性感开发精油按摩 ',
-                    style: TextStyle(
-                        fontSize: 15, overflow: TextOverflow.ellipsis),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        '524 次播放',
-                        style: TextStyle(color: Colors.grey, fontSize: 12),
-                      ),
-                      Row(
-                        children: [
-                          Image.asset(
-                            ImageIcons.remommendIcon.assetName,
-                            width: 45,
-                            height: 15,
-                          ),
-                          Text(
-                            '0人',
-                            style: TextStyle(color: Colors.grey, fontSize: 13),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
+      ),
     );
   }
 

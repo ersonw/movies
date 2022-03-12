@@ -30,7 +30,7 @@ class Player {
         downloadUrl = json['downloadUrl'],
         pic = json['pic'],
         diamond = json['diamond'],
-  favorite = json['favorite'],
+        favorite = json['favorite'],
         tag = json['tag'];
 
   Map<String, dynamic> toJson() => {
@@ -45,7 +45,7 @@ class Player {
         'playUrl': playUrl,
         'downloadUrl': downloadUrl,
         'diamond': diamond,
-    'favorite': favorite,
+        'favorite': favorite,
       };
 
   @override

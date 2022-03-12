@@ -39,6 +39,7 @@ class _PlayerPage extends State<PlayerPage> {
   bool _canPlay = false;
   bool _showError = false;
   bool _isReport = false;
+  bool alive = true;
 
   @override
   void initState() {
@@ -106,7 +107,6 @@ class _PlayerPage extends State<PlayerPage> {
       });
     });
   }
-
   _showControls() {
     if (showControls) {
       setState(() {
@@ -123,7 +123,6 @@ class _PlayerPage extends State<PlayerPage> {
       });
     }
   }
-
   _buildActorAvatar(String avatar) {
     if (avatar == null || avatar == '') {
       return AssetImage(ImageIcons.actorIcon.assetName);
@@ -139,7 +138,7 @@ class _PlayerPage extends State<PlayerPage> {
     };
     String? result = (await DioManager().requestAsync(
         NWMethod.GET, NWApi.favoriteVideo, {"data": jsonEncode(parm)}));
-    print(result);
+    // print(result);
     if (result == null) {
     return;
     }
@@ -1041,7 +1040,6 @@ class _PlayerPage extends State<PlayerPage> {
       ),
     );
   }
-
   Widget _buildLists() {
     List<Widget> widgets = [];
     widgets.add(Container(
@@ -1061,7 +1059,6 @@ class _PlayerPage extends State<PlayerPage> {
       children: widgets,
     );
   }
-
   List<Widget> _buildList() {
     List<Widget> widgets = [];
     for (int i = 0; i < _avLists.length; i++) {
@@ -1069,7 +1066,6 @@ class _PlayerPage extends State<PlayerPage> {
     }
     return widgets;
   }
-
   Widget _buildListItem(int index) {
     SearchList list = _avLists[index];
     return Container(
@@ -1149,10 +1145,11 @@ class _PlayerPage extends State<PlayerPage> {
       ),
     );
   }
-
   @override
   void dispose() {
     // TODO: implement dispose
+    alive = false;
+    _controller.removeListener(() { });
     _controller.dispose();
     Wakelock.disable();
     super.dispose();

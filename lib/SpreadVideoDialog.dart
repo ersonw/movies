@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:movies/data/Player.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'global.dart';
+import 'dart:io';
 
 class SpreadVideoDialog extends Dialog {
   Player player;
@@ -98,13 +99,13 @@ class SpreadVideoDialog extends Dialog {
                             // ),
                           ),
                           child: QrImage(
-                            data: '$domian${player.id}@${userModel.user.invite}',
+                            data: '$domian${player.id}#${userModel.user.invite}',
                             size: 130,
                             version: QrVersions.auto,
                             embeddedImageStyle: QrEmbeddedImageStyle(
                               size: const Size(36, 36),
                             ),
-                            embeddedImage: _buildAvatar(),
+                            // embeddedImage: _buildAvatar(),
                           ),
                         ),
                         Container(
@@ -119,7 +120,7 @@ class SpreadVideoDialog extends Dialog {
                               ),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width) / 2.7,
-                                child: Text('$domian${player.id}-${userModel.user.invite}'),
+                                child: Text('$domian${player.id}#${userModel.user.invite}'),
                               ),
                               SizedBox(
                                 width: 120,
@@ -145,7 +146,7 @@ class SpreadVideoDialog extends Dialog {
                                   onPressed: () async{
                                     // await capturePng();
                                     // requestPermission();
-                                    if(await Global.requestPhotosPermission()){
+                                    if(await Global.requestPhotosPermission() || Platform.isIOS){
                                       await Global.capturePng(repaintKey);
                                     }
                                   },

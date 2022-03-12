@@ -30,6 +30,7 @@ import 'dart:convert';
 import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart';
 import 'package:movies/utils/UploadOssUtil.dart';
+import 'package:movies/web_view.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -591,6 +592,15 @@ class Global {
   static saveProfile() => _prefs.setString("profile", jsonEncode(profile.toJson()));
 
   static saveMessages() => _prefs.setString('messages', jsonEncode(messages.toJson()));
+  static void openWebview(String data, {bool? inline}){
+    Navigator.push(
+      MainContext,
+      CupertinoPageRoute(
+        title: inline== true ? '':'非官方网址，谨防假冒!',
+        builder: (context) => WebViewExample(url: data, inline: inline,),
+      ),
+    );
+  }
   static Future<void> loading(bool load) async {
     loadingChangeNotifier.isLoading = load;
   }
@@ -634,7 +644,7 @@ class Global {
       done: () {
         download.finish = true;
         configModel.changeDownload(download);
-        print("下载1完成");
+        // print("下载1完成");
       },
       failed: (e) {
         download.error = true;
@@ -643,7 +653,7 @@ class Global {
         // if(file.existsSync()){
         //   file.deleteSync();
         // }
-        print("下载1失败：" + e.toString());
+        showWebColoredToast("下载1失败：" + e.toString());
       },
     );
   }
@@ -651,13 +661,14 @@ class Global {
     Download download = Download();
     /// 申请写文件权限
     bool isPermiss =  await Global.requestPhotosPermission();
-    if(isPermiss) {
+    // print(isPermiss);
+    if(isPermiss || Platform.isIOS) {
       ///手机储存目录
       String? savePath = await getPhoneLocalPath();
       if(savePath != null) savePath = "$savePath/videos/";
       String appName = downloadUrl.split('/').last;
       String savePaths = "$savePath$appName";
-
+      // print(savePaths);
       download.title = title;
       download.url = downloadUrl;
       download.path = savePaths;
@@ -692,6 +703,7 @@ class Global {
         : await getApplicationDocumentsDirectory();
     return directory?.path;
   }
+
   static Future<bool> requestPhotosPermission() async {
     //获取当前的权限
     var statusPhotos = await Permission.photos.status;
@@ -714,12 +726,13 @@ class Global {
   }
   static Future<String?> capturePng(GlobalKey repaintKey) async {
     try {
-      print('开始保存');
+      // print('开始保存');
       RenderRepaintBoundary boundary = repaintKey.currentContext?.findRenderObject()! as RenderRepaintBoundary;
       ui.Image image = await boundary.toImage();
       ByteData byteData = (await image.toByteData(format: ui.ImageByteFormat.png))!;
       final result = await ImageGallerySaver.saveImage(byteData.buffer.asUint8List());
-      result != null ? Global.showWebColoredToast('保存成功：${result['filePath']}') : print(result);
+      // print(result);
+      result != null ? Global.showWebColoredToast(Platform.isIOS ? (result['isSuccess'] == true ? '保存成功！': '保存失败！') : '保存成功：${result['filePath']}') : print(result);
       return result['filePath'];
     } catch (e) {
       print(e);
