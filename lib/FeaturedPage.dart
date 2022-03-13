@@ -6,6 +6,8 @@ import 'package:movies/data/ClassData.dart';
 
 import 'HttpManager.dart';
 import 'data/ClassTag.dart';
+import 'global.dart';
+import 'image_icon.dart';
 import 'network/NWApi.dart';
 import 'network/NWMethod.dart';
 
@@ -34,6 +36,13 @@ class _FeaturedPage extends State<FeaturedPage> {
     _initTags();
     _initLists();
     super.initState();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        page++;
+        _initLists();
+      }
+    });
   }
   _initTags() async{
     Map<String, dynamic> parm = {};
@@ -52,7 +61,10 @@ class _FeaturedPage extends State<FeaturedPage> {
     }
   }
   _initLists() async{
-    if(page >= total) return;
+    if(page >= total) {
+      page--;
+      return;
+    }
     Map<String, dynamic> parm = {
       'type': _firstIndex,
       'tag': _secondId,
@@ -60,7 +72,7 @@ class _FeaturedPage extends State<FeaturedPage> {
     };
     String? result = (await DioManager().requestAsync(
         NWMethod.GET, NWApi.featuredLists, {"data": jsonEncode(parm)}));
-    print(result);
+    // print(result);
     if (result != null) {
       List<ClassData> list = (jsonDecode(result)['list'] as List).map((e) => ClassData.formJson(e)).toList();
     setState(() {
@@ -79,6 +91,9 @@ class _FeaturedPage extends State<FeaturedPage> {
       widgets.add(InkWell(
         onTap: () => setState(() {
           _firstIndex = i;
+          page = 1;
+          total = 2;
+          _initLists();
         }),
         child: Container(
           margin: const EdgeInsets.only(right: 10),
@@ -117,6 +132,9 @@ class _FeaturedPage extends State<FeaturedPage> {
       widgets.add(InkWell(
         onTap: () => setState(() {
           _secondId = tag.id;
+          page = 1;
+          total = 2;
+          _initLists();
         }),
         child: Container(
           margin: const EdgeInsets.only(right: 10),
@@ -149,7 +167,87 @@ class _FeaturedPage extends State<FeaturedPage> {
   }
   Widget _buildList(int index){
     ClassData data = _list[index];
-    return Container();
+    return InkWell(
+      onTap: (){
+        Global.playVideo(data.id);
+      },
+      child: Container(
+        margin: const EdgeInsets.only(left: 10,right: 10,bottom: 10),
+        child: Column(
+          children: [
+            Container(
+              width: ((MediaQuery.of(context).size.width) / 1),
+              height: 210,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                image: DecorationImage(
+                  image: NetworkImage(data.image),
+                  fit: BoxFit.fill,
+                  alignment: Alignment.center,
+                ),
+              ),
+              // child: Global.buildPlayIcon(() {}),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: ((MediaQuery.of(context).size.width) / 1.1),
+                  child: Text(
+                    data.title,
+                    style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        overflow: TextOverflow.ellipsis),
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 10, bottom: 20),
+                  width: ((MediaQuery.of(context).size.width) / 2),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Text(
+                      //   '主演${_classDatas[0].actor}',
+                      //   style: const TextStyle(color: Colors.grey, fontSize: 12),
+                      // ),
+                      Text(
+                        '${Global.getNumbersToChinese(data.play)}次播放',
+                        style: const TextStyle(color: Colors.grey, fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 10, bottom: 20),
+                  width: ((MediaQuery.of(context).size.width) / 2.5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Image.asset(
+                        ImageIcons.remommendIcon.assetName,
+                        width: 45,
+                        height: 15,
+                      ),
+                      Text(
+                        '${Global.getNumbersToChinese(data.remommends)}人',
+                        style: const TextStyle(color: Colors.grey, fontSize: 13),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
   @override
   Widget build(BuildContext context) {
@@ -176,12 +274,10 @@ class _FeaturedPage extends State<FeaturedPage> {
               ),
             ],
           ),
-
-          Container(
-          child: Expanded(child: ListView.builder(
+          Expanded(child: ListView.builder(
+            controller: _scrollController,
             itemCount: _list.length,
             itemBuilder: (BuildContext context, int index) => _buildList(index),
-          ),
           ),
           ),
         ],
