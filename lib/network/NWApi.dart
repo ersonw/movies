@@ -34,6 +34,8 @@ class NWApi {
   static const loginPhone = 'login';
   static const carousels = 'carousels';
   static const featureds = 'featureds';
+  static const featuredTags = 'featuredTags';
+  static const featuredLists = 'featuredLists';
   static const forgotPasswd = 'forgotPasswd';
   static const gethotTags = 'video/hotTags';
   static const getSearchs = 'video/search';

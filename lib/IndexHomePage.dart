@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:movies/FeaturedPage.dart';
 import 'package:movies/SearchPage.dart';
 import 'package:movies/data/ClassData.dart';
 import 'package:movies/data/SearchList.dart';
@@ -1204,7 +1205,15 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           InkWell(
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context, rootNavigator: true).push<void>(
+                CupertinoPageRoute(
+                  title: '精品专区',
+                  // fullscreenDialog: true,
+                  builder: (context) => const FeaturedPage(),
+                ),
+              );
+            },
             child: Container(
               height: 63,
               width: ((MediaQuery.of(context).size.width) / 5),
