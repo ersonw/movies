@@ -14,6 +14,9 @@ class User {
   int superior = 0;
   int expired = 0;
   int experience = 0;
+  int remommends = 0;
+  int follows = 0;
+  int fans = 0;
 
   User();
 
@@ -29,24 +32,31 @@ class User {
         gold = json['gold'],
         superior = json['superior'],
         expired = json['expired'],
-        experience=json['experience'],
+        experience = json['experience'],
+        remommends = json['remommends'],
+        follows = json['follows'],
+        fans = json['fans'],
         diamond = json['diamond'];
 
   Map<String, dynamic> toJson() => {
-    'token': token,
-    'nickname': nickname,
-    'sex': sex,
-    'birthday': birthday,
-    'uid': uid,
-    'invite': invite,
-    'avatar': avatar,
-    'phone': phone,
-    'gold': gold,
-    'diamond': diamond,
-    'superior': superior,
-    'expired': expired,
-    'experience': experience,
-  };
+        'token': token,
+        'nickname': nickname,
+        'sex': sex,
+        'birthday': birthday,
+        'uid': uid,
+        'invite': invite,
+        'avatar': avatar,
+        'phone': phone,
+        'gold': gold,
+        'diamond': diamond,
+        'superior': superior,
+        'expired': expired,
+        'experience': experience,
+        'remommends': remommends,
+        'follows': follows,
+        'fans': fans,
+      };
+
   @override
   String toString() {
     // TODO: implement toString

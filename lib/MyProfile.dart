@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:images_picker/images_picker.dart';
 import 'package:movies/BuyDiamondPage.dart';
+import 'package:movies/KeFuMessagePage.dart';
 import 'package:movies/UserSharePage.dart';
 import 'package:movies/VIPBuyPage.dart';
 import 'package:movies/data/User.dart';
@@ -73,7 +74,17 @@ class _MyProfile extends State<MyProfile> {
                       // builder: (context) => TakePictureScreen(cameras: Global.cameras, ),
                       builder: (context) =>  ScanQRPage(
                         fn: (data){
-                          if(data != null) Global.handlerInvite(data);
+                          if(data != null) {
+                            if(data.startsWith(configModel.config.domain)){
+                              Global.handlerInvite(data);
+                              return;
+                            }
+                            if (data.contains('http')) {
+                              Global.openWebview(data);
+                            } else {
+                              ShowCopyDialog(context, "二维码提取", data);
+                            }
+                          }
                         },
                       ),
                     ),
@@ -112,7 +123,7 @@ class _MyProfile extends State<MyProfile> {
             ),
             CupertinoButton(
               padding: EdgeInsets.zero,
-              child: Icon(
+              child: const Icon(
                 XiaoXiongIcon.xiaoxi,
                 size: 30,
                 color: Colors.grey,
@@ -165,9 +176,11 @@ class _MyProfile extends State<MyProfile> {
 
   Widget _buildBody(BuildContext context) {
     return  Container(
-      margin: const EdgeInsets.all(15),
-      child: Column(
+      margin: const EdgeInsets.all(5),
+      child:  SingleChildScrollView(
+        child: Flex(
         // mainAxisAlignment: MainAxisAlignment.center,
+        direction: Axis.vertical,
         children: [
           // 头像用户名
           TextButton(
@@ -217,7 +230,7 @@ class _MyProfile extends State<MyProfile> {
           ),
           // 金币数
          SizedBox(
-          width: ((MediaQuery.of(context).size.width) / 1.1),
+          width: ((MediaQuery.of(context).size.width) / 1),
            child:  Row(
              mainAxisAlignment: MainAxisAlignment.spaceBetween,
              children: [
@@ -228,11 +241,11 @@ class _MyProfile extends State<MyProfile> {
                    children: [
                      Text(Global.getNumbersToChinese(userModel.user.gold),
                        style: const TextStyle(
-                           fontSize: 20, fontWeight: FontWeight.bold),
+                           fontSize: 18, ),
                      ),
                      const Text(
                        '金币',
-                       style: TextStyle(fontSize: 13, color: Colors.grey),
+                       style: TextStyle(fontSize: 12, color: Colors.grey),
                      ),
                    ],
                  ),
@@ -243,11 +256,11 @@ class _MyProfile extends State<MyProfile> {
                    children: [
                      Text(Global.getNumbersToChinese(userModel.user.diamond),
                        style: const TextStyle(
-                           fontSize: 20, fontWeight: FontWeight.bold),
+                           fontSize: 18, ),
                      ),
                      const Text(
                        '钻石',
-                       style: TextStyle(fontSize: 13, color: Colors.grey),
+                       style: TextStyle(fontSize: 12, color: Colors.grey),
                      ),
                    ],
                  ),
@@ -255,57 +268,45 @@ class _MyProfile extends State<MyProfile> {
                InkWell(
                  child: Column(
                    children: [
-                     Container(
-                         // margin: EdgeInsets.only(left: 10, top: 10),
-                         child: Text(
-                           '0',
-                           style: TextStyle(
-                               fontSize: 25, fontWeight: FontWeight.bold),
-                         )),
-                     Container(
-                         // margin: EdgeInsets.only(left: 10, top: 10),
-                         child: Text(
-                           '推荐数',
-                           style: TextStyle(fontSize: 13, color: Colors.grey),
-                         )),
+                     Text(
+                       Global.getNumbersToChinese(userModel.user.remommends),
+                       style: const TextStyle(
+                           fontSize: 18,),
+                     ),
+                     const Text(
+                       '推荐数',
+                       style: TextStyle(fontSize: 12, color: Colors.grey),
+                     ),
                    ],
                  ),
                ),
                InkWell(
                  child: Column(
                    children: [
-                     Container(
-                         // margin: EdgeInsets.only(left: 10, top: 10),
-                         child: Text(
-                           '0',
-                           style: TextStyle(
-                               fontSize: 25, fontWeight: FontWeight.bold),
-                         )),
-                     Container(
-                         // margin: EdgeInsets.only(left: 10, top: 10),
-                         child: Text(
-                           '我的关注',
-                           style: TextStyle(fontSize: 13, color: Colors.grey),
-                         )),
+                     Text(
+                       Global.getNumbersToChinese(userModel.user.follows),
+                       style: const TextStyle(
+                           fontSize: 18, ),
+                     ),
+                     const Text(
+                       '我的关注',
+                       style: TextStyle(fontSize: 12, color: Colors.grey),
+                     ),
                    ],
                  ),
                ),
                InkWell(
                  child: Column(
                    children: [
-                     Container(
-                         // margin: EdgeInsets.only(left: 10, top: 10),
-                         child: Text(
-                           '0',
-                           style: TextStyle(
-                               fontSize: 25, fontWeight: FontWeight.bold),
-                         )),
-                     Container(
-                         // margin: EdgeInsets.only(left: 10, top: 10),
-                         child: Text(
-                           '我的粉丝',
-                           style: TextStyle(fontSize: 13, color: Colors.grey),
-                         )),
+                     Text(
+                       Global.getNumbersToChinese(userModel.user.fans),
+                       style: const TextStyle(
+                           fontSize: 18, ),
+                     ),
+                     const Text(
+                       '我的粉丝',
+                       style: TextStyle(fontSize: 12, color: Colors.grey),
+                     ),
                    ],
                  ),
                ),
@@ -314,21 +315,21 @@ class _MyProfile extends State<MyProfile> {
          ),
           InkWell(
             onTap: (() {
-              // Fluttertoast.showToast(msg: '点击我了');
-              Navigator.of(context, rootNavigator: true).push<void>(
-                CupertinoPageRoute(
-                  title: SettingsTab.title,
-                  fullscreenDialog: true,
-                  builder: (context) => const SettingsTab(),
-                ),
-              );
+              Global.showWebColoredToast('暂未开放，敬请期待!');
+              // Navigator.of(context, rootNavigator: true).push<void>(
+              //   CupertinoPageRoute(
+              //     title: SettingsTab.title,
+              //     fullscreenDialog: true,
+              //     builder: (context) => const SettingsTab(),
+              //   ),
+              // );
             }),
             child: Container(
-              margin: const EdgeInsets.all(10),
-              // width: (MediaQuery.of(context).size.width),
+              margin: const EdgeInsets.only(left: 5,right: 5,top: 10,bottom: 10),
+              width: (MediaQuery.of(context).size.width),
               height: 95,
               decoration: BoxDecoration(
-                  color: Colors.grey,
+                  // color: Colors.grey,
                   borderRadius: BorderRadius.circular(5.0),
                   image: const DecorationImage(
                     fit: BoxFit.fill,
@@ -352,8 +353,8 @@ class _MyProfile extends State<MyProfile> {
                   );
                 }),
                 child: Container(
-                  margin: const EdgeInsets.only(top: 10),
-                  width: ((MediaQuery.of(context).size.width) / 3.5),
+                  // margin: const EdgeInsets.only(top: 10),
+                  width: ((MediaQuery.of(context).size.width) / 3.2),
                   height: 70,
                   decoration: BoxDecoration(
                       color: Colors.transparent,
@@ -375,8 +376,8 @@ class _MyProfile extends State<MyProfile> {
                   );
                 },
                 child: Container(
-                  margin: const EdgeInsets.only(top: 10),
-                  width: ((MediaQuery.of(context).size.width) / 3.5),
+                  // margin: const EdgeInsets.only(top: 10),
+                  width: ((MediaQuery.of(context).size.width) / 3.2),
                   height: 70,
                   decoration: BoxDecoration(
                       color: Colors.transparent,
@@ -388,9 +389,12 @@ class _MyProfile extends State<MyProfile> {
                 ),
               ),
               InkWell(
+                onTap: (){
+                  Global.showWebColoredToast('暂未开放，敬请期待!');
+                },
                 child: Container(
-                  margin: const EdgeInsets.only(top: 10),
-                  width: ((MediaQuery.of(context).size.width) / 3.5),
+                  // margin: const EdgeInsets.only(top: 10),
+                  width: ((MediaQuery.of(context).size.width) / 3.2),
                   height: 70,
                   decoration: BoxDecoration(
                       color: Colors.grey,
@@ -510,7 +514,15 @@ class _MyProfile extends State<MyProfile> {
                         ),
                       ),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context, rootNavigator: true).push<void>(
+                            CupertinoPageRoute(
+                              title: '反馈中心',
+                              // fullscreenDialog: true,
+                              builder: (context) => const KeFuMessagePage(),
+                            ),
+                          );
+                        },
                         child: Column(
                           children: [
                             Image.asset(
@@ -542,7 +554,9 @@ class _MyProfile extends State<MyProfile> {
                         ),
                       ),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Global.showWebColoredToast('暂未开放，敬请期待!');
+                        },
                         child: Column(
                           children: [
                             Image.asset(
@@ -563,12 +577,9 @@ class _MyProfile extends State<MyProfile> {
               ),
             ),
           ),
-          Expanded(
-            child: Container(),
-          ),
           // const LogOutButton(),
         ],
-      ),
+      ),),
     );
   }
 

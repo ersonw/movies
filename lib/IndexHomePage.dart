@@ -10,6 +10,7 @@ import 'package:movies/data/ClassData.dart';
 import 'package:movies/data/SearchList.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'ActorPage.dart';
 import 'HttpManager.dart';
 import 'RoundUnderlineTabIndicator.dart';
 import 'data/Featured.dart';
@@ -1239,7 +1240,9 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
             ),
           ),
           InkWell(
-            onTap: () {},
+            onTap: () {
+              Global.showWebColoredToast('暂未开放，敬请期待!');
+            },
             child: Container(
               height: 63,
               width: ((MediaQuery.of(context).size.width) / 5),
@@ -1265,7 +1268,15 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
             ),
           ),
           InkWell(
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context, rootNavigator: true).push<void>(
+                CupertinoPageRoute(
+                  title: '女优列表',
+                  // fullscreenDialog: true,
+                  builder: (context) => const ActorPage(),
+                ),
+              );
+            },
             child: Container(
               height: 63,
               width: ((MediaQuery.of(context).size.width) / 5),

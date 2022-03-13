@@ -26,6 +26,7 @@ class KeFuMessagePage extends StatefulWidget {
 class _KeFuMessagePage extends State<KeFuMessagePage> {
   final TextEditingController _textEditingController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+  final FocusNode _commentFocus = FocusNode();
   bool _isDown = false;
   List<KefuMessage> messages = [];
 
@@ -55,12 +56,13 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
-        trailing: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [Text("反馈详情")],
-        ),
-      ),
+      navigationBar: const CupertinoNavigationBar(),
+      // navigationBar: CupertinoNavigationBar(
+      //   trailing: Row(
+      //     mainAxisAlignment: MainAxisAlignment.center,
+      //     children: const [Text("反馈详情")],
+      //   ),
+      // ),
       child: Column(
         children: [
           Expanded(
@@ -109,12 +111,14 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
                       child: TextField(
                         controller: _textEditingController,
                         autofocus: true,
+                        focusNode: _commentFocus,
                         keyboardType: TextInputType.text,
                         textInputAction: TextInputAction.send,
                         // onSubmitted: (value) => {
                         //   setState(() => {_inputString = value})
                         // },
                         onEditingComplete: () {
+                          _commentFocus.unfocus();
                           setState(() {
                             sendMessage();
                           });
@@ -446,7 +450,8 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
   @override
   void dispose() {
     // TODO: implement dispose
-    super.dispose();
+    _commentFocus.unfocus();
     _textEditingController.clear();
+    super.dispose();
   }
 }

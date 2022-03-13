@@ -14,6 +14,7 @@ import 'network/NWMethod.dart';
 
 class DialogVideoRecommended extends Dialog {
   Player player;
+  final FocusNode _commentFocus = FocusNode();
   DialogVideoRecommended({Key? key, required this.player})
       : super(key: key);
   final TextEditingController _textEditingController = TextEditingController();
@@ -31,7 +32,11 @@ class DialogVideoRecommended extends Dialog {
               GestureDetector(
                 ///点击事件
                 onTap: () {
-                  _close(context);
+                  if(_commentFocus.hasFocus){
+                    _commentFocus.unfocus();
+                  }else{
+                    _close(context);
+                  }
                 },
               ),
               _dialog(context),
@@ -40,6 +45,7 @@ class DialogVideoRecommended extends Dialog {
     );
   }
   _close(BuildContext context){
+    // _commentFocus.unfocus();
     Navigator.pop(context);
     // _textEditingController.dispose();
     // Navigator.pop(context);
@@ -112,12 +118,14 @@ class DialogVideoRecommended extends Dialog {
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
                       child: TextField(
+                        focusNode: _commentFocus,
                         maxLength: 100,
                         maxLines: 5,
                         minLines: 1,
                         controller: _textEditingController,
                         keyboardType: TextInputType.multiline,
                         onEditingComplete: () {
+                          _commentFocus.unfocus();
                         },
                         inputFormatters: <TextInputFormatter>[
                           LengthLimitingTextInputFormatter(100)

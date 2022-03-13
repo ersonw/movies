@@ -29,15 +29,15 @@ class _DownloadsManager extends State<DownloadsManager>{
   void initState() {
     // TODO: implement initState
     downloads = configModel.downloads;
-    for(int i=0;i< downloads.length;i++){
-      if(!(File(downloads[i].path).existsSync())){
-        downloads[i].progress=0;
-        downloads[i].finish = false;
-        // downloads[i].error = true;
-        configModel.changeDownload(downloads[i]);
-        // Global.handlerDownload(downloads[i]);
-      }
-    }
+    // for(int i=0;i< downloads.length;i++){
+    //   if(!(File(downloads[i].path).existsSync())){
+    //     downloads[i].progress=0;
+    //     downloads[i].finish = false;
+    //     // downloads[i].error = true;
+    //     configModel.changeDownload(downloads[i]);
+    //     // Global.handlerDownload(downloads[i]);
+    //   }
+    // }
     _controller = VideoPlayerController.asset(ImageIcons.loading_38959.assetName);
     _initializeVideoPlayerFuture = _controller.initialize();
     super.initState();
@@ -164,10 +164,10 @@ class _DownloadsManager extends State<DownloadsManager>{
     );
   }
   _exportDownload(Download download) async{
-    if((File(download.path)).existsSync()){
-
+    if(download.finish){
+      Global.exportToDoc(download.path);
     }else{
-      Global.showWebColoredToast('源文件不存在！');
+      Global.showWebColoredToast('未完成下载！');
     }
   }
   _reDownload(Download download) async{
@@ -177,9 +177,15 @@ class _DownloadsManager extends State<DownloadsManager>{
       Global.handlerDownload(download);
     }
   }
-  _playVideo(Download download){
+  _playVideo(Download download)async{
     if(download.path.isNotEmpty && download.finish){
-      _controller = VideoPlayerController.file(File(download.path));
+      File file = File(await Global.getVideoPath(download.path));
+      if(!file.existsSync()){
+        download.finish = false;
+        configModel.changeDownload(download);
+        return;
+      }
+      _controller = VideoPlayerController.file(file);
       _initializeVideoPlayerFuture = _controller.initialize();
       _controller.setLooping(true);
     }else{
@@ -210,7 +216,7 @@ class _DownloadsManager extends State<DownloadsManager>{
     if(await ShowAlertDialogBool(context, '删除提示', '正在尝试删除下载任务，是否继续？')){
     DownloadFile.cancelDownload(download.url);
     configModel.removeDownload(download.url);
-    File file = File(download.path);
+    File file = File(await Global.getVideoPath(download.path));
     if(file.existsSync()){
       file.deleteSync();
     }

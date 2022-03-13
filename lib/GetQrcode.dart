@@ -125,22 +125,11 @@ class _ScanQRPageState extends State<ScanQRPage> {
           return;
         }
         Navigator.pop(context);
-        if(str.startsWith(configModel.config.domain)){
+        if(str.startsWith(configModel.config.domain) || str.contains('http')){
           widget.fn!(str);
           return;
         }
-        if(str.contains('http')){
-          // print(str);
-          Navigator.push(context, CupertinoPageRoute(
-            // builder: (context) => TakePictureScreen(cameras: Global.cameras, ),
-            builder: (context) => WebViewExample(url: str),
-          ),
-          );
-        }else{
-          // text = '未识别内容:${str}';
-          // Navigator.pop(context);
-          ShowCopyDialog(context, '二维码扫描', str);
-        }
+        ShowCopyDialog(context, '二维码扫描', str);
       });
     });
   }

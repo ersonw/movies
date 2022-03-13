@@ -375,10 +375,10 @@ class Global {
     }else{
       double d= n / 10000;
       if(d < 999){
-        return '${d.toStringAsFixed(2)}W';
+        return '${d.toStringAsFixed(2)}万';
       }else{
         d= d / 1000;
-        return '${d.toStringAsFixed(2)}KW';
+        return '${d.toStringAsFixed(2)}千万';
       }
     }
   }
@@ -529,6 +529,8 @@ class Global {
       } else if (Platform.isIOS) {
         var build = await deviceInfoPlugin.iosInfo;
         uid = build.identifierForVendor;
+      }else{
+        uid = 'test';
       }
       // ignore: nullable_type_in_catch_clause
     } on PlatformException {
@@ -561,14 +563,10 @@ class Global {
           });
     }
   }
-  /*
-  * 根据本地路径获取名称
-  * */
   static String getNameByPath(String filePath) {
     // ignore: null_aware_before_operator
     return filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length);
   }
-  //压缩视频
   static Future<void> runFlutterVideoCompressMethods(File videoFile) async {
     final mediaInfo = await VideoCompress.compressVideo(
       videoFile.path,
@@ -590,7 +588,6 @@ class Global {
   }
 //  持久化Profile信息
   static saveProfile() => _prefs.setString("profile", jsonEncode(profile.toJson()));
-
   static saveMessages() => _prefs.setString('messages', jsonEncode(messages.toJson()));
   static void openWebview(String data, {bool? inline}){
     Navigator.push(
@@ -614,22 +611,28 @@ class Global {
       player: player,
     )));
   }
+  static Future<String> getVideoPath(String path) async{
+    String? savePath = await getPhoneLocalPath();
+    return '$savePath$path';
+  }
   static void handlerDownload(Download download) async{
-    File f = File(download.path);
-    List<String> paths = download.path.split('/');
-    paths.removeAt(paths.length - 1);
-    String path = paths.join('/');
-    // print(path);
-    if(!await File(path).exists()){
-      Directory(path).createSync();
-    }
-    if (!await f.exists()) {
-      // Directory(savePaths).createSync();
+    // if(!(await Global.requestPhotosPermission())) return;
+    File f = File(await getVideoPath(download.path));
+    // File f = File(download.path);
+    // List<String> paths = download.path.split('/');
+    // paths.removeAt(paths.length - 1);
+    // String path = paths.join('/');
+    // // print(path);
+    // if(!await File(path).exists()){
+    //   Directory(path).createSync();
+    // }
+    if (!f.parent.existsSync()) {
+      Directory(f.parent.path).createSync();
     }
     // Directory(download.path).deleteSync();
     await DownloadFile.download(
       url: download.url,
-      savePath: download.path,
+      savePath: f.path,
       onReceiveProgress: (received, total) {
         if (total != -1) {
           download.progress = received / total;
@@ -664,8 +667,9 @@ class Global {
     // print(isPermiss);
     if(isPermiss || Platform.isIOS) {
       ///手机储存目录
-      String? savePath = await getPhoneLocalPath();
-      if(savePath != null) savePath = "$savePath/videos/";
+      // String? savePath = await getPhoneLocalPath();
+      // if(savePath != null) savePath = "$savePath/videos/";
+      String savePath = "/videos/";
       String appName = downloadUrl.split('/').last;
       String savePaths = "$savePath$appName";
       // print(savePaths);
@@ -703,7 +707,13 @@ class Global {
         : await getApplicationDocumentsDirectory();
     return directory?.path;
   }
-
+  static void exportToDoc(String path) async{
+    File file = File(await getVideoPath(path));
+    if(file.existsSync()){
+      ImageGallerySaver.saveFile(file.path);
+      showWebColoredToast('导出成功!');
+    }
+  }
   static Future<bool> requestPhotosPermission() async {
     //获取当前的权限
     var statusPhotos = await Permission.photos.status;

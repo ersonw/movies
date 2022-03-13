@@ -50,9 +50,11 @@ class _PlayerPage extends State<PlayerPage> {
     _controller.setLooping(true);
     value = _controller.value;
     _controller.addListener(() {
-      setState(() {
-        value = _controller.value;
-      });
+      if(alive) {
+        setState(() {
+          value = _controller.value;
+        });
+      }
     });
     _initPlayer();
     _initList();
@@ -74,7 +76,7 @@ class _PlayerPage extends State<PlayerPage> {
     };
     String? result = (await DioManager().requestAsync(
         NWMethod.GET, NWApi.getPlayer, {"data": jsonEncode(parm)}));
-    print(result);
+    // print(result);
     if (result == null) {
       return;
     }
@@ -102,25 +104,31 @@ class _PlayerPage extends State<PlayerPage> {
     _controller.setLooping(true);
     value = _controller.value;
     _controller.addListener(() {
-      setState(() {
-        value = _controller.value;
-      });
+      if(alive){
+        setState(() {
+          value = _controller.value;
+        });
+      }
     });
   }
   _showControls() {
-    if (showControls) {
-      setState(() {
-        showControls = false;
-      });
-    } else {
-      setState(() {
-        showControls = true;
-      });
-      Timer(const Duration(seconds: 15), () {
+    if(alive){
+      if (showControls) {
         setState(() {
           showControls = false;
         });
-      });
+      } else {
+        setState(() {
+          showControls = true;
+        });
+        Timer(const Duration(seconds: 15), () {
+          if(alive){
+            setState(() {
+              showControls = false;
+            });
+          }
+        });
+      }
     }
   }
   _buildActorAvatar(String avatar) {
@@ -251,7 +259,7 @@ class _PlayerPage extends State<PlayerPage> {
       Column(
         children: [
           Container(
-            // margin: const EdgeInsets.only(top: 70),
+            margin: const EdgeInsets.only(top: 10),
             child: _canPlay
                 ? Hero(
                     tag: 'player',
