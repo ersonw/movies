@@ -29,6 +29,7 @@ class _VIPBuyPage extends State<VIPBuyPage>
   late TabController _innerTabController;
   final _tabKey = const ValueKey('tab');
   int _tabIndex = 0;
+  bool alive = true;
 
   void handleTabChange() {
     setState(() {
@@ -52,10 +53,10 @@ class _VIPBuyPage extends State<VIPBuyPage>
     _innerTabController.addListener(handleTabChange);
     _init();
     userModel.addListener(() {
-      _init();
+      if(alive) _init();
     });
     configModel.addListener(() {
-      _init();
+      if(alive){_init();}
     });
   }
 
@@ -297,6 +298,7 @@ class _VIPBuyPage extends State<VIPBuyPage>
   @override
   void dispose() {
     // TODO: implement dispose
+    alive = false;
     super.dispose();
   }
 }

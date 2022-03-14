@@ -6,6 +6,7 @@ import 'package:movies/data/ClassData.dart';
 
 import 'HttpManager.dart';
 import 'data/ClassTag.dart';
+import 'data/SearchActor.dart';
 import 'global.dart';
 import 'image_icon.dart';
 import 'network/NWApi.dart';
@@ -25,7 +26,7 @@ class _ActorPage extends State<ActorPage> {
   List<ClassTag> _second = [];
   int _secondId = 0;
 
-  List<ClassData> _list = [];
+  List<SearchActor> _list = [];
   int page = 1;
   int total = 2;
   @override
@@ -75,7 +76,7 @@ class _ActorPage extends State<ActorPage> {
         NWMethod.GET, NWApi.ActorLists, {"data": jsonEncode(parm)}));
     print(result);
     if (result != null) {
-      List<ClassData> list = (jsonDecode(result)['list'] as List).map((e) => ClassData.formJson(e)).toList();
+      List<SearchActor> list = (jsonDecode(result)['list'] as List).map((e) => SearchActor.formJson(e)).toList();
       setState(() {
         if(page>1){
           _list.addAll(list);
@@ -167,87 +168,65 @@ class _ActorPage extends State<ActorPage> {
     );
   }
   Widget _buildList(int index){
-    ClassData data = _list[index];
+    List<Widget> widgets = [];
+    if((index * 4) < _list.length){
+      widgets.add(_buildListItem(_list[(index * 4)]));
+    }
+    if((index * 4)+1 < _list.length){
+      widgets.add(_buildListItem(_list[(index * 4)+1]));
+    }
+    if((index * 4)+2 < _list.length){
+      widgets.add(_buildListItem(_list[(index * 4)+2]));
+    }
+    if((index * 4)+3 < _list.length){
+      widgets.add(_buildListItem(_list[(index * 4)+3]));
+    }
+    return Container(
+      margin: const EdgeInsets.all(5),
+      child: Row(
+        children: widgets,
+      ),
+    );
+  }
+  Widget _buildListItem(SearchActor data){
+
     return InkWell(
       onTap: (){
-        Global.playVideo(data.id);
       },
       child: Container(
-        margin: const EdgeInsets.only(left: 10,right: 10,bottom: 10),
+        width: ((MediaQuery.of(context).size.width) / 4.5),
+        margin: const EdgeInsets.only(left: 5,top: 5),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
-              width: ((MediaQuery.of(context).size.width) / 1),
-              height: 210,
+              width: 63,
+              height: 63,
+              // margin: EdgeInsets.only(left: vw()),
               decoration: BoxDecoration(
-                borderRadius: const BorderRadius.all(Radius.circular(10)),
-                image: DecorationImage(
-                  image: NetworkImage(data.image),
-                  fit: BoxFit.fill,
-                  alignment: Alignment.center,
-                ),
-              ),
-              // child: Global.buildPlayIcon(() {}),
+                  color: Colors.grey,
+                  borderRadius: BorderRadius.circular(50.0),
+                  image: DecorationImage(
+                    // image: AssetImage('assets/image/default_head.gif'),
+                    image: NetworkImage(data.avatar),
+                  )),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: ((MediaQuery.of(context).size.width) / 1.1),
-                  child: Text(
-                    data.title,
-                    style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        overflow: TextOverflow.ellipsis),
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(top: 10, bottom: 20),
-                  width: ((MediaQuery.of(context).size.width) / 2),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      // Text(
-                      //   '主演${_classDatas[0].actor}',
-                      //   style: const TextStyle(color: Colors.grey, fontSize: 12),
-                      // ),
-                      Text(
-                        '${Global.getNumbersToChinese(data.play)}次播放',
-                        style: const TextStyle(color: Colors.grey, fontSize: 12),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 10, bottom: 20),
-                  width: ((MediaQuery.of(context).size.width) / 2.5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Image.asset(
-                        ImageIcons.remommendIcon.assetName,
-                        width: 45,
-                        height: 15,
-                      ),
-                      Text(
-                        '${Global.getNumbersToChinese(data.remommends)}人',
-                        style: const TextStyle(color: Colors.grey, fontSize: 13),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+            SizedBox(
+              width: ((MediaQuery.of(context).size.width) / 4.2),
+              child: Text(data.name,style: const TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.bold,overflow: TextOverflow.ellipsis),textAlign: TextAlign.center,),
             ),
           ],
         ),
       ),
+    );
+  }
+  _listViewbuilder(){
+    List<Widget> widgets = [];
+    for(int i=0;i< (_list.length/4)+1;i++){
+      widgets.add(_buildList(i));
+    }
+    return Column(
+      children: widgets,
     );
   }
   @override
@@ -255,34 +234,40 @@ class _ActorPage extends State<ActorPage> {
     // TODO: implement build
     return CupertinoPageScaffold(
       navigationBar: const CupertinoNavigationBar(),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                margin: const EdgeInsets.only(bottom: 15,left: 10,top: 10),
-                child: _buildFirst(),
-              )
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                margin: const EdgeInsets.only(bottom: 15,left: 10),
-                child: _buildSecond(),
+      // child: Expanded(
+      //   child: ListView(
+        child: Column(
+          // controller: _scrollController,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(bottom: 15,left: 10,top: 10),
+                  child: _buildFirst(),
+                )
+              ],
+            ),
+            Container(
+              margin: const EdgeInsets.only(bottom: 15,left: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Expanded(child: _buildSecond(),flex: 1,)
+                ],
               ),
-            ],
-          ),
-          Expanded(child: ListView.builder(
-            controller: _scrollController,
-            itemCount: _list.length,
-            itemBuilder: (BuildContext context, int index) => _buildList(index),
-          ),
-          ),
-        ],
-      ),
+            ),
+            // _listViewbuilder(),
+            Expanded(
+              flex: 9,
+              child: ListView.builder(
+              itemBuilder: (BuildContext _context,int index) => _buildList(index),
+              itemCount: (_list.length ~/ 4)+1,
+            ),
+            ),
+          ],
+        ),
+      // ),
     );
   }
   @override

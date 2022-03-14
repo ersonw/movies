@@ -57,6 +57,7 @@ class _FeaturedPage extends State<FeaturedPage> {
       List<ClassTag> second = (jsonDecode(result)['list'] as List).map((e) => ClassTag.formJson(e)).toList();
     setState(() {
       _second.addAll(second);
+      // _second.addAll(second);
     });
     }
   }
@@ -265,16 +266,24 @@ class _FeaturedPage extends State<FeaturedPage> {
               )
             ],
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                margin: const EdgeInsets.only(bottom: 15,left: 10),
-                child: _buildSecond(),
-              ),
-            ],
+          // Expanded(child: Row(
+          //   mainAxisAlignment: MainAxisAlignment.start,
+          //   children: [
+          //     _buildSecond()
+          //   ],
+          // ),flex: 1,),
+          Container(
+            margin: const EdgeInsets.only(bottom: 15,left: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(child: _buildSecond(),flex: 1,),
+              ],
+            ),
           ),
-          Expanded(child: ListView.builder(
+          Expanded(
+            flex: 9,
+            child: ListView.builder(
             controller: _scrollController,
             itemCount: _list.length,
             itemBuilder: (BuildContext context, int index) => _buildList(index),

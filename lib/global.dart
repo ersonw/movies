@@ -374,11 +374,11 @@ class Global {
       return '$n';
     }else{
       double d= n / 10000;
-      if(d < 999){
+      if(d < 9999){
         return '${d.toStringAsFixed(2)}万';
       }else{
-        d= d / 1000;
-        return '${d.toStringAsFixed(2)}千万';
+        d= d / 10000;
+        return '${d.toStringAsFixed(2)}亿';
       }
     }
   }
