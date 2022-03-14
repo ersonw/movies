@@ -166,7 +166,7 @@ class _SearchPage extends State<SearchPage>
             ),
             TabBar(
                 controller: _innerTabController,
-                labelStyle: const TextStyle(fontSize: 15, color: Colors.black),
+                labelStyle: const TextStyle(fontSize: 18, color: Colors.black),
                 unselectedLabelStyle:
                     const TextStyle(fontSize: 10, color: Colors.grey),
                 labelColor: Colors.red,

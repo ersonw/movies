@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:movies/ActorDetailsPage.dart';
 import 'package:movies/data/ClassData.dart';
 
 import 'HttpManager.dart';
@@ -74,7 +75,7 @@ class _ActorPage extends State<ActorPage> {
     };
     String? result = (await DioManager().requestAsync(
         NWMethod.GET, NWApi.ActorLists, {"data": jsonEncode(parm)}));
-    print(result);
+    // print(result);
     if (result != null) {
       List<SearchActor> list = (jsonDecode(result)['list'] as List).map((e) => SearchActor.formJson(e)).toList();
       setState(() {
@@ -192,6 +193,13 @@ class _ActorPage extends State<ActorPage> {
 
     return InkWell(
       onTap: (){
+        Navigator.of(context, rootNavigator: true).push<void>(
+          CupertinoPageRoute(
+            title: '演员详情',
+            // fullscreenDialog: true,
+            builder: (context) =>  ActorDetailsPage(aid: data.id),
+          ),
+        );
       },
       child: Container(
         width: ((MediaQuery.of(context).size.width) / 4.5),
