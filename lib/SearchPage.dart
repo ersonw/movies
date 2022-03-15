@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:movies/ActorDetailsPage.dart';
 import 'package:movies/data/SearchActor.dart';
 import 'package:movies/data/SearchList.dart';
 import 'package:movies/data/UserList.dart';
@@ -10,6 +11,7 @@ import 'package:movies/image_icon.dart';
 import 'dart:io';
 import 'HttpManager.dart';
 import 'RoundUnderlineTabIndicator.dart';
+import 'UserInfoPage.dart';
 import 'global.dart';
 import 'network/NWApi.dart';
 import 'network/NWMethod.dart';
@@ -263,43 +265,65 @@ class _SearchPage extends State<SearchPage>
         children: [
           Row(
             children: [
-              Container(
-                margin: const EdgeInsets.only(right: 15),
-                width: 54,
-                height: 54,
-                // margin: EdgeInsets.only(left: vw()),
-                decoration: BoxDecoration(
-                  color: Colors.grey,
-                  borderRadius: BorderRadius.circular(50.0),
-                  image: DecorationImage(
-                    // image: AssetImage('assets/image/default_head.gif'),
-                    image: _buildAvatar(userList.avatar),
+              InkWell(
+                onTap: (){
+                  Navigator.of(context, rootNavigator: true).push<void>(
+                    CupertinoPageRoute(
+                      // title: "推广分享",
+                      // fullscreenDialog: true,
+                      builder: (context) => UserInfoPage(uid: userList.id),
+                    ),
+                  ).then((value) => _search());
+                },
+                child: Container(
+                  margin: const EdgeInsets.only(right: 15),
+                  width: 54,
+                  height: 54,
+                  // margin: EdgeInsets.only(left: vw()),
+                  decoration: BoxDecoration(
+                    color: Colors.grey,
+                    borderRadius: BorderRadius.circular(50.0),
+                    image: DecorationImage(
+                      // image: AssetImage('assets/image/default_head.gif'),
+                      image: _buildAvatar(userList.avatar),
+                    ),
                   ),
                 ),
               ),
-              SizedBox(
-                width: ((MediaQuery.of(context).size.width) / 2.5),
-                // height: 80,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: ((MediaQuery.of(context).size.width) / 2.5),
-                          child: Text(userList.nickname,style: const TextStyle(color: Colors.black,fontSize: 15,overflow: TextOverflow.ellipsis),),
-                        ),
-                      ],
+              InkWell(
+                onTap: (){
+                  Navigator.of(context, rootNavigator: true).push<void>(
+                    CupertinoPageRoute(
+                      // title: "推广分享",
+                      // fullscreenDialog: true,
+                      builder: (context) => UserInfoPage(uid: userList.id),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('粉丝：${Global.getNumbersToChinese(userList.fans)}',style: const TextStyle(color: Colors.grey,fontSize: 12),),
-                        Text('作品：${Global.getNumbersToChinese(userList.work)}',style: const TextStyle(color: Colors.grey,fontSize: 12),),
-                      ],
-                    ),
-                  ],
+                  ).then((value) => _search());
+                },
+                child: SizedBox(
+                  width: ((MediaQuery.of(context).size.width) / 2.5),
+                  // height: 80,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            width: ((MediaQuery.of(context).size.width) / 2.5),
+                            child: Text(userList.nickname,style: const TextStyle(color: Colors.black,fontSize: 15,overflow: TextOverflow.ellipsis),),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('粉丝：${Global.getNumbersToChinese(userList.fans)}',style: const TextStyle(color: Colors.grey,fontSize: 12),),
+                          Text('作品：${Global.getNumbersToChinese(userList.work)}',style: const TextStyle(color: Colors.grey,fontSize: 12),),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -390,42 +414,64 @@ class _SearchPage extends State<SearchPage>
         children: [
           Row(
             children: [
-              Container(
-                margin: const EdgeInsets.only(right: 15),
-                width: 54,
-                height: 54,
-                // margin: EdgeInsets.only(left: vw()),
-                decoration: BoxDecoration(
-                  color: Colors.grey,
-                  borderRadius: BorderRadius.circular(50.0),
-                  image: DecorationImage(
-                    // image: AssetImage('assets/image/default_head.gif'),
-                    image: _buildActorAvatar(actor.avatar),
+              InkWell(
+                onTap: (){
+                  Navigator.of(context, rootNavigator: true).push<void>(
+                    CupertinoPageRoute(
+                      // title: "推广分享",
+                      // fullscreenDialog: true,
+                      builder: (context) => ActorDetailsPage(aid: actor.id),
+                    ),
+                  ).then((value) => _search());
+                },
+                child: Container(
+                  margin: const EdgeInsets.only(right: 15),
+                  width: 54,
+                  height: 54,
+                  // margin: EdgeInsets.only(left: vw()),
+                  decoration: BoxDecoration(
+                    color: Colors.grey,
+                    borderRadius: BorderRadius.circular(50.0),
+                    image: DecorationImage(
+                      // image: AssetImage('assets/image/default_head.gif'),
+                      image: _buildActorAvatar(actor.avatar),
+                    ),
                   ),
                 ),
               ),
-              SizedBox(
-                width: ((MediaQuery.of(context).size.width) / 2.5),
-                // height: 80,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: ((MediaQuery.of(context).size.width) / 2.5),
-                          child: Text(actor.name,style: const TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.bold,overflow: TextOverflow.ellipsis),),
-                        ),
-                      ],
+              InkWell(
+                onTap: (){
+                  Navigator.of(context, rootNavigator: true).push<void>(
+                    CupertinoPageRoute(
+                      // title: "推广分享",
+                      // fullscreenDialog: true,
+                      builder: (context) => ActorDetailsPage(aid: actor.id),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('作品：${Global.getNumbersToChinese(actor.work)}部',style: const TextStyle(color: Colors.grey,fontSize: 12),),
-                      ],
-                    ),
-                  ],
+                  ).then((value) => _search());
+                },
+                child: SizedBox(
+                  width: ((MediaQuery.of(context).size.width) / 2.5),
+                  // height: 80,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            width: ((MediaQuery.of(context).size.width) / 2.5),
+                            child: Text(actor.name,style: const TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.bold,overflow: TextOverflow.ellipsis),),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('作品：${Global.getNumbersToChinese(actor.work)}部',style: const TextStyle(color: Colors.grey,fontSize: 12),),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
