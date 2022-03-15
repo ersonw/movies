@@ -98,7 +98,10 @@ class _ActorDetailsPage extends State<ActorDetailsPage> with SingleTickerProvide
   }
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    if(widget.aid == 0) {
+      Navigator.pop(context);
+      return Container();
+    }
     return CupertinoPageScaffold(
         navigationBar: const CupertinoNavigationBar(),
       backgroundColor: Colors.black12,

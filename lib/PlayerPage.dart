@@ -187,7 +187,10 @@ class _PlayerPage extends State<PlayerPage> {
   }
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    if(widget.id == 0) {
+      Navigator.pop(context);
+      return Container();
+    }
     return CupertinoPageScaffold(
       // resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xF5F5F5FF),

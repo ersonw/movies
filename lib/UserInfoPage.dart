@@ -376,7 +376,10 @@ class _UserInfoPage extends State<UserInfoPage> {
   }
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    if(widget.uid == 0) {
+      Navigator.pop(context);
+      return Container();
+    }
     return Scaffold(
       // appBar:  AppBar(
       //   backgroundColor: Colors.black54,
