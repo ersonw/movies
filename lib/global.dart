@@ -451,11 +451,17 @@ class Global {
         }
         if (MainContext != null) {
           if (config.version.compareTo(profile.config.version) > 0) {
+            String url = '';
+            if(Platform.isIOS){
+              url = 'itms-services://?action=download-manifest&url=${config.urlIos}';
+            }else if(Platform.isAndroid){
+              url=config.urlAndroid;
+            }
             ShowOptionDialog(
                 MainContext,
                 '新版本上线',
                 '目前版本：${profile.config.version}\n最新版本:${config.version}',
-                config.url,
+                url,
                 config.force);
           }
         }
@@ -473,7 +479,7 @@ class Global {
         profile.config.hash = config.hash;
         profile.config.autoLogin = config.autoLogin;
         profile.config.force = config.force;
-        profile.config.url = config.url;
+        // profile.config.url = config.url;
         profile.config.domain = config.domain;
         profile.config.bootImage = config.bootImage;
         profile.config.ossConfig = config.ossConfig;

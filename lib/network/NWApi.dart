@@ -38,6 +38,7 @@ class NWApi {
   static const measurementTags = 'measurementTags';
   static const featuredLists = 'featuredLists';
   static const ActorLists = 'ActorLists';
+  static const PopularList = 'PopularList';
   static const Actor = 'Actor';
   static const collectActor = 'user/collectActor';
   static const ActorVideos = 'ActorVideos';

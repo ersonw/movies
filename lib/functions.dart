@@ -49,10 +49,10 @@ ShowOptionDialog(BuildContext context, String title, String? text,String? url, b
           actions: [
             CupertinoDialogAction(
                 child: Text(force ? "马上更新":"好的"),
-                onPressed: () {
+                onPressed: ()async {
                   Navigator.of(_context).pop();
                   if(force){
-                    launch(url!);
+                    if(await canLaunch(url!)) launch(url);
                     exit(0);
                   }
                 }),

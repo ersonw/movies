@@ -77,7 +77,9 @@ class _ActorPage extends State<ActorPage> {
         NWMethod.GET, NWApi.ActorLists, {"data": jsonEncode(parm)}));
     // print(result);
     if (result != null) {
-      List<SearchActor> list = (jsonDecode(result)['list'] as List).map((e) => SearchActor.formJson(e)).toList();
+      Map<String,dynamic> map = jsonDecode(result);
+      List<SearchActor> list = (map['list'] as List).map((e) => SearchActor.formJson(e)).toList();
+      if(map['total'] != null) total = map['total'];
       setState(() {
         if(page>1){
           _list.addAll(list);

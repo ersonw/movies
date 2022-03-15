@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:movies/FeaturedPage.dart';
+import 'package:movies/PopularListPage.dart';
 import 'package:movies/SearchPage.dart';
 import 'package:movies/data/ClassData.dart';
 import 'package:movies/data/SearchList.dart';
@@ -1302,7 +1303,15 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
             ),
           ),
           InkWell(
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context, rootNavigator: true).push<void>(
+                CupertinoPageRoute(
+                  title: '热门榜单',
+                  // fullscreenDialog: true,
+                  builder: (context) => const PopularListPage(),
+                ),
+              );
+            },
             child: Container(
               height: 63,
               width: ((MediaQuery.of(context).size.width) / 5),
