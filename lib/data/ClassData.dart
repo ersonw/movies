@@ -1,12 +1,14 @@
 import 'dart:convert';
 
+import 'package:movies/data/SearchActor.dart';
+
 class ClassData {
   ClassData();
 
   int id = 0;
   String title = '';
   String image = '';
-  String actor = '';
+  SearchActor actor = SearchActor();
   int play = 0;
   int remommends = 0;
 
@@ -14,7 +16,7 @@ class ClassData {
       : id = json['id'],
         title = json['title'],
         image = json['image'],
-        actor = json['actor'],
+        actor = json['actor'] !=null ? SearchActor.formJson(json['actor']) : SearchActor(),
         play = json['play'],
         remommends = json['remommends'];
 
@@ -22,7 +24,7 @@ class ClassData {
         'id': id,
         'title': title,
         'image': image,
-        'actor': actor,
+        'actor': actor.toJson(),
         'play': play,
         'remommends': remommends,
       };

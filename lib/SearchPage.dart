@@ -31,6 +31,7 @@ class _SearchPage extends State<SearchPage>
   final _tabKey = const ValueKey('tab');
   int _tabIndex = 0;
   int _page = 1;
+  int total = 1;
 
   List<SearchList> _avLists = [];
   List<SearchList> _workLists = [];
@@ -48,15 +49,15 @@ class _SearchPage extends State<SearchPage>
     // searchList.play = 1500;
     // searchList.remommends = 30000;
     // _avLists.add(searchList);
-    SearchActor searchActor = SearchActor();
-    searchActor.name = '潘甜甜';
-    searchActor.work = 0;
-    _actorLists.add(searchActor);
-    UserList userList = UserList();
-    userList.work = 1500;
-    userList.fans = 10000;
-    userList.nickname = '游客132131313123甜美游戏陪玩2';
-    _userLists.add(userList);
+    // SearchActor searchActor = SearchActor();
+    // searchActor.name = '潘甜甜';
+    // searchActor.work = 0;
+    // _actorLists.add(searchActor);
+    // UserList userList = UserList();
+    // userList.work = 1500;
+    // userList.fans = 10000;
+    // userList.nickname = '游客132131313123甜美游戏陪玩2';
+    // _userLists.add(userList);
     _textEditingController.text = widget.title;
     int initialIndex =
         PageStorage.of(context)?.readState(context, identifier: _tabKey);
@@ -70,11 +71,16 @@ class _SearchPage extends State<SearchPage>
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
-        // _getMore();
+        _page++;
+        _search();
       }
     });
   }
   _search() async{
+    if(_page > total){
+      _page--;
+      return;
+    }
     Map<String, dynamic> parm = {
       'type': _tabIndex,
       'text': _textEditingController.text,
@@ -84,13 +90,38 @@ class _SearchPage extends State<SearchPage>
         NWMethod.GET, NWApi.getSearchs, {"data": jsonEncode(parm)}));
     if (result != null) {
       // print(result);
+      Map<String,dynamic> map = jsonDecode(result);
+      if(map['total'] != null) total = map['total'];
       switch(_tabIndex){
-        case 0:
+        case 3:
+          List<UserList> userLists = (map['list'] as List).map((e) => UserList.formJson(e)).toList();
           setState(() {
-            _avLists = (jsonDecode(result)['list'] as List).map((e) => SearchList.formJson(e)).toList();
+            if(_page > 1){
+              _userLists.addAll(userLists);
+            }else{
+              _userLists = userLists;
+            }
+          });
+          break;
+        case 4:
+          List<SearchActor> actorLists = (map['list'] as List).map((e) => SearchActor.formJson(e)).toList();
+          setState(() {
+            if(_page > 1){
+              _actorLists.addAll(actorLists);
+            }else{
+              _actorLists = actorLists;
+            }
           });
           break;
         default:
+          List<SearchList> avLists = (map['list'] as List).map((e) => SearchList.formJson(e)).toList();
+          setState(() {
+            if(_page > 1){
+              _avLists.addAll(avLists);
+            }else{
+              _avLists = avLists;
+            }
+          });
           break;
       }
 
@@ -99,6 +130,9 @@ class _SearchPage extends State<SearchPage>
   void handleTabChange() {
     setState(() {
       _tabIndex = _innerTabController.index;
+      _page=1;
+      total=1;
+      _search();
     });
     PageStorage.of(context)
         ?.writeState(context, _innerTabController.index, identifier: _tabKey);
@@ -314,6 +348,30 @@ class _SearchPage extends State<SearchPage>
       ),
     );
   }
+  _collect(int index) async{
+    SearchActor actor = _actorLists[index];
+    Map<String, dynamic> parm = {
+      'aid': actor.id,
+    };
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET, NWApi.collectActor, {"data": jsonEncode(parm)}));
+    // print(result);
+    if (result != null) {
+      Map<String,dynamic> map = jsonDecode(result);
+      if(map['verify'] != null && map['verify'] == true){
+        if(actor.collect){
+          Global.showWebColoredToast('取消收藏成功！');
+        }else{
+          Global.showWebColoredToast('收藏成功！');
+        }
+        setState(() {
+          _actorLists[index].collect = !actor.collect;
+        });
+      }else if(map['msg'] != null){
+        Global.showWebColoredToast(map['msg']);
+      }
+    }
+  }
   _buildAvatar(String avatar) {
     if ((avatar == null || avatar == '') ||
         avatar.contains('http') == false) {
@@ -373,9 +431,9 @@ class _SearchPage extends State<SearchPage>
             ],
           ),
           actor.collect ? InkWell(
-            onTap: () => setState(() {
-              _actorLists[index].collect = false;
-            }),
+            onTap: () {
+              _collect(index);
+            },
             child: Container(
               width: 63,
               height: 30,
@@ -387,9 +445,9 @@ class _SearchPage extends State<SearchPage>
             ),
           ) :
           InkWell(
-            onTap: () => setState(() {
-              _actorLists[index].collect  = true;
-            }),
+            onTap: () {
+              _collect(index);
+            },
             child: Container(
               width: 63,
               height: 30,

@@ -85,7 +85,7 @@ class DioManager {
     } on DioError catch (e) {
       // print(e.response?.statusCode);
       if (e.response?.statusCode == 105) {
-        ShowAlertDialog(Global.MainContext, '访问受限', '原因:未登录用户');
+        ShowAlertDialog(Global.MainContext, '访问受限', '原因:游客无法访问');
       } else if (e.response?.statusCode == 106) {
         UserModel().token = '';
         // Global.saveProfile();
@@ -134,7 +134,7 @@ class DioManager {
     } on DioError catch (e) {
       // print(e.response?.statusCode);
       if (e.response?.statusCode == 105) {
-        ShowAlertDialog(Global.MainContext, '温馨提醒', '原因:未登录用户');
+        ShowAlertDialog(Global.MainContext, '温馨提醒', '原因:游客无法访问');
       } else if (e.response?.statusCode == 106) {
         UserModel().token = '';
         // Global.saveProfile();

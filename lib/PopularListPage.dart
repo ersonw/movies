@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movies/data/ClassData.dart';
+import 'package:movies/image_icon.dart';
 
 import 'HttpManager.dart';
 import 'RoundUnderlineTabIndicator.dart';
+import 'global.dart';
 import 'network/NWApi.dart';
 import 'network/NWMethod.dart';
 
@@ -28,6 +30,7 @@ class _PopularListPage extends State<PopularListPage>  with SingleTickerProvider
   @override
   void initState() {
     // TODO: implement initState
+    _initList();
     int initialIndex = PageStorage.of(context)?.readState(context, identifier: _tabKey);
     _innerTabController = TabController(
         length: 3,
@@ -116,9 +119,123 @@ class _PopularListPage extends State<PopularListPage>  with SingleTickerProvider
       ),
     );
   }
-  _buildNumber(int index){}
+  _buildNumber(int index){
+    switch(index){
+      case 0:
+        return Container(
+          height: 30,
+          width: 30,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: ImageIcons.icon_rank_1,
+            )
+          ),
+        );
+      case 1:
+        return Container(
+          height: 30,
+          width: 30,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: ImageIcons.icon_rank_2,
+            )
+          ),
+        );
+      case 2:
+        return Container(
+          height: 30,
+          width: 30,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: ImageIcons.icon_rank_3,
+            )
+          ),
+        );
+      default:
+        return SizedBox(
+          height: 30,
+          width: 30,
+          child: Text('${index+1}',style: const TextStyle(fontSize: 30),),
+        );
+    }
+  }
   _buildList(int index){
-    return Container();
+    ClassData data = _list[index];
+    return Row(
+      children: [
+        _buildNumber(index),
+        Container(
+          width: 150,
+          height: 100,
+          margin: const EdgeInsets.all(5),
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.circular(5)),
+            image: DecorationImage(
+              image: NetworkImage(data.image),
+              fit: BoxFit.fill,
+            ),
+          ),
+          child: Global.buildPlayIcon(() {
+            Global.playVideo(data.id);
+          }),
+        ),
+        Container(
+          margin: const EdgeInsets.only(left: 5),
+          height: 100,
+          width: ((MediaQuery.of(context).size.width) / 2.5),
+          // color: Colors.black54,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(
+                      width: ((MediaQuery.of(context).size.width) / 2.5),
+                      child: Text(
+                        data.title,
+                        style: const TextStyle(fontSize: 15),
+                        textAlign: TextAlign.left,
+                      )
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        Global.getNumbersToChinese(data.play),
+                        style: const TextStyle(color: Colors.black, fontSize: 13),
+                      ),
+                      const Text(
+                        '播放',
+                        style: TextStyle(color: Colors.grey, fontSize: 13),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Image.asset(
+                        ImageIcons.icon_recommend.assetName,
+                        // width: 45,
+                        height: 20,
+                      ),
+                      const Padding(padding: EdgeInsets.only(left: 5)),
+                      Text(
+                        '${Global.getNumbersToChinese(data.remommends)}人',
+                        style: const TextStyle(color: Colors.grey, fontSize: 13),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
   @override
   void dispose() {

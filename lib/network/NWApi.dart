@@ -34,6 +34,9 @@ class NWApi {
   static const loginPhone = 'login';
   static const carousels = 'carousels';
   static const featureds = 'featureds';
+  static const classVideos = 'classVideos';
+  static const classLists = 'classLists';
+  static const classTags = 'classTags';
   static const featuredTags = 'featuredTags';
   static const measurementTags = 'measurementTags';
   static const featuredLists = 'featuredLists';

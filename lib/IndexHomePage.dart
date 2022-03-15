@@ -8,6 +8,7 @@ import 'package:movies/FeaturedPage.dart';
 import 'package:movies/PopularListPage.dart';
 import 'package:movies/SearchPage.dart';
 import 'package:movies/data/ClassData.dart';
+import 'package:movies/data/ClassTag.dart';
 import 'package:movies/data/SearchList.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -41,13 +42,13 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
   List<Featured> _featureds = [];
   bool _showClassTop = false;
   final List<String> _first = [];
-  final List<String> _second = [];
-  final List<String> _last = [];
+  List<ClassTag> _second = [];
+  List<ClassTag> _last = [];
   int _firstIndex = 0;
   int _lastIndex = 0;
   int _secondIndex = 0;
   int _classPage = 1;
-  int _classTotal = 20;
+  int _classTotal = 1;
   bool _layout = true;
   List<ClassData> _classDatas = [];
   void handleTabChange() {
@@ -59,57 +60,24 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
         _initFeatured();
         break;
       case 2:
+        _classPage = 1;
+        _classTotal = 1;
+        _initClassVideos();
         break;
     }
     PageStorage.of(context)?.writeState(context, _innerTabController.index, identifier: _tabKey);
   }
   @override
   void initState() {
-
-
-    ClassData classData = ClassData();
-    classData.remommends = 10300;
-    classData.play = 1030;
-    classData.actor = '三上悠亚';
-    classData.title =
-        '「明日花綺羅！請假裝被施了催眠樹！」邊演出連1mm都動不了的演技邊一心忍受超快感的性愛[中文字幕]SNIS-907 ';
-    classData.image =
-        'https://github1.oss-cn-hongkong.aliyuncs.com/7abc3392-2f02-4549-8b1d-a7d024030c60.jpeg';
-    _classDatas.add(classData);
     _first.add('全部');
     _first.add('最新');
     _first.add('最热');
-    _second.add('全部');
-    _second.add('制片厂');
-    _second.add('三级');
-    _second.add('日本');
-    _second.add('国产');
-    _second.add('韩国');
-    _second.add('欧美');
-    _last.add('全部');
-    _last.add('強奸');
-    _last.add('潘甜甜');
-    _last.add('探花');
-    _last.add('黑人');
-    _last.add('媽媽');
-    _last.add('偷拍');
-    _last.add('按摩');
-    _last.add('絲襪');
-    _last.add('玩偶姐姐');
-    _last.add('亂倫');
-    _last.add('巨乳');
-    _last.add('强奸');
-    _last.add('換妻');
-    _last.add('人妻');
-    _last.add('蘿莉');
-    _last.add('丝袜');
-    _last.add('空姐');
-    _last.add('人妖');
-    _last.add('學生');
-    _last.add('五星級酒店女服務員');
     _initCarousel();
     _initSearchTags();
     _initFeatured();
+    _initClassList();
+    _initClassVideos();
+    _initClassTag();
     _Records = configModel.searchRecords;
     int initialIndex = PageStorage.of(context)?.readState(context, identifier: _tabKey);
     _innerTabController = TabController(
@@ -127,7 +95,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
         _classPage++;
-        // _getMore();
+        _initClassVideos();
       } else if (_scrollController.position.pixels > 100) {
         if (!_showClassTop) {
           setState(() {
@@ -153,6 +121,66 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
         _featureds = (jsonDecode(result)['list'] as List).map((e) => Featured.formJson(e)).toList();
       });
     }
+  }
+  _initClassList()async{
+    Map<String, dynamic> parm = {};
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET, NWApi.classLists, {"data": jsonEncode(parm)}));
+    // print(result);
+    _second = [];
+    ClassTag tag = ClassTag();
+    tag.title = '全部';
+    if (result != null) {
+      List<ClassTag> second = (jsonDecode(result)['list'] as List).map((e) => ClassTag.formJson(e)).toList();
+      setState(() {
+        _second.add(tag);
+        _second.addAll(second);
+      });
+    }
+  }
+  _initClassTag()async{
+    Map<String, dynamic> parm = {};
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET, NWApi.classTags, {"data": jsonEncode(parm)}));
+    // print(result);
+    _last = [];
+    ClassTag tag = ClassTag();
+    tag.title = '全部';
+    if (result != null) {
+      List<ClassTag> last = (jsonDecode(result)['list'] as List).map((e) => ClassTag.formJson(e)).toList();
+      setState(() {
+        _last.add(tag);
+        _last.addAll(last);
+      });
+    }
+  }
+  _initClassVideos()async{
+    if(_classPage > _classTotal){
+      _classPage--;
+      return;
+    }
+    Map<String, dynamic> parm = {
+      'type': _firstIndex,
+      'class': _secondIndex,
+      'tag': _lastIndex,
+      'page': _classPage,
+    };
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET, NWApi.classVideos, {"data": jsonEncode(parm)}));
+    // print(result);
+    if (result != null) {
+      Map<String, dynamic> map = jsonDecode(result);
+      if(map['total'] != null) _classTotal = map['total'];
+      List<ClassData>  classDatas = (map['list'] as List).map((e) => ClassData.formJson(e)).toList();
+      setState(() {
+        if(_classPage > 1){
+          _classDatas.addAll(classDatas);
+        }else{
+          _classDatas = classDatas;
+        }
+      });
+    }
+    // _classPage++;
   }
   _initCarousel()async{
     Map<String, dynamic> parm = {};
@@ -181,6 +209,9 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
       widgets.add(InkWell(
         onTap: () => setState(() {
           _firstIndex = i;
+          _classPage = 1;
+          _classTotal = 1;
+          _initClassVideos();
         }),
         child: Container(
           margin: const EdgeInsets.only(right: 10),
@@ -321,21 +352,25 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
   Widget _buildSecond() {
     List<Widget> widgets = [];
     for (int i = 0; i < _second.length; i++) {
+      ClassTag tag = _second[i];
       widgets.add(InkWell(
         onTap: () => setState(() {
-          _secondIndex = i;
+          _secondIndex = tag.id;
+          _classPage = 1;
+          _classTotal = 1;
+          _initClassVideos();
         }),
         child: Container(
           margin: const EdgeInsets.only(right: 10),
           decoration: BoxDecoration(
-            color: _secondIndex == i ? Colors.yellow : Colors.transparent,
+            color: _secondIndex == tag.id ? Colors.yellow : Colors.transparent,
             borderRadius: const BorderRadius.all(Radius.circular(20)),
           ),
           child: Container(
             margin:
                 const EdgeInsets.only(top: 4, bottom: 4, left: 15, right: 15),
             child: Text(
-              _second[i],
+              tag.title,
               style: const TextStyle(
                 color: Colors.black,
                 fontSize: 15,
@@ -358,21 +393,25 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
   Widget _buildLast() {
     List<Widget> widgets = [];
     for (int i = 0; i < _last.length; i++) {
+      ClassTag tag = _last[i];
       widgets.add(InkWell(
         onTap: () => setState(() {
-          _lastIndex = i;
+          _lastIndex = tag.id;
+          _classPage = 1;
+          _classTotal = 1;
+          _initClassVideos();
         }),
         child: Container(
           margin: const EdgeInsets.only(right: 10),
           decoration: BoxDecoration(
-            color: _lastIndex == i ? Colors.yellow : Colors.transparent,
+            color: _lastIndex == tag.id ? Colors.yellow : Colors.transparent,
             borderRadius: const BorderRadius.all(Radius.circular(20)),
           ),
           child: Container(
             margin:
                 const EdgeInsets.only(top: 4, bottom: 4, left: 15, right: 15),
             child: Text(
-              _last[i],
+              tag.title,
               style: const TextStyle(
                 color: Colors.black,
                 fontSize: 15,
@@ -400,7 +439,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
   }
 
   _buildClassSingleItem(int index) {
-    // ClassData classData = _classDatas[index];
+    ClassData classData = _classDatas[index];
     return Column(
       children: [
         Container(
@@ -409,7 +448,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(10)),
             image: DecorationImage(
-              image: NetworkImage(_classDatas[0].image),
+              image: NetworkImage(classData.image),
               fit: BoxFit.fill,
               alignment: Alignment.center,
             ),
@@ -422,7 +461,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
             SizedBox(
               width: ((MediaQuery.of(context).size.width) / 1.1),
               child: Text(
-                _classDatas[0].title,
+                classData.title,
                 style: const TextStyle(
                     color: Colors.black,
                     fontSize: 15,
@@ -441,12 +480,12 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    '主演${_classDatas[0].actor}',
+                   Text(
+                    '主演:${classData.actor.name.isNotEmpty ? classData.actor.name : '无'}',
                     style: const TextStyle(color: Colors.grey, fontSize: 12),
                   ),
                   Text(
-                    '${Global.getNumbersToChinese(_classDatas[0].play)}次播放',
+                    '${Global.getNumbersToChinese(classData.play)}次播放',
                     style: const TextStyle(color: Colors.grey, fontSize: 12),
                   ),
                 ],
@@ -464,7 +503,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
                     height: 15,
                   ),
                   Text(
-                    '${Global.getNumbersToChinese(_classDatas[0].remommends)}人',
+                    '${Global.getNumbersToChinese(classData.remommends)}人',
                     style: const TextStyle(color: Colors.grey, fontSize: 13),
                   ),
                 ],
@@ -476,17 +515,17 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
     );
   }
 
-  _buildClassItem(int index) {
+  _buildClassDoubleItem(int index) {
     List<Widget> widgets = [];
-    widgets.add(_buildClassDoubleItem(_classDatas[0]));
-    widgets.add(_buildClassDoubleItem(_classDatas[0]));
+    if((index*2) < _classDatas.length) widgets.add(_buildClassItem(_classDatas[index*2]));
+    if((index*2)+1 < _classDatas.length) widgets.add(_buildClassItem(_classDatas[(index*2)+1]));
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: widgets,
     );
   }
 
-  _buildClassDoubleItem(ClassData classData) {
+  _buildClassItem(ClassData classData) {
     return Column(
       children: [
         Container(
@@ -495,7 +534,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(10)),
             image: DecorationImage(
-              image: NetworkImage(_classDatas[0].image),
+              image: NetworkImage(classData.image),
               fit: BoxFit.fill,
               alignment: Alignment.center,
             ),
@@ -525,8 +564,8 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
 
   _buildClassListWithLayout() {
     List<Widget> widgets = [];
-    for (int i = 0; i < (20 / 2) + 1; i++) {
-      widgets.add(_buildClassItem(i));
+    for (int i = 0; i < (_classDatas.length / 2) + 1; i++) {
+      widgets.add(_buildClassDoubleItem(i));
     }
     widgets.add(Center(
       child: Container(
@@ -545,7 +584,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
 
   _buildClassListWithoutLayout() {
     List<Widget> widgets = [];
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < _classDatas.length; i++) {
       widgets.add(_buildClassSingleItem(i));
     }
     widgets.add(Center(
@@ -609,7 +648,18 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
       ),
     );
   }
-
+  _getSecondTag(int id){
+    for(int i=0;i<_second.length;i++){
+      if(_second[i].id == id) return _second[i].title;
+    }
+    return '';
+  }
+  _getLastTag(int id){
+    for(int i=0;i<_last.length;i++){
+      if(_last[i].id == id) return _last[i].title;
+    }
+    return '';
+  }
   Widget _buildClassification() {
     return Column(
       children: [
@@ -651,7 +701,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
                         margin: const EdgeInsets.only(
                             top: 4, bottom: 4, left: 15, right: 15),
                         child: Text(
-                          _second[_secondIndex],
+                          _getSecondTag(_secondIndex),
                           style: const TextStyle(
                             color: Colors.black,
                             fontSize: 15,
@@ -672,7 +722,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
                         margin: const EdgeInsets.only(
                             top: 4, bottom: 4, left: 15, right: 15),
                         child: Text(
-                          _last[_lastIndex],
+                          _getLastTag(_lastIndex),
                           style: const TextStyle(
                             color: Colors.black,
                             fontSize: 15,
