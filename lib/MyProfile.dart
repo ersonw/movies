@@ -234,7 +234,7 @@ class _MyProfile extends State<MyProfile> {
            child:  Row(
              mainAxisAlignment: MainAxisAlignment.spaceBetween,
              children: [
-               const Padding(padding: EdgeInsets.only(top: 10,bottom: 10,left: 5,right: 5)),
+               const Padding(padding: EdgeInsets.only(top: 10,left: 5)),
                InkWell(
                  onTap: () => _enterGold(),
                  child: Column(
@@ -274,7 +274,7 @@ class _MyProfile extends State<MyProfile> {
                            fontSize: 18,),
                      ),
                      const Text(
-                       '推荐数',
+                       '推荐',
                        style: TextStyle(fontSize: 12, color: Colors.grey),
                      ),
                    ],
@@ -289,7 +289,7 @@ class _MyProfile extends State<MyProfile> {
                            fontSize: 18, ),
                      ),
                      const Text(
-                       '我的关注',
+                       '关注',
                        style: TextStyle(fontSize: 12, color: Colors.grey),
                      ),
                    ],
@@ -304,12 +304,13 @@ class _MyProfile extends State<MyProfile> {
                            fontSize: 18, ),
                      ),
                      const Text(
-                       '我的粉丝',
+                       '粉丝',
                        style: TextStyle(fontSize: 12, color: Colors.grey),
                      ),
                    ],
                  ),
                ),
+               const Padding(padding: EdgeInsets.only(right: 5)),
              ],
            ),
          ),

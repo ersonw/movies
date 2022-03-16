@@ -453,7 +453,9 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
               alignment: Alignment.center,
             ),
           ),
-          child: Global.buildPlayIcon(() {}),
+          child: Global.buildPlayIcon(() {
+            Global.playVideo(classData.id);
+          }),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -539,7 +541,9 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
               alignment: Alignment.center,
             ),
           ),
-          child: Global.buildPlayIcon(() {}),
+          child: Global.buildPlayIcon(() {
+            Global.playVideo(classData.id);
+          }),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.start,

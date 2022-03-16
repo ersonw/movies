@@ -51,6 +51,7 @@ class NWApi {
   static const getPlayer = 'video/player';
   static const getRandom = 'video/random';
   static const favoriteVideo = 'video/favorite';
+  static const reportVideo = 'video/report';
   static const likeComment = 'video/likeComment';
   static const buyVideo = 'video/buy';
   static const recommendVideo = 'video/recommend';

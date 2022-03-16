@@ -43,23 +43,6 @@ class _SearchPage extends State<SearchPage>
 
   @override
   void initState() {
-    // SearchList searchList = SearchList();
-    // searchList.image =
-    //     'https://github1.oss-cn-hongkong.aliyuncs.com/8aa3d840-8a60-4e85-8bf1-418ab5518be5.png';
-    // searchList.number = '12321312312321321312';
-    // searchList.title = '[HongKongDoll]甜美游戏陪玩2 下';
-    // searchList.play = 1500;
-    // searchList.remommends = 30000;
-    // _avLists.add(searchList);
-    // SearchActor searchActor = SearchActor();
-    // searchActor.name = '潘甜甜';
-    // searchActor.work = 0;
-    // _actorLists.add(searchActor);
-    // UserList userList = UserList();
-    // userList.work = 1500;
-    // userList.fans = 10000;
-    // userList.nickname = '游客132131313123甜美游戏陪玩2';
-    // _userLists.add(userList);
     _textEditingController.text = widget.title;
     int initialIndex =
         PageStorage.of(context)?.readState(context, identifier: _tabKey);
@@ -95,6 +78,26 @@ class _SearchPage extends State<SearchPage>
       Map<String,dynamic> map = jsonDecode(result);
       if(map['total'] != null) total = map['total'];
       switch(_tabIndex){
+        case 1:
+          List<SearchList> avLists = (map['list'] as List).map((e) => SearchList.formJson(e)).toList();
+          setState(() {
+            if(_page > 1){
+              _workLists.addAll(avLists);
+            }else{
+              _workLists = avLists;
+            }
+          });
+          break;
+        case 2:
+          List<SearchList> avLists = (map['list'] as List).map((e) => SearchList.formJson(e)).toList();
+          setState(() {
+            if(_page > 1){
+              _numberLists.addAll(avLists);
+            }else{
+              _numberLists = avLists;
+            }
+          });
+          break;
         case 3:
           List<UserList> userLists = (map['list'] as List).map((e) => UserList.formJson(e)).toList();
           setState(() {
@@ -187,9 +190,9 @@ class _SearchPage extends State<SearchPage>
                   ),
                   TextButton(
                     onPressed: () {
-                      if (_textEditingController.text.length > 1) {
+                      if (_textEditingController.text.isNotEmpty) {
                         _commentFocus.unfocus();
-                        // _textEditingController.text = '';
+                        _search();
                       }
                     },
                     child: const Text(

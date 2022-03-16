@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:movies/FeaturedPage.dart';
 import 'package:movies/IndexHomePage.dart';
 import 'package:movies/LockScreenCustom.dart';
 import 'package:movies/RecommendedPage.dart';
@@ -49,7 +50,7 @@ class _HomePageState extends State<HomePage> {
           case 2:
             return CupertinoTabView(
               // defaultTitle: IndexPage.title,
-              builder: (context) => const IndexPage(),
+              builder: (context) => const FeaturedPage(),
             );
           case 3:
             return CupertinoTabView(

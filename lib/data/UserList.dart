@@ -12,10 +12,11 @@ class UserList {
 
   UserList.formJson(Map<String, dynamic> json)
       : id = json['id'],
-        avatar = json[''],
-        nickname = json[''],
-        fans = json[''],
-        work = json[''];
+        avatar = json['avatar'],
+        nickname = json['nickname'],
+        fans = json['fans'],
+        work = json['work'],
+        follow = json['follow'];
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -23,6 +24,7 @@ class UserList {
         'nickname': nickname,
         'fans': fans,
         'work': work,
+    'follow':follow,
       };
 
   @override

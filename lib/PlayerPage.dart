@@ -12,6 +12,7 @@ import 'package:movies/image_icon.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
 import 'package:wakelock/wakelock.dart';
+import 'ActorDetailsPage.dart';
 import 'HttpManager.dart';
 import 'VIPBuyPage.dart';
 import 'VideoFullPage.dart';
@@ -76,7 +77,7 @@ class _PlayerPage extends State<PlayerPage> {
     };
     String? result = (await DioManager().requestAsync(
         NWMethod.GET, NWApi.getPlayer, {"data": jsonEncode(parm)}));
-    // print(result);
+    print(result);
     if (result == null) {
       return;
     }
@@ -162,6 +163,23 @@ class _PlayerPage extends State<PlayerPage> {
       });
     }
   }
+  _report() async{
+    Map<String, dynamic> parm = {
+      'id': widget.id,
+    };
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET, NWApi.reportVideo, {"data": jsonEncode(parm)}));
+    // print(result);
+    if (result == null) {
+    return;
+    }
+    Map<String, dynamic> map = jsonDecode(result);
+    if(map['verify'] != null && map['verify'] == true){
+      Global.showWebColoredToast('举报成功！');
+    }else if(map['msg'] != null){
+      Global.showWebColoredToast(map['msg']);
+    }
+  }
   _buyVideo() async {
     if(await ShowAlertDialogBool(context, '购买付费视频', '确定花费 ${_player.diamond}钻石 购买本视频吗？')){
       Map<String, dynamic> parm = {
@@ -233,7 +251,9 @@ class _PlayerPage extends State<PlayerPage> {
                       _isReport
                           ? Container()
                           : InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          _report();
+                        },
                         child: Container(
                           color: Colors.transparent,
                           margin: const EdgeInsets.only(
@@ -593,7 +613,7 @@ class _PlayerPage extends State<PlayerPage> {
                     child: Container(
                       color: Colors.black87,
                       child: Center(
-                        child: _player.diamond == 10 ?
+                        child: _player.diamond > 0 ?
                         Column(
                           // mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -626,7 +646,9 @@ class _PlayerPage extends State<PlayerPage> {
                                       _isReport
                                           ? Container()
                                           : InkWell(
-                                        onTap: () {},
+                                        onTap: () {
+                                          _report();
+                                        },
                                         child: Container(
                                           color: Colors.transparent,
                                           margin: const EdgeInsets.only(
@@ -749,7 +771,9 @@ class _PlayerPage extends State<PlayerPage> {
                                       _isReport
                                           ? Container()
                                           : InkWell(
-                                        onTap: () {},
+                                        onTap: () {
+                                          _report();
+                                        },
                                         child: Container(
                                           color: Colors.transparent,
                                           margin: const EdgeInsets.only(
@@ -925,18 +949,29 @@ class _PlayerPage extends State<PlayerPage> {
                               children: [
                                 Column(
                                   children: [
-                                    Container(
-                                      width: 90,
-                                      height: 90,
-                                      margin:
-                                          const EdgeInsets.only(left: 10, top: 10),
-                                      decoration: BoxDecoration(
-                                          color: Colors.grey,
-                                          borderRadius:
-                                              BorderRadius.circular(50.0),
-                                          image: DecorationImage(
-                                            image: _buildActorAvatar(_player.actor.avatar),
-                                          )),
+                                    InkWell(
+                                      onTap: (){
+                                        Navigator.of(context, rootNavigator: true).push<void>(
+                                          CupertinoPageRoute(
+                                            title: '演员详情',
+                                            // fullscreenDialog: true,
+                                            builder: (context) =>  ActorDetailsPage(aid: _player.actor.id),
+                                          ),
+                                        );
+                                      },
+                                      child: Container(
+                                        width: 90,
+                                        height: 90,
+                                        margin:
+                                        const EdgeInsets.only(left: 10, top: 10),
+                                        decoration: BoxDecoration(
+                                            color: Colors.grey,
+                                            borderRadius:
+                                            BorderRadius.circular(50.0),
+                                            image: DecorationImage(
+                                              image: _buildActorAvatar(_player.actor.avatar),
+                                            )),
+                                      ),
                                     ),
                                     SizedBox(
                                       width: 90,
