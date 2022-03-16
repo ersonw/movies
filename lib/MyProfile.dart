@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:images_picker/images_picker.dart';
 import 'package:movies/BuyDiamondPage.dart';
+import 'package:movies/CollectsPage.dart';
 import 'package:movies/KeFuMessagePage.dart';
 import 'package:movies/UserSharePage.dart';
 import 'package:movies/VIPBuyPage.dart';
@@ -462,7 +463,15 @@ class _MyProfile extends State<MyProfile> {
                         ),
                       ),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context, rootNavigator: true).push<void>(
+                            CupertinoPageRoute(
+                              // title: "推广分享",
+                              // fullscreenDialog: true,
+                              builder: (context) => const CollectsPage(),
+                            ),
+                          );
+                        },
                         child: Column(
                           children: [
                             Image.asset(

@@ -35,6 +35,7 @@ class NWApi {
   static const carousels = 'carousels';
   static const featureds = 'featureds';
   static const classVideos = 'classVideos';
+  static const collectList = 'user/collectList';
   static const classLists = 'classLists';
   static const classTags = 'classTags';
   static const featuredTags = 'featuredTags';
