@@ -7,7 +7,10 @@ import 'package:movies/data/OnlinePay.dart';
 import 'package:movies/data/OssConfig.dart';
 import 'package:movies/data/VIPBuy.dart';
 
+import '../global.dart';
+
 class Config {
+  // double version = double.parse(Global.packageInfo.version);
   double version = 1.0;
   String hash = '';
   bool autoLogin = false;

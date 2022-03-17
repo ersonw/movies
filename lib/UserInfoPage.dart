@@ -9,6 +9,7 @@ import 'package:movies/data/UserPost.dart';
 import 'HttpManager.dart';
 import 'PhotpGalleryPage.dart';
 import 'RoundUnderlineTabIndicator.dart';
+import 'data/UserVideo.dart';
 import 'global.dart';
 import 'image_icon.dart';
 import 'network/NWApi.dart';
@@ -31,7 +32,7 @@ class _UserInfoPage extends State<UserInfoPage>  with SingleTickerProviderStateM
   int type = 0;
   int total = 1;
   UserList _user = UserList();
-  List<ClassData> _list = [];
+  List<UserVideo> _list = [];
 
   void handleTabChange() {
     type = _innerTabController.index;
@@ -105,16 +106,18 @@ class _UserInfoPage extends State<UserInfoPage>  with SingleTickerProviderStateM
     }
     Map<String, dynamic> parm = {
       'page': _page,
+      'type': type,
+      'id': widget.uid,
     };
     String? result = (await DioManager().requestAsync(
-        NWMethod.GET, NWApi.VideoRecords, {"data": jsonEncode(parm)}));
+        NWMethod.GET, NWApi.PushRecords, {"data": jsonEncode(parm)}));
     print(result);
     if (result != null) {
       Map<String, dynamic> map = jsonDecode(result);
       if (map['total'] != null) total = map['total'];
       if(type == 0){
-        List<ClassData> list = (map['list'] as List).map((e) =>
-            ClassData.formJson(e)).toList();
+        List<UserVideo> list = (map['list'] as List).map((e) =>
+            UserVideo.formJson(e)).toList();
         setState(() {
           if (_page > 1) {
             _list.addAll(list);
@@ -136,7 +139,7 @@ class _UserInfoPage extends State<UserInfoPage>  with SingleTickerProviderStateM
     }
   }
   _buildAvatar(String avatar) {
-    if ((avatar == null || avatar == '') ||
+    if (avatar == null || avatar.isEmpty ||
         avatar.contains('http') == false) {
       return const AssetImage('assets/image/default_head.gif');
     }
@@ -150,6 +153,7 @@ class _UserInfoPage extends State<UserInfoPage>  with SingleTickerProviderStateM
     return NetworkImage(avatar);
   }
   Widget _buildListItem(int index){
+    UserVideo video = _list[index];
     return Container(
       color: Colors.white,
       margin: const EdgeInsets.only(left: 5,right: 5,top: 5),
@@ -165,7 +169,7 @@ class _UserInfoPage extends State<UserInfoPage>  with SingleTickerProviderStateM
                   height: 100,
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                          image: AssetImage('assets/image/124f0bbd-3255-49da-ac85-09df9db02e36.jpeg'),
+                          image: NetworkImage(video.image),
                           fit: BoxFit.fill
                       )
                   ),
@@ -182,7 +186,7 @@ class _UserInfoPage extends State<UserInfoPage>  with SingleTickerProviderStateM
                   ),
                   child: Container(
                     margin: const EdgeInsets.only(left: 6,right: 6,top: 3.0,bottom: 3),
-                    child: Text('00:30',style: TextStyle(color: Colors.white,fontSize: 10),),
+                    child: Text(Global.inSecondsTostring(video.duration),style: const TextStyle(color: Colors.white,fontSize: 10),),
                   ),
                 ),
               ],
@@ -195,21 +199,24 @@ class _UserInfoPage extends State<UserInfoPage>  with SingleTickerProviderStateM
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('办公室内玩弄斯斯文文的加班女同事',style: TextStyle(fontSize: 15),),
+                  Text(video.title.length > 30 ? video.title.substring(0,30) : video.title,style: const TextStyle(fontSize: 15),),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
                         children: [
-                          Text('1391',style: TextStyle(color: Colors.black,fontSize: 13),),
-                          Text('播放',style: TextStyle(color: Colors.grey,fontSize: 13),),
+                          Text(Global.getNumbersToChinese(video.play),style: const TextStyle(color: Colors.black,fontSize: 13),),
+                          const Text('播放',style: TextStyle(color: Colors.grey,fontSize: 13),),
                         ],
                       ),
-                      Row(
-                        children: [
-                          Image.asset(ImageIcons.icon_community_zan.assetName,width: 45,height: 15,),
-                          Text('99990人',style: TextStyle(color: Colors.grey,fontSize: 13),),
-                        ],
+                      InkWell(
+                        onTap: () => _likeVideo(index),
+                        child: Row(
+                          children: [
+                            Image.asset(ImageIcons.icon_community_zan.assetName,color: video.like ? Colors.red : Colors.grey,width: 45,height: 15,),
+                            Text('${Global.getNumbersToChinese(video.likes)}人',style: const TextStyle(color: Colors.grey,fontSize: 13),),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -487,6 +494,32 @@ class _UserInfoPage extends State<UserInfoPage>  with SingleTickerProviderStateM
       }
     }
   }
+  _likeVideo(int index) async{
+    UserVideo video = _list[index];
+    Map<String, dynamic> parm = {
+      'id': video.id,
+    };
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET, NWApi.likeUserVideo, {"data": jsonEncode(parm)}));
+    // print(result);
+    if (result != null) {
+      Map<String,dynamic> map = jsonDecode(result);
+      if(map['verify'] != null && map['verify'] == true){
+        if(video.like){
+          _list[index].likes--;
+          Global.showWebColoredToast('取消点赞成功！');
+        }else{
+          _list[index].likes++;
+          Global.showWebColoredToast('点赞成功！');
+        }
+        setState(() {
+          _list[index].like = !video.like;
+        });
+      }else if(map['msg'] != null){
+        Global.showWebColoredToast(map['msg']);
+      }
+    }
+  }
   @override
   Widget build(BuildContext context) {
     if(widget.uid == 0) {
@@ -629,7 +662,7 @@ class _UserInfoPage extends State<UserInfoPage>  with SingleTickerProviderStateM
                   Row(
                     children: [
                       Text(Global.getNumbersToChinese(_user.remommends),style: const TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold),),
-                      const Text('推荐数',style: TextStyle(color: Colors.grey,fontSize: 15),),
+                      const Text('推荐',style: TextStyle(color: Colors.grey,fontSize: 15),),
                     ],
                   ),
                 ],
@@ -644,7 +677,7 @@ class _UserInfoPage extends State<UserInfoPage>  with SingleTickerProviderStateM
                   Container(
                     width: (MediaQuery.of(context).size.width) / 1.5,
                     margin: const EdgeInsets.only(left: 10,right: 20),
-                    child: Text('${_user.signature == null || _user.signature.isEmpty ? '专注各种网红，进入主页看更多精彩!': _user.signature}',style: const TextStyle(color: Colors.black,fontSize: 15),),
+                    child: Text(_user.signature == null || _user.signature.isEmpty ? '专注各种网红，进入主页看更多精彩!': _user.signature,style: const TextStyle(color: Colors.black,fontSize: 15),),
                   ),
                 ],
               ),
@@ -654,19 +687,19 @@ class _UserInfoPage extends State<UserInfoPage>  with SingleTickerProviderStateM
               child:  TabBar(
                 controller: _innerTabController,
                 // isScrollable: true,
-                labelStyle: TextStyle(fontSize: 18),
-                unselectedLabelStyle: TextStyle(fontSize: 15),
-                padding: EdgeInsets.only(right: 0),
-                indicatorPadding: EdgeInsets.only(right: 0),
+                labelStyle: const TextStyle(fontSize: 18),
+                unselectedLabelStyle: const TextStyle(fontSize: 15),
+                padding: const EdgeInsets.only(right: 0),
+                indicatorPadding: const EdgeInsets.only(right: 0),
                 labelColor: Colors.red,
-                labelPadding: EdgeInsets.only(left: 0, right: 0),
+                labelPadding: const EdgeInsets.only(left: 0, right: 0),
                 unselectedLabelColor: Colors.black,
-                indicator: RoundUnderlineTabIndicator(
+                indicator: const RoundUnderlineTabIndicator(
                     borderSide: BorderSide(
                       width: 9,
                       color: Colors.red,
                     )),
-                tabs: [
+                tabs: const [
                   Tab(
                     text: '视频',
                   ),
@@ -685,12 +718,12 @@ class _UserInfoPage extends State<UserInfoPage>  with SingleTickerProviderStateM
                     MediaQuery.removePadding(
                       removeTop: true,
                       context: context,
-                      child: ListView.builder(itemCount: 10 ,itemBuilder: (BuildContext _context,int index) => _buildListItem(index)),
+                      child: ListView.builder(itemCount: _list.length ,itemBuilder: (BuildContext _context,int index) => _buildListItem(index)),
                     ),
                     MediaQuery.removePadding(
                       removeTop: true,
                       context: context,
-                      child: ListView.builder(itemCount: 10 ,itemBuilder: (BuildContext _context,int index) => _buildPostItem(index)),
+                      child: ListView.builder(itemCount: _userPosts.length ,itemBuilder: (BuildContext _context,int index) => _buildPostItem(index)),
                     ),
                   ],
                 ),

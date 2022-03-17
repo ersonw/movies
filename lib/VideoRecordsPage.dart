@@ -44,7 +44,7 @@ class _VideoRecordsPage extends State<VideoRecordsPage> {
     };
     String? result = (await DioManager().requestAsync(
         NWMethod.GET, NWApi.VideoRecords, {"data": jsonEncode(parm)}));
-    print(result);
+    // print(result);
     if (result != null) {
       Map<String, dynamic> map = jsonDecode(result);
       if(map['total'] != null) total = map['total'];

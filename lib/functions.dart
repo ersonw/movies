@@ -53,7 +53,7 @@ ShowOptionDialog(BuildContext context, String title, String? text,String? url, b
                   Navigator.of(_context).pop();
                   if(force){
                     if(await canLaunch(url!)) launch(url);
-                    exit(0);
+                    // exit(0);
                   }
                 }),
           ],

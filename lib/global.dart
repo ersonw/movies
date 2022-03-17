@@ -5,6 +5,7 @@ import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+// import 'package:flutter_udid/flutter_udid.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:image_pickers/image_pickers.dart';
@@ -31,6 +32,7 @@ import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart';
 import 'package:movies/utils/UploadOssUtil.dart';
 import 'package:movies/web_view.dart';
+import 'package:package_info/package_info.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -58,6 +60,7 @@ class Global {
 
   // 是否为release版
   static bool get isRelease => const bool.fromEnvironment("dart.vm.product");
+  // static late PackageInfo packageInfo;
   static late final cameras;
   static bool _isLogin = false;
   static late BuildContext MainContext;
@@ -71,6 +74,7 @@ class Global {
   static bool isLoading = false;
   //初始化全局信息，会在APP启动时执行
   static Future init() async {
+    // packageInfo = await PackageInfo.fromPlatform();
     loadingChangeNotifier.addListener(() {
       if(isLoading){
         Navigator.push(MainContext, DialogRouter(LoadingDialog(false)));
@@ -535,6 +539,7 @@ class Global {
       } else if (Platform.isIOS) {
         var build = await deviceInfoPlugin.iosInfo;
         uid = build.identifierForVendor;
+        // uid = await FlutterUdid.udid;
       }else{
         uid = 'test';
       }

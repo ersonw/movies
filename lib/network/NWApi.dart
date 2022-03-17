@@ -39,6 +39,7 @@ class NWApi {
   static const classVideos = 'classVideos';
   static const collectList = 'user/collectList';
   static const VideoRecords = 'user/VideoRecords';
+  static const PushRecords = 'user/PushRecords';
   static const getUserInfo = 'user/getUserInfo';
   static const classLists = 'classLists';
   static const classTags = 'classTags';
@@ -50,6 +51,7 @@ class NWApi {
   static const Actor = 'Actor';
   static const collectActor = 'user/collectActor';
   static const followUser = 'user/followUser';
+  static const likeUserVideo = 'user/likeUserVideo';
   static const ActorVideos = 'ActorVideos';
   static const forgotPasswd = 'forgotPasswd';
   static const gethotTags = 'video/hotTags';
