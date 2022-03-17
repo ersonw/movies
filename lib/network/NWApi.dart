@@ -1,4 +1,6 @@
 class NWApi {
+  // static const baseApi = "https://api.telebott.com/api/";
+  // static const baseWs = "wss://api.telebott.com";
   static const baseApi = "http://192.168.254.142:8015/api/";
   static const baseWs = "ws://192.168.254.142:8015";
   // static const baseWs = "ws://172.21.68.12:8015";
@@ -36,6 +38,8 @@ class NWApi {
   static const featureds = 'featureds';
   static const classVideos = 'classVideos';
   static const collectList = 'user/collectList';
+  static const VideoRecords = 'user/VideoRecords';
+  static const getUserInfo = 'user/getUserInfo';
   static const classLists = 'classLists';
   static const classTags = 'classTags';
   static const featuredTags = 'featuredTags';
@@ -45,6 +49,7 @@ class NWApi {
   static const PopularList = 'PopularList';
   static const Actor = 'Actor';
   static const collectActor = 'user/collectActor';
+  static const followUser = 'user/followUser';
   static const ActorVideos = 'ActorVideos';
   static const forgotPasswd = 'forgotPasswd';
   static const gethotTags = 'video/hotTags';

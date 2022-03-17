@@ -17,6 +17,8 @@ class User {
   int remommends = 0;
   int follows = 0;
   int fans = 0;
+  String signature = '';
+  String bkImage = '';
 
   User();
 
@@ -36,10 +38,14 @@ class User {
         remommends = json['remommends'],
         follows = json['follows'],
         fans = json['fans'],
+        signature = json['signature'],
+        bkImage = json['bkImage'],
         diamond = json['diamond'];
 
   Map<String, dynamic> toJson() => {
         'token': token,
+        'bkImage': bkImage,
+        'signature': signature,
         'nickname': nickname,
         'sex': sex,
         'birthday': birthday,

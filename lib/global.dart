@@ -479,7 +479,7 @@ class Global {
         profile.config.hash = config.hash;
         profile.config.autoLogin = config.autoLogin;
         profile.config.force = config.force;
-        // profile.config.url = config.url;
+        profile.config.groupLink = config.groupLink;
         profile.config.domain = config.domain;
         profile.config.bootImage = config.bootImage;
         profile.config.ossConfig = config.ossConfig;
@@ -487,7 +487,7 @@ class Global {
         profile.config.vipBuys = config.vipBuys;
         profile.config.buyDiamonds = config.buyDiamonds;
         profile.config.buyGolds = config.buyGolds;
-        print(config);
+        // print(config);
         saveProfile();
       }
     }, error: (error) {});

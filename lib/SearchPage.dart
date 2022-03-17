@@ -333,7 +333,7 @@ class _SearchPage extends State<SearchPage>
           ),
           userList.follow ? InkWell(
             onTap: () => setState(() {
-                _userLists[index].follow = false;
+                _follow(index);
             }),
             child: Container(
               width: 80,
@@ -353,7 +353,7 @@ class _SearchPage extends State<SearchPage>
           ) :
           InkWell(
             onTap: () => setState(() {
-              _userLists[index].follow = true;
+              _follow(index);
             }),
             child: Container(
               width: 80,
@@ -393,6 +393,30 @@ class _SearchPage extends State<SearchPage>
         }
         setState(() {
           _actorLists[index].collect = !actor.collect;
+        });
+      }else if(map['msg'] != null){
+        Global.showWebColoredToast(map['msg']);
+      }
+    }
+  }
+  _follow(int index) async{
+    UserList user = _userLists[index];
+    Map<String, dynamic> parm = {
+      'id': user.id,
+    };
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET, NWApi.followUser, {"data": jsonEncode(parm)}));
+    // print(result);
+    if (result != null) {
+      Map<String,dynamic> map = jsonDecode(result);
+      if(map['verify'] != null && map['verify'] == true){
+        if(user.follow){
+          Global.showWebColoredToast('取消关注成功！');
+        }else{
+          Global.showWebColoredToast('关注成功！');
+        }
+        setState(() {
+          _userLists[index].follow = !user.follow;
         });
       }else if(map['msg'] != null){
         Global.showWebColoredToast(map['msg']);

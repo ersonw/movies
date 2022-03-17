@@ -1,11 +1,18 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:movies/data/ClassData.dart';
+import 'package:movies/data/UserList.dart';
 import 'package:movies/data/UserPost.dart';
 
+import 'HttpManager.dart';
 import 'PhotpGalleryPage.dart';
 import 'RoundUnderlineTabIndicator.dart';
 import 'global.dart';
 import 'image_icon.dart';
+import 'network/NWApi.dart';
+import 'network/NWMethod.dart';
 
 class UserInfoPage extends StatefulWidget {
   UserInfoPage({Key? key,required this.uid}) : super(key: key);
@@ -15,8 +22,24 @@ class UserInfoPage extends StatefulWidget {
   _UserInfoPage createState() => _UserInfoPage();
 
 }
-class _UserInfoPage extends State<UserInfoPage> {
+class _UserInfoPage extends State<UserInfoPage>  with SingleTickerProviderStateMixin {
+  late  TabController _innerTabController;
+  final ScrollController _controller = ScrollController();
+  final _tabKey = const ValueKey('tab');
   List<UserPost> _userPosts = [];
+  int _page = 1;
+  int type = 0;
+  int total = 1;
+  UserList _user = UserList();
+  List<ClassData> _list = [];
+
+  void handleTabChange() {
+    type = _innerTabController.index;
+    _page = 1;
+    total = 1;
+    _init();
+    PageStorage.of(context)?.writeState(context, _innerTabController.index, identifier: _tabKey);
+  }
   @override
   void initState() {
     // TODO: implement initState
@@ -45,7 +68,72 @@ class _UserInfoPage extends State<UserInfoPage> {
     userPost.likes = 1030;
     userPost.isCollect = true;
     _userPosts.add(userPost);
+    _init();
+    _initInfo();
+    int initialIndex = PageStorage.of(context)?.readState(context, identifier: _tabKey);
+    _innerTabController = TabController(
+        length: 2,
+        vsync: this,
+        initialIndex: initialIndex != null ? initialIndex : 0);
+    _innerTabController.addListener(handleTabChange);
     super.initState();
+    _controller.addListener(() {
+      if (_controller.position.pixels ==
+          _controller.position.maxScrollExtent) {
+        _page++;
+        _init();
+      }
+    });
+  }
+  _initInfo()async{
+    Map<String, dynamic> parm = {
+      'id': widget.uid,
+    };
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET, NWApi.getUserInfo, {"data": jsonEncode(parm)}));
+    print(result);
+    if (result != null) {
+      setState(() {
+        _user = UserList.formJson(jsonDecode(result));
+      });
+    }
+  }
+  _init()async {
+    if (_page > total) {
+      _page--;
+      return;
+    }
+    Map<String, dynamic> parm = {
+      'page': _page,
+    };
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET, NWApi.VideoRecords, {"data": jsonEncode(parm)}));
+    print(result);
+    if (result != null) {
+      Map<String, dynamic> map = jsonDecode(result);
+      if (map['total'] != null) total = map['total'];
+      if(type == 0){
+        List<ClassData> list = (map['list'] as List).map((e) =>
+            ClassData.formJson(e)).toList();
+        setState(() {
+          if (_page > 1) {
+            _list.addAll(list);
+          } else {
+            _list = list;
+          }
+        });
+      }else{
+        List<UserPost> list = (map['list'] as List).map((e) =>
+            UserPost.formJson(e)).toList();
+        setState(() {
+          if (_page > 1) {
+            _userPosts.addAll(list);
+          } else {
+            _userPosts = list;
+          }
+        });
+      }
+    }
   }
   _buildAvatar(String avatar) {
     if ((avatar == null || avatar == '') ||
@@ -374,6 +462,31 @@ class _UserInfoPage extends State<UserInfoPage> {
       ),
     );
   }
+  _follow() async{
+    Map<String, dynamic> parm = {
+      'id': widget.uid,
+    };
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET, NWApi.followUser, {"data": jsonEncode(parm)}));
+    // print(result);
+    if (result != null) {
+      Map<String,dynamic> map = jsonDecode(result);
+      if(map['verify'] != null && map['verify'] == true){
+        if(_user.follow){
+          _user.fans--;
+          Global.showWebColoredToast('取消关注成功！');
+        }else{
+          _user.fans++;
+          Global.showWebColoredToast('关注成功！');
+        }
+        setState(() {
+          _user.follow = !_user.follow;
+        });
+      }else if(map['msg'] != null){
+        Global.showWebColoredToast(map['msg']);
+      }
+    }
+  }
   @override
   Widget build(BuildContext context) {
     if(widget.uid == 0) {
@@ -388,84 +501,70 @@ class _UserInfoPage extends State<UserInfoPage> {
       // ),
       // backgroundColor: const Color(0xF5F5F5FF),
       // backgroundColor: Colors.black54,
-      body: DefaultTabController(
-        length: 2,
-        child: Container(
-          color: Colors.white,
-          child: Column(
-            children: [
-              Stack(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: _buildBgImage(''),
-                          fit: BoxFit.fitWidth
+      body: Container(
+        color: Colors.white,
+        child: Column(
+          children: [
+            Stack(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: _buildBgImage(_user.bkImage),
+                        fit: BoxFit.fitWidth
+                    ),
+                  ),
+                  height: 190,
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 30,left: 5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      InkWell(
+                        onTap: (){
+                          Navigator.pop(context);
+                        },
+                        child: const Icon(Icons.arrow_back,color: Colors.white,size: 36,),
                       ),
-                    ),
-                    height: 190,
+                    ],
                   ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 30,left: 5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        InkWell(
-                          onTap: (){
-                            Navigator.pop(context);
-                          },
-                          child: const Icon(Icons.arrow_back,color: Colors.white,size: 30,),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 10,right: 10),
-                    height: 210,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                InkWell(
-                                  onTap: (){},
-                                  child: Container(
-                                    height: 90,
-                                    width: 90,
-                                    decoration: BoxDecoration(
-                                      borderRadius: const BorderRadius.all(Radius.circular(50)),
-                                      image: DecorationImage(
-                                        image: _buildAvatar(''),
-                                        fit: BoxFit.fill,
-                                        alignment: Alignment.center,
-                                      ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(left: 10,right: 10),
+                  height: 210,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              InkWell(
+                                onTap: (){},
+                                child: Container(
+                                  height: 90,
+                                  width: 90,
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.all(Radius.circular(50)),
+                                    image: DecorationImage(
+                                      image: _buildAvatar(_user.avatar),
+                                      fit: BoxFit.fill,
+                                      alignment: Alignment.center,
                                     ),
                                   ),
                                 ),
-                                SizedBox(
-                                  width: (MediaQuery.of(context).size.width) / 3,
-                                  child: Text('相见恨晚相见恨晚相见恨晚相见恨晚',style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold,overflow: TextOverflow.ellipsis),),
-                                ),
-                              ],
-                            ),
-                            // Container(
-                            //   decoration: const BoxDecoration(
-                            //     color: Colors.white38,
-                            //     borderRadius: BorderRadius.all(Radius.circular(6)),
-                            //   ),
-                            //   child: Container(
-                            //     margin: const EdgeInsets.only(left: 12,right: 12,top: 6,bottom: 6),
-                            //     child: Row(
-                            //       children: const [
-                            //         Icon(Icons.add,size: 20,color: Colors.white,),
-                            //         Text('关注',style: TextStyle(color: Colors.white,fontSize: 15),)
-                            //       ],
-                            //     ),
-                            //   ),
-                            // ),
+                              ),
+                              SizedBox(
+                                width: (MediaQuery.of(context).size.width) / 3,
+                                child: Text(_user.nickname,style: const TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold,overflow: TextOverflow.ellipsis),),
+                              ),
+                            ],
+                          ),
+                          InkWell(
+                            onTap: () => _follow(),
+                            child: _user.follow ?
                             Container(
                               decoration: const BoxDecoration(
                                 color: Colors.grey,
@@ -480,91 +579,109 @@ class _UserInfoPage extends State<UserInfoPage> {
                                   ],
                                 ),
                               ),
+                            ) :
+                            Container(
+                              decoration: const BoxDecoration(
+                                color: Colors.white38,
+                                borderRadius: BorderRadius.all(Radius.circular(6)),
+                              ),
+                              child: Container(
+                                margin: const EdgeInsets.only(left: 12,right: 12,top: 6,bottom: 6),
+                                child: Row(
+                                  children: const [
+                                    Icon(Icons.add,size: 20,color: Colors.white,),
+                                    Text('关注',style: TextStyle(color: Colors.white,fontSize: 15),)
+                                  ],
+                                ),
+                              ),
                             ),
-                          ],
-                        ),
-                      ],
-                    ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              margin: const EdgeInsets.all(10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Text(Global.getNumbersToChinese(_user.work),style: const TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold),),
+                      const Text('视频',style: TextStyle(color: Colors.grey,fontSize: 15),),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(Global.getNumbersToChinese(_user.follows),style: const TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold),),
+                      const Text('关注',style: TextStyle(color: Colors.grey,fontSize: 15),),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(Global.getNumbersToChinese(_user.fans),style: const TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold),),
+                      const Text('粉丝',style: TextStyle(color: Colors.grey,fontSize: 15),),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(Global.getNumbersToChinese(_user.remommends),style: const TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold),),
+                      const Text('推荐数',style: TextStyle(color: Colors.grey,fontSize: 15),),
+                    ],
                   ),
                 ],
               ),
-              Container(
-                margin: const EdgeInsets.all(10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            ),
+            Container(
+              margin: const EdgeInsets.all(10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const Text('简介:',style: TextStyle(color: Colors.black,fontSize: 15),),
+                  Container(
+                    width: (MediaQuery.of(context).size.width) / 1.5,
+                    margin: const EdgeInsets.only(left: 10,right: 20),
+                    child: Text('${_user.signature == null || _user.signature.isEmpty ? '专注各种网红，进入主页看更多精彩!': _user.signature}',style: const TextStyle(color: Colors.black,fontSize: 15),),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(left: 90,right: 90),
+              child:  TabBar(
+                controller: _innerTabController,
+                // isScrollable: true,
+                labelStyle: TextStyle(fontSize: 18),
+                unselectedLabelStyle: TextStyle(fontSize: 15),
+                padding: EdgeInsets.only(right: 0),
+                indicatorPadding: EdgeInsets.only(right: 0),
+                labelColor: Colors.red,
+                labelPadding: EdgeInsets.only(left: 0, right: 0),
+                unselectedLabelColor: Colors.black,
+                indicator: RoundUnderlineTabIndicator(
+                    borderSide: BorderSide(
+                      width: 9,
+                      color: Colors.red,
+                    )),
+                tabs: [
+                  Tab(
+                    text: '视频',
+                  ),
+                  Tab(
+                    text: '帖子',
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Container(
+                color: const Color(0xF5F5F5FF),
+                child: TabBarView(
+                  controller: _innerTabController,
                   children: [
-                    Row(
-                      children: [
-                        Text('0',style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold),),
-                        Text('视频',style: TextStyle(color: Colors.grey,fontSize: 15),),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text('58',style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold),),
-                        Text('关注',style: TextStyle(color: Colors.grey,fontSize: 15),),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text('0',style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold),),
-                        Text('粉丝',style: TextStyle(color: Colors.grey,fontSize: 15),),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text('0',style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold),),
-                        Text('推荐数',style: TextStyle(color: Colors.grey,fontSize: 15),),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.all(10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text('简介:',style: TextStyle(color: Colors.black,fontSize: 15),),
-                    Container(
-                      width: (MediaQuery.of(context).size.width) / 1.5,
-                      margin: const EdgeInsets.only(left: 10,right: 20),
-                      child: Text('专注各种网红，进入主页看更多精彩专注各种网红，进入主页看更多精彩专注各种网红，进入主页看更多精彩专注各种网红，进入主页看更多精彩',style: TextStyle(color: Colors.black,fontSize: 15),),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(left: 90,right: 90),
-                child: const TabBar(
-                  // isScrollable: true,
-                  labelStyle: TextStyle(fontSize: 18),
-                  unselectedLabelStyle: TextStyle(fontSize: 15),
-                  padding: EdgeInsets.only(right: 0),
-                  indicatorPadding: EdgeInsets.only(right: 0),
-                  labelColor: Colors.red,
-                  labelPadding: EdgeInsets.only(left: 0, right: 0),
-                  unselectedLabelColor: Colors.black,
-                  indicator: RoundUnderlineTabIndicator(
-                      borderSide: BorderSide(
-                        width: 9,
-                        color: Colors.red,
-                      )),
-                  tabs: [
-                    Tab(
-                      text: '视频',
-                    ),
-                    Tab(
-                      text: '帖子',
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  color: const Color(0xF5F5F5FF),
-                  child: TabBarView(
-                    children: [
                     MediaQuery.removePadding(
                       removeTop: true,
                       context: context,
@@ -575,12 +692,11 @@ class _UserInfoPage extends State<UserInfoPage> {
                       context: context,
                       child: ListView.builder(itemCount: 10 ,itemBuilder: (BuildContext _context,int index) => _buildPostItem(index)),
                     ),
-                    ],
-                  ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

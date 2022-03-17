@@ -6,6 +6,7 @@ import 'package:movies/CollectsPage.dart';
 import 'package:movies/KeFuMessagePage.dart';
 import 'package:movies/UserSharePage.dart';
 import 'package:movies/VIPBuyPage.dart';
+import 'package:movies/VideoRecordsPage.dart';
 import 'package:movies/data/User.dart';
 import 'package:movies/functions.dart';
 import 'package:movies/messagesPage.dart';
@@ -15,6 +16,7 @@ import 'package:movies/system_ttf.dart';
 import 'package:movies/web_view.dart';
 import 'package:movies/xiaoxiong_icon.dart';
 import 'package:qr_code_tools/qr_code_tools.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'AccountManager.dart';
 import 'BuyGoldPage.dart';
 import 'GetQrcode.dart';
@@ -508,7 +510,10 @@ class _MyProfile extends State<MyProfile> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () async{
+                          String url = configModel.config.groupLink;
+                          if(await canLaunch(url)) launch(url);
+                        },
                         child: Column(
                           children: [
                             Image.asset(
@@ -548,7 +553,15 @@ class _MyProfile extends State<MyProfile> {
                         ),
                       ),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context, rootNavigator: true).push<void>(
+                            CupertinoPageRoute(
+                              title: '观看记录',
+                              // fullscreenDialog: true,
+                              builder: (context) => const VideoRecordsPage(),
+                            ),
+                          );
+                        },
                         child: Column(
                           children: [
                             Image.asset(

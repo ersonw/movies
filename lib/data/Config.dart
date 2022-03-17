@@ -15,6 +15,7 @@ class Config {
   String domain = '';
   String urlIos = '';
   String urlAndroid = '';
+  String groupLink = '';
   bool force = false;
   bool bootLock = false;
   String? bootLockPasswd = '';
@@ -31,6 +32,7 @@ class Config {
       : hash = json['hash'],
         urlIos = json['urlIos'],
         urlAndroid = json['urlAndroid'],
+        groupLink = json['groupLink'],
         domain = json['domain'],
         force = json['force'] ?? false,
         version = json['version'] ?? 1.0,
@@ -68,6 +70,7 @@ class Config {
         'hash': hash,
         'urlIos': urlIos,
         'urlAndroid': urlAndroid,
+        'groupLink': groupLink,
         'domain': domain,
         'force': force,
         'version': version,
