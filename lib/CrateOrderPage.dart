@@ -27,14 +27,42 @@ class CrateOrderPage extends StatefulWidget {
 class _CrateOrderPage extends State<CrateOrderPage> {
   OnlinePay _onlinePay = OnlinePay();
   CrateOrder _crateOrder = CrateOrder();
-
+  int balance = 0;
   @override
   void initState() {
     _onlinePay = configModel.onlinePays.first;
     _initOrder();
     super.initState();
   }
-
+  _initBalance() async {
+    Map<String, dynamic> parm = {};
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET, NWApi.getBalance, {"data": jsonEncode(parm)}));
+    if (result != null) {
+      Map<String, dynamic> map = jsonDecode(result);
+      if(map['balance'] != null){
+        setState(() {
+          balance = map['balance'];
+        });
+      }
+    }
+  }
+  String _getAmount(){
+    double dAmount = balance / 100;
+    // int iLast = amount ~/ 100;
+    // double dLast = dAmount - iLast;
+    // if(dAmount < 1000){
+      return dAmount.toStringAsFixed(2);
+    // }else{
+    //   dAmount = dAmount / 1000;
+    //   if(dAmount < 1000){
+    //     return '${dAmount.toStringAsFixed(3).replaceAll('.', ',')}${dLast.toStringAsFixed(2).substring(1)}';
+    //   }else{
+    //     double b = dAmount / 1000;
+    //
+    //   }
+    // }
+  }
   _initOrder() async {
     Map<String, dynamic> parm = {
       'type': widget.type,
@@ -179,7 +207,8 @@ class _CrateOrderPage extends State<CrateOrderPage> {
                                         color: Colors.black54,
                                         fontWeight: FontWeight.bold),
                                   ),
-                                  _onlinePay.title.contains('钻石') ? Text('(${Global.getNumbersToChinese(userModel.user.diamond)})',
+                                  // _onlinePay.title.contains('余额') ? Text('(￥${Global.getNumbersToChinese(balance)})',
+                                  _onlinePay.title.contains('余额') ? Text('(￥${_getAmount()})',
                                     style: const TextStyle(
                                         fontSize: 15,
                                         color: Colors.black54,
@@ -198,8 +227,8 @@ class _CrateOrderPage extends State<CrateOrderPage> {
                 width: (MediaQuery.of(context).size.width) - 100,
                 child: TextButton(
                   onPressed: () {
-                    if(_onlinePay.title.contains('钻石')){
-                      if(userModel.user.diamond < _crateOrder.amount){
+                    if(_onlinePay.title.contains('余额')){
+                      if(balance < _crateOrder.amount){
                         Global.showWebColoredToast('余额不足!');
                         return;
                       }
@@ -254,6 +283,9 @@ class _CrateOrderPage extends State<CrateOrderPage> {
               ),
               isDestructiveAction: true,
               onPressed: () async {
+                if(e.title.contains('余额')){
+                  _initBalance();
+                }
                 setState(() {
                   _onlinePay = e;
                 });
@@ -315,7 +347,7 @@ class _CrateOrderPage extends State<CrateOrderPage> {
     String? result = (await DioManager().requestAsync(
         NWMethod.GET, NWApi.postCrateOrder, {"data": jsonEncode(parm)}));
     if (result != null) {
-      print(result);
+      // print(result);
       Map<String, dynamic> map = jsonDecode(result);
       if(map['state'] == 'ok'){
         if(map['url'] != null){

@@ -21,12 +21,12 @@ class MyAdaptingApp extends StatelessWidget {
     // );
     return MaterialApp(
       routes: Routes,
-      title: 'movies App',
+      // title: 'movies App',
       // debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        // Use the green theme for Material widgets.
-        primarySwatch: Colors.blue,
-      ),
+      // theme: ThemeData(
+      //   // Use the green theme for Material widgets.
+      //   primarySwatch: Colors.blue,
+      // ),
       // darkTheme: ThemeData.dark(),
       builder: (context, child) {
         return CupertinoTheme(

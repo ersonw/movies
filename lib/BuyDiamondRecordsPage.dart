@@ -67,7 +67,7 @@ class _BuyDiamondRecordsPage extends State<BuyDiamondRecordsPage> {
     String? result = (await DioManager().requestAsync(
         NWMethod.GET, NWApi.getDiamondOrder, {"data": jsonEncode(parm)}));
     if (result != null) {
-      print(result);
+      // print(result);
       Map<String, dynamic> map = jsonDecode(result);
       if (map['total'] != null) {
         total = map['total'];

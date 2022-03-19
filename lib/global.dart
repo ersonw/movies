@@ -36,6 +36,7 @@ import 'package:package_info/package_info.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uni_links/uni_links.dart';
 import 'package:video_compress/video_compress.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:movies/utils/UploadOss.dart';
@@ -70,10 +71,12 @@ class Global {
   static Profile profile = Profile();
   static Messages messages = Messages();
   static late SharedPreferences _prefs;
-
+  static bool mounted = false;
+  static String? link;
   static bool isLoading = false;
   //初始化全局信息，会在APP启动时执行
   static Future init() async {
+    await initPlatformStateForStringUniLinks();
     // packageInfo = await PackageInfo.fromPlatform();
     loadingChangeNotifier.addListener(() {
       if(isLoading){
@@ -115,6 +118,32 @@ class Global {
     //     loginSocket();
     //   }
     // });
+  }
+  static Future<void> initPlatformStateForStringUniLinks() async {
+    // late String initialLink;
+    // // App未打开的状态在这个地方捕获scheme
+    // try {
+    //   initialLink = (await getInitialLink())!;
+    //   print('initial link: $initialLink');
+    //   if (initialLink != null) {
+    //     print('initialLink--$initialLink');
+    //     //  跳转到指定页面
+    //     // schemeJump(context, initialLink);
+    //   }
+    // } on PlatformException {
+    //   initialLink = 'Failed to get initial link.';
+    // } on FormatException {
+    //   initialLink = 'Failed to parse the initial link as Uri.';
+    // }
+    // // App打开的状态监听scheme
+    //  String _sub = getLinksStream().listen((String link) {
+    //   if (!mounted || link == null) return;
+    //   print('link--$link');
+    //   //  跳转到指定页面
+    //   // schemeJump(context, link);
+    // }, onError: (Object err) {
+    //   if (!mounted) return;
+    // }) as String;
   }
   static void changePassword(String old, String news){
     WebSocketMessage message = WebSocketMessage();
@@ -457,7 +486,8 @@ class Global {
           if (config.version.compareTo(profile.config.version) > 0) {
             String url = '';
             if(Platform.isIOS){
-              url = 'itms-services://?action=download-manifest&url=${config.urlIos}';
+              // url = 'itms-services://?action=download-manifest&url=${config.urlIos}';
+              url = config.urlIos;
             }else if(Platform.isAndroid){
               url=config.urlAndroid;
             }

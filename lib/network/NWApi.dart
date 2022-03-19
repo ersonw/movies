@@ -13,6 +13,7 @@ class NWApi {
   static const changePhoneCheck = 'user/changePhoneCheck';
   static const getInfo = "user/info";
   static const getOrder = 'user/getOrder';
+  static const getBalance = 'user/getBalance';
   static const crateVipOrder = 'user/crateVipOrder';
   static const crateDiamondOrder = 'user/crateDiamondOrder';
   static const crateGoldOrder = 'user/crateGoldOrder';
