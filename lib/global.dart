@@ -253,6 +253,12 @@ class Global {
     return hex.encode(digest.bytes);
   }
   static Future<void> initSock() async {
+    String? wsUrl = configModel.config.domain;
+    if(wsUrl != null && wsUrl.isNotEmpty){
+      if(wsUrl.startsWith('http')){
+        wsUrl.replaceAll('http', 'ws');
+      }
+    }
     channel = WebSocketChannel.connect(
       Uri.parse(NWApi.baseWs),
     );

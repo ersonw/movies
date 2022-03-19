@@ -24,7 +24,7 @@ class DioManager {
       'Token': _token
     };
     BaseOptions options = BaseOptions(
-      baseUrl: NWApi.baseApi,
+      baseUrl: configModel.config.domain ?? NWApi.baseApi,
       headers: httpHeaders,
       contentType: Headers.jsonContentType,
       responseType: ResponseType.json,
