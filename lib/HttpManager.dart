@@ -23,8 +23,12 @@ class DioManager {
     Map<String, dynamic> httpHeaders = {
       'Token': _token
     };
+    String? api;
+    if(configModel.config.domain != null && configModel.config.domain.isNotEmpty){
+      api = configModel.config.domain;
+    }
     BaseOptions options = BaseOptions(
-      baseUrl: configModel.config.domain ?? NWApi.baseApi,
+      baseUrl: api ?? NWApi.baseApi,
       headers: httpHeaders,
       contentType: Headers.jsonContentType,
       responseType: ResponseType.json,

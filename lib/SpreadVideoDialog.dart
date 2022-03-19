@@ -23,7 +23,7 @@ class SpreadVideoDialog extends Dialog {
   @override
   Widget build(BuildContext context) {
     if(domian != null && !domian.endsWith('/')){
-      domian+'/';
+      domian='$domian/';
     }
     return Center(
       child: Material(

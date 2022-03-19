@@ -71,6 +71,8 @@ PODS:
   - shared_preferences_ios (0.0.1):
     - Flutter
   - Toast (4.0.0)
+  - uni_links (0.0.1):
+    - Flutter
   - url_launcher_ios (0.0.1):
     - Flutter
   - video_compress (0.3.0):
@@ -103,6 +105,7 @@ DEPENDENCIES:
   - qr_code_scanner (from `.symlinks/plugins/qr_code_scanner/ios`)
   - qr_code_tools (from `.symlinks/plugins/qr_code_tools/ios`)
   - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
+  - uni_links (from `.symlinks/plugins/uni_links/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
   - video_compress (from `.symlinks/plugins/video_compress/ios`)
   - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/ios`)
@@ -152,6 +155,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/qr_code_tools/ios"
   shared_preferences_ios:
     :path: ".symlinks/plugins/shared_preferences_ios/ios"
+  uni_links:
+    :path: ".symlinks/plugins/uni_links/ios"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
   video_compress:
@@ -186,6 +191,7 @@ SPEC CHECKSUMS:
   SDWebImageWebPCoder: f93010f3f6c031e2f8fb3081ca4ee6966c539815
   shared_preferences_ios: aef470a42dc4675a1cdd50e3158b42e3d1232b32
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
+  uni_links: d97da20c7701486ba192624d99bffaaffcfc298a
   url_launcher_ios: 02f1989d4e14e998335b02b67a7590fa34f971af
   video_compress: fce97e4fb1dfd88175aa07d2ffc8a2f297f87fbe
   video_player_avfoundation: e489aac24ef5cf7af82702979ed16f2a5ef84cff
