@@ -4,6 +4,7 @@ import 'package:images_picker/images_picker.dart';
 import 'package:movies/BuyDiamondPage.dart';
 import 'package:movies/CollectsPage.dart';
 import 'package:movies/KeFuMessagePage.dart';
+import 'package:movies/MyRecommendedPage.dart';
 import 'package:movies/UserSharePage.dart';
 import 'package:movies/VIPBuyPage.dart';
 import 'package:movies/VideoRecordsPage.dart';
@@ -19,6 +20,8 @@ import 'package:qr_code_tools/qr_code_tools.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'AccountManager.dart';
 import 'BuyGoldPage.dart';
+import 'FansPage.dart';
+import 'FollowsPage.dart';
 import 'GetQrcode.dart';
 import 'global.dart';
 import 'image_icon.dart';
@@ -269,6 +272,15 @@ class _MyProfile extends State<MyProfile> {
                  ),
                ),
                InkWell(
+                 onTap: (){
+                   Navigator.of(context, rootNavigator: true).push<void>(
+                     CupertinoPageRoute(
+                       title: "推荐记录",
+                       // fullscreenDialog: true,
+                       builder: (context) => const MyRecommendedPage(),
+                     ),
+                   );
+                 },
                  child: Column(
                    children: [
                      Text(
@@ -284,6 +296,15 @@ class _MyProfile extends State<MyProfile> {
                  ),
                ),
                InkWell(
+                 onTap: (){
+                   Navigator.of(context, rootNavigator: true).push<void>(
+                     CupertinoPageRoute(
+                       title: "关注列表",
+                       // fullscreenDialog: true,
+                       builder: (context) => const FollowsPage(),
+                     ),
+                   );
+                 },
                  child: Column(
                    children: [
                      Text(
@@ -299,6 +320,15 @@ class _MyProfile extends State<MyProfile> {
                  ),
                ),
                InkWell(
+                 onTap: (){
+                   Navigator.of(context, rootNavigator: true).push<void>(
+                     CupertinoPageRoute(
+                       title: "粉丝列表 ",
+                       // fullscreenDialog: true,
+                       builder: (context) => const FansPage(),
+                     ),
+                   );
+                 },
                  child: Column(
                    children: [
                      Text(

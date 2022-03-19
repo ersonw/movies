@@ -58,15 +58,104 @@ class _VideoRecordsPage extends State<VideoRecordsPage> {
       });
     }
   }
+  Widget _buildVideoItem( ClassData data){
+    return Container(
+      color: Colors.white,
+      margin: const EdgeInsets.only(top: 5),
+      child: Container(
+        height: 100,
+        margin: const EdgeInsets.all(5),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              width: ((MediaQuery.of(context).size.width) / 2.2),
+              // width: 200,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                image: DecorationImage(
+                  image: NetworkImage(data.image),
+                  fit: BoxFit.fill,
+                  alignment: Alignment.center,
+                ),
+              ),
+              child: Global.buildPlayIcon(() {
+                Global.playVideo(data.id);
+              }),
+            ),
+            SizedBox(
+              width: ((MediaQuery.of(context).size.width) / 2.2),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: ((MediaQuery.of(context).size.width) / 2.2),
+                        child: Text(
+                          data.title.length > 30 ? '${data.title.substring(0,30)}...' : data.title,
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 15,
+                            // overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            Global.getNumbersToChinese(data.play),
+                            style: const TextStyle(color: Colors.black, fontSize: 13),
+                          ),
+                          const Text(
+                            '播放',
+                            style: TextStyle(color: Colors.grey, fontSize: 13),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Image.asset(
+                            ImageIcons.remommendIcon.assetName,
+                            width: 45,
+                            height: 15,
+                          ),
+                          Text(
+                            '${Global.getNumbersToChinese(data.remommends)}人',
+                            style: const TextStyle(color: Colors.grey, fontSize: 13),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  Widget _buildListAv(int index) {
+    ClassData data = _list[index];
+    return _buildVideoItem(data);
+  }
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return CupertinoPageScaffold(
       navigationBar: const CupertinoNavigationBar(),
+      backgroundColor: Colors.black12,
       child: ListView.builder(
         controller: _controller,
         itemCount: _list.length,
-        itemBuilder: (BuildContext _context, int index) => _buildClassSingleItem(index),
+        itemBuilder: (BuildContext _context, int index) => _buildListAv(index),
       ),
     );
   }

@@ -1,23 +1,11 @@
 // Copyright 2020 The Flutter team. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-
-import 'dart:async';
-
-import 'package:flare_splash_screen/flare_splash_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movies/SplashPage.dart';
 import 'package:movies/global.dart';
-import 'package:movies/HomePage.dart';
 import 'package:movies/routes.dart';
-import 'package:provider/provider.dart';
-import 'news_tab.dart';
-import 'profile_tab.dart';
-import 'settings_tab.dart';
-import 'songs_tab.dart';
-import 'widgets.dart';
-
 void main() => Global.init().then((e) => runApp(const MyAdaptingApp()));
 
 class MyAdaptingApp extends StatelessWidget {
