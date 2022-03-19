@@ -260,7 +260,7 @@ class Global {
       }
     }
     channel = WebSocketChannel.connect(
-      Uri.parse(NWApi.baseWs),
+      Uri.parse(wsUrl ?? NWApi.baseWs),
     );
     channel?.stream.listen(
       channelListen,
