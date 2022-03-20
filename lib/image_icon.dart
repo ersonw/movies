@@ -53,4 +53,5 @@ class ImageIcons {
   static const AssetImage icon_rank_3 = AssetImage('assets/image/icon_rank_3.png');
   static const AssetImage icon_recommend = AssetImage('assets/image/icon_recommend.png');
   static const AssetImage loading_38959 = AssetImage('assets/image/loading_38959.mp4');
+  static const AssetImage shareBgImage = AssetImage('assets/image/shareBgImage.jpg');
 }

@@ -77,7 +77,7 @@ class _PlayerPage extends State<PlayerPage> {
     };
     String? result = (await DioManager().requestAsync(
         NWMethod.GET, NWApi.getPlayer, {"data": jsonEncode(parm)}));
-    print(result);
+    // print(result);
     if (result == null) {
       return;
     }
@@ -1147,7 +1147,7 @@ class _PlayerPage extends State<PlayerPage> {
                     SizedBox(
                         width: ((MediaQuery.of(context).size.width) / 2.5),
                         child: Text(
-                          list.title,
+                          list.title.length > 30 ? '${list.title.substring(0,30)}...' : list.title,
                           style: const TextStyle(fontSize: 15),
                           textAlign: TextAlign.left,
                         )

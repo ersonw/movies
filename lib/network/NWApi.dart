@@ -1,8 +1,8 @@
 class NWApi {
-  static const baseApi = "https://api.telebott.com";
-  static const baseWs = "wss://api.telebott.com";
-  // static const baseApi = "http://192.168.254.142:8015";
-  // static const baseWs = "ws://192.168.254.142:8015";
+  // static const baseApi = "https://api.telebott.com";
+  // static const baseWs = "wss://api.telebott.com";
+  static const baseApi = "http://192.168.254.142:8015";
+  static const baseWs = "ws://192.168.254.142:8015";
   // static const baseWs = "ws://172.21.68.12:8015";
   // static const baseApi = "http://172.21.68.12:8015";
   static const uploadServer = '';
@@ -14,6 +14,7 @@ class NWApi {
   static const getInfo = "/api/user/info";
   static const getOrder = '/api/user/getOrder';
   static const getBalance = '/api/user/getBalance';
+  static const getShareCount = '/api/user/getShareCount';
   static const crateVipOrder = '/api/user/crateVipOrder';
   static const crateDiamondOrder = '/api/user/crateDiamondOrder';
   static const crateGoldOrder = '/api/user/crateGoldOrder';
@@ -43,6 +44,7 @@ class NWApi {
   static const RecommendRecords = '/api/user/RecommendRecords';
   static const followRecords = '/api/user/followRecords';
   static const fansRecords = '/api/user/fansRecords';
+  static const shareRecords = '/api/user/shareRecords';
   static const PushRecords = '/api/user/PushRecords';
   static const getUserInfo = '/api/user/getUserInfo';
   static const classLists = '/api/classLists';

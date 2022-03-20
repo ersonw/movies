@@ -254,14 +254,14 @@ class Global {
   }
   static Future<void> initSock() async {
     String? wsUrl;
-    if(configModel.config.domain != null && configModel.config.domain.isNotEmpty){
-      wsUrl = configModel.config.domain;
-    }
-    if(wsUrl != null && wsUrl.isNotEmpty){
-      if(wsUrl.startsWith('http')){
-        wsUrl = wsUrl.replaceAll('http', 'ws');
-      }
-    }
+    // if(configModel.config.domain != null && configModel.config.domain.isNotEmpty){
+    //   wsUrl = configModel.config.domain;
+    // }
+    // if(wsUrl != null && wsUrl.isNotEmpty){
+    //   if(wsUrl.startsWith('http')){
+    //     wsUrl = wsUrl.replaceAll('http', 'ws');
+    //   }
+    // }
     channel = WebSocketChannel.connect(
       Uri.parse(wsUrl ?? NWApi.baseWs),
     );
