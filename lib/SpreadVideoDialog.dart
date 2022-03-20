@@ -99,7 +99,7 @@ class SpreadVideoDialog extends Dialog {
                             // ),
                           ),
                           child: QrImage(
-                            data: '$domian${player.id}#${userModel.user.invite}',
+                            data: '$domian${player.id}-${userModel.user.invite}',
                             size: 130,
                             version: QrVersions.auto,
                             embeddedImageStyle: QrEmbeddedImageStyle(
@@ -120,7 +120,7 @@ class SpreadVideoDialog extends Dialog {
                               ),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width) / 2.7,
-                                child: Text('$domian${player.id}#${userModel.user.invite}'),
+                                child: Text('$domian${player.id}-${userModel.user.invite}'),
                               ),
                               SizedBox(
                                 width: 120,

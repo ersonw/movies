@@ -12,6 +12,8 @@ class NWApi {
   static const changePhone = '/api/user/changePhone';
   static const changePhoneCheck = '/api/user/changePhoneCheck';
   static const getInfo = "/api/user/info";
+  static const joinInvite = "/api/user/joinInvite";
+  static const joinVideo = "/api/user/joinVideo";
   static const getOrder = '/api/user/getOrder';
   static const getBalance = '/api/user/getBalance';
   static const getShareCount = '/api/user/getShareCount';

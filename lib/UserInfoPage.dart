@@ -92,7 +92,7 @@ class _UserInfoPage extends State<UserInfoPage>  with SingleTickerProviderStateM
     };
     String? result = (await DioManager().requestAsync(
         NWMethod.GET, NWApi.getUserInfo, {"data": jsonEncode(parm)}));
-    print(result);
+    // print(result);
     if (result != null) {
       setState(() {
         _user = UserList.formJson(jsonDecode(result));
@@ -590,7 +590,7 @@ class _UserInfoPage extends State<UserInfoPage>  with SingleTickerProviderStateM
                                 ),
                               ),
                               SizedBox(
-                                width: (MediaQuery.of(context).size.width) / 3,
+                                width: (MediaQuery.of(context).size.width) / 2,
                                 child: Text(_user.nickname,style: const TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold,overflow: TextOverflow.ellipsis),),
                               ),
                             ],

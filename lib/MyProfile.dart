@@ -82,7 +82,7 @@ class _MyProfile extends State<MyProfile> {
                         fn: (data){
                           if(data != null) {
                             if(data.startsWith(configModel.config.domain)){
-                              Global.handlerInvite(data);
+                              Global.handlerScan(data);
                               return;
                             }
                             if (data.contains('http')) {
@@ -100,6 +100,7 @@ class _MyProfile extends State<MyProfile> {
                 bottonMenu = BottomMenu();
                 bottonMenu.title = '相册';
                 bottonMenu.fn = () async {
+                  await Global.requestPhotosPermission();
                   List<Media>? res = await ImagesPicker.pick(
                     count: 1,
                     pickType: PickType.image,
@@ -113,7 +114,7 @@ class _MyProfile extends State<MyProfile> {
                     });
                     if (data == null || data.isEmpty) return;
                     if(data.startsWith(configModel.config.domain)){
-                      Global.handlerInvite(data);
+                      Global.handlerScan(data);
                       return;
                     }
                     if (data.contains('http')) {

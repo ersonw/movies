@@ -41,7 +41,7 @@ class _MessageListBuild extends State<MessageListBuild> {
           // was a real card but this is just a demo. Skip the splash on iOS.
           onTap: tap,
           child: Padding(
-            padding: const EdgeInsets.all(12.0),
+            padding: const EdgeInsets.all(10.0),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -51,7 +51,7 @@ class _MessageListBuild extends State<MessageListBuild> {
                   showBadge: newIn > 0,
                   // badgeColor: backgroundColor ?? Colors.blue,
                 ),
-                const Padding(padding: EdgeInsets.only(left: 16)),
+                const Padding(padding: EdgeInsets.only(left: 12)),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,12 +65,12 @@ class _MessageListBuild extends State<MessageListBuild> {
                       ),
                       const Padding(padding: EdgeInsets.only(top: 8)),
                       Row(
-                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           SizedBox(
                             width: (MediaQuery.of(context).size.width) / 1.8,
                             child: Text(text!,
-                              style: TextStyle(color: Colors.grey,overflow: TextOverflow.clip),
+                              style: const TextStyle(color: Colors.grey,overflow: TextOverflow.clip),
                             ),
                           ),
                           Text(date!),

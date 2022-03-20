@@ -998,7 +998,9 @@ class _PlayerPage extends State<PlayerPage> {
                           child: Container(
                             margin: const EdgeInsets.only(left: 5,right: 5),
                             child: _buildLists(),
-                          )),
+                          ),
+                      ),
+                      const Padding(padding: EdgeInsets.only(top: 90)),
                     ],
                   ),
                 ),

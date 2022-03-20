@@ -424,8 +424,47 @@ class Global {
       }
     }
   }
-  static void handlerInvite(String data){
+  static void handlerScan(String data){
     print(data);
+    String url = data.replaceAll(configModel.config.domain, '');
+    if(url.contains('/')) url = url.replaceAll('/', '');
+    if(url.contains('-')){
+      List<String> urls = url.split('-');
+      int vid = int.parse(urls[0]);
+      String code = urls[1];
+      _handlerInvite(code);
+      _handlerJoin(vid, code);
+    }else{
+      _handlerInvite(url);
+    }
+  }
+  static void _handlerInvite(String code)async{
+    Map<String,dynamic> map = {
+      'code': code
+    };
+    DioManager().request(NWMethod.POST, NWApi.joinInvite,
+        params: {'data': jsonEncode(map)}, success: (data) {
+          print("success data = $data");
+          if (data != null) {
+            map = jsonDecode(data);
+            if(map['msg'] != null) showWebColoredToast(map['msg']);
+          }
+        }, error: (error) {});
+  }
+  static void _handlerJoin(int vid, String code)async{
+    Map<String,dynamic> map = {
+      'id': vid,
+      'code': code
+    };
+    DioManager().request(NWMethod.POST, NWApi.joinVideo,
+        params: {'data': jsonEncode(map)}, success: (data) {
+          print("success data = $data");
+          if (data != null) {
+            map = jsonDecode(data);
+            if(map['msg'] != null) showWebColoredToast(map['msg']);
+            playVideo(vid);
+          }
+        }, error: (error) {});
   }
   static String getDateTime(int date) {
     int t = ((DateTime.now().millisecondsSinceEpoch ~/ 1000) - date);
