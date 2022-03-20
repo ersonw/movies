@@ -24,9 +24,9 @@ class DioManager {
       'Token': _token
     };
     String? api;
-    // if(configModel.config.domain != null && configModel.config.domain.isNotEmpty){
-    //   api = configModel.config.domain;
-    // }
+    if(configModel.config.domain != null && configModel.config.domain.isNotEmpty){
+      api = configModel.config.domain;
+    }
     BaseOptions options = BaseOptions(
       baseUrl: api ?? NWApi.baseApi,
       headers: httpHeaders,
