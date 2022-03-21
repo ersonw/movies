@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
-
-import 'package:dio/dio.dart';
+import 'package:http/http.dart';
 import 'package:movies/data/OssConfig.dart';
 import 'package:movies/global.dart';
 import 'package:movies/model/ConfigModel.dart';
@@ -16,17 +15,17 @@ class UploadOssUtil {
   // static OssConfig config = _configModel.ossConfig;
   static Future<String?> upload(File file, String fileKey)async {
     OssConfig config = _configModel.ossConfig;
-    if(config.bucketName == null || config.endpoint == null) return exit(0);
+    if(config.bucketName == null || config.endpoint == null) return null;
     OssClient client = OssClient(bucketName: config.bucketName,endpoint: config.endpoint,tokenGetter: getStsAccount);
     fileKey = 'upload/$fileKey';
     List<int> fileData = file.readAsBytesSync();//上传文件的二进制
     // String fileKey = 'ABC.text';//上传文件名
-    var response;
-    //上传文件
-    response = await client.putObject(fileData, fileKey);
-    print(response.statusCode);
+    Response  response = await client.putObject(fileData, fileKey);
+    // print(response.statusCode);
+    // print(response.request.url);
     if(response.statusCode == 200){
-      return (config.ossName ?? 'http://${client.bucketName}.${client.endpoint}')+'/$fileKey';
+      // return (config.ossName ?? 'http://${client.bucketName}.${client.endpoint}')+'/$fileKey';
+      return response.request.url.toString();
     }
     return null;
     //获取文件

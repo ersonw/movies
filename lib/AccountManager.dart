@@ -136,9 +136,7 @@ class _AccountManager extends State<AccountManager> {
               );
               if (res != null) {
                 String image = res[0].thumbPath!;
-                setState(() {
-                  _user.avatar = image;
-                });
+                _user.avatar = image;
                 Global.changeUserProfile(_user);
               }else{
                 // Global.showWebColoredToast("修改头像失败！");

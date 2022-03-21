@@ -385,9 +385,9 @@ packages:
   oss_dart:
     dependency: "direct main"
     description:
-      name: oss_dart
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: oss_dart
+      relative: true
+    source: path
     version: "0.1.0"
   package_info:
     dependency: "direct main"

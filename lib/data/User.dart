@@ -6,9 +6,9 @@ class User {
   int sex = 0;
   int birthday = 0;
   String uid = '';
-  String? invite = '';
-  String? avatar = '';
-  String? phone = '';
+  String? invite ;
+  String? avatar ;
+  String? phone ;
   int gold = 0;
   int diamond = 0;
   int superior = 0;

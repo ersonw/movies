@@ -155,7 +155,7 @@ class Global {
     channel?.sink.add(message.toString());
   }
   static void changeUserProfile(User user) async{
-    if(user.avatar?.contains('http') == true){
+    if(user.avatar == null || user.avatar?.startsWith('http') == true){
       //
     }else{
       if(user.avatar != null && user.avatar != ''){
@@ -166,6 +166,7 @@ class Global {
           return;
         }
         user.avatar = images;
+        userModel.user = user;
         showWebColoredToast("头像上传成功！");
       }
     }
@@ -334,7 +335,7 @@ class Global {
         getUserInfo();
         break;
       case WebSocketMessage.user_change_success:
-        showWebColoredToast('账号信息修改成功!');
+        // showWebColoredToast('修改成功!');
         // getUserInfo();
         break;
       case WebSocketMessage.user_change_passwoed_fail:
