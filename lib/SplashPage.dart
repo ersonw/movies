@@ -18,9 +18,9 @@ class SplashScreenState extends State<SplashPage> {
   void initState() {
     super.initState();
     Global.MainContext = context;
-    Timer(Duration(milliseconds: 500), (){
-      _next();
-    });
+    // Timer(const Duration(milliseconds: 500), (){
+    //   _next();
+    // });
     _timer = Timer.periodic(
         const Duration(seconds: 1),
         (Timer timer) => {
@@ -55,10 +55,11 @@ class SplashScreenState extends State<SplashPage> {
             children: [
               Container(
                 child: ElevatedButton(
+                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.white38)),
                   onPressed: () => _next(),
-                  child: Text('[${widget.validTime}] 跳过'),
+                  child: Text('[${widget.validTime}] 跳过',style: const TextStyle(color: Colors.black),),
                 ),
-                margin: EdgeInsets.only(top: 50, right: 10),
+                margin: const EdgeInsets.only(top: 50, right: 10),
               )
             ],
           )

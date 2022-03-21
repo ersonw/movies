@@ -263,6 +263,7 @@ class Global {
         wsUrl = wsUrl.replaceAll('http', 'ws');
       }
     }
+    // print(wsUrl);
     channel = WebSocketChannel.connect(
       Uri.parse(wsUrl ?? NWApi.baseWs),
     );

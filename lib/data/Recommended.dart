@@ -1,35 +1,30 @@
 import 'dart:convert';
 
+import 'package:movies/data/ClassData.dart';
+import 'package:movies/data/SearchActor.dart';
+
 class Recommended {
   Recommended();
-
+  int id=0;
   String title = '';
-  String image = '';
-  String actor = '';
+  ClassData video = ClassData();
   double funny = 0;
   double hot = 0;
   double face = 0;
-  int type = 0;
-  int diamond = 0;
-  int vid = 0;
 
   Recommended.formJson(Map<String, dynamic> json)
       : title = json['title'],
-        image = json['image'],
-        actor = json['actor'],
+        video = ClassData.formJson(json['video']),
         funny = json['funny'],
         hot = json['hot'],
-        face = json['face'],
-        type = json['type'];
+        face = json['face'];
 
   Map<String, dynamic> toJson() => {
         'title': title,
-        'image': image,
-        'actor': actor,
+        'video': video.toJson(),
         'funny': funny,
         'hot': hot,
         'face': face,
-        'type': type,
       };
 
   @override

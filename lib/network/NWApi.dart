@@ -43,6 +43,7 @@ class NWApi {
   static const classVideos = '/api/classVideos';
   static const collectList = '/api/user/collectList';
   static const VideoRecords = '/api/user/VideoRecords';
+  static const Recommends = '/api/Recommends';
   static const RecommendRecords = '/api/user/RecommendRecords';
   static const followRecords = '/api/user/followRecords';
   static const fansRecords = '/api/user/fansRecords';

@@ -183,10 +183,8 @@ class _OrderRecordsPage extends State<OrderRecordsPage> {
       case 1:
         str = '已支付';
         break;
-      case -1:
-        str = '支付失败';
-        break;
       default:
+        str = '支付失败';
         break;
     }
     return str;

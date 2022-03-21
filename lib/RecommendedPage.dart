@@ -1,11 +1,17 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movies/PlayerPage.dart';
 import 'package:movies/image_icon.dart';
+import 'package:movies/utils/JhPickerTool.dart';
 
+import 'HttpManager.dart';
 import 'RoundUnderlineTabIndicator.dart';
 import 'data/Recommended.dart';
 import 'global.dart';
+import 'network/NWApi.dart';
+import 'network/NWMethod.dart';
 
 class RecommendedPage extends StatefulWidget {
   const RecommendedPage({Key? key}) : super(key: key);
@@ -16,35 +22,33 @@ class RecommendedPage extends StatefulWidget {
 
 class _RecommendedPage extends State<RecommendedPage> {
   List<Recommended> _recommendeds = [];
+  DateTime _dateTime = DateTime.now();
 
   @override
   void initState() {
     // TODO: implement initState
+    _getDate();
     super.initState();
-    Recommended recommended = Recommended();
-    recommended.type = 0;
-    recommended.title = '[hongkongdoll]玩偶姐姐森林新篇章-第二集-欺骗-失身又失心';
-    recommended.actor = 'hongkongdoll';
-    recommended.image = '';
-    recommended.face = 5;
-    recommended.funny = 4.5;
-    recommended.hot = 3.5;
-    _recommendeds.add(recommended);
-    recommended = Recommended();
-    recommended.type = 1;
-    recommended.title = '[hongkongdoll]玩偶姐姐森林新篇章-第二集-欺骗-失身又失心';
-    recommended.actor = 'hongkongdoll';
-    recommended.image = '';
-    recommended.face = 5;
-    recommended.funny = 4.5;
-    recommended.hot = 3.5;
-    recommended.diamond = 2900;
-    setState(() {
-      _recommendeds.add(recommended);
-    });
-    print(_recommendeds);
+    _init();
   }
-
+  _getDate(){
+    return '${_dateTime.year}-${_dateTime.month}-${_dateTime.day}';
+  }
+  _init()async{
+    Map<String, dynamic> parm = {
+      'date': _getDate(),
+    };
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET, NWApi.Recommends, {"data": jsonEncode(parm)}));
+    // print(result);
+    if (result != null) {
+      Map<String, dynamic> map = jsonDecode(result);
+      List<Recommended> list = (map['list'] as List).map((e) => Recommended.formJson(e)).toList();
+      setState(() {
+        _recommendeds = list;
+      });
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -52,6 +56,13 @@ class _RecommendedPage extends State<RecommendedPage> {
           length: 2,
           child: _buildBody(context)),
     );
+  }
+  _buildTitle(Recommended recommended){
+    String title =  recommended.title == null || recommended.title.isEmpty ? recommended.video.title : recommended.title;
+    if(title.length > 30){
+      return title.substring(0,30);
+    }
+    return title;
   }
   Widget _buildItem(BuildContext context, int index){
     Recommended recommended = _recommendeds[index];
@@ -101,7 +112,7 @@ class _RecommendedPage extends State<RecommendedPage> {
                   Container(
                     margin: const EdgeInsets.only(left: 50),
                     width: (MediaQuery.of(context).size.width) / 1.6,
-                    child: Text(recommended.title,
+                    child: Text(_buildTitle(recommended),
                       style: const TextStyle(color: Colors.black,fontSize: 17,fontWeight: FontWeight.normal),),
                   )
                 ],
@@ -114,7 +125,7 @@ class _RecommendedPage extends State<RecommendedPage> {
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(Radius.circular(10)),
               image: DecorationImage(
-                image: AssetImage('assets/image/06b6f2f7-484e-41e1-82e8-4b31d199e813.jpg'),
+                image: NetworkImage(recommended.video.image),
                 fit: BoxFit.fill,
                 alignment: Alignment.center,
               ),
@@ -125,7 +136,7 @@ class _RecommendedPage extends State<RecommendedPage> {
                 CupertinoPageRoute(
                   // title: '金币钱包',
                   // fullscreenDialog: true,
-                  builder: (context) => PlayerPage(id: recommended.vid),
+                  builder: (context) => PlayerPage(id: recommended.video.id),
                 ),
               );
             }),
@@ -134,7 +145,7 @@ class _RecommendedPage extends State<RecommendedPage> {
             margin: const EdgeInsets.only(left: 20),
             child: Row(
               children: [
-                Text('主演：${recommended.actor}')
+                Text('主演：${recommended.video.actor.name}')
               ],
             ),
           ),
@@ -209,6 +220,7 @@ class _RecommendedPage extends State<RecommendedPage> {
         //     ],
         //   ),
         // ),
+        const Padding(padding: EdgeInsets.only(top: 30)),
         Expanded(child: TabBarView(
             children: [
               Container(
@@ -220,13 +232,25 @@ class _RecommendedPage extends State<RecommendedPage> {
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: const [
-                                Text(
+                              children:  [
+                                const Text(
                                   '今日推荐',
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 27,
                                       fontWeight: FontWeight.bold),
+                                ),
+                                InkWell(
+                                  onTap: (){
+                                    JhPickerTool.showDatePicker(context, dateType: DateType.YMD, value: _dateTime,maxValue: DateTime.now(), clickCallBack: (t,p) {
+                                      if(_dateTime.millisecondsSinceEpoch == p) return;
+                                      setState(() {
+                                        _dateTime = DateTime.fromMillisecondsSinceEpoch(p);
+                                      });
+                                      _init();
+                                    });
+                                  },
+                                  child: Text(_getDate(),style: const TextStyle(color: Colors.black,fontSize: 18),),
                                 ),
                               ],
                             ),
@@ -255,7 +279,7 @@ class _RecommendedPage extends State<RecommendedPage> {
     );
   }
   _buildPlay(Recommended recommended){
-    int diamond = recommended.diamond;
+    int diamond = recommended.video.diamond;
     if(diamond == 0) {
       return InkWell(
           onTap: (){
@@ -295,7 +319,7 @@ class _RecommendedPage extends State<RecommendedPage> {
           CupertinoPageRoute(
             // title: '金币钱包',
             // fullscreenDialog: true,
-            builder: (context) => PlayerPage(id: recommended.vid),
+            builder: (context) => PlayerPage(id: recommended.video.id),
           ),
         );
       },
