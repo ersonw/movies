@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movies/PlayerPage.dart';
+import 'package:movies/data/Player.dart';
 import 'package:movies/image_icon.dart';
 import 'package:movies/utils/JhPickerTool.dart';
 
@@ -283,7 +284,15 @@ class _RecommendedPage extends State<RecommendedPage> {
     if(diamond == 0) {
       return InkWell(
           onTap: (){
-            // Global.showDialogVideo(recommended.title, recommended.image);
+            if(userModel.user.expired > DateTime.now().millisecondsSinceEpoch){
+              Global.playVideo(recommended.video.id);
+            }else{
+              Player player = Player();
+              player.id = recommended.video.id;
+              player.title = recommended.video.title;
+              player.pic = recommended.video.image;
+              Global.showDialogVideo(player);
+            }
           },
           child: Container(
             width: 100,
@@ -315,13 +324,7 @@ class _RecommendedPage extends State<RecommendedPage> {
     }
     return InkWell(
       onTap: (){
-        Navigator.of(context, rootNavigator: true).push<void>(
-          CupertinoPageRoute(
-            // title: '金币钱包',
-            // fullscreenDialog: true,
-            builder: (context) => PlayerPage(id: recommended.video.id),
-          ),
-        );
+        Global.playVideo(recommended.video.id);
       },
       child: Container(
         width: 100,
