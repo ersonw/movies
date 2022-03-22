@@ -5,6 +5,7 @@ import 'package:movies/BuyDiamondPage.dart';
 import 'package:movies/CollectsPage.dart';
 import 'package:movies/KeFuMessagePage.dart';
 import 'package:movies/MyRecommendedPage.dart';
+import 'package:movies/OrderRecordsPage.dart';
 import 'package:movies/UserSharePage.dart';
 import 'package:movies/VIPBuyPage.dart';
 import 'package:movies/VideoRecordsPage.dart';
@@ -609,7 +610,13 @@ class _MyProfile extends State<MyProfile> {
                       ),
                       TextButton(
                         onPressed: () {
-                          Global.showWebColoredToast('暂未开放，敬请期待!');
+                          Navigator.of(context, rootNavigator: true).push<void>(
+                            CupertinoPageRoute(
+                              title: '交易记录',
+                              // fullscreenDialog: true,
+                              builder: (context) => const OrderRecordsPage(),
+                            ),
+                          );
                         },
                         child: Column(
                           children: [
@@ -619,7 +626,7 @@ class _MyProfile extends State<MyProfile> {
                               height: 45,
                             ),
                             const Text(
-                              '应用中心',
+                              '交易记录',
                               style: TextStyle(color: Colors.black),
                             ),
                           ],
