@@ -68,7 +68,7 @@ class _DiamondRecordsPage extends State<DiamondRecordsPage> {
     String? result = (await DioManager().requestAsync(
         NWMethod.GET, NWApi.getDiamondRecords, {"data": jsonEncode(parm)}));
     if (result != null) {
-      print(result);
+      // print(result);
       Map<String, dynamic> map = jsonDecode(result);
       if (map['total'] != null) {
         total = map['total'];
@@ -135,7 +135,7 @@ class _DiamondRecordsPage extends State<DiamondRecordsPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('时间：${Global.getTimeToString(records.add_time)}'),
+                            Text('时间：${Global.getTimeToString(records.addTime)}'),
                           ],
                         ),
                       ],

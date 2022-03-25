@@ -5,22 +5,22 @@ class DiamondRecord {
 
   int id = 0;
   int diamond = 0;
-  int add_time = 0;
-  int update_time = 0;
+  int addTime = 0;
+  int updateTime = 0;
   String reason = '';
 
   DiamondRecord.formJson(Map<String, dynamic> json)
       : id = json['id'],
         diamond = json['diamond'],
-        add_time = json['add_time'],
-        update_time = json['update_time'],
+        addTime = json['addTime'],
+        updateTime = json['updateTime'],
         reason = json['reason'];
 
   Map<String, dynamic> toJson() => {
         'id': id,
         'diamond': diamond,
-        'add_time': add_time,
-        'update_time': update_time,
+        'addTime': addTime,
+        'updateTime': updateTime,
         'reason': reason,
       };
 
