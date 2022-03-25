@@ -136,7 +136,7 @@ class _GoldRecordsPage extends State<GoldRecordsPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('时间：${Global.getDateTime(records.ctime ~/ 1000)}'),
+                            Text('时间：${Global.getTimeToString(records.add_time)}'),
                           ],
                         ),
                       ],
