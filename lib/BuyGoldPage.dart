@@ -42,7 +42,7 @@ class _BuyGoldPage extends State<BuyGoldPage>
 
   @override
   void initState() {
-    // TODO: implement initState
+    Global.getUserInfo();
     super.initState();
     int initialIndex =
     PageStorage.of(context)?.readState(context, identifier: _tabKey);
@@ -115,7 +115,7 @@ class _BuyGoldPage extends State<BuyGoldPage>
                       ],
                     ),
                     Container(
-                      margin: const EdgeInsets.only(top: 20,bottom: 20),
+                      margin: const EdgeInsets.only(top: 20,bottom: 20,left: 10,right: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

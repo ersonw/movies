@@ -23,6 +23,10 @@ class NWApi {
   static const getVipOrder = '/api/user/getVipOrder';
   static const getDiamondOrder = '/api/user/getDiamondOrder';
   static const getGoldOrder = '/api/user/getGoldOrder';
+  static const getWithdrawal= '/api/user/getWithdrawal';
+  static const addCard= '/api/user/addCard';
+  static const getWithdrawalRecords= '/api/user/getWithdrawalRecords';
+  static const Withdrawal = '/api/user/Withdrawal';
   static const getDiamondRecords = '/api/user/getDiamondRecords';
   static const getGoldRecords = '/api/user/getGoldRecords';
   static const getOrders = '/api/user/getOrders';

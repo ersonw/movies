@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movies/DiamondRecordsPage.dart';
+import 'package:movies/WithdrawalManagementPage.dart';
 import 'package:movies/data/BuyDiamond.dart';
 import 'package:movies/global.dart';
 
@@ -38,7 +39,7 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
 
   @override
   void initState() {
-    // TODO: implement initState
+    Global.getUserInfo();
     super.initState();
     int initialIndex =
         PageStorage.of(context)?.readState(context, identifier: _tabKey);
@@ -132,12 +133,21 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
                       ],
                     ),
                     Container(
-                      margin: const EdgeInsets.only(top: 20,bottom: 20),
+                      margin: const EdgeInsets.only(top: 20,bottom: 20,left: 10,right: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.of(context, rootNavigator: true).push<void>(
+                                CupertinoPageRoute(
+                                  title: '钻石提现',
+                                  builder: (context) =>  WithdrawalManagementPage(
+                                    type: WithdrawalManagementPage.WITHDRAWAL_DIAMOND,
+                                  ),
+                                ),
+                              );
+                            },
                             style: ButtonStyle(
                               backgroundColor:
                                   MaterialStateProperty.all(Colors.orange),
@@ -149,7 +159,7 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
                               width: 140,
                               alignment: Alignment.center,
                               child: const Text(
-                                '去提现',
+                                '立即提现',
                                 style: TextStyle(
                                     color: Colors.black, fontSize: 18),
                               ),
