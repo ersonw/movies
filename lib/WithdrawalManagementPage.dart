@@ -263,7 +263,7 @@ class _WithdrawalManagementPage extends State<WithdrawalManagementPage> {
         return;
       }
     }
-    // print(amount);
+    print(amount);
     if (amount < (MiniWithdrawal / 100)) {
       Global.showWebColoredToast(
           '单笔最小提现不能少于等值￥${(MiniWithdrawal / 100).toStringAsFixed(2)}！');
@@ -500,7 +500,7 @@ class _WithdrawalManagementPage extends State<WithdrawalManagementPage> {
                                     if(widget.type == WithdrawalManagementPage.WITHDRAWAL_BALANCE){
                                       if(  MaxWithdrawal > (balance )){
                                         _textEditingController.text =
-                                            (balance / 100).toString();
+                                            (balance ~/ 100).toString();
                                       }else{
                                         _textEditingController.text =
                                             (MaxWithdrawal ~/ 100).toString();
