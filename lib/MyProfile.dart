@@ -20,6 +20,7 @@ import 'package:movies/xiaoxiong_icon.dart';
 import 'package:qr_code_tools/qr_code_tools.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'AccountManager.dart';
+import 'BalancePage.dart';
 import 'BuyGoldPage.dart';
 import 'FansPage.dart';
 import 'FollowsPage.dart';
@@ -612,9 +613,9 @@ class _MyProfile extends State<MyProfile> {
                         onPressed: () {
                           Navigator.of(context, rootNavigator: true).push<void>(
                             CupertinoPageRoute(
-                              title: '交易记录',
+                              title: '我的钱包',
                               // fullscreenDialog: true,
-                              builder: (context) => const OrderRecordsPage(),
+                              builder: (context) => const BalancePage(),
                             ),
                           );
                         },
@@ -626,7 +627,7 @@ class _MyProfile extends State<MyProfile> {
                               height: 45,
                             ),
                             const Text(
-                              '交易记录',
+                              '我的钱包',
                               style: TextStyle(color: Colors.black),
                             ),
                           ],

@@ -26,6 +26,7 @@ class NWApi {
   static const getWithdrawal= '/api/user/getWithdrawal';
   static const addCard= '/api/user/addCard';
   static const getWithdrawalRecords= '/api/user/getWithdrawalRecords';
+  static const getBalanceRecords= '/api/user/getBalanceRecords';
   static const Withdrawal = '/api/user/Withdrawal';
   static const cancelWithdrawal = '/api/user/cancelWithdrawal';
   static const getDiamondRecords = '/api/user/getDiamondRecords';

@@ -216,6 +216,7 @@ class _WithdrawalManagementPage extends State<WithdrawalManagementPage> {
   _cancelWithdrawal(int id) async {
     Map<String, dynamic> parm = {
       'id': id,
+      // 'type': widget.type,
     };
     String? result = (await DioManager().requestAsync(
         NWMethod.GET, NWApi.cancelWithdrawal, {"data": jsonEncode(parm)}));
@@ -394,7 +395,7 @@ class _WithdrawalManagementPage extends State<WithdrawalManagementPage> {
                            );
                          },
                        onStepCancel: ()async {
-                         if(await ShowAlertDialogBool(context, '提现订单', '取消提现申请将会以等值的人民币发放到余额账户,确认取消订单号：${record.orderNo} 的提现申请吗？')){
+                         if(await ShowAlertDialogBool(context, '提现订单', '取消提现申请将会以等值的人民币发放到现金账户,确认取消订单号：${record.orderNo} 的提现申请吗？')){
                            _cancelWithdrawal(record.id);
                          }
                        },
