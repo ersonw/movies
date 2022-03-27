@@ -4,7 +4,7 @@ class WithdrawalRecord {
   WithdrawalRecord();
 
   int id = 0;
-  double amount=0;
+  int amount=0;
   String reason='';
   String orderNo = '';
   String bank = '';
@@ -12,6 +12,7 @@ class WithdrawalRecord {
   int status = 0;
   int addTime = 0;
   int updateTime = 0;
+  bool open = false;
 
   WithdrawalRecord.formJson(Map<String, dynamic> json)
       : id = json['id'],

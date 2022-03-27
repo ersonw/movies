@@ -61,23 +61,19 @@ class _WithdrawalCardsPage extends State<WithdrawalCardsPage> {
       'name': _controllerName.text,
       'bank': _controllerBank.text,
       'code': _controllerCode.text,
+      'id': _list[_select].id,
     };
     String? result = (await DioManager().requestAsync(
         NWMethod.GET, NWApi.addCard, {"data": jsonEncode(parm)}));
     if (result != null) {
-      print(result);
+      // print(result);
       Map<String, dynamic> map = jsonDecode(result);
-      if (map['cards'] != null) {
-        _list = [];
-        WithdrawalCard card = WithdrawalCard();
-        card.bank = '添加新的收款方式';
-        _list.add(card);
-        List<WithdrawalCard> list = (map['cards'] as List)
-            .map((e) => WithdrawalCard.formJson(e))
-            .toList();
-        setState(() {
-          _list.addAll(list);
-        });
+      if (map['verify'] == true) {
+        _init();
+        _initController();
+      }
+      if (map['msg'] != null) {
+        Global.showWebColoredToast(map['msg']);
       }
     }
   }
@@ -90,7 +86,7 @@ class _WithdrawalCardsPage extends State<WithdrawalCardsPage> {
         DropdownMenuItem(
           child: Text(
               '${card.bank}${card.code != null && card.code.length > 4 ? '-(${card.code.substring(card.code.length - 4)})' : ''}'),
-          value: card.id,
+          value: i,
         ),
       );
     }
