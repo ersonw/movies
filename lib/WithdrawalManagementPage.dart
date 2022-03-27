@@ -72,7 +72,7 @@ class _WithdrawalManagementPage extends State<WithdrawalManagementPage> {
     _textEditingController.addListener(() {
       if (alive && _textEditingController.text.isNotEmpty) {
         setState(() {
-          withDrawa = int.parse(_textEditingController.text);
+          withDrawa = double.parse(_textEditingController.text).toInt();
         });
       }
     });
@@ -263,7 +263,7 @@ class _WithdrawalManagementPage extends State<WithdrawalManagementPage> {
         return;
       }
     }
-    print(amount);
+    // print(amount);
     if (amount < (MiniWithdrawal / 100)) {
       Global.showWebColoredToast(
           '单笔最小提现不能少于等值￥${(MiniWithdrawal / 100).toStringAsFixed(2)}！');
