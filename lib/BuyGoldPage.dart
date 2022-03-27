@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movies/DiamondRecordsPage.dart';
 import 'package:movies/GoldRecordsPage.dart';
+import 'package:movies/WithdrawalCardsPage.dart';
+import 'package:movies/WithdrawalManagementPage.dart';
 import 'package:movies/data/BuyDiamond.dart';
 import 'package:movies/data/BuyGold.dart';
 import 'package:movies/global.dart';
@@ -65,7 +67,28 @@ class _BuyGoldPage extends State<BuyGoldPage>
   Widget build(BuildContext context) {
     // TODO: implement build
     return CupertinoPageScaffold(
-        navigationBar: const CupertinoNavigationBar(),
+        navigationBar: CupertinoNavigationBar(
+          trailing: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context, rootNavigator: true).push<void>(
+                      CupertinoPageRoute(
+                        // title: '确认订单',
+                        builder: (context) => const BuyDiamondRecordsPage(),
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    "充值记录",
+                    style: TextStyle(color: Colors.black, fontSize: 18),
+                  ),
+                ),
+              ]),
+        ),
         child: Container(
           width: MediaQuery.of(context).size.width,
           decoration: const BoxDecoration(
@@ -131,8 +154,10 @@ class _BuyGoldPage extends State<BuyGoldPage>
                             onPressed: () {
                               Navigator.of(context, rootNavigator: true).push<void>(
                                 CupertinoPageRoute(
-                                  title: '充值记录',
-                                  builder: (context) => const BuyGoldRecordsPage(),
+                                  title: '金币提现',
+                                  builder: (context) => WithdrawalManagementPage(
+                                    type: WithdrawalManagementPage.WITHDRAWAL_GOLD,
+                                  ),
                                 ),
                               );
                             },
@@ -147,7 +172,7 @@ class _BuyGoldPage extends State<BuyGoldPage>
                               width: 140,
                               alignment: Alignment.center,
                               child: const Text(
-                                '充值记录',
+                                '立即提现',
                                 style: TextStyle(
                                     color: Colors.black, fontSize: 18),
                               ),
