@@ -30,6 +30,8 @@ class _BuyGoldPage extends State<BuyGoldPage>
   late TabController _innerTabController;
   final _tabKey = const ValueKey('tab');
   int _tabIndex = 0;
+  bool alive = true;
+  int gold = 0;
 
   void handleTabChange() {
     setState(() {
@@ -42,6 +44,12 @@ class _BuyGoldPage extends State<BuyGoldPage>
 
   @override
   void initState() {
+    gold = userModel.user.gold;
+    userModel.addListener(() {
+      if(alive){
+        gold = userModel.user.gold;
+      }
+    });
     Global.getUserInfo();
     super.initState();
     int initialIndex =
@@ -101,7 +109,7 @@ class _BuyGoldPage extends State<BuyGoldPage>
                         Container(
                           margin: const EdgeInsets.only(left: 20),
                           child: Text(
-                            '${userModel.user.gold}',
+                            '${gold}',
                             style: const TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.normal,
@@ -214,12 +222,13 @@ class _BuyGoldPage extends State<BuyGoldPage>
             ),
           ),
         ).then((value) {
-          Navigator.of(context, rootNavigator: true).push<void>(
-            CupertinoPageRoute(
-              title: '充值记录',
-              builder: (context) => const BuyGoldRecordsPage(),
-            ),
-          );
+          Global.getUserInfo();
+          // Navigator.of(context, rootNavigator: true).push<void>(
+          //   CupertinoPageRoute(
+          //     title: '充值记录',
+          //     builder: (context) => const BuyGoldRecordsPage(),
+          //   ),
+          // );
         });
       }else{
         bool sure = await ShowAlertDialogBool(context, '订单提醒', '您已存在未付订单，请先支付或取消该订单才可以继续，确定前往订单吗?');
@@ -233,20 +242,22 @@ class _BuyGoldPage extends State<BuyGoldPage>
               ),
             ),
           ).then((value) {
-            Navigator.of(context, rootNavigator: true).push<void>(
-              CupertinoPageRoute(
-                title: '充值记录',
-                builder: (context) => const BuyGoldRecordsPage(),
-              ),
-            );
+            Global.getUserInfo();
+            // Navigator.of(context, rootNavigator: true).push<void>(
+            //   CupertinoPageRoute(
+            //     title: '充值记录',
+            //     builder: (context) => const BuyGoldRecordsPage(),
+            //   ),
+            // );
           });
         }else{
-          Navigator.of(context, rootNavigator: true).push<void>(
-            CupertinoPageRoute(
-              title: '充值记录',
-              builder: (context) => const BuyGoldRecordsPage(),
-            ),
-          );
+          Global.getUserInfo();
+          // Navigator.of(context, rootNavigator: true).push<void>(
+          //   CupertinoPageRoute(
+          //     title: '充值记录',
+          //     builder: (context) => const BuyGoldRecordsPage(),
+          //   ),
+          // );
         }
       }
     }
@@ -313,7 +324,7 @@ class _BuyGoldPage extends State<BuyGoldPage>
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    alive = false;
     super.dispose();
   }
 }

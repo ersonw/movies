@@ -28,6 +28,8 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
   late TabController _innerTabController;
   final _tabKey = const ValueKey('tab');
   int _tabIndex = 0;
+  bool alive = true;
+  int diamond = 0;
 
   void handleTabChange() {
     setState(() {
@@ -39,6 +41,12 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
 
   @override
   void initState() {
+    diamond = userModel.user.diamond;
+    userModel.addListener(() {
+      if(alive){
+        diamond = userModel.user.diamond;
+      }
+    });
     Global.getUserInfo();
     super.initState();
     int initialIndex =
@@ -119,7 +127,7 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
                         Container(
                           margin: const EdgeInsets.only(left: 20),
                           child: Text(
-                            '${userModel.user.diamond}',
+                            '${diamond}',
                             style: const TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.normal,
@@ -234,12 +242,13 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
             ),
           ),
         ).then((value) {
-          Navigator.of(context, rootNavigator: true).push<void>(
-            CupertinoPageRoute(
-              title: '购买记录',
-              builder: (context) => const BuyDiamondRecordsPage(),
-            ),
-          );
+          // Navigator.of(context, rootNavigator: true).push<void>(
+          //   CupertinoPageRoute(
+          //     title: '购买记录',
+          //     builder: (context) => const BuyDiamondRecordsPage(),
+          //   ),
+          // );
+          Global.getUserInfo();
         });
       }else{
         bool sure = await ShowAlertDialogBool(context, '订单提醒', '您已存在未付订单，请先支付或取消该订单才可以继续，确定前往订单吗?');
@@ -253,20 +262,22 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
               ),
             ),
           ).then((value) {
-            Navigator.of(context, rootNavigator: true).push<void>(
-              CupertinoPageRoute(
-                title: '购买记录',
-                builder: (context) => const BuyDiamondRecordsPage(),
-              ),
-            );
+            Global.getUserInfo();
+            // Navigator.of(context, rootNavigator: true).push<void>(
+            //   CupertinoPageRoute(
+            //     title: '购买记录',
+            //     builder: (context) => const BuyDiamondRecordsPage(),
+            //   ),
+            // );
           });
         }else{
-          Navigator.of(context, rootNavigator: true).push<void>(
-            CupertinoPageRoute(
-              title: '购买记录',
-              builder: (context) => const BuyDiamondRecordsPage(),
-            ),
-          );
+          Global.getUserInfo();
+          // Navigator.of(context, rootNavigator: true).push<void>(
+          //   CupertinoPageRoute(
+          //     title: '购买记录',
+          //     builder: (context) => const BuyDiamondRecordsPage(),
+          //   ),
+          // );
         }
       }
     }
@@ -337,7 +348,7 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    alive = false;
     super.dispose();
   }
 }

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:movies/TransferPage.dart';
 import 'package:movies/data/BalanceRecord.dart';
 
 import 'HttpManager.dart';
@@ -31,6 +32,7 @@ class _BalancePage extends State<BalancePage> {
     _initList();
     _controller.addListener(() {
       if(_controller.position.pixels == _controller.position.maxScrollExtent){
+        page++;
         _initList();
       }
     });
@@ -47,7 +49,7 @@ class _BalancePage extends State<BalancePage> {
     String? result = (await DioManager().requestAsync(
         NWMethod.GET, NWApi.getBalanceRecords, {"data": jsonEncode(parm)}));
     if (result != null) {
-      print(result);
+      // print(result);
       Map<String, dynamic> map = jsonDecode(result);
       if (map['list'] != null) {
         List<BalanceRecord> list = (map['list'] as List)
@@ -80,10 +82,10 @@ class _BalancePage extends State<BalancePage> {
     String str = '未知状态';
     switch (status) {
       case 0:
-        str = '未支付';
+        str = '操作中';
         break;
       case 1:
-        str = '已支付';
+        str = '已成功';
         break;
       case -1:
         str = '已取消';
@@ -160,7 +162,11 @@ class _BalancePage extends State<BalancePage> {
                                   type: WithdrawalManagementPage.WITHDRAWAL_BALANCE,
                                 ),
                               ),
-                            );
+                            ).then((value) {
+                              page = 1;
+                              total = 1;
+                              _initList();
+                            });
                           },
                           style: ButtonStyle(
                             backgroundColor:
@@ -179,14 +185,40 @@ class _BalancePage extends State<BalancePage> {
                             ),
                           ),
                         ),
+                        // TextButton(
+                        //   onPressed: () {
+                        //     Global.showWebColoredToast('暂未开放直接充值余额!');
+                        //   },
+                        //   style: ButtonStyle(
+                        //     backgroundColor:
+                        //     MaterialStateProperty.all(Colors.orange),
+                        //     shape: MaterialStateProperty.all(
+                        //         RoundedRectangleBorder(
+                        //             borderRadius: BorderRadius.circular(5))),
+                        //   ),
+                        //   child: Container(
+                        //     width: 140,
+                        //     alignment: Alignment.center,
+                        //     child: const Text(
+                        //       '充值',
+                        //       style: TextStyle(
+                        //           color: Colors.black, fontSize: 18),
+                        //     ),
+                        //   ),
+                        // ),
                         TextButton(
                           onPressed: () {
+                            Global.showWebColoredToast('暂未开放余额转账!');
                             // Navigator.of(context, rootNavigator: true).push<void>(
                             //   CupertinoPageRoute(
-                            //     // title: '确认订单',
-                            //     builder: (context) => const DiamondRecordsPage(),
+                            //     title: '余额提现',
+                            //     builder: (context) =>  const TransferPage(),
                             //   ),
-                            // );
+                            // ).then((value) {
+                            //   page = 1;
+                            //   total = 1;
+                            //   _initList();
+                            // });
                           },
                           style: ButtonStyle(
                             backgroundColor:
@@ -199,7 +231,7 @@ class _BalancePage extends State<BalancePage> {
                             width: 140,
                             alignment: Alignment.center,
                             child: const Text(
-                              '充值',
+                              '转账',
                               style: TextStyle(
                                   color: Colors.black, fontSize: 18),
                             ),
@@ -229,20 +261,28 @@ class _BalancePage extends State<BalancePage> {
                         margin: const EdgeInsets.all(10),
                         child: Column(
                           children: [
-                            Row(
+                            Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                 Text('备注：${records.reason}',
-                                  style: const TextStyle(
-                                      color: Colors.brown, fontSize: 17),),
-                                Text('￥${(records.amount / 100).toStringAsFixed(2)}', style: const TextStyle(
-                                    color: Colors.red, fontSize: 30),)
+                                Row(
+                                  children: [
+                                    Text('备注：${records.reason}',
+                                      style: const TextStyle(
+                                          color: Colors.brown, fontSize: 17),),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text('￥${records.amount > 0 ? '+' : ''}${(records.amount / 100).toStringAsFixed(2)}', style: const TextStyle(
+                                        color: Colors.red, fontSize: 30),),
+                                  ],
+                                ),
                               ],
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text('创建时间：${Global.getDateTime(records.addTime ~/ 1000)}'),
+                                Text('操作时间：${Global.getTimeToString(records.addTime)}'),
                                 Text('状态：${_switchStatus(records.status)}')
                               ],
                             ),

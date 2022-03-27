@@ -175,7 +175,7 @@ class _WithdrawalManagementPage extends State<WithdrawalManagementPage> {
     String? result = (await DioManager().requestAsync(
         NWMethod.GET, NWApi.getWithdrawalRecords, {"data": jsonEncode(parm)}));
     if (result != null) {
-      print(result);
+      // print(result);
       Map<String, dynamic> map = jsonDecode(result);
       if (map['list'] != null) {
         List<WithdrawalRecord> list = (map['list'] as List)
@@ -246,39 +246,38 @@ class _WithdrawalManagementPage extends State<WithdrawalManagementPage> {
   }
 
   _onPressed() async {
-    // print((withDrawa / _proportion()));
-    if ((withDrawa / _proportion()) < (MiniWithdrawal / 100)) {
-      Global.showWebColoredToast(
-          '单笔最小提现不能少于等值￥${(MiniWithdrawal / 100).toStringAsFixed(2)}！');
-      return;
-    }
-    if ((withDrawa / _proportion()) > (MaxWithdrawal / 100)) {
-      Global.showWebColoredToast(
-          '单笔最大提现不能多于等值￥${(MaxWithdrawal / 100).toStringAsFixed(2)}！');
-      return;
-    }
     if (cards[_select].id == 0) {
       Global.showWebColoredToast('请先选择收款方式或者先添加新的收款方式！');
       return;
     }
+    int amount = ((withDrawa) ~/ _proportion());
     if (widget.type == WithdrawalManagementPage.WITHDRAWAL_BALANCE) {
+      amount = ((withDrawa) * (_proportion() / 100)).toInt();
       if (withDrawa > (balance / 100)) {
         Global.showWebColoredToast('提现大于拥有额度，操作失败！');
         return;
       }
-      if (await ShowAlertDialogBool(context, '提现确认',
-          '您正在操作的提现额度为$withDrawa 剩余额度为 ${((balance / 100) - withDrawa).toStringAsFixed(2)} 兑换价值 ￥${((withDrawa / _proportion()) / 100).toStringAsFixed(2)},确定继续操作吗？')) {
-        _withdrawal();
-      }
-    } else {
-      if (withDrawa > balance) {
+    }else{
+      if (withDrawa > (balance )) {
         Global.showWebColoredToast('提现大于拥有额度，操作失败！');
         return;
       }
-      if (await ShowAlertDialogBool(context, '提现确认',
-          '您正在操作的提现额度为$withDrawa 剩余额度为 ${balance - withDrawa} 兑换价值 ￥${(withDrawa / _proportion()).toStringAsFixed(2)},确定继续操作吗？')) {
-        _withdrawal();
-      }
+    }
+    // print(amount);
+    if (amount < (MiniWithdrawal / 100)) {
+      Global.showWebColoredToast(
+          '单笔最小提现不能少于等值￥${(MiniWithdrawal / 100).toStringAsFixed(2)}！');
+      return;
+    }
+    if (amount > (MaxWithdrawal / 100)) {
+      Global.showWebColoredToast(
+          '单笔最大提现不能多于等值￥${(MaxWithdrawal / 100).toStringAsFixed(2)}！');
+      return;
+    }
+
+    if (await ShowAlertDialogBool(context, '提现确认',
+        '您正在操作的提现价值 ￥${(amount ).toStringAsFixed(2)},确定继续操作吗？')) {
+      _withdrawal();
     }
   }
 
@@ -498,8 +497,24 @@ class _WithdrawalManagementPage extends State<WithdrawalManagementPage> {
                             ? TextButton(
                                 onPressed: () {
                                   setState(() {
-                                    _textEditingController.text =
-                                        balance.toString();
+                                    if(widget.type == WithdrawalManagementPage.WITHDRAWAL_BALANCE){
+                                      if(  MaxWithdrawal > (balance )){
+                                        _textEditingController.text =
+                                            (balance / 100).toString();
+                                      }else{
+                                        _textEditingController.text =
+                                            (MaxWithdrawal ~/ 100).toString();
+                                      }
+                                    }else{
+                                      if( (MaxWithdrawal / 100) > (balance / _proportion())){
+                                        _textEditingController.text =
+                                            balance.toString();
+                                      }else{
+                                        _textEditingController.text =
+                                            ((MaxWithdrawal ~/ 100) * _proportion()).toString();
+                                      }
+
+                                    }
                                   });
                                 },
                                 style: ButtonStyle(

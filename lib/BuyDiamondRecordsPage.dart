@@ -156,7 +156,7 @@ class _BuyDiamondRecordsPage extends State<BuyDiamondRecordsPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('创建时间：${Global.getDateTime(records.ctime ~/ 1000)}'),
+                            Text('创建时间：${Global.getTimeToString(records.ctime)}'),
                             Text('状态：${_switchStatus(records.status)}')
                           ],
                         ),
