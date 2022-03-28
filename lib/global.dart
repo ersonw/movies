@@ -544,7 +544,7 @@ class Global {
             ShowOptionDialog(
                 MainContext,
                 '新版本上线',
-                '目前版本：${profile.config.version}\n最新版本:${config.version}',
+                '当前版本：${profile.config.version}    最新版本:${config.version}\n${config.text}',
                 url,
                 config.force);
           }

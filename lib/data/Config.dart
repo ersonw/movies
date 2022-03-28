@@ -13,6 +13,7 @@ class Config {
   // double version = double.parse(Global.packageInfo.version);
   double version = 1.0;
   String hash = '';
+  String text = '';
   bool autoLogin = false;
   String bootImage = '';
   String domain = '';
@@ -33,6 +34,7 @@ class Config {
 
   Config.fromJson(Map<String, dynamic> json)
       : hash = json['hash'],
+        text = json['text'],
         urlIos = json['urlIos'],
         urlAndroid = json['urlAndroid'],
         groupLink = json['groupLink'],
@@ -71,6 +73,7 @@ class Config {
 
   Map<String, dynamic> toJson() => {
         'hash': hash,
+        'text': text,
         'urlIos': urlIos,
         'urlAndroid': urlAndroid,
         'groupLink': groupLink,

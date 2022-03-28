@@ -22,7 +22,7 @@ ShowCopyDialog(BuildContext context, String title, String? text) {
       builder: (_context) {
         return CupertinoAlertDialog(
           title: Text(title),
-          content: Text("内容：${text}"),
+          content: Text("内容：${text}",textAlign: TextAlign.left,),
           actions: [
             CupertinoDialogAction(
                 child: Text("复制"),
@@ -45,10 +45,16 @@ ShowOptionDialog(BuildContext context, String title, String? text,String? url, b
       builder: (_context) {
         return CupertinoAlertDialog(
           title: Text(title),
-          content: Text(text!),
+          content: Text(text!,textAlign: TextAlign.left,),
           actions: [
+            force == false ?  CupertinoDialogAction(
+                child: const Text("马上更新"),
+                onPressed: ()async {
+                  Navigator.of(_context).pop();
+                  if(await canLaunch(url!)) launch(url);
+                }) : Container(),
             CupertinoDialogAction(
-                child: Text(force ? "马上更新":"好的"),
+                child: Text(force ? "马上更新":"我知道了"),
                 onPressed: ()async {
                   Navigator.of(_context).pop();
                   if(force){
@@ -67,7 +73,7 @@ ShowAlertDialog(BuildContext context, String? title, String? text) async{
       builder: (_context) {
         return CupertinoAlertDialog(
           title: Text(title!),
-          content: Text(text!),
+          content: Text(text!,textAlign: TextAlign.left,),
           actions: [
             CupertinoDialogAction(
                 child: Text("好的"),
@@ -85,7 +91,7 @@ Future<bool> ShowAlertDialogBool(BuildContext context, String? title, String? te
       builder: (_context) {
         return CupertinoAlertDialog(
           title: Text(title!),
-          content: Text(text!),
+          content: Text(text!,textAlign: TextAlign.left,),
           actions: [
             CupertinoDialogAction(
                 child: const Text("取消"),
