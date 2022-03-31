@@ -348,6 +348,7 @@ class _RecommendedPage extends State<RecommendedPage> {
     );
   }
   _buildStar(double m){
+    if(m > 5) m = 5;
     int ii = m.toInt();
     if(ii < m){
       ii++;
