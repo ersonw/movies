@@ -39,6 +39,31 @@ ShowCopyDialog(BuildContext context, String title, String? text) {
         );
       });
 }
+_buildUpdate(BuildContext context, String url, {bool force = false}){
+  if(!force){
+    return <Widget>[
+      CupertinoDialogAction(
+          child: const Text("马上更新"),
+          onPressed: ()async {
+            Navigator.of(context).pop();
+            if(await canLaunch(url)) launch(url);
+          }) ,
+      CupertinoDialogAction(
+          child: const Text("我知道了"),
+          onPressed: ()async {
+            Navigator.of(context).pop();
+          }),
+    ];
+  }
+  return <Widget>[
+    CupertinoDialogAction(
+        child: const Text("马上更新"),
+        onPressed: ()async {
+          Navigator.of(context).pop();
+          if(await canLaunch(url)) launch(url);
+        }) ,
+  ];
+}
 ShowOptionDialog(BuildContext context, String title, String? text,String? url, bool force) {
   return showCupertinoDialog<void>(
       context: context,
@@ -46,23 +71,7 @@ ShowOptionDialog(BuildContext context, String title, String? text,String? url, b
         return CupertinoAlertDialog(
           title: Text(title),
           content: Text(text!,textAlign: TextAlign.left,),
-          actions: [
-            force == false ?  CupertinoDialogAction(
-                child: const Text("马上更新"),
-                onPressed: ()async {
-                  Navigator.of(_context).pop();
-                  if(await canLaunch(url!)) launch(url);
-                }) : Container(),
-            CupertinoDialogAction(
-                child: Text(force ? "马上更新":"我知道了"),
-                onPressed: ()async {
-                  Navigator.of(_context).pop();
-                  if(force){
-                    if(await canLaunch(url!)) launch(url);
-                    // exit(0);
-                  }
-                }),
-          ],
+          actions: _buildUpdate(_context,url!,force: force),
         );
       });
 }
