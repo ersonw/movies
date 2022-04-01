@@ -220,7 +220,7 @@ class _VIPBuyPage extends State<VIPBuyPage>
             },
             child: Container(
               height: 120,
-              margin: const EdgeInsets.all(20),
+              margin: const EdgeInsets.only(top: 20, left: 10, right: 10),
               decoration: BoxDecoration(
                 // color: Colors.grey,
                 border: Border.all(width: 2.0, color: Colors.transparent),
