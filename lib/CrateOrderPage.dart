@@ -208,7 +208,7 @@ class _CrateOrderPage extends State<CrateOrderPage> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                   // _onlinePay.title.contains('余额') ? Text('(￥${Global.getNumbersToChinese(balance)})',
-                                  _onlinePay.title.contains('余额') ? Text('(￥${_getAmount()})',
+                                  _onlinePay.type == 0 ? Text('(￥${_getAmount()})',
                                     style: const TextStyle(
                                         fontSize: 15,
                                         color: Colors.black54,
@@ -227,7 +227,7 @@ class _CrateOrderPage extends State<CrateOrderPage> {
                 width: (MediaQuery.of(context).size.width) - 100,
                 child: TextButton(
                   onPressed: () {
-                    if(_onlinePay.title.contains('余额')){
+                    if(_onlinePay.type == 0){
                       if(balance < _crateOrder.amount){
                         Global.showWebColoredToast('余额不足!');
                         return;
@@ -283,7 +283,7 @@ class _CrateOrderPage extends State<CrateOrderPage> {
               ),
               isDestructiveAction: true,
               onPressed: () async {
-                if(e.title.contains('余额')){
+                if(e.type == 0){
                   _initBalance();
                 }
                 setState(() {
