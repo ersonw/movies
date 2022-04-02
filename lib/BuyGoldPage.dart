@@ -78,7 +78,7 @@ class _BuyGoldPage extends State<BuyGoldPage>
                     Navigator.of(context, rootNavigator: true).push<void>(
                       CupertinoPageRoute(
                         // title: '确认订单',
-                        builder: (context) => const BuyDiamondRecordsPage(),
+                        builder: (context) => const BuyGoldRecordsPage(),
                       ),
                     );
                   },

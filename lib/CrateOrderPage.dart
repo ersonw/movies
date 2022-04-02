@@ -71,9 +71,15 @@ class _CrateOrderPage extends State<CrateOrderPage> {
     String? result = (await DioManager().requestAsync(
         NWMethod.GET, NWApi.getOrder, {"data": jsonEncode(parm)}));
     if (result != null) {
-      setState(() {
-        _crateOrder = CrateOrder.formJson(jsonDecode(result));
-      });
+      Map<String, dynamic> map = jsonDecode(result);
+      if(map['state'] == 'error'){
+        Global.showWebColoredToast(map['msg']);
+        Navigator.pop(context);
+      }else{
+        setState(() {
+          _crateOrder = CrateOrder.formJson(jsonDecode(result));
+        });
+      }
     }
   }
 

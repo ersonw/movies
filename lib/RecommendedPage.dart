@@ -274,7 +274,7 @@ class _RecommendedPage extends State<RecommendedPage> {
                   ],
                 ),
               ),
-              Text("Tab2"),
+              // Text("Tab2"),
             ])),
       ],
     );
