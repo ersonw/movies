@@ -1215,8 +1215,10 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
         Global.openWebview(data.url, inline: true);
         break;
       case SwiperData.OPEN_VIDEO:
+        Global.playVideo(int.parse(data.url));
         break;
       case SwiperData.OPEN_INLINE:
+        Global.showWebColoredToast('暂未支持!');
         break;
     }
   }
