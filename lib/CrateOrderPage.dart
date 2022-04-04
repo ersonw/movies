@@ -29,7 +29,7 @@ class _CrateOrderPage extends State<CrateOrderPage> {
   OnlinePay _onlinePay = OnlinePay();
   CrateOrder _crateOrder = CrateOrder();
   int balance = 0;
-  late BuildContext context;
+  // late BuildContext context;
   @override
   void initState() {
     _onlinePay = configModel.onlinePays.first;
@@ -65,7 +65,7 @@ class _CrateOrderPage extends State<CrateOrderPage> {
     //   }
     // }
   }
-  _initOrder() async {
+  _initOrder({BuildContext? context}) async {
     Map<String, dynamic> parm = {
       'type': widget.type,
       'order_id': widget.order_id,
@@ -76,7 +76,7 @@ class _CrateOrderPage extends State<CrateOrderPage> {
       Map<String, dynamic> map = jsonDecode(result);
       if(map['state'] == 'error'){
         Global.showWebColoredToast(map['msg']);
-        Navigator.pop(context);
+        Navigator.pop(context!);
       }else{
         setState(() {
           _crateOrder = CrateOrder.formJson(jsonDecode(result));
@@ -87,7 +87,7 @@ class _CrateOrderPage extends State<CrateOrderPage> {
 
   @override
   Widget build(BuildContext context) {
-    context = context;
+    // context = context;
     return CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
           trailing: Row(
@@ -198,7 +198,7 @@ class _CrateOrderPage extends State<CrateOrderPage> {
                     ),
                     TextButton(
                         onPressed: () {
-                          _showOnlinePaySelect();
+                          _showOnlinePaySelect(context);
                         },
                         child: Row(
                           children: [
@@ -247,7 +247,7 @@ class _CrateOrderPage extends State<CrateOrderPage> {
                         return;
                       }
                     }
-                    _postCrateOrder();
+                    _postCrateOrder(context);
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.yellow),
@@ -266,7 +266,7 @@ class _CrateOrderPage extends State<CrateOrderPage> {
     );
   }
 
-  _showOnlinePaySelect() async {
+  _showOnlinePaySelect(BuildContext context) async {
     showCupertinoModalPopup<void>(
       context: context,
       builder: (_context) {
@@ -352,7 +352,7 @@ class _CrateOrderPage extends State<CrateOrderPage> {
     }
   }
 
-  _postCrateOrder() async {
+  _postCrateOrder(BuildContext context) async {
     Map<String, dynamic> parm = {
       'order_id': widget.order_id,
       'type': widget.type,
@@ -368,14 +368,14 @@ class _CrateOrderPage extends State<CrateOrderPage> {
           Navigator.pop(context);
           launch(map['url']);
         }else{
-
+          Navigator.pop(context);
           // Global.getUserInfo().then((value) => setState(() =>{}));
-          Navigator.of(context, rootNavigator: true).push<void>(
-            CupertinoPageRoute(
-              // title: '确认订单',
-              builder: (context) => const OrderRecordsPage(),
-            ),
-          ).then((value) => Navigator.pop(context));
+          // Navigator.of(context, rootNavigator: true).push<void>(
+          //   CupertinoPageRoute(
+          //     // title: '确认订单',
+          //     builder: (context) => const OrderRecordsPage(),
+          //   ),
+          // ).then((value) => Navigator.pop(context));
         }
       }else{
         Global.showWebColoredToast(map['msg']);

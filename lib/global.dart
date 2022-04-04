@@ -52,7 +52,7 @@ import 'data/Profile.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:ui' as ui;
-
+// import 'package:meiqiachat/meiqiachat.dart';
 final MessagesChangeNotifier messagesChangeNotifier = MessagesChangeNotifier();
 final KeFuMessageModel keFuMessageModel = KeFuMessageModel();
 final ConfigModel configModel = ConfigModel();
@@ -108,6 +108,7 @@ class Global {
     cameras = await availableCameras();
     uid = await getUUID();
     await initNetworks();
+    // await initMeiqia();
     // print(_messages);
     // print(_profile);
     await _init();
@@ -121,17 +122,37 @@ class Global {
     //   }
     // });
   }
+  // static Future<void> initMeiqia() async {
+  //   try {
+  //     await Meiqiachat.initMeiqiaSdkWith('55584b4e99ced1153307db4d80b19c97');
+  //   } catch (e) {}
+  // }
+  static Future<void> toChat() async {
+    // await Meiqiachat.toChat();
+    String? path = await getPhoneLocalPath();
+    if(path != null){
+      path = path + '/index.html';
+      File file = File(path);
+      if(!(await file.exists())) {
+        String data = await rootBundle.loadString( './assets/files/index.html');
+        await file.writeAsString(data);
+      }
+      // print(file.uri);
+      Global.openWebview(file.uri.toString(), inline: true);
+    }
+    // Global.openWebview(Image.asset(''), inline: true);
+  }
   static Future<void> initNetworks() async {
     // if(await _initNetwork() == false) {
     //   RestartWidget.restartApp(MainContext);
     //   return;
     // }
-    if(configModel.config.domain != null || configModel.config.domain.isEmpty){
+    if(configModel.config.domain == null || configModel.config.domain.isEmpty){
       await requestPhotosPermission();
       //DIO网络访问
       try {
-        Response response = await Dio().get('https://github1.oss-cn-hongkong.aliyuncs.com/ios/app-release.config');
-        // Response response = await Dio().get('http://23porn.oss-accelerate.aliyuncs.com/app-release.config');
+        // Response response = await Dio().get('https://github1.oss-cn-hongkong.aliyuncs.com/ios/app-release.config');
+        Response response = await Dio().get('http://23porn.oss-accelerate.aliyuncs.com/app-release.config');
         // print(response);
         String? result = response.data.toString();
         // print(result);
@@ -459,6 +480,10 @@ class Global {
   static String getTimeToString(int t){
     DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(t);
     return '${dateTime.year}-${dateTime.month}-${dateTime.day} ${dateTime.hour}:${dateTime.minute}';
+  }
+  static String getDateToString(int t){
+    DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(t);
+    return '${dateTime.year}.${dateTime.month}.${dateTime.day}';
   }
   static String getNumbersToChinese(int n){
     if(n < 9999){

@@ -41,6 +41,7 @@ class _PlayerPage extends State<PlayerPage> {
   bool _showError = false;
   bool _isReport = false;
   bool alive = true;
+  bool tryPlay = false;
 
   @override
   void initState() {
@@ -57,9 +58,46 @@ class _PlayerPage extends State<PlayerPage> {
         });
       }
     });
-    _initPlayer();
+    _init();
     _initList();
     super.initState();
+  }
+  void _init()async{
+    await _initPlayer();
+    if(_player.playUrl != null && _player.playUrl.isNotEmpty){
+      if(_player.diamond > 0){
+        _canPlay = true;
+      }else if(_player.member){
+        _canPlay = true;
+      }else {
+        tryPlay = true;
+      }
+    }else{
+      _canPlay = false;
+    }
+  }
+  void _reloadPlayer(){
+    _controller = VideoPlayerController.network(_player.playUrl);
+    _initializeVideoPlayerFuture = _controller.initialize();
+    _controller.setLooping(true);
+    value = _controller.value;
+    _controller.addListener(() {
+      if(alive){
+        setState(() {
+          value = _controller.value;
+        });
+        if(!_player.member && _player.du > 0){
+          // print(value.position.inMinutes);
+          if(value.position.inSeconds > (_player.du * 60)){
+            _controller.pause();
+            setState(() {
+              // tryPlay = false;
+              _canPlay = false;
+            });
+          }
+        }
+      }
+    });
   }
  void _initList() async{
    String? result = (await DioManager().requestAsync(
@@ -71,13 +109,13 @@ class _PlayerPage extends State<PlayerPage> {
      _avLists = (jsonDecode(result)['list'] as List).map((e) => SearchList.formJson(e)).toList();
    });
  }
-  void _initPlayer() async {
+   Future<void> _initPlayer() async {
     Map<String, dynamic> parm = {
       'id': widget.id,
     };
     String? result = (await DioManager().requestAsync(
         NWMethod.GET, NWApi.getPlayer, {"data": jsonEncode(parm)}));
-    // print(result);
+    print(result);
     if (result == null) {
       return;
     }
@@ -91,7 +129,7 @@ class _PlayerPage extends State<PlayerPage> {
     if (map['verify'] == null || map['verify'] == false) {
       setState(() {
         _player = Player.formJson(map['info']);
-        _canPlay = false;
+        // _canPlay = false;
       });
       return;
     }
@@ -100,17 +138,7 @@ class _PlayerPage extends State<PlayerPage> {
       _canPlay = true;
       _showError = false;
     });
-    _controller = VideoPlayerController.network(_player.playUrl);
-    _initializeVideoPlayerFuture = _controller.initialize();
-    _controller.setLooping(true);
-    value = _controller.value;
-    _controller.addListener(() {
-      if(alive){
-        setState(() {
-          value = _controller.value;
-        });
-      }
-    });
+    _reloadPlayer();
   }
   _showControls() {
     if(alive){
@@ -181,13 +209,13 @@ class _PlayerPage extends State<PlayerPage> {
     }
   }
   _buyVideo() async {
-    if(await ShowAlertDialogBool(context, '购买付费视频', '确定花费 ${_player.diamond}钻石 购买本视频吗？')){
+    if(await ShowAlertDialogBool(context, '购买付费视频', '确定花费 ${_player.diamond - _player.less}钻石 购买本视频吗？')){
       Map<String, dynamic> parm = {
         'id': widget.id,
       };
       String? result = (await DioManager().requestAsync(
           NWMethod.GET, NWApi.buyVideo, {"data": jsonEncode(parm)}));
-      print(result);
+      // print(result);
       if (result == null) {
         return;
       }
@@ -202,6 +230,333 @@ class _PlayerPage extends State<PlayerPage> {
         }
       }
     }
+  }
+  _buildHero(){
+    return Hero(
+      tag: 'player',
+      child: FutureBuilder(
+        future: _initializeVideoPlayerFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            // If the VideoPlayerController has finished initialization, use
+            // the data it provides to limit the aspect ratio of the video.
+            return AspectRatio(
+              // aspectRatio: _controller.value.aspectRatio,
+              aspectRatio: 16 / 9,
+              // Use the VideoPlayer widget to display the video.
+              child: Stack(
+                alignment: Alignment.bottomCenter,
+                children: [
+                  VideoPlayer(_controller),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(
+                            left: 5, right: 20, top: 30),
+                        child: Row(
+                          mainAxisAlignment:
+                          MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.start,
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Icon(
+                                    Icons.arrow_back,
+                                    color: Colors.grey,
+                                    size: 30,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            InkWell(
+                              onTap: () {
+                                _favorite();
+                              },
+                              child:  Icon(
+                                _player.favorite ? Icons.favorite : Icons.favorite_border,
+                                color: _player.favorite ? Colors.red : Colors.grey,
+                              ),
+                              // child: Icon(Icons.favorite_outlined,color: Colors.red,),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  // ClosedCaption(text: _controller.value.caption.text),
+                  AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 50),
+                    reverseDuration:
+                    const Duration(milliseconds: 200),
+                    child: _controller.value.isPlaying
+                        ? Container(
+                      margin:
+                      const EdgeInsets.only(top: 60),
+                      // color: Colors.black54,
+                      child: InkWell(
+                        onTap: () {
+                          _showControls();
+                        },
+                        child: Container(),
+                      ),
+                    )
+                        : Center(
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              _controller.play();
+                            });
+                          },
+                          child: Container(
+                            color: Colors.black26,
+                            child: const Icon(
+                              Icons.play_arrow,
+                              color: Colors.white,
+                              size: 100.0,
+                              semanticLabel: 'Play',
+                            ),
+                          ),
+                        )),
+                  ),
+                  showControls
+                      ? AnimatedSwitcher(
+                    duration:
+                    const Duration(milliseconds: 50),
+                    reverseDuration:
+                    const Duration(milliseconds: 200),
+                    child: Container(
+                      color: Colors.black26,
+                      height: 55,
+                      // color: Colors.black,
+                      child: Column(
+                        mainAxisAlignment:
+                        MainAxisAlignment.end,
+                        children: [
+                          VideoProgressIndicator(
+                            _controller,
+                            allowScrubbing: true,
+                            padding: const EdgeInsets.only(
+                                left: 10,
+                                bottom: 5,
+                                right: 10),
+                          ),
+                          Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment
+                                .spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        _controller.value
+                                            .isPlaying
+                                            ? _controller
+                                            .pause()
+                                            : _controller
+                                            .play();
+                                      });
+                                    },
+                                    child: Icon(
+                                      _controller.value
+                                          .isPlaying
+                                          ? Icons.pause
+                                          : Icons
+                                          .play_arrow,
+                                      color: Colors.white,
+                                      size: 36.0,
+                                      semanticLabel: 'Play',
+                                    ),
+                                  ),
+                                  value.volume > 0
+                                      ? InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        _controller
+                                            .setVolume(
+                                            0);
+                                      });
+                                    },
+                                    child: const Icon(
+                                      Icons.volume_up,
+                                      color: Colors
+                                          .white,
+                                      size: 36.0,
+                                      semanticLabel:
+                                      'Play',
+                                    ),
+                                  )
+                                      : InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        _controller
+                                            .setVolume(
+                                            100);
+                                      });
+                                    },
+                                    child: const Icon(
+                                      Icons
+                                          .volume_off,
+                                      color: Colors
+                                          .white,
+                                      size: 36.0,
+                                      semanticLabel:
+                                      'Play',
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: const EdgeInsets
+                                        .only(left: 10),
+                                    color:
+                                    Colors.transparent,
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          '${Global.inSecondsTostring(value.position.inSeconds)}/${Global.inSecondsTostring(value.duration.inSeconds)}',
+                                          style: const TextStyle(
+                                              color: Colors
+                                                  .white),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.of(context).push(MaterialPageRoute(
+                                          builder:
+                                              (context) {
+                                            return VideoFullPage(
+                                              _controller,
+                                              title:
+                                              _player.title,
+                                            );
+                                          })).then((value) {
+                                        AutoOrientation
+                                            .portraitUpMode();
+                                        setState(() {
+                                          SystemChrome
+                                              .setEnabledSystemUIMode(
+                                              SystemUiMode
+                                                  .leanBack,
+                                              overlays: [
+                                                SystemUiOverlay
+                                                    .bottom
+                                              ]);
+                                        });
+                                      });
+                                    },
+                                    child: const Icon(
+                                      Icons.fullscreen,
+                                      color: Colors.white,
+                                      size: 36.0,
+                                      semanticLabel: 'Play',
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                      : VideoProgressIndicator(_controller,
+                      allowScrubbing: true),
+                ],
+              ),
+            );
+          } else {
+            // If the VideoPlayerController is still initializing, show a
+            // loading spinner.
+            return Stack(
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(
+                          left: 5, right: 20, top: 30),
+                      child: Row(
+                        mainAxisAlignment:
+                        MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.start,
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Icon(
+                                  Icons.arrow_back,
+                                  color: Colors.grey,
+                                  size: 30,
+                                ),
+                              ),
+                            ],
+                          ),
+                          _isReport
+                              ? Container()
+                              : InkWell(
+                            onTap: () {},
+                            child: Container(
+                              color: Colors.transparent,
+                              margin: const EdgeInsets.only(
+                                  right: 20),
+                              child: const Text(
+                                '举报',
+                                style: TextStyle(
+                                    color: Colors.black),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                  decoration: _player.pic.isEmpty ? null :  BoxDecoration(
+                    color: Colors.black54,
+                    // borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    image: DecorationImage(
+                      image: NetworkImage(_player.pic),
+                      fit: BoxFit.fill,
+                      alignment: Alignment.center,
+                    ),
+                  ),
+                  height: 200,
+                  child: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+              ],
+            );
+          }
+        },
+      ),
+    );
+  }
+  bool _isValid(){
+    if(_player.playUrl == null || _player.playUrl.isEmpty){
+      return true;
+    }
+    if(_player.member || _player.diamond > 0){
+      return false;
+    }
+    return true;
   }
   @override
   Widget build(BuildContext context) {
@@ -284,322 +639,7 @@ class _PlayerPage extends State<PlayerPage> {
           Container(
             margin: const EdgeInsets.only(top: 10),
             child: _canPlay
-                ? Hero(
-                    tag: 'player',
-                    child: FutureBuilder(
-                      future: _initializeVideoPlayerFuture,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          // If the VideoPlayerController has finished initialization, use
-                          // the data it provides to limit the aspect ratio of the video.
-                          return AspectRatio(
-                            // aspectRatio: _controller.value.aspectRatio,
-                            aspectRatio: 16 / 9,
-                            // Use the VideoPlayer widget to display the video.
-                            child: Stack(
-                              alignment: Alignment.bottomCenter,
-                              children: [
-                                VideoPlayer(_controller),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      margin: const EdgeInsets.only(
-                                          left: 5, right: 20, top: 30),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              InkWell(
-                                                onTap: () {
-                                                  Navigator.pop(context);
-                                                },
-                                                child: const Icon(
-                                                  Icons.arrow_back,
-                                                  color: Colors.grey,
-                                                  size: 30,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          InkWell(
-                                            onTap: () {
-                                              _favorite();
-                                            },
-                                            child:  Icon(
-                                              _player.favorite ? Icons.favorite : Icons.favorite_border,
-                                              color: _player.favorite ? Colors.red : Colors.grey,
-                                            ),
-                                            // child: Icon(Icons.favorite_outlined,color: Colors.red,),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                // ClosedCaption(text: _controller.value.caption.text),
-                                AnimatedSwitcher(
-                                  duration: const Duration(milliseconds: 50),
-                                  reverseDuration:
-                                      const Duration(milliseconds: 200),
-                                  child: _controller.value.isPlaying
-                                      ? Container(
-                                          margin:
-                                              const EdgeInsets.only(top: 60),
-                                          // color: Colors.black54,
-                                          child: InkWell(
-                                            onTap: () {
-                                              _showControls();
-                                            },
-                                            child: Container(),
-                                          ),
-                                        )
-                                      : Center(
-                                          child: InkWell(
-                                          onTap: () {
-                                            setState(() {
-                                              _controller.play();
-                                            });
-                                          },
-                                          child: Container(
-                                            color: Colors.black26,
-                                            child: const Icon(
-                                              Icons.play_arrow,
-                                              color: Colors.white,
-                                              size: 100.0,
-                                              semanticLabel: 'Play',
-                                            ),
-                                          ),
-                                        )),
-                                ),
-                                showControls
-                                    ? AnimatedSwitcher(
-                                        duration:
-                                            const Duration(milliseconds: 50),
-                                        reverseDuration:
-                                            const Duration(milliseconds: 200),
-                                        child: Container(
-                                          color: Colors.black26,
-                                          height: 55,
-                                          // color: Colors.black,
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            children: [
-                                              VideoProgressIndicator(
-                                                _controller,
-                                                allowScrubbing: true,
-                                                padding: const EdgeInsets.only(
-                                                    left: 10,
-                                                    bottom: 5,
-                                                    right: 10),
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      InkWell(
-                                                        onTap: () {
-                                                          setState(() {
-                                                            _controller.value
-                                                                    .isPlaying
-                                                                ? _controller
-                                                                    .pause()
-                                                                : _controller
-                                                                    .play();
-                                                          });
-                                                        },
-                                                        child: Icon(
-                                                          _controller.value
-                                                                  .isPlaying
-                                                              ? Icons.pause
-                                                              : Icons
-                                                                  .play_arrow,
-                                                          color: Colors.white,
-                                                          size: 36.0,
-                                                          semanticLabel: 'Play',
-                                                        ),
-                                                      ),
-                                                      value.volume > 0
-                                                          ? InkWell(
-                                                              onTap: () {
-                                                                setState(() {
-                                                                  _controller
-                                                                      .setVolume(
-                                                                          0);
-                                                                });
-                                                              },
-                                                              child: const Icon(
-                                                                Icons.volume_up,
-                                                                color: Colors
-                                                                    .white,
-                                                                size: 36.0,
-                                                                semanticLabel:
-                                                                    'Play',
-                                                              ),
-                                                            )
-                                                          : InkWell(
-                                                              onTap: () {
-                                                                setState(() {
-                                                                  _controller
-                                                                      .setVolume(
-                                                                          100);
-                                                                });
-                                                              },
-                                                              child: const Icon(
-                                                                Icons
-                                                                    .volume_off,
-                                                                color: Colors
-                                                                    .white,
-                                                                size: 36.0,
-                                                                semanticLabel:
-                                                                    'Play',
-                                                              ),
-                                                            ),
-                                                      Container(
-                                                        margin: const EdgeInsets
-                                                            .only(left: 10),
-                                                        color:
-                                                            Colors.transparent,
-                                                        child: Row(
-                                                          children: [
-                                                            Text(
-                                                              '${Global.inSecondsTostring(value.position.inSeconds)}/${Global.inSecondsTostring(value.duration.inSeconds)}',
-                                                              style: const TextStyle(
-                                                                  color: Colors
-                                                                      .white),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      InkWell(
-                                                        onTap: () {
-                                                          Navigator.of(context).push(MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) {
-                                                            return VideoFullPage(
-                                                              _controller,
-                                                              title:
-                                                                  _player.title,
-                                                            );
-                                                          })).then((value) {
-                                                            AutoOrientation
-                                                                .portraitUpMode();
-                                                            setState(() {
-                                                              SystemChrome
-                                                                  .setEnabledSystemUIMode(
-                                                                      SystemUiMode
-                                                                          .leanBack,
-                                                                      overlays: [
-                                                                    SystemUiOverlay
-                                                                        .bottom
-                                                                  ]);
-                                                            });
-                                                          });
-                                                        },
-                                                        child: const Icon(
-                                                          Icons.fullscreen,
-                                                          color: Colors.white,
-                                                          size: 36.0,
-                                                          semanticLabel: 'Play',
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      )
-                                    : VideoProgressIndicator(_controller,
-                                        allowScrubbing: true),
-                              ],
-                            ),
-                          );
-                        } else {
-                          // If the VideoPlayerController is still initializing, show a
-                          // loading spinner.
-                          return Stack(
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    margin: const EdgeInsets.only(
-                                        left: 5, right: 20, top: 30),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            InkWell(
-                                              onTap: () {
-                                                Navigator.pop(context);
-                                              },
-                                              child: const Icon(
-                                                Icons.arrow_back,
-                                                color: Colors.grey,
-                                                size: 30,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        _isReport
-                                            ? Container()
-                                            : InkWell(
-                                                onTap: () {},
-                                                child: Container(
-                                                  color: Colors.transparent,
-                                                  margin: const EdgeInsets.only(
-                                                      right: 20),
-                                                  child: const Text(
-                                                    '举报',
-                                                    style: TextStyle(
-                                                        color: Colors.black),
-                                                  ),
-                                                ),
-                                              ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Container(
-                                decoration: _player.pic.isEmpty ? null :  BoxDecoration(
-                                  color: Colors.black54,
-                                  // borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                  image: DecorationImage(
-                                    image: NetworkImage(_player.pic),
-                                    fit: BoxFit.fill,
-                                    alignment: Alignment.center,
-                                  ),
-                                ),
-                                height: 200,
-                                child: const Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                              ),
-                            ],
-                          );
-                        }
-                      },
-                    ),
-                  )
+                ? _buildHero()
                 : Container(
                     decoration: _player.pic.isEmpty ? null :  BoxDecoration(
                       // borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -723,11 +763,21 @@ class _PlayerPage extends State<PlayerPage> {
                                       children: [
                                         Row(
                                           children: [
-                                            Text(
-                                              '支付${Global.getNumbersToChinese(_player.diamond)}',
-                                              style: const TextStyle(color: Colors.orange),
+                                            const Text(
+                                              '支付',
+                                              style: TextStyle(color: Colors.orange),
                                               textAlign: TextAlign.right,
                                             ),
+                                            Text(
+                                              Global.getNumbersToChinese(_player.diamond),
+                                              style:  TextStyle(color: Colors.orange, decoration: _player.less > 0 ? TextDecoration.lineThrough : TextDecoration.none),
+                                              textAlign: TextAlign.right,
+                                            ),
+                                            _player.less > 0 ? Text(
+                                              Global.getNumbersToChinese(_player.diamond - _player.less),
+                                              style: const TextStyle(color: Colors.orange),
+                                              textAlign: TextAlign.right,
+                                            ) : Container(),
                                             Image.asset(ImageIcons.diamond.assetName,width: 12,),
                                           ],
                                         ),
@@ -739,7 +789,90 @@ class _PlayerPage extends State<PlayerPage> {
                             ),
                           ],
                         ) :
-                        Column(
+                        (tryPlay ? Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.only(
+                                      left: 5, right: 20),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.start,
+                                        children: [
+                                          InkWell(
+                                            onTap: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: const Icon(
+                                              Icons.arrow_back,
+                                              color: Colors.grey,
+                                              size: 30,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      _isReport
+                                          ? Container()
+                                          : InkWell(
+                                        onTap: () {
+                                          _report();
+                                        },
+                                        child: Container(
+                                          color: Colors.transparent,
+                                          margin: const EdgeInsets.only(
+                                              right: 20),
+                                          child: const Text(
+                                            '举报',
+                                            style: TextStyle(
+                                                color: Colors.black),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                             Text(
+                              '未开通Vip可以观看只能试看${_player.du}分钟哦',
+                              style:
+                              const TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                            const Padding(padding: EdgeInsets.all(10)),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                SizedBox(
+                                  width: 120,
+                                  child: TextButton(
+                                    style: ButtonStyle(
+                                      backgroundColor:
+                                      MaterialStateProperty.all(Colors.red),
+                                      shape: MaterialStateProperty.all(
+                                          RoundedRectangleBorder(
+                                              borderRadius:
+                                              BorderRadius.circular(16))),
+                                    ),
+                                    onPressed: () {
+                                      _tryPlayer();
+                                    },
+                                    child: const Text(
+                                      '马上试看',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ) : Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Column(
@@ -793,7 +926,7 @@ class _PlayerPage extends State<PlayerPage> {
                             const Text(
                               '开通Vip可以观看完整版哦',
                               style:
-                                  TextStyle(color: Colors.white, fontSize: 20),
+                              TextStyle(color: Colors.white, fontSize: 20),
                             ),
                             const Padding(padding: EdgeInsets.all(10)),
                             Row(
@@ -804,22 +937,22 @@ class _PlayerPage extends State<PlayerPage> {
                                   child: TextButton(
                                     style: ButtonStyle(
                                       backgroundColor:
-                                          MaterialStateProperty.all(Colors.red),
+                                      MaterialStateProperty.all(Colors.red),
                                       shape: MaterialStateProperty.all(
                                           RoundedRectangleBorder(
                                               borderRadius:
-                                                  BorderRadius.circular(16))),
+                                              BorderRadius.circular(16))),
                                     ),
                                     onPressed: () {
                                       Navigator.of(context, rootNavigator: true)
                                           .push<void>(
-                                            CupertinoPageRoute(
-                                              title: "VIP购买",
-                                              // fullscreenDialog: true,
-                                              builder: (context) =>
-                                                  const VIPBuyPage(),
-                                            ),
-                                          )
+                                        CupertinoPageRoute(
+                                          title: "VIP购买",
+                                          // fullscreenDialog: true,
+                                          builder: (context) =>
+                                          const VIPBuyPage(),
+                                        ),
+                                      )
                                           .then((value) => _initPlayer());
                                     },
                                     child: const Text(
@@ -833,11 +966,11 @@ class _PlayerPage extends State<PlayerPage> {
                                   child: TextButton(
                                     style: ButtonStyle(
                                       backgroundColor:
-                                          MaterialStateProperty.all(Colors.red),
+                                      MaterialStateProperty.all(Colors.red),
                                       shape: MaterialStateProperty.all(
                                           RoundedRectangleBorder(
                                               borderRadius:
-                                                  BorderRadius.circular(16))),
+                                              BorderRadius.circular(16))),
                                     ),
                                     onPressed: () {
                                       Global.showDialogVideo(_player);
@@ -851,7 +984,7 @@ class _PlayerPage extends State<PlayerPage> {
                               ],
                             ),
                           ],
-                        ),
+                        )),
                       ),
                     ),
                   ),
@@ -865,16 +998,95 @@ class _PlayerPage extends State<PlayerPage> {
                   context: context,
                   child: ListView(
                     children: [
+                      _isValid() ? Container(
+                        color: Colors.white,
+                        // margin: const EdgeInsets.only(top: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            SizedBox(
+                              width: 120,
+                              child: TextButton(
+                                style: ButtonStyle(
+                                  backgroundColor:
+                                  MaterialStateProperty.all(Colors.red),
+                                  shape: MaterialStateProperty.all(
+                                      RoundedRectangleBorder(
+                                          borderRadius:
+                                          BorderRadius.circular(16))),
+                                ),
+                                onPressed: () {
+                                  Global.showDialogVideo(_player);
+                                },
+                                child: const Text(
+                                  '分享得无限',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 120,
+                              child: TextButton(
+                                style: ButtonStyle(
+                                  backgroundColor:
+                                  MaterialStateProperty.all(Colors.red),
+                                  shape: MaterialStateProperty.all(
+                                      RoundedRectangleBorder(
+                                          borderRadius:
+                                          BorderRadius.circular(16))),
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context, rootNavigator: true)
+                                      .push<void>(
+                                    CupertinoPageRoute(
+                                      title: "钻石购买",
+                                      // fullscreenDialog: true,
+                                      builder: (context) =>
+                                      const BuyDiamondPage(),
+                                    ),
+                                  )
+                                      .then((value) => setState);
+                                },
+                                child: const Text(
+                                    '充值钻石',
+                                    style: TextStyle(color: Colors.white,),
+                                    textAlign: TextAlign.right
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ) : Container(),
+                      const Padding(padding: EdgeInsets.only(top: 5)),
                       Container(
                         color: Colors.white,
                         // margin: const EdgeInsets.only(top: 20),
                         child: Column(
+                          // mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
+                                // _player.diamond > 0 ? Container(
+                                //   // width: 100,
+                                //   height: 30,
+                                //   margin: const EdgeInsets.all(10),
+                                //   decoration: BoxDecoration(
+                                //     borderRadius: const BorderRadius.all(Radius.circular(20)),
+                                //     border: Border.all(width: 1.0, color: Colors.orange),
+                                //   ),
+                                //   child: Container(
+                                //     margin: const EdgeInsets.only(left: 5,right: 5),
+                                //     child: Row(
+                                //       children: [
+                                //         Image.asset(ImageIcons.diamond.assetName,width: 15,),
+                                //         Text(Global.getNumbersToChinese(_player.diamond),style: const TextStyle(color: Colors.orange),),
+                                //       ],
+                                //     ),
+                                //   ),
+                                // ) : Container(),
                                 Container(
-                                  width: (MediaQuery.of(context).size.width / 1.2),
+                                  width: (MediaQuery.of(context).size.width / 1.1),
                                   margin: const EdgeInsets.only(
                                       left: 5, right: 5, top: 10, bottom: 10),
                                   child: Text(_player.title,
@@ -1019,7 +1231,15 @@ class _PlayerPage extends State<PlayerPage> {
                       children: [
                         InkWell(
                           onTap: () async{
-                            if(_player.downloadUrl==null || _player.downloadUrl.isEmpty){
+                            // if(_player.downloadUrl==null || _player.downloadUrl.isEmpty){
+                            //   if(_player.diamond > 0){
+                            //     Global.showWebColoredToast("无法下载未购买影片！");
+                            //   }else{
+                            //     Global.showWebColoredToast("未开通会员无法下载影片！");
+                            //   }
+                            //   return;
+                            // }
+                            if(!_player.download){
                               if(_player.diamond > 0){
                                 Global.showWebColoredToast("无法下载未购买影片！");
                               }else{
@@ -1087,6 +1307,13 @@ class _PlayerPage extends State<PlayerPage> {
         ],
       ),
     );
+  }
+  _tryPlayer() {
+    // print('dsadas');
+    _reloadPlayer();
+    setState(() {
+      _canPlay = true;
+    });
   }
   Widget _buildLists() {
     List<Widget> widgets = [];

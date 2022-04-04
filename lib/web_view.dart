@@ -27,9 +27,12 @@ class WebViewExampleState extends State<WebViewExample> {
       // appBar: AppBar(backgroundColor: Colors.transparent, title: const Text('网页访问'),),
       // navigationBar: widget.inline == true ? const CupertinoNavigationBar(previousPageTitle: '',) : const CupertinoNavigationBar(),
       navigationBar: widget.bar ? const CupertinoNavigationBar() : null,
-      child: WebView(
-        javascriptMode: JavascriptMode.unrestricted,
-        initialUrl: widget.url,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 20),
+        child: WebView(
+          javascriptMode: JavascriptMode.unrestricted,
+          initialUrl: widget.url,
+        )
       ),
     );
   }

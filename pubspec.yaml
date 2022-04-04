@@ -75,6 +75,8 @@ dependencies:
   flutter_slidable: ^1.2.0
   package_info: ^2.0.2
   uni_links: ^0.4.0
+#  meiqiachat:
+#    path: ./meiqiachat
 #  flutter_udid: ^1.0.1
 
 flutter_native_splash:
@@ -114,6 +116,7 @@ flutter:
   assets:
     - assets/
     - assets/image/
+    - assets/files/
   #  fonts:
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

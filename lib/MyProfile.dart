@@ -17,6 +17,7 @@ import 'package:movies/settings_tab.dart';
 import 'package:movies/system_ttf.dart';
 import 'package:movies/web_view.dart';
 import 'package:movies/xiaoxiong_icon.dart';
+import 'package:path/path.dart';
 import 'package:qr_code_tools/qr_code_tools.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'AccountManager.dart';
@@ -50,6 +51,7 @@ class _MyProfile extends State<MyProfile> {
     super.initState();
     _user = userModel.user;
     userModel.addListener(() {
+      // print(userModel.user);
       setState(() {
         _user = userModel.user;
       });
@@ -219,13 +221,35 @@ class _MyProfile extends State<MyProfile> {
                 ),
                 Container(
                     margin: const EdgeInsets.only(left: 10, top: 10),
-                    child: Text(
-                      _user.nickname,
-                      style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black),
-                    )),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              _user.nickname,
+                              style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black),
+                            ),
+                          ]
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            userModel.user.expired > DateTime.now().millisecondsSinceEpoch ?
+                            Text(
+                                'VIP到期: ${Global.getDateToString(userModel.user.expired)}',
+                              style: const TextStyle(color: Colors.brown,fontSize: 12,fontWeight: FontWeight.bold),
+                            )
+                                : Container(),
+                          ]
+                        ),
+
+                      ],
+                    ),
+                ),
                 Container(
                   margin: const EdgeInsets.only(left: 10),
                   width: 35,
@@ -245,7 +269,7 @@ class _MyProfile extends State<MyProfile> {
              children: [
                const Padding(padding: EdgeInsets.only(top: 10,left: 5)),
                InkWell(
-                 onTap: () => _enterGold(),
+                 onTap: () => _enterGold(context),
                  child: Column(
                    children: [
                      Text(Global.getNumbersToChinese(userModel.user.gold),
@@ -260,7 +284,7 @@ class _MyProfile extends State<MyProfile> {
                  ),
                ),
                InkWell(
-                 onTap: () => _enterDiamond(),
+                 onTap: () => _enterDiamond(context),
                  child: Column(
                    children: [
                      Text(Global.getNumbersToChinese(userModel.user.diamond),
@@ -469,7 +493,7 @@ class _MyProfile extends State<MyProfile> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       TextButton(
-                        onPressed: () => _enterDiamond(),
+                        onPressed: () => _enterDiamond(context),
                         child: Column(
                           children: [
                             Image.asset(
@@ -486,7 +510,7 @@ class _MyProfile extends State<MyProfile> {
                         ),
                       ),
                       TextButton(
-                        onPressed: () => _enterGold(),
+                        onPressed: () => _enterGold(context),
                         child: Column(
                           children: [
                             Image.asset(
@@ -567,13 +591,14 @@ class _MyProfile extends State<MyProfile> {
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.of(context, rootNavigator: true).push<void>(
-                            CupertinoPageRoute(
-                              title: '反馈中心',
-                              // fullscreenDialog: true,
-                              builder: (context) => const KeFuMessagePage(),
-                            ),
-                          );
+                          // Navigator.of(context, rootNavigator: true).push<void>(
+                          //   CupertinoPageRoute(
+                          //     title: '反馈中心',
+                          //     // fullscreenDialog: true,
+                          //     builder: (context) => const KeFuMessagePage(),
+                          //   ),
+                          // );
+                          Global.toChat();
                         },
                         child: Column(
                           children: [
@@ -583,7 +608,7 @@ class _MyProfile extends State<MyProfile> {
                               height: 45,
                             ),
                             const Text(
-                              '帮助反馈',
+                              '在线客服',
                               style: TextStyle(color: Colors.black),
                             ),
                           ],
@@ -649,7 +674,7 @@ class _MyProfile extends State<MyProfile> {
     );
   }
 
-  void _enterDiamond() {
+  void _enterDiamond(BuildContext context) {
     Navigator.of(context, rootNavigator: true)
         .push<void>(
           CupertinoPageRoute(
@@ -662,7 +687,7 @@ class _MyProfile extends State<MyProfile> {
               Global.getUserInfo();
             }));
   }
-  void _enterGold() {
+  void _enterGold(BuildContext context) {
     Navigator.of(context, rootNavigator: true)
         .push<void>(
       CupertinoPageRoute(

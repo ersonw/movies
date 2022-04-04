@@ -11,11 +11,12 @@ import 'package:movies/network/NWMethod.dart';
 import 'global.dart';
 
 class DioManager {
-  static final DioManager _shared = DioManager._internal();
+  static DioManager _shared = DioManager._internal();
 
   factory DioManager() => _shared;
   late Dio dio;
   String _token = '';
+  // late BaseOptions options;
 
   DioManager._internal() {
     _token = userModel.token;
@@ -23,12 +24,13 @@ class DioManager {
     Map<String, dynamic> httpHeaders = {
       'Token': _token
     };
-    String? api;
+    String api=NWApi.baseApi;
     if(configModel.config.domain != null && configModel.config.domain.isNotEmpty){
       api = configModel.config.domain;
     }
     BaseOptions options = BaseOptions(
-      baseUrl: api ?? NWApi.baseApi,
+     // options = BaseOptions(
+      baseUrl: api,
       headers: httpHeaders,
       contentType: Headers.jsonContentType,
       responseType: ResponseType.json,
@@ -43,8 +45,13 @@ class DioManager {
       Map<String, dynamic> httpHeaders = {
         'Token': _token
       };
+      String api = NWApi.baseApi;
+      if(configModel.config.domain != null && configModel.config.domain.isNotEmpty){
+        api = configModel.config.domain;
+      }
       BaseOptions options = BaseOptions(
-        baseUrl: NWApi.baseApi,
+        // options = BaseOptions(
+        baseUrl: api,
         headers: httpHeaders,
         contentType: Headers.jsonContentType,
         responseType: ResponseType.json,
@@ -54,7 +61,9 @@ class DioManager {
       );
       dio = Dio(options);
     });
+
   }
+
   Future<bool> upload<T>(String path, Map<String, dynamic> params) async {
     try {
       Response response = await dio.request(path, queryParameters: params, options: Options(method: NWMethodValues[NWMethod.POST]));
@@ -65,13 +74,17 @@ class DioManager {
     } on DioError catch (e) {
       // print(e.response?.statusCode);
       if (e.response?.statusCode == 105) {
-        ShowAlertDialog(Global.MainContext, '上传文件', '原因:未登录用户');
+        // ShowAlertDialog(Global.MainContext, '访问受限', '原因:游客无法访问');
+        Global.showWebColoredToast('原因:游客无法访问');
       } else if (e.response?.statusCode == 106) {
         UserModel().token = '';
         // Global.saveProfile();
-        ShowAlertDialog(Global.MainContext, '上传文件', '原因:登录已失效');
+        // ShowAlertDialog(Global.MainContext, '访问受限', '原因:登录已失效');
+        Global.showWebColoredToast('原因:登录已失效');
       } else {
-        ShowAlertDialog(Global.MainContext, '网络错误!', '原因:${e.message}');
+        print(dio.options.baseUrl+path);
+        print(e.message);
+        // ShowAlertDialog(Global.MainContext, '网络错误!', '原因:${e.message}');
       }
     }
     return false;
@@ -97,7 +110,7 @@ class DioManager {
         // ShowAlertDialog(Global.MainContext, '访问受限', '原因:登录已失效');
         Global.showWebColoredToast('原因:登录已失效');
       } else {
-        print(path);
+        print(dio.options.baseUrl+path);
         print(e.message);
         // ShowAlertDialog(Global.MainContext, '网络错误!', '原因:${e.message}');
       }
@@ -142,16 +155,18 @@ class DioManager {
     } on DioError catch (e) {
       // print(e.response?.statusCode);
       if (e.response?.statusCode == 105) {
-        ShowAlertDialog(Global.MainContext, '温馨提醒', '原因:游客无法访问');
+        // ShowAlertDialog(Global.MainContext, '访问受限', '原因:游客无法访问');
+        Global.showWebColoredToast('原因:游客无法访问');
       } else if (e.response?.statusCode == 106) {
         UserModel().token = '';
         // Global.saveProfile();
-        ShowAlertDialog(Global.MainContext, '温馨提醒', '原因:登录已失效');
+        // ShowAlertDialog(Global.MainContext, '访问受限', '原因:登录已失效');
+        Global.showWebColoredToast('原因:登录已失效');
       } else {
-        print(path);
-        ShowAlertDialog(Global.MainContext, '网络错误!', '原因:${e.message}');
+        print(dio.options.baseUrl+path);
+        print(e.message);
+        // ShowAlertDialog(Global.MainContext, '网络错误!', '原因:${e.message}');
       }
-
 //      error(createErrorEntity(e));
     }
   }

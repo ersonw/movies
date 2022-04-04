@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>在线客服</title>
+  <style>
+    body {
+      background-image: url("http://iostuku.tzfreee.cn/photo_2022-04-03_21-32-58.jpg");
+    }
+
+  </style>
+</head>
+<body>
+<script type='text/javascript'>
+  function yourFunction(servability) {
+    // 你可以根据自己的需求编写相应的代码
+    console.log('美洽网站插件初始化完毕。');
+    if (servability) {
+      console.log('有客服在线');
+    } else {
+      console.log('无客服在线');
+    }
+  }
+  function handleEnd() {
+    _MEIQIA('showPanel');
+  }
+  (function(a, b, c, d, e, j, s) {
+    a[d] = a[d] || function() {
+      (a[d].a = a[d].a || []).push(arguments)
+    };
+    j = b.createElement(c),
+            s = b.getElementsByTagName(c)[0];
+    j.async = true;
+    j.charset = 'UTF-8';
+    j.src = 'https://static.meiqia.com/widget/loader.js';
+    s.parentNode.insertBefore(j, s);
+  })(window, document, 'script', '_MEIQIA');
+  _MEIQIA('entId', '80cc7af12b73cd39a695e0c6110915fe');
+  // _MEIQIA('withoutBtn');
+  _MEIQIA('allSet', yourFunction);
+  _MEIQIA('endConversation',handleEnd);
+  _MEIQIA('showPanel');
+</script>
+</body>
+</html>

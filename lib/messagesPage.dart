@@ -78,22 +78,22 @@ class _MessagesPage extends State<MessagesPage>{
         newIn++;
       }
     }
-    list.add(MessageListBuild(
-      title: '客服回复',
-      text: kefumsg,
-      newIn: newIn,
-      date: _messages.kefuMessage.isNotEmpty ? Global.getDateTime(_messages.kefuMessage.last.date) : '',
-      icon: MessageIcon.kefu,
-      backgroundColor: Colors.purple,
-      tap: (){
-
-        Navigator.of(context, rootNavigator: true).push<void>(
-          CupertinoPageRoute(
-            builder: (context) => const KeFuMessagePage(),
-          ),
-        ).then((val) =>setState);
-      },
-    ));
+    // list.add(MessageListBuild(
+    //   title: '客服回复',
+    //   text: kefumsg,
+    //   newIn: newIn,
+    //   date: _messages.kefuMessage.isNotEmpty ? Global.getDateTime(_messages.kefuMessage.last.date) : '',
+    //   icon: MessageIcon.kefu,
+    //   backgroundColor: Colors.purple,
+    //   tap: (){
+    //
+    //     Navigator.of(context, rootNavigator: true).push<void>(
+    //       CupertinoPageRoute(
+    //         builder: (context) => const KeFuMessagePage(),
+    //       ),
+    //     ).then((val) =>setState);
+    //   },
+    // ));
     // list.add(MessageListBuild(
     //   title: '审核消息',
     //   text: '暂无消息',
