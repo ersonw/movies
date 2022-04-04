@@ -200,7 +200,7 @@ class _MyProfile extends State<MyProfile> {
                   // fullscreenDialog: true,
                   builder: (context) => const AccountManager(),
                 ),
-              );
+              ).then((value) => Global.getUserInfo());
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -404,6 +404,10 @@ class _MyProfile extends State<MyProfile> {
               ),
               InkWell(
                 onTap: () {
+                  if(userModel.user.invite == null){
+                    ShowAlertDialog(context, '友情提示','为了您的账号安全，未绑定手机号无法进行推广哟');
+                    return;
+                  }
                   Navigator.of(context, rootNavigator: true).push<void>(
                     CupertinoPageRoute(
                       title: "推广分享",

@@ -120,7 +120,10 @@ class _GoldRecordsPage extends State<GoldRecordsPage> {
                         Row(
                           children: [
                             const Text('备注:'),
-                            Text(records.reason),
+                            SizedBox(
+                                width: ((MediaQuery.of(context).size.width) / 1.4),
+                                child: Text(records.reason)
+                            ),
                           ],
                         ),
                         Row(

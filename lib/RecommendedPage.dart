@@ -274,7 +274,7 @@ class _RecommendedPage extends State<RecommendedPage> {
                   ],
                 ),
               ),
-              // Text("Tab2"),
+              const Text("暂未开放"),
             ])),
       ],
     );

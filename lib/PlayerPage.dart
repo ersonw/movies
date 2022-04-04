@@ -820,7 +820,7 @@ class _PlayerPage extends State<PlayerPage> {
                                                   const VIPBuyPage(),
                                             ),
                                           )
-                                          .then((value) => setState);
+                                          .then((value) => _initPlayer());
                                     },
                                     child: const Text(
                                       '开通VIP',
@@ -1138,7 +1138,7 @@ class _PlayerPage extends State<PlayerPage> {
           Container(
             margin: const EdgeInsets.only(left: 10),
             height: 100,
-            width: ((MediaQuery.of(context).size.width) / 2.5),
+            width: ((MediaQuery.of(context).size.width) / 2.2),
             // color: Colors.black54,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

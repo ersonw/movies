@@ -8,31 +8,29 @@ import 'package:movies/RecommendedPage.dart';
 import 'package:movies/image_icon.dart';
 import 'package:movies/MyProfile.dart';
 import 'package:movies/WolfFriendPage.dart';
-import 'package:movies/IndexPage.dart';
 
 import 'global.dart';
-
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
 }
-
 class _HomePageState extends State<HomePage> {
   final songsTabKey = GlobalKey();
   final CupertinoTabController _tabController = CupertinoTabController();
+  static int indexTab = 0;
 
   Widget _buildHomePage(BuildContext context) {
     return CupertinoTabScaffold(
       controller: _tabController,
       tabBar: CupertinoTabBar(
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home_filled,), label: "首页"),
-          BottomNavigationBarItem(icon: Icon(Icons.kitesurfing,), label: '狼友推荐'),
-          BottomNavigationBarItem(icon: Icon(Icons.add,color: Colors.transparent,)),
-          BottomNavigationBarItem(icon: Icon(Icons.public,), label: "推荐"),
-          BottomNavigationBarItem(icon: MyProfile.icon, label: MyProfile.title),
+        items:  [
+          BottomNavigationBarItem(icon: Image.asset(indexTab == 0 ? ImageIcons.remommend_active.assetName : ImageIcons.remommend.assetName), label: "首页"),
+          BottomNavigationBarItem(icon: Image.asset(indexTab == 1 ? ImageIcons.past_active.assetName : ImageIcons.past.assetName), label: '狼友推荐'),
+          const BottomNavigationBarItem(icon: Icon(Icons.add,color: Colors.transparent,)),
+          BottomNavigationBarItem(icon: Image.asset(indexTab == 3 ?  ImageIcons.everyDay_active.assetName : ImageIcons.everyDay.assetName), label: "推荐"),
+          BottomNavigationBarItem(icon: Image.asset(indexTab == 4 ? ImageIcons.user_active.assetName : ImageIcons.user.assetName), label: MyProfile.title),
         ],
       ),
       tabBuilder: (context, index) {
@@ -68,7 +66,11 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
-
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     Global.MainContext = context;
@@ -89,7 +91,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
           child: Image.asset(
-            ImageIcons.index6.assetName,
+            ImageIcons.game.assetName,
             width: 60,
           ),
           onPressed: () {

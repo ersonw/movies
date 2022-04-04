@@ -89,13 +89,17 @@ class DioManager {
     } on DioError catch (e) {
       // print(e.response?.statusCode);
       if (e.response?.statusCode == 105) {
-        ShowAlertDialog(Global.MainContext, '访问受限', '原因:游客无法访问');
+        // ShowAlertDialog(Global.MainContext, '访问受限', '原因:游客无法访问');
+        Global.showWebColoredToast('原因:游客无法访问');
       } else if (e.response?.statusCode == 106) {
         UserModel().token = '';
         // Global.saveProfile();
-        ShowAlertDialog(Global.MainContext, '访问受限', '原因:登录已失效');
+        // ShowAlertDialog(Global.MainContext, '访问受限', '原因:登录已失效');
+        Global.showWebColoredToast('原因:登录已失效');
       } else {
-        ShowAlertDialog(Global.MainContext, '网络错误!', '原因:${e.message}');
+        print(path);
+        print(e.message);
+        // ShowAlertDialog(Global.MainContext, '网络错误!', '原因:${e.message}');
       }
     }
     return null;
@@ -144,6 +148,7 @@ class DioManager {
         // Global.saveProfile();
         ShowAlertDialog(Global.MainContext, '温馨提醒', '原因:登录已失效');
       } else {
+        print(path);
         ShowAlertDialog(Global.MainContext, '网络错误!', '原因:${e.message}');
       }
 

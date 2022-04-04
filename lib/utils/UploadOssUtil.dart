@@ -21,12 +21,17 @@ class UploadOssUtil {
     List<int> fileData = file.readAsBytesSync();//上传文件的二进制
     // String fileKey = 'ABC.text';//上传文件名
     Response  response = await client.putObject(fileData, fileKey);
-    // print(response.statusCode);
     // print(response.request.url);
     if(response.statusCode == 200){
       // return (config.ossName ?? 'http://${client.bucketName}.${client.endpoint}')+'/$fileKey';
-      return response.request.url.toString();
+      // return (response.request.url.toString()).replaceAll(config.endpoint!, 'oss-accelerate.aliyuncs.com');
+      String url = response.request.url.toString();
+      if(config.endpoint != null && config.ossName != null){
+        url = url.replaceAll('${config.bucketName}.${config.endpoint}', '${config.ossName}');
+      }
+      return url;
     }
+    print(response.body);
     return null;
     //获取文件
     // response = await client.getObject(fileKey);

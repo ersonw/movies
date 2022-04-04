@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:movies/UserShareRecordsPage.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'HttpManager.dart';
+import 'functions.dart';
 import 'global.dart';
 import 'image_icon.dart';
 import 'network/NWApi.dart';
@@ -72,6 +73,7 @@ class _UserSharePage extends State<UserSharePage> {
   }
   @override
   Widget build(BuildContext context) {
+
     if(domian != null && !domian.endsWith('/')){
       domian='$domian/';
     }

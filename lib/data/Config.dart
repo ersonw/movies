@@ -17,6 +17,7 @@ class Config {
   bool autoLogin = false;
   String bootImage = '';
   String domain = '';
+  String wsDomain = '';
   String urlIos = '';
   String urlAndroid = '';
   String groupLink = '';
@@ -39,6 +40,7 @@ class Config {
         urlAndroid = json['urlAndroid'],
         groupLink = json['groupLink'],
         domain = json['domain'],
+        wsDomain = json['wsDomain'],
         force = json['force'] ?? false,
         version = json['version'] ?? 1.0,
         autoLogin = json['autoLogin'] ?? false,
@@ -78,6 +80,7 @@ class Config {
         'urlAndroid': urlAndroid,
         'groupLink': groupLink,
         'domain': domain,
+        'wsDomain': wsDomain,
         'force': force,
         'version': version,
         'autoLogin': autoLogin,

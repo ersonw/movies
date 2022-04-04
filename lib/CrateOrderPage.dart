@@ -6,6 +6,7 @@ import 'package:movies/OrderRecordsPage.dart';
 import 'package:movies/data/CrateOrder.dart';
 import 'package:movies/data/OnlinePay.dart';
 import 'package:movies/functions.dart';
+import 'package:path/path.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:io';
 import 'HttpManager.dart';
@@ -28,6 +29,7 @@ class _CrateOrderPage extends State<CrateOrderPage> {
   OnlinePay _onlinePay = OnlinePay();
   CrateOrder _crateOrder = CrateOrder();
   int balance = 0;
+  late BuildContext context;
   @override
   void initState() {
     _onlinePay = configModel.onlinePays.first;
@@ -85,6 +87,7 @@ class _CrateOrderPage extends State<CrateOrderPage> {
 
   @override
   Widget build(BuildContext context) {
+    context = context;
     return CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
           trailing: Row(
@@ -180,6 +183,7 @@ class _CrateOrderPage extends State<CrateOrderPage> {
                   ],
                 ),
               ),
+
               Container(
                 decoration: const BoxDecoration(
                   border:
@@ -227,6 +231,10 @@ class _CrateOrderPage extends State<CrateOrderPage> {
                         )),
                   ],
                 ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 5),
+                child: const Text('温馨提示：轻点图标可以切换支付方式哦!',style: TextStyle(color: Colors.black45,fontSize:12)),
               ),
               Container(
                 margin: const EdgeInsets.only(top: 40),

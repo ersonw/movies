@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:camera/camera.dart';
 import 'package:device_info/device_info.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -106,6 +107,7 @@ class Global {
     WidgetsFlutterBinding.ensureInitialized();
     cameras = await availableCameras();
     uid = await getUUID();
+    await initNetworks();
     // print(_messages);
     // print(_profile);
     await _init();
@@ -118,6 +120,49 @@ class Global {
     //     loginSocket();
     //   }
     // });
+  }
+  static Future<void> initNetworks() async {
+    // if(await _initNetwork() == false) {
+    //   RestartWidget.restartApp(MainContext);
+    //   return;
+    // }
+    if(configModel.config.domain != null || configModel.config.domain.isEmpty){
+      await requestPhotosPermission();
+      //DIO网络访问
+      try {
+        Response response = await Dio().get('https://github1.oss-cn-hongkong.aliyuncs.com/ios/app-release.config');
+        // Response response = await Dio().get('http://23porn.oss-accelerate.aliyuncs.com/app-release.config');
+        // print(response);
+        String? result = response.data.toString();
+        // print(result);
+        if (result != null) {
+          Config config = configModel.config;
+          Map<String, dynamic> map = jsonDecode(result);
+          if (map['wsDomain'] != null) {
+            config.wsDomain = map['wsDomain'];
+          }
+          if (map['domain'] != null) {
+            config.domain = map['domain'];
+          }
+          configModel.config = config;
+        }
+      } catch (e) {
+        print(e);
+      }
+    }
+    await getUserInfo();
+  }
+  static Future<bool> _initNetwork() async {
+    try {
+      String hostname = 'baidu.com';
+      final r = await InternetAddress.lookup(hostname);
+      if(r.isNotEmpty && r.first.address.isNotEmpty) {
+        return true;
+      }
+    }catch (e) {
+      print(e);
+    }
+    return false;
   }
   static Future<void> initPlatformStateForStringUniLinks() async {
     // late String initialLink;
@@ -255,8 +300,8 @@ class Global {
   }
   static Future<void> initSock() async {
     String? wsUrl;
-    if(configModel.config.domain != null && configModel.config.domain.isNotEmpty){
-      wsUrl = configModel.config.domain;
+    if(configModel.config.wsDomain != null && configModel.config.wsDomain.isNotEmpty){
+      wsUrl = configModel.config.wsDomain;
     }
     if(wsUrl != null && wsUrl.isNotEmpty){
       if(wsUrl.startsWith('http')){
@@ -284,13 +329,15 @@ class Global {
   static Future<void> loginSocket() async {
     Timer(const Duration(seconds: 10), () {
       if(!_isLogin){
+        // print(_isLogin);
+        // print(userModel.isLogin);
         if (userModel.isLogin) {
           WebSocketMessage _message = WebSocketMessage();
           _message.code = WebSocketMessage.login;
           _message.data = jsonEncode({"token": userModel.token});
           channel?.sink.add(_message.toString());
         }else{
-          getUserInfo();
+          // getUserInfo();
         }
       }
     });
@@ -565,6 +612,7 @@ class Global {
         profile.config.force = config.force;
         profile.config.groupLink = config.groupLink;
         profile.config.domain = config.domain;
+        profile.config.wsDomain = config.wsDomain;
         profile.config.bootImage = config.bootImage;
         profile.config.ossConfig = config.ossConfig;
         profile.config.onlinePays = config.onlinePays;
@@ -603,7 +651,8 @@ class Global {
       // print("success data = $data");
       if (data != null) {
         userModel.user = User.fromJson(jsonDecode(data));
-        RestartWidget.restartApp(MainContext);
+        loginSocket();
+        // RestartWidget.restartApp(MainContext);
       }
     }, error: (error) {});
   }
@@ -807,6 +856,7 @@ class Global {
   }
   static Future<bool> requestPhotosPermission() async {
     //获取当前的权限
+    // var statusInternet = await Permission.interfaces.status;
     var statusPhotos = await Permission.photos.status;
     var statusCamera = await Permission.camera.status;
     var storageStatus = await Permission.storage.status;

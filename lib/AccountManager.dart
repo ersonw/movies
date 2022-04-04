@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:images_picker/images_picker.dart';
@@ -10,8 +12,11 @@ import 'package:movies/functions.dart';
 import 'package:movies/image_icon.dart';
 import 'package:movies/system_ttf.dart';
 import 'package:movies/utils/JhPickerTool.dart';
+import 'HttpManager.dart';
 import 'LockScreenCustom.dart';
 import 'global.dart';
+import 'network/NWApi.dart';
+import 'network/NWMethod.dart';
 
 class AccountManager extends StatefulWidget {
   const AccountManager({Key? key}) : super(key: key);
@@ -64,6 +69,20 @@ class _AccountManager extends State<AccountManager> {
     setState(() {
       _cacheSize = Global.formatSize(size);
     });
+  }
+  _logout()async{
+    Map<String, dynamic> parm = {};
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET, NWApi.getDiamondOrder, {"data": jsonEncode(parm)}));
+    if (result != null) {
+      // print(result);
+      Map<String, dynamic> map = jsonDecode(result);
+      if (map['state'] == 'ok') {
+        Global.getUserInfo();
+      }else if(map['msg'] != null){
+        Global.showWebColoredToast(map['msg']);
+      }
+    }
   }
   @override
   Widget build(BuildContext context) {

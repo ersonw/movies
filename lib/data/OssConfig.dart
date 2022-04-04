@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class OssConfig {
   OssConfig();
 
@@ -15,4 +17,9 @@ class OssConfig {
         'endpoint': endpoint,
         'ossName': ossName,
       };
+  @override
+  String toString() {
+    // TODO: implement toString
+    return jsonEncode(toJson());
+  }
 }

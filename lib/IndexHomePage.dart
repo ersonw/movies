@@ -1458,7 +1458,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
               // child: Global.buildPlayIcon(() {}),
             ),
             Container(
-              width: ((MediaQuery.of(context).size.width) / 2.2),
+              width: ((MediaQuery.of(context).size.width) / 2.3),
               margin: const EdgeInsets.only(top: 10),
               child: Text(
                 video.title,
@@ -1469,11 +1469,11 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
             Container(
               margin: const EdgeInsets.only(top: 5),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     '${Global.getNumbersToChinese(video.play)} 次播放',
-                    style: const TextStyle(color: Colors.grey, fontSize: 12),
+                    style: const TextStyle(color: Colors.grey, fontSize: 10),
                   ),
                   Row(
                     children: [
@@ -1484,7 +1484,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
                       ),
                       Text(
                         '${Global.getNumbersToChinese(video.recommendations)}人',
-                        style: const TextStyle(color: Colors.grey, fontSize: 13),
+                        style: const TextStyle(color: Colors.grey, fontSize: 10),
                       ),
                     ],
                   ),
