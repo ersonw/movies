@@ -102,45 +102,81 @@ class _VIPBuyPage extends State<VIPBuyPage>
         ),
         child: Column(
           children: [
-            Row(
-              children: [
-                Container(
-                  width: 80,
-                  height: 80,
-                  margin: const EdgeInsets.only(left: 40, top: 40),
-                  decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(50.0),
-                      image: DecorationImage(
-                        // image: AssetImage('assets/image/default_head.gif'),
-                        image: _buildAvatar(),
-                      )),
-                ),
-                Container(
-                    margin: const EdgeInsets.only(left: 10, top: 10),
-                    child: Text(
-                      _user.nickname,
-                      style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black),
-                    )),
-              ],
+            Container(
+              margin: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                color: Colors.white, // 底色
+                boxShadow: [
+                  BoxShadow(
+                    blurRadius: 10, //阴影范围
+                    spreadRadius: 0.1, //阴影浓度
+                    color: Colors.grey.withOpacity(0.2), //阴影颜色
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 80,
+                    height: 80,
+                    margin: const EdgeInsets.only(left: 20, top: 20,bottom: 20),
+                    decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(50.0),
+                        image: DecorationImage(
+                          // image: AssetImage('assets/image/default_head.gif'),
+                          image: _buildAvatar(),
+                        )),
+                  ),
+                  Container(
+                      margin: const EdgeInsets.only(left: 10, top: 10),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            width: ((MediaQuery.of(context).size.width) / 1.9),
+                            child: Text(
+                                _user.nickname,
+                                style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                textAlign: TextAlign.left
+                            ),
+                          ),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                userModel.user.expired > DateTime.now().millisecondsSinceEpoch ?
+                                Text(
+                                  '您是黄金会员，到期时间 ${Global.getDateToString(userModel.user.expired)}',
+                                  style: const TextStyle(color: Colors.grey,fontSize: 12,fontWeight: FontWeight.bold),
+                                )
+                                    : Container(),
+                              ]
+                          ),
+                        ]
+                      ), ),
+                  // const Padding(padding: EdgeInsets.only(bottom:25)),
+                ],
+              ),
             ),
-            TabBar(
-                controller: _innerTabController,
-                labelColor: Colors.black,
-                tabs: const [
-                  Tab(
-                    child: Text('在线充值'),
-                  ),
-                  Tab(
-                    child: Text('代理充值'),
-                  )
-                ]),
-                  Expanded(
-                  child:_buildBody(),
-                  ),
+            // TabBar(
+            //     controller: _innerTabController,
+            //     labelColor: Colors.black,
+            //     tabs: const [
+            //       Tab(
+            //         child: Text('在线充值'),
+            //       ),
+            //       Tab(
+            //         child: Text('代理充值'),
+            //       )
+            //     ]),
+            Expanded(
+              child:_buildBody(),
+            ),
           ],
         ));
   }

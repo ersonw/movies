@@ -591,24 +591,23 @@ class _MyProfile extends State<MyProfile> {
                       ),
                       TextButton(
                         onPressed: () {
-                          // Navigator.of(context, rootNavigator: true).push<void>(
-                          //   CupertinoPageRoute(
-                          //     title: '反馈中心',
-                          //     // fullscreenDialog: true,
-                          //     builder: (context) => const KeFuMessagePage(),
-                          //   ),
-                          // );
-                          Global.toChat();
+                          Navigator.of(context, rootNavigator: true).push<void>(
+                            CupertinoPageRoute(
+                              title: '我的钱包',
+                              // fullscreenDialog: true,
+                              builder: (context) => const BalancePage(),
+                            ),
+                          );
                         },
                         child: Column(
                           children: [
                             Image.asset(
-                              ImageIcons.bangzhufankui.assetName,
+                              ImageIcons.yingyongzhongxin.assetName,
                               width: 45,
                               height: 45,
                             ),
                             const Text(
-                              '在线客服',
+                              '我的钱包',
                               style: TextStyle(color: Colors.black),
                             ),
                           ],
@@ -640,23 +639,24 @@ class _MyProfile extends State<MyProfile> {
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.of(context, rootNavigator: true).push<void>(
-                            CupertinoPageRoute(
-                              title: '我的钱包',
-                              // fullscreenDialog: true,
-                              builder: (context) => const BalancePage(),
-                            ),
-                          );
+                          // Navigator.of(context, rootNavigator: true).push<void>(
+                          //   CupertinoPageRoute(
+                          //     title: '反馈中心',
+                          //     // fullscreenDialog: true,
+                          //     builder: (context) => const KeFuMessagePage(),
+                          //   ),
+                          // );
+                          Global.toChat();
                         },
                         child: Column(
                           children: [
                             Image.asset(
-                              ImageIcons.yingyongzhongxin.assetName,
+                              ImageIcons.bangzhufankui.assetName,
                               width: 45,
                               height: 45,
                             ),
                             const Text(
-                              '我的钱包',
+                              '在线客服',
                               style: TextStyle(color: Colors.black),
                             ),
                           ],

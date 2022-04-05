@@ -105,9 +105,15 @@ class _BuyGoldPage extends State<BuyGoldPage>
                 // height: 80,
                 margin: const EdgeInsets.only(left: 10, right: 10, top: 40),
                 decoration: BoxDecoration(
-                  color: Colors.white,
                   borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  border: Border.all(width: 1.0, color: Colors.black12),
+                  color: Colors.white, // 底色
+                  boxShadow: [
+                    BoxShadow(
+                      blurRadius: 10, //阴影范围
+                      spreadRadius: 0.1, //阴影浓度
+                      color: Colors.grey.withOpacity(0.2), //阴影颜色
+                    ),
+                  ],
                 ),
                 child: Column(
                   children: [
@@ -120,7 +126,7 @@ class _BuyGoldPage extends State<BuyGoldPage>
                           child: const Text(
                             '金币余额',
                             style: TextStyle(
-                                color: Colors.grey,
+                                color: Colors.black,
                                 fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -139,10 +145,10 @@ class _BuyGoldPage extends State<BuyGoldPage>
                                 fontSize: 36),
                           ),
                         ),
-                        Image.asset(
-                          ImageIcons.GoldCoins.assetName,
-                          width: 30,
-                        ),
+                        // Image.asset(
+                        //   ImageIcons.GoldCoins.assetName,
+                        //   width: 30,
+                        // ),
                       ],
                     ),
                     Container(
@@ -150,57 +156,81 @@ class _BuyGoldPage extends State<BuyGoldPage>
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context, rootNavigator: true).push<void>(
-                                CupertinoPageRoute(
-                                  title: '金币提现',
-                                  builder: (context) => WithdrawalManagementPage(
-                                    type: WithdrawalManagementPage.WITHDRAWAL_GOLD,
-                                  ),
-                                ),
-                              );
+                          InkWell(
+                            onTap: () {
+                                  Navigator.of(context, rootNavigator: true).push<void>(
+                                    CupertinoPageRoute(
+                                      title: '金币提现',
+                                      builder: (context) => WithdrawalManagementPage(
+                                        type: WithdrawalManagementPage.WITHDRAWAL_GOLD,
+                                      ),
+                                    ),
+                                  );
                             },
-                            style: ButtonStyle(
-                              backgroundColor:
-                              MaterialStateProperty.all(Colors.orange),
-                              shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5))),
-                            ),
                             child: Container(
-                              width: 140,
-                              alignment: Alignment.center,
-                              child: const Text(
-                                '立即提现',
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 18),
+                              decoration: BoxDecoration(
+                                gradient: const LinearGradient(
+                                  colors: [
+                                    // Colors.redAccent,
+                                    Color(0xFFFC8A7D),
+                                    Color(0xffff0010),
+                                  ],
+                                  begin: Alignment.centerLeft,
+                                  end: Alignment.centerRight,
+                                ),
+                                borderRadius: const BorderRadius.all(Radius.circular(30)),
+                                border: Border.all(width: 1.0, color: Colors.black12),
+                              ),
+                              child: Container(
+                                margin: const EdgeInsets.only(top:10,bottom: 10, left:30,right: 30),
+                                child: Row(
+                                  children: [
+                                    Image(image: ImageIcons.iconCardList, width: 20),
+                                    const Text(
+                                      '立即提现',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 18),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                          TextButton(
-                            onPressed: () {
+                          InkWell(
+                            onTap: () {
                               Navigator.of(context, rootNavigator: true).push<void>(
-                                CupertinoPageRoute(
-                                  // title: '确认订单',
-                                  builder: (context) => const GoldRecordsPage(),
-                                ),
-                              );
+                                        CupertinoPageRoute(
+                                          // title: '确认订单',
+                                          builder: (context) => const GoldRecordsPage(),
+                                        ),
+                                      );
                             },
-                            style: ButtonStyle(
-                              backgroundColor:
-                              MaterialStateProperty.all(Colors.orange),
-                              shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5))),
-                            ),
                             child: Container(
-                              width: 140,
-                              alignment: Alignment.center,
-                              child: const Text(
-                                '收支明细',
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 18),
+                              decoration: BoxDecoration(
+                                gradient: const LinearGradient(
+                                  colors: [
+                                    // Colors.redAccent,
+                                    Color(0xFFFC8A7D),
+                                    Color(0xffff0010),
+                                  ],
+                                  begin: Alignment.centerLeft,
+                                  end: Alignment.centerRight,
+                                ),
+                                borderRadius: const BorderRadius.all(Radius.circular(30)),
+                                border: Border.all(width: 1.0, color: Colors.black12),
+                              ),
+                              child: Container(
+                                margin: const EdgeInsets.only(top:10,bottom: 10, left:30,right: 30),
+                                child: Row(
+                                  children: [
+                                    Image(image: ImageIcons.iconCoins, width: 20),
+                                    const Text(
+                                      '金币明细',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 18),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -210,17 +240,17 @@ class _BuyGoldPage extends State<BuyGoldPage>
                   ],
                 ),
               ),
-              TabBar(
-                  controller: _innerTabController,
-                  labelColor: Colors.black,
-                  tabs: const [
-                    Tab(
-                      child: Text('在线充值'),
-                    ),
-                    Tab(
-                      child: Text('代理充值'),
-                    )
-                  ]),
+              // TabBar(
+              //     controller: _innerTabController,
+              //     labelColor: Colors.black,
+              //     tabs: const [
+              //       Tab(
+              //         child: Text('在线充值'),
+              //       ),
+              //       Tab(
+              //         child: Text('代理充值'),
+              //       )
+              //     ]),
               Expanded(
                 child: _buildBody(),
               ),
@@ -297,20 +327,32 @@ class _BuyGoldPage extends State<BuyGoldPage>
         width: ((MediaQuery.of(context).size.width) / 2.3),
         margin: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          // color: Colors.white,
           borderRadius: const BorderRadius.all(Radius.circular(10)),
-          border: Border.all(width: 1.0, color: Colors.black12),
-          image: DecorationImage(image: AssetImage(ImageIcons.GoldCoins.assetName)),
+          color: Colors.white, // 底色
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 10, //阴影范围
+              spreadRadius: 0.1, //阴影浓度
+              color: Colors.grey.withOpacity(0.2), //阴影颜色
+            ),
+          ],
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('${buyGold.gold}金币',style: const TextStyle(color: Colors.deepOrange,fontSize: 20),),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Image( image: ImageIcons.GoldCoins, width: 21),
+                Text('${buyGold.gold}金币',style: const TextStyle(color: Colors.deepOrange,fontSize: 20),),
+              ]
+            ),
+            const Padding(padding: EdgeInsets.only(top:18)),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text('￥',style: TextStyle(color: Colors.black,fontSize: 15),),
-                Text('${buyGold.amount ~/ 100}',style: const TextStyle(color: Colors.black,fontSize: 30),),
+                const Text('￥',style: TextStyle(color: Colors.black,fontSize: 21),),
+                Text('${buyGold.amount ~/ 100}',style: const TextStyle(color: Colors.black,fontSize: 21,fontWeight: FontWeight.bold),),
               ],
             ),
           ],
