@@ -63,16 +63,16 @@ class _VideoRecordsPage extends State<VideoRecordsPage> {
       color: Colors.white,
       margin: const EdgeInsets.only(top: 5),
       child: Container(
-        height: 100,
+        height: 120,
         margin: const EdgeInsets.all(5),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
-              width: ((MediaQuery.of(context).size.width) / 2.2),
+              width: ((MediaQuery.of(context).size.width) / 2.1),
               // width: 200,
               decoration: BoxDecoration(
-                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                borderRadius: const BorderRadius.all(Radius.circular(5)),
                 image: DecorationImage(
                   image: NetworkImage(data.image),
                   fit: BoxFit.fill,
@@ -119,19 +119,20 @@ class _VideoRecordsPage extends State<VideoRecordsPage> {
                           ),
                         ],
                       ),
-                      Row(
-                        children: [
-                          Image.asset(
-                            ImageIcons.remommendIcon.assetName,
-                            width: 45,
-                            height: 15,
-                          ),
-                          Text(
-                            '${Global.getNumbersToChinese(data.remommends)}人',
-                            style: const TextStyle(color: Colors.grey, fontSize: 13),
-                          ),
-                        ],
-                      ),
+                      const Padding(padding: EdgeInsets.only(right: 5)),
+                      // Row(
+                      //   children: [
+                      //     Image.asset(
+                      //       ImageIcons.remommendIcon.assetName,
+                      //       width: 45,
+                      //       height: 15,
+                      //     ),
+                      //     Text(
+                      //       '${Global.getNumbersToChinese(data.remommends)}人',
+                      //       style: const TextStyle(color: Colors.grey, fontSize: 13),
+                      //     ),
+                      //   ],
+                      // ),
                     ],
                   ),
                 ],
@@ -151,7 +152,7 @@ class _VideoRecordsPage extends State<VideoRecordsPage> {
     // TODO: implement build
     return CupertinoPageScaffold(
       navigationBar: const CupertinoNavigationBar(),
-      backgroundColor: Colors.black12,
+      // backgroundColor: Colors.black12,
       child: ListView.builder(
         controller: _controller,
         itemCount: _list.length,
@@ -216,6 +217,7 @@ class _VideoRecordsPage extends State<VideoRecordsPage> {
                   ],
                 ),
               ),
+              // const Padding(padding: EdgeInsets.only(right: 5)),
               Container(
                 margin: const EdgeInsets.only(top: 10, bottom: 20),
                 width: ((MediaQuery.of(context).size.width) / 2.5),

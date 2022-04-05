@@ -101,7 +101,38 @@ class _HomePageState extends State<HomePage> {
           },
           backgroundColor: Colors.transparent),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      body: _buildHomePage(context),
+      body: Stack(
+        alignment: Alignment.bottomRight,
+        children: [
+          _buildHomePage(context),
+          Container(
+            // width: 60,
+            // height: 60,
+            margin: const EdgeInsets.only(bottom: 90,right: 20),
+            child: InkWell(
+              onTap: () {
+                Global.toChat();
+              },
+              child: Container(
+                width: 60,
+                height: 60,
+                decoration: const BoxDecoration(
+                  // color: Colors.blueAccent,
+                  image: DecorationImage(
+                    image: ImageIcons.kefu,
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(50)),
+                ),
+                // child: Container(
+                //   alignment: Alignment.center,
+                //   child: const Text('客服', textAlign: TextAlign.center)
+                // ),
+              ),
+            ),
+          ),
+
+        ],
+      ),
     );
   }
 }

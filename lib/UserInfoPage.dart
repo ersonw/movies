@@ -673,11 +673,11 @@ class _UserInfoPage extends State<UserInfoPage>  with SingleTickerProviderStateM
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  const Text('简介:',style: TextStyle(color: Colors.black,fontSize: 15),),
+                  // const Text('简介:',style: TextStyle(color: Colors.black,fontSize: 15),),
                   Container(
                     width: (MediaQuery.of(context).size.width) / 1.5,
                     margin: const EdgeInsets.only(left: 10,right: 20),
-                    child: Text(_user.signature == null || _user.signature.isEmpty ? '专注各种网红，进入主页看更多精彩!': _user.signature,style: const TextStyle(color: Colors.black,fontSize: 15),),
+                    child: Text('简介:  ${_user.signature == null || _user.signature.isEmpty ? '23PORN视频社区-亚洲国产原创AV平台': _user.signature}',style: const TextStyle(color: Colors.black,fontSize: 15),),
                   ),
                 ],
               ),

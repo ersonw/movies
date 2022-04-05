@@ -60,6 +60,21 @@ class _MyProfile extends State<MyProfile> {
 
   @override
   Widget build(BuildContext context) {
+    // return Scaffold(
+    //   floatingActionButton: FloatingActionButton(
+    //       child: Image.asset(
+    //         ImageIcons.game.assetName,
+    //         width: 60,
+    //       ),
+    //       onPressed: () {
+    //         setState(() {
+    //           _tabController.index = 2;
+    //         });
+    //       },
+    //       backgroundColor: Colors.transparent),
+    //   floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    //   body: _buildHomePage(context),
+    // );
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         trailing: Row(
@@ -374,31 +389,32 @@ class _MyProfile extends State<MyProfile> {
              ],
            ),
          ),
-          InkWell(
-            onTap: (() {
-              Global.showWebColoredToast('暂未开放，敬请期待!');
-              // Navigator.of(context, rootNavigator: true).push<void>(
-              //   CupertinoPageRoute(
-              //     title: SettingsTab.title,
-              //     fullscreenDialog: true,
-              //     builder: (context) => const SettingsTab(),
-              //   ),
-              // );
-            }),
-            child: Container(
-              margin: const EdgeInsets.only(left: 5,right: 5,top: 10,bottom: 10),
-              width: (MediaQuery.of(context).size.width),
-              height: 95,
-              decoration: BoxDecoration(
-                  // color: Colors.grey,
-                  borderRadius: BorderRadius.circular(5.0),
-                  image: const DecorationImage(
-                    fit: BoxFit.fill,
-                    image: ImageIcons.zhipianrenjihua,
-                  )),
-            ),
-          ),
+          // InkWell(
+          //   onTap: (() {
+          //     Global.showWebColoredToast('暂未开放，敬请期待!');
+          //     // Navigator.of(context, rootNavigator: true).push<void>(
+          //     //   CupertinoPageRoute(
+          //     //     title: SettingsTab.title,
+          //     //     fullscreenDialog: true,
+          //     //     builder: (context) => const SettingsTab(),
+          //     //   ),
+          //     // );
+          //   }),
+          //   child: Container(
+          //     margin: const EdgeInsets.only(left: 5,right: 5,top: 10,bottom: 10),
+          //     width: (MediaQuery.of(context).size.width),
+          //     height: 95,
+          //     decoration: BoxDecoration(
+          //         // color: Colors.grey,
+          //         borderRadius: BorderRadius.circular(5.0),
+          //         image: const DecorationImage(
+          //           fit: BoxFit.fill,
+          //           image: ImageIcons.zhipianrenjihua,
+          //         )),
+          //   ),
+          // ),
           // 三图片
+          const Padding(padding: EdgeInsets.only(top:20)),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

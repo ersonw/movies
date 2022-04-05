@@ -407,90 +407,90 @@ class _AccountManager extends State<AccountManager> {
             ],
           ),
         ),
-        ListTile(
-            leading: const Icon(
-              Icons.screen_lock_portrait,
-              color: Colors.grey,
-              size: 30,
-            ),
-            title: const Text('设置锁屏',style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold)),
-            // The Material switch has a platform adaptive constructor.
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Switch.adaptive(
-                  value: _config.bootLock,
-                  onChanged: (value) => setState(() {
-                    // print(value);
-                    // _configModel.lock = value;
-                    if (_config.bootLockPasswd == null || configModel.lockPasswd == '') {
-                      Navigator.of(context, rootNavigator: true).push<void>(
-                        CupertinoPageRoute(
-                          // fullscreenDialog: true,
-                          builder: (context) =>
-                              LockScreenCustom(LockScreenCustom.setPasswd),
-                        ),
-                      );
-                    } else {
-                      configModel.lock = value;
-                    }
-                  }),
-                ),
-              ],
-            )),
-        ListTile(
-            leading: const Icon(
-              Icons.edit_road_outlined,
-              size: 30,
-            ),
-            title: const Text('修改锁屏密码',style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold)),
-            // The Material switch has a platform adaptive constructor.
-            onTap: () {
-              Navigator.of(context, rootNavigator: true).push<void>(
-                CupertinoPageRoute(
-                  // fullscreenDialog: true,
-                  builder: (context) =>
-                      LockScreenCustom((configModel.lockPasswd == null || configModel.lockPasswd == '') ? LockScreenCustom.setPasswd : LockScreenCustom.changePasswd),
-                ),
-              );
-            },
-            trailing: const Icon(Icons.chevron_right)),
-        ListTile(
-            leading: const Icon(
-              Icons.edit_road_outlined,
-              size: 30,
-            ),
-            title: const Text('重置锁屏密码',style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold)),
-            // The Material switch has a platform adaptive constructor.
-            onTap: () async{
-              if(configModel.lockPasswd == null || configModel.lockPasswd == ''){
-                ShowAlertDialog(context, '重置锁屏密码', '未设置锁屏密码，请先配置锁屏密码!');
-              }else{
-                if(await ShowAlertDialogBool(context, '重置锁屏密码', '密码一旦重置不可找回，如需开启锁屏可重新设置密码,确定要重置锁屏密码吗？')){
-                  setState(() {
-                    configModel.lockPasswd = '';
-                    configModel.lock = false;
-                  });
-                }
-              }
-            },
-            trailing: const Icon(Icons.chevron_right)),
-        ListTile(
-            leading: const Icon(
-              Icons.delete_forever,
-              size: 30,
-            ),
-            title: const Text('清理缓存',style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold)),
-            // The Material switch has a platform adaptive constructor.
-            onTap: () async{
-              if(await ShowAlertDialogBool(context, '清除缓存', '一键清除缓存将清除应用所有缓存，包括视频数据等等，确定继续吗？')){
-                await Global.clearApplicationCache();
-                setState(() {
-                  _initCache();
-                });
-              }
-            },
-            trailing: Text(_cacheSize)),
+        // ListTile(
+        //     leading: const Icon(
+        //       Icons.screen_lock_portrait,
+        //       color: Colors.grey,
+        //       size: 30,
+        //     ),
+        //     title: const Text('设置锁屏',style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold)),
+        //     // The Material switch has a platform adaptive constructor.
+        //     trailing: Row(
+        //       mainAxisSize: MainAxisSize.min,
+        //       children: [
+        //         Switch.adaptive(
+        //           value: _config.bootLock,
+        //           onChanged: (value) => setState(() {
+        //             // print(value);
+        //             // _configModel.lock = value;
+        //             if (_config.bootLockPasswd == null || configModel.lockPasswd == '') {
+        //               Navigator.of(context, rootNavigator: true).push<void>(
+        //                 CupertinoPageRoute(
+        //                   // fullscreenDialog: true,
+        //                   builder: (context) =>
+        //                       LockScreenCustom(LockScreenCustom.setPasswd),
+        //                 ),
+        //               );
+        //             } else {
+        //               configModel.lock = value;
+        //             }
+        //           }),
+        //         ),
+        //       ],
+        //     )),
+        // ListTile(
+        //     leading: const Icon(
+        //       Icons.edit_road_outlined,
+        //       size: 30,
+        //     ),
+        //     title: const Text('修改锁屏密码',style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold)),
+        //     // The Material switch has a platform adaptive constructor.
+        //     onTap: () {
+        //       Navigator.of(context, rootNavigator: true).push<void>(
+        //         CupertinoPageRoute(
+        //           // fullscreenDialog: true,
+        //           builder: (context) =>
+        //               LockScreenCustom((configModel.lockPasswd == null || configModel.lockPasswd == '') ? LockScreenCustom.setPasswd : LockScreenCustom.changePasswd),
+        //         ),
+        //       );
+        //     },
+        //     trailing: const Icon(Icons.chevron_right)),
+        // ListTile(
+        //     leading: const Icon(
+        //       Icons.edit_road_outlined,
+        //       size: 30,
+        //     ),
+        //     title: const Text('重置锁屏密码',style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold)),
+        //     // The Material switch has a platform adaptive constructor.
+        //     onTap: () async{
+        //       if(configModel.lockPasswd == null || configModel.lockPasswd == ''){
+        //         ShowAlertDialog(context, '重置锁屏密码', '未设置锁屏密码，请先配置锁屏密码!');
+        //       }else{
+        //         if(await ShowAlertDialogBool(context, '重置锁屏密码', '密码一旦重置不可找回，如需开启锁屏可重新设置密码,确定要重置锁屏密码吗？')){
+        //           setState(() {
+        //             configModel.lockPasswd = '';
+        //             configModel.lock = false;
+        //           });
+        //         }
+        //       }
+        //     },
+        //     trailing: const Icon(Icons.chevron_right)),
+        // ListTile(
+        //     leading: const Icon(
+        //       Icons.delete_forever,
+        //       size: 30,
+        //     ),
+        //     title: const Text('清理缓存',style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold)),
+        //     // The Material switch has a platform adaptive constructor.
+        //     onTap: () async{
+        //       if(await ShowAlertDialogBool(context, '清除缓存', '一键清除缓存将清除应用所有缓存，包括视频数据等等，确定继续吗？')){
+        //         await Global.clearApplicationCache();
+        //         setState(() {
+        //           _initCache();
+        //         });
+        //       }
+        //     },
+        //     trailing: Text(_cacheSize)),
         ListTile(
           leading: const Icon(
             Icons.fact_check,

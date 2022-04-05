@@ -65,9 +65,7 @@ class _PlayerPage extends State<PlayerPage> {
   void _init()async{
     await _initPlayer();
     if(_player.playUrl != null && _player.playUrl.isNotEmpty){
-      if(_player.diamond > 0){
-        _canPlay = true;
-      }else if(_player.member){
+      if(_player.download || _player.member){
         _canPlay = true;
       }else {
         tryPlay = true;
@@ -115,7 +113,7 @@ class _PlayerPage extends State<PlayerPage> {
     };
     String? result = (await DioManager().requestAsync(
         NWMethod.GET, NWApi.getPlayer, {"data": jsonEncode(parm)}));
-    print(result);
+    // print(result);
     if (result == null) {
       return;
     }
@@ -553,7 +551,7 @@ class _PlayerPage extends State<PlayerPage> {
     if(_player.playUrl == null || _player.playUrl.isEmpty){
       return true;
     }
-    if(_player.member || _player.diamond > 0){
+    if(_player.member || _player.download){
       return false;
     }
     return true;
@@ -653,7 +651,91 @@ class _PlayerPage extends State<PlayerPage> {
                     child: Container(
                       color: Colors.black87,
                       child: Center(
-                        child: _player.diamond > 0 ?
+                        child: tryPlay ? Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.only(
+                                      left: 5, right: 20),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.start,
+                                        children: [
+                                          InkWell(
+                                            onTap: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: const Icon(
+                                              Icons.arrow_back,
+                                              color: Colors.grey,
+                                              size: 30,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      _isReport
+                                          ? Container()
+                                          : InkWell(
+                                        onTap: () {
+                                          _report();
+                                        },
+                                        child: Container(
+                                          color: Colors.transparent,
+                                          margin: const EdgeInsets.only(
+                                              right: 20),
+                                          child: const Text(
+                                            '举报',
+                                            style: TextStyle(
+                                                color: Colors.black),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Text(
+                              '未开通Vip或购买只能试看${_player.du}分钟哦',
+                              style:
+                              const TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                            const Padding(padding: EdgeInsets.all(10)),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                SizedBox(
+                                  width: 120,
+                                  child: TextButton(
+                                    style: ButtonStyle(
+                                      backgroundColor:
+                                      MaterialStateProperty.all(Colors.red),
+                                      shape: MaterialStateProperty.all(
+                                          RoundedRectangleBorder(
+                                              borderRadius:
+                                              BorderRadius.circular(16))),
+                                    ),
+                                    onPressed: () {
+                                      _tryPlayer();
+                                    },
+                                    child: const Text(
+                                      '马上试看',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ) :
+                        (_player.diamond > 0 ?
                         Column(
                           // mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -708,7 +790,7 @@ class _PlayerPage extends State<PlayerPage> {
                             const Text(
                               '本视频需要购买才可以观看哦',
                               style:
-                                  TextStyle(color: Colors.white, fontSize: 20),
+                              TextStyle(color: Colors.white, fontSize: 20),
                             ),
                             const Padding(padding: EdgeInsets.all(10)),
                             Row(
@@ -719,27 +801,27 @@ class _PlayerPage extends State<PlayerPage> {
                                   child: TextButton(
                                     style: ButtonStyle(
                                       backgroundColor:
-                                          MaterialStateProperty.all(Colors.red),
+                                      MaterialStateProperty.all(Colors.red),
                                       shape: MaterialStateProperty.all(
                                           RoundedRectangleBorder(
                                               borderRadius:
-                                                  BorderRadius.circular(16))),
+                                              BorderRadius.circular(16))),
                                     ),
                                     onPressed: () {
                                       Navigator.of(context, rootNavigator: true)
                                           .push<void>(
-                                            CupertinoPageRoute(
-                                              title: "钻石购买",
-                                              // fullscreenDialog: true,
-                                              builder: (context) =>
-                                                  const BuyDiamondPage(),
-                                            ),
-                                          )
+                                        CupertinoPageRoute(
+                                          title: "钻石购买",
+                                          // fullscreenDialog: true,
+                                          builder: (context) =>
+                                          const BuyDiamondPage(),
+                                        ),
+                                      )
                                           .then((value) => setState);
                                     },
                                     child: const Text(
-                                      '充值钻石',
-                                      style: TextStyle(color: Colors.white,),
+                                        '充值钻石',
+                                        style: TextStyle(color: Colors.white,),
                                         textAlign: TextAlign.right
                                     ),
                                   ),
@@ -749,11 +831,11 @@ class _PlayerPage extends State<PlayerPage> {
                                   child: TextButton(
                                     style: ButtonStyle(
                                       backgroundColor:
-                                          MaterialStateProperty.all(Colors.red),
+                                      MaterialStateProperty.all(Colors.red),
                                       shape: MaterialStateProperty.all(
                                           RoundedRectangleBorder(
                                               borderRadius:
-                                                  BorderRadius.circular(16))),
+                                              BorderRadius.circular(16))),
                                     ),
                                     onPressed: () {
                                       _buyVideo();
@@ -788,91 +870,7 @@ class _PlayerPage extends State<PlayerPage> {
                               ],
                             ),
                           ],
-                        ) :
-                        (tryPlay ? Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.only(
-                                      left: 5, right: 20),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.start,
-                                        children: [
-                                          InkWell(
-                                            onTap: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: const Icon(
-                                              Icons.arrow_back,
-                                              color: Colors.grey,
-                                              size: 30,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      _isReport
-                                          ? Container()
-                                          : InkWell(
-                                        onTap: () {
-                                          _report();
-                                        },
-                                        child: Container(
-                                          color: Colors.transparent,
-                                          margin: const EdgeInsets.only(
-                                              right: 20),
-                                          child: const Text(
-                                            '举报',
-                                            style: TextStyle(
-                                                color: Colors.black),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                             Text(
-                              '未开通Vip可以观看只能试看${_player.du}分钟哦',
-                              style:
-                              const TextStyle(color: Colors.white, fontSize: 20),
-                            ),
-                            const Padding(padding: EdgeInsets.all(10)),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                SizedBox(
-                                  width: 120,
-                                  child: TextButton(
-                                    style: ButtonStyle(
-                                      backgroundColor:
-                                      MaterialStateProperty.all(Colors.red),
-                                      shape: MaterialStateProperty.all(
-                                          RoundedRectangleBorder(
-                                              borderRadius:
-                                              BorderRadius.circular(16))),
-                                    ),
-                                    onPressed: () {
-                                      _tryPlayer();
-                                    },
-                                    child: const Text(
-                                      '马上试看',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ) : Column(
+                        ) :Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Column(

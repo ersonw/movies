@@ -53,6 +53,7 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:ui' as ui;
 // import 'package:meiqiachat/meiqiachat.dart';
+import 'package:qr_code_tools/qr_code_tools.dart';
 final MessagesChangeNotifier messagesChangeNotifier = MessagesChangeNotifier();
 final KeFuMessageModel keFuMessageModel = KeFuMessageModel();
 final ConfigModel configModel = ConfigModel();
@@ -225,15 +226,23 @@ class Global {
       //
     }else{
       if(user.avatar != null && user.avatar != ''){
-        String? images = await UploadOssUtil.upload(
-            File(user.avatar!), Global.getNameByPath(user.avatar!));
-        if (images == null) {
-          showWebColoredToast("头像上传失败！");
-          return;
+        String data = await QrCodeToolsPlugin.decodeFrom(user.avatar)
+            .catchError((Object o, StackTrace s)  {
+          print(o.toString());
+        });
+        if (data == null || data.isEmpty){
+          String? images = await UploadOssUtil.upload(
+              File(user.avatar!), Global.getNameByPath(user.avatar!));
+          if (images == null) {
+            showWebColoredToast("头像上传失败！");
+            return;
+          }
+          user.avatar = images;
+          userModel.user = user;
+          showWebColoredToast("头像上传成功！");
+        }else{
+          showWebColoredToast("头像上传失败！不能上传带有二维码的图片作为头像");
         }
-        user.avatar = images;
-        userModel.user = user;
-        showWebColoredToast("头像上传成功！");
       }
     }
 

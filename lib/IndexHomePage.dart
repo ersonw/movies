@@ -869,7 +869,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
         child: Container(
             width: ((MediaQuery.of(context).size.width) / 5),
             height: 30,
-            margin: const EdgeInsets.only(top: 5, left: 10),
+            margin: const EdgeInsets.only(top: 15, left: 10),
             decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(15)),
                 color: Color(0xFFD6D6D6)),
@@ -897,7 +897,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
         child: Container(
             width: ((MediaQuery.of(context).size.width) / 5),
             height: 30,
-            margin: const EdgeInsets.only(top: 5, left: 10),
+            margin: const EdgeInsets.only(top: 15, left: 10),
             decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(15)),
                 color: Color(0xFFD6D6D6)),
@@ -925,7 +925,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
         child: Container(
             width: ((MediaQuery.of(context).size.width) / 5),
             height: 30,
-            margin: const EdgeInsets.only(top: 5, left: 10),
+            margin: const EdgeInsets.only(top: 15, left: 10),
             decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(15)),
                 color: Color(0xFFD6D6D6)),
@@ -953,7 +953,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
         child: Container(
             width: ((MediaQuery.of(context).size.width) / 5),
             height: 30,
-            margin: const EdgeInsets.only(top: 5, left: 10),
+            margin: const EdgeInsets.only(top: 15, left: 10),
             decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(15)),
                 color: Color(0xFFD6D6D6)),
@@ -1250,6 +1250,8 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
       // color: Colors.black,
       height: 200,
       child: Swiper(
+        loop: true,
+        autoplay: true,
         itemCount: _swipers.length,
         itemBuilder: _buildSwiper,
         pagination: const SwiperPagination(),

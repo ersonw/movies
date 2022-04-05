@@ -65,4 +65,5 @@ class ImageIcons {
   static const AssetImage user_active = AssetImage('assets/image/user-active.png');
   static const AssetImage iconCardList = AssetImage('assets/image/iconCardList.png');
   static const AssetImage iconCoins = AssetImage('assets/image/iconCoins.png');
+  static const AssetImage kefu = AssetImage('assets/image/kefu.png');
 }
