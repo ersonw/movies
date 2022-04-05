@@ -89,7 +89,7 @@ class _PlayerPage extends State<PlayerPage> {
           if(value.position.inSeconds > (_player.du * 60)){
             _controller.pause();
             setState(() {
-              // tryPlay = false;
+              tryPlay = false;
               _canPlay = false;
             });
           }
@@ -788,7 +788,7 @@ class _PlayerPage extends State<PlayerPage> {
                               ],
                             ),
                             const Text(
-                              '本视频需要购买才可以观看哦',
+                              '试看已结束,购买才可以观看哦',
                               style:
                               TextStyle(color: Colors.white, fontSize: 20),
                             ),
@@ -922,7 +922,7 @@ class _PlayerPage extends State<PlayerPage> {
                               ],
                             ),
                             const Text(
-                              '开通Vip可以观看完整版哦',
+                              '试看已结束,开通Vip才可以观看哦',
                               style:
                               TextStyle(color: Colors.white, fontSize: 20),
                             ),
