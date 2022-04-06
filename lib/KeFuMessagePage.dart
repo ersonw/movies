@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:images_picker/images_picker.dart';
+// import 'package:images_picker/images_picker.dart';
 import 'package:movies/MessagesChangeNotifier.dart';
 import 'package:movies/data/KefuMessage.dart';
 import 'package:movies/data/WebSocketMessage.dart';
@@ -83,22 +83,22 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
                   TextButton(
                       onPressed: () async {
                         // Navigator.pop(context);
-                        List<Media>? res = await ImagesPicker.pick(
-                          count: 1,
-                          pickType: PickType.image,
-                          language: Language.System,
-                          maxTime: 30,
-                          // maxSize: 500,
-                          cropOpt: CropOption(
-                              aspectRatio: CropAspectRatio.custom,
-                              cropType: CropType.circle),
-                        );
-                        if (res != null) {
-                          var image = res[0].thumbPath;
-                          setState(() {
-                            sendPicture(image!);
-                          });
-                        }
+                        // List<Media>? res = await ImagesPicker.pick(
+                        //   count: 1,
+                        //   pickType: PickType.image,
+                        //   language: Language.System,
+                        //   maxTime: 30,
+                        //   // maxSize: 500,
+                        //   cropOpt: CropOption(
+                        //       aspectRatio: CropAspectRatio.custom,
+                        //       cropType: CropType.circle),
+                        // );
+                        // if (res != null) {
+                        //   var image = res[0].thumbPath;
+                        //   setState(() {
+                        //     sendPicture(image!);
+                        //   });
+                        // }
                       },
                       child: const Image(image: ImageIcons.tuku)),
                   Expanded(

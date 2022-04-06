@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:images_picker/images_picker.dart';
+// import 'package:images_picker/images_picker.dart';
 import 'package:movies/BindPhonePage.dart';
 import 'package:movies/ChangePasswordPage.dart';
 import 'package:movies/InviteCodeInputPage.dart';
@@ -145,21 +145,21 @@ class _AccountManager extends State<AccountManager> {
         const Padding(padding: EdgeInsets.only(top: 24)),
         _user.phone==null || _user.phone == '' ? Container() : TextButton(
             onPressed: () async {
-              List<Media>? res = await ImagesPicker.pick(
-                count: 1,
-                pickType: PickType.image,
-                language: Language.System,
-                cropOpt: CropOption(
-                    aspectRatio: CropAspectRatio.custom,
-                    cropType: CropType.circle),
-              );
-              if (res != null) {
-                String image = res[0].thumbPath!;
-                _user.avatar = image;
-                Global.changeUserProfile(_user);
-              }else{
-                // Global.showWebColoredToast("修改头像失败！");
-              }
+              // List<Media>? res = await ImagesPicker.pick(
+              //   count: 1,
+              //   pickType: PickType.image,
+              //   language: Language.System,
+              //   cropOpt: CropOption(
+              //       aspectRatio: CropAspectRatio.custom,
+              //       cropType: CropType.circle),
+              // );
+              // if (res != null) {
+              //   String image = res[0].thumbPath!;
+              //   _user.avatar = image;
+              //   Global.changeUserProfile(_user);
+              // }else{
+              //   // Global.showWebColoredToast("修改头像失败！");
+              // }
             },
             child: Column(
               children: [

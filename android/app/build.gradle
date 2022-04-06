@@ -30,7 +30,6 @@ keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 android {
 //    compileSdkVersion flutter.compileSdkVersion
     compileSdkVersion 31
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -38,9 +37,12 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.telebott.movies"
+        applicationId "com.example.movies"
 //        minSdkVersion flutter.minSdkVersion
         minSdkVersion 21
+        manifestPlaceholders = [
+                OPENINSTALL_APPKEY : "dw2elt",
+        ]
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

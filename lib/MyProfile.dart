@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:images_picker/images_picker.dart';
+// import 'package:images_picker/images_picker.dart';
 import 'package:movies/BuyDiamondPage.dart';
 import 'package:movies/CollectsPage.dart';
 import 'package:movies/KeFuMessagePage.dart';
@@ -26,6 +26,8 @@ import 'BuyGoldPage.dart';
 import 'FansPage.dart';
 import 'FollowsPage.dart';
 import 'GetQrcode.dart';
+import 'InviteCodeInputPage.dart';
+import 'SlideRightRoute.dart';
 import 'global.dart';
 import 'image_icon.dart';
 import 'dart:ui';
@@ -120,28 +122,28 @@ class _MyProfile extends State<MyProfile> {
                 bottonMenu.title = '相册';
                 bottonMenu.fn = () async {
                   await Global.requestPhotosPermission();
-                  List<Media>? res = await ImagesPicker.pick(
-                    count: 1,
-                    pickType: PickType.image,
-                    language: Language.System,
-                  );
-                  if (res != null) {
-                    var image = res[0].thumbPath;
-                    String data = await QrCodeToolsPlugin.decodeFrom(image)
-                        .catchError((Object o, StackTrace s)  {
-                          print(o.toString());
-                    });
-                    if (data == null || data.isEmpty) return;
-                    if(data.startsWith(configModel.config.domain)){
-                      Global.handlerScan(data);
-                      return;
-                    }
-                    if (data.contains('http')) {
-                      Global.openWebview(data);
-                    } else {
-                      ShowCopyDialog(context, "二维码提取", data);
-                    }
-                  }
+                  // List<Media>? res = await ImagesPicker.pick(
+                  //   count: 1,
+                  //   pickType: PickType.image,
+                  //   language: Language.System,
+                  // );
+                  // if (res != null) {
+                  //   var image = res[0].thumbPath;
+                  //   String data = await QrCodeToolsPlugin.decodeFrom(image)
+                  //       .catchError((Object o, StackTrace s)  {
+                  //         print(o.toString());
+                  //   });
+                  //   if (data == null || data.isEmpty) return;
+                  //   if(data.startsWith(configModel.config.domain)){
+                  //     Global.handlerScan(data);
+                  //     return;
+                  //   }
+                  //   if (data.contains('http')) {
+                  //     Global.openWebview(data);
+                  //   } else {
+                  //     ShowCopyDialog(context, "二维码提取", data);
+                  //   }
+                  // }
                 };
                 lists.add(bottonMenu);
                 ShowBottomMenu(context, lists);
@@ -211,13 +213,14 @@ class _MyProfile extends State<MyProfile> {
           // 头像用户名
           TextButton(
             onPressed: () {
-              Navigator.of(context, rootNavigator: true).push<void>(
-                CupertinoPageRoute(
-                  title: '账号管理',
-                  // fullscreenDialog: true,
-                  builder: (context) => const AccountManager(),
-                ),
-              ).then((value) => Global.getUserInfo());
+              // Navigator.of(context, rootNavigator: true).push<void>(
+              //   CupertinoPageRoute(
+              //     title: '账号管理',
+              //     // fullscreenDialog: true,
+              //     builder: (context) => const AccountManager(),
+              //   ),
+              // ).then((value) => Global.getUserInfo());
+              Navigator.push(Global.MainContext, SlideRightRoute(page: const AccountManager())).then((value) => setState(() {Global.getUserInfo();}));
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -315,13 +318,15 @@ class _MyProfile extends State<MyProfile> {
                ),
                InkWell(
                  onTap: (){
-                   Navigator.of(context, rootNavigator: true).push<void>(
-                     CupertinoPageRoute(
-                       title: "推荐记录",
-                       // fullscreenDialog: true,
-                       builder: (context) => const MyRecommendedPage(),
-                     ),
-                   );
+                   // Navigator.of(context, rootNavigator: true).push<void>(
+                   //   CupertinoPageRoute(
+                   //     title: "推荐记录",
+                   //     // fullscreenDialog: true,
+                   //     builder: (context) => const MyRecommendedPage(),
+                   //   ),
+                   // );
+                   Navigator.push(Global.MainContext, SlideRightRoute(page: const MyRecommendedPage())).then((value) => setState(() {Global.getUserInfo();}));
+
                  },
                  child: Column(
                    children: [
@@ -339,13 +344,15 @@ class _MyProfile extends State<MyProfile> {
                ),
                InkWell(
                  onTap: (){
-                   Navigator.of(context, rootNavigator: true).push<void>(
-                     CupertinoPageRoute(
-                       title: "关注列表",
-                       // fullscreenDialog: true,
-                       builder: (context) => const FollowsPage(),
-                     ),
-                   );
+                   // Navigator.of(context, rootNavigator: true).push<void>(
+                   //   CupertinoPageRoute(
+                   //     title: "关注列表",
+                   //     // fullscreenDialog: true,
+                   //     builder: (context) => const FollowsPage(),
+                   //   ),
+                   // );
+                   Navigator.push(Global.MainContext, SlideRightRoute(page: const FollowsPage())).then((value) => setState(() {Global.getUserInfo();}));
+
                  },
                  child: Column(
                    children: [
@@ -363,13 +370,15 @@ class _MyProfile extends State<MyProfile> {
                ),
                InkWell(
                  onTap: (){
-                   Navigator.of(context, rootNavigator: true).push<void>(
-                     CupertinoPageRoute(
-                       title: "粉丝列表 ",
-                       // fullscreenDialog: true,
-                       builder: (context) => const FansPage(),
-                     ),
-                   );
+                   // Navigator.of(context, rootNavigator: true).push<void>(
+                   //   CupertinoPageRoute(
+                   //     title: "粉丝列表 ",
+                   //     // fullscreenDialog: true,
+                   //     builder: (context) => const FansPage(),
+                   //   ),
+                   // );
+                   Navigator.push(Global.MainContext, SlideRightRoute(page: const FansPage())).then((value) => setState(() {Global.getUserInfo();}));
+
                  },
                  child: Column(
                    children: [
@@ -421,13 +430,15 @@ class _MyProfile extends State<MyProfile> {
               InkWell(
                 onTap: (() {
                   // Fluttertoast.showToast(msg: '点击我了');
-                  Navigator.of(context, rootNavigator: true).push<void>(
-                    CupertinoPageRoute(
-                      title: "VIP购买",
-                      // fullscreenDialog: true,
-                      builder: (context) => const VIPBuyPage(),
-                    ),
-                  );
+                  // Navigator.of(context, rootNavigator: true).push<void>(
+                  //   CupertinoPageRoute(
+                  //     title: "VIP购买",
+                  //     // fullscreenDialog: true,
+                  //     builder: (context) => const VIPBuyPage(),
+                  //   ),
+                  // );
+                  Navigator.push(Global.MainContext, SlideRightRoute(page: const VIPBuyPage())).then((value) => setState(() {Global.getUserInfo();}));
+
                 }),
                 child: Container(
                   // margin: const EdgeInsets.only(top: 10),
@@ -448,13 +459,14 @@ class _MyProfile extends State<MyProfile> {
                     ShowAlertDialog(context, '友情提示','为了您的账号安全，未绑定手机号无法进行推广哟');
                     return;
                   }
-                  Navigator.of(context, rootNavigator: true).push<void>(
-                    CupertinoPageRoute(
-                      title: "推广分享",
-                      // fullscreenDialog: true,
-                      builder: (context) => const UserSharePage(),
-                    ),
-                  );
+                  // Navigator.of(context, rootNavigator: true).push<void>(
+                  //   CupertinoPageRoute(
+                  //     title: "推广分享",
+                  //     // fullscreenDialog: true,
+                  //     builder: (context) => const UserSharePage(),
+                  //   ),
+                  // );
+                  Navigator.push(Global.MainContext, SlideRightRoute(page: const UserSharePage())).then((value) => setState(() {Global.getUserInfo();}));
                 },
                 child: Container(
                   // margin: const EdgeInsets.only(top: 10),
@@ -543,13 +555,14 @@ class _MyProfile extends State<MyProfile> {
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.of(context, rootNavigator: true).push<void>(
-                            CupertinoPageRoute(
-                              // title: "推广分享",
-                              // fullscreenDialog: true,
-                              builder: (context) => const CollectsPage(),
-                            ),
-                          );
+                          // Navigator.of(context, rootNavigator: true).push<void>(
+                          //   CupertinoPageRoute(
+                          //     // title: "推广分享",
+                          //     // fullscreenDialog: true,
+                          //     builder: (context) => const CollectsPage(),
+                          //   ),
+                          // );
+                          Navigator.push(Global.MainContext, SlideRightRoute(page: const CollectsPage())).then((value) => setState(() {Global.getUserInfo();}));
                         },
                         child: Column(
                           children: [
@@ -607,13 +620,14 @@ class _MyProfile extends State<MyProfile> {
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.of(context, rootNavigator: true).push<void>(
-                            CupertinoPageRoute(
-                              title: '我的钱包',
-                              // fullscreenDialog: true,
-                              builder: (context) => const BalancePage(),
-                            ),
-                          );
+                          // Navigator.of(context, rootNavigator: true).push<void>(
+                          //   CupertinoPageRoute(
+                          //     title: '我的钱包',
+                          //     // fullscreenDialog: true,
+                          //     builder: (context) => const BalancePage(),
+                          //   ),
+                          // );
+                          Navigator.push(Global.MainContext, SlideRightRoute(page: const InviteCodeInputPage())).then((value) => setState(() {Global.getUserInfo();}));
                         },
                         child: Column(
                           children: [
@@ -623,7 +637,7 @@ class _MyProfile extends State<MyProfile> {
                               height: 45,
                             ),
                             const Text(
-                              '我的钱包',
+                              '兑换码',
                               style: TextStyle(color: Colors.black),
                             ),
                           ],
@@ -631,13 +645,15 @@ class _MyProfile extends State<MyProfile> {
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.of(context, rootNavigator: true).push<void>(
-                            CupertinoPageRoute(
-                              title: '观看记录',
-                              // fullscreenDialog: true,
-                              builder: (context) => const VideoRecordsPage(),
-                            ),
-                          );
+                          // Navigator.of(context, rootNavigator: true).push<void>(
+                          //   CupertinoPageRoute(
+                          //     title: '观看记录',
+                          //     // fullscreenDialog: true,
+                          //     builder: (context) => const VideoRecordsPage(),
+                          //   ),
+                          // );
+                          Navigator.push(Global.MainContext, SlideRightRoute(page: const VideoRecordsPage())).then((value) => setState(() {Global.getUserInfo();}));
+
                         },
                         child: Column(
                           children: [
@@ -691,30 +707,32 @@ class _MyProfile extends State<MyProfile> {
   }
 
   void _enterDiamond(BuildContext context) {
-    Navigator.of(context, rootNavigator: true)
-        .push<void>(
-          CupertinoPageRoute(
-            title: '钻石钱包',
-            // fullscreenDialog: true,
-            builder: (context) => const BuyDiamondPage(),
-          ),
-        )
-        .then((value) => setState(() {
-              Global.getUserInfo();
-            }));
+    // Navigator.of(context, rootNavigator: true)
+    //     .push<void>(
+    //       CupertinoPageRoute(
+    //         title: '钻石钱包',
+    //         // fullscreenDialog: true,
+    //         builder: (context) => const BuyDiamondPage(),
+    //       ),
+    //     )
+    //     .then((value) => setState(() {
+    //           Global.getUserInfo();
+    //         }));
+    Navigator.push(Global.MainContext, SlideRightRoute(page: const BuyDiamondPage())).then((value) => setState(() {Global.getUserInfo();}));
   }
   void _enterGold(BuildContext context) {
-    Navigator.of(context, rootNavigator: true)
-        .push<void>(
-      CupertinoPageRoute(
-        title: '金币钱包',
-        // fullscreenDialog: true,
-        builder: (context) => const BuyGoldPage(),
-      ),
-    )
-        .then((value) => setState(() {
-      Global.getUserInfo();
-    }));
+    // Navigator.of(context, rootNavigator: true)
+    //     .push<void>(
+    //   CupertinoPageRoute(
+    //     title: '金币钱包',
+    //     // fullscreenDialog: true,
+    //     builder: (context) => const BuyGoldPage(),
+    //   ),
+    // )
+    //     .then((value) => setState(() {
+    //   Global.getUserInfo();
+    // }));
+    Navigator.push(Global.MainContext, SlideRightRoute(page: const BuyGoldPage())).then((value) => setState(() {Global.getUserInfo();}));
   }
 }
 

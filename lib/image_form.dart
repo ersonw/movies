@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:images_picker/images_picker.dart';
+// import 'package:images_picker/images_picker.dart';
 import 'dart:io';
 import 'package:dio/dio.dart';
 
@@ -31,69 +31,69 @@ class _ImageFrom extends State<ImageForm> {
             ElevatedButton(
               child: Text('pick'),
               onPressed: () async {
-                List<Media>? res = await ImagesPicker.pick(
-                  count: 3,
-                  pickType: PickType.all,
-                  language: Language.System,
-                  maxTime: 30,
-                  // maxSize: 500,
-                  // cropOpt: CropOption(
-                  //   aspectRatio: CropAspectRatio.wh16x9,
-                  // ),
-                );
-                print(res);
-                if (res != null) {
-                  print(res.map((e) => e.path).toList());
-                  setState(() {
-                    path = res[0].thumbPath;
-                  });
-                  // bool status = await ImagesPicker.saveImageToAlbum(File(res[0]?.path));
-                  // print(status);
-                }
+                // List<Media>? res = await ImagesPicker.pick(
+                //   count: 3,
+                //   pickType: PickType.all,
+                //   language: Language.System,
+                //   maxTime: 30,
+                //   // maxSize: 500,
+                //   // cropOpt: CropOption(
+                //   //   aspectRatio: CropAspectRatio.wh16x9,
+                //   // ),
+                // );
+                // print(res);
+                // if (res != null) {
+                //   print(res.map((e) => e.path).toList());
+                //   setState(() {
+                //     path = res[0].thumbPath;
+                //   });
+                //   // bool status = await ImagesPicker.saveImageToAlbum(File(res[0]?.path));
+                //   // print(status);
+                // }
               },
             ),
             ElevatedButton(
               child: Text('openCamera'),
               onPressed: () async {
-                List<Media>? res = await ImagesPicker.openCamera(
-                  // pickType: PickType.video,
-                  pickType: PickType.image,
-                  quality: 0.8,
-                  maxSize: 800,
-                  // cropOpt: CropOption(
-                  //   aspectRatio: CropAspectRatio.wh16x9,
-                  // ),
-                  maxTime: 15,
-                );
-                print(res);
-                if (res != null) {
-                  print(res[0].path);
-                  setState(() {
-                    path = res[0].thumbPath;
-                  });
-                }
+                // List<Media>? res = await ImagesPicker.openCamera(
+                //   // pickType: PickType.video,
+                //   pickType: PickType.image,
+                //   quality: 0.8,
+                //   maxSize: 800,
+                //   // cropOpt: CropOption(
+                //   //   aspectRatio: CropAspectRatio.wh16x9,
+                //   // ),
+                //   maxTime: 15,
+                // );
+                // print(res);
+                // if (res != null) {
+                //   print(res[0].path);
+                //   setState(() {
+                //     path = res[0].thumbPath;
+                //   });
+                // }
               },
             ),
-            ElevatedButton(
-              onPressed: () async {
-                File file =
-                    await downloadFile('https://cdn.chavesgu.com/logo.png');
-                bool res = await ImagesPicker.saveImageToAlbum(file,
-                    albumName: "chaves");
-                print(res);
-              },
-              child: Text('saveNetworkImageToAlbum'),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                File file = await downloadFile(
-                    'https://cdn.chavesgu.com/SampleVideo.mp4');
-                bool res = await ImagesPicker.saveVideoToAlbum(file,
-                    albumName: "chaves");
-                print(res);
-              },
-              child: Text('saveNetworkVideoToAlbum'),
-            ),
+            // ElevatedButton(
+            //   onPressed: () async {
+            //     File file =
+            //         await downloadFile('https://cdn.chavesgu.com/logo.png');
+            //     bool res = await ImagesPicker.saveImageToAlbum(file,
+            //         albumName: "chaves");
+            //     print(res);
+            //   },
+            //   child: Text('saveNetworkImageToAlbum'),
+            // ),
+            // ElevatedButton(
+            //   onPressed: () async {
+            //     File file = await downloadFile(
+            //         'https://cdn.chavesgu.com/SampleVideo.mp4');
+            //     bool res = await ImagesPicker.saveVideoToAlbum(file,
+            //         albumName: "chaves");
+            //     print(res);
+            //   },
+            //   child: Text('saveNetworkVideoToAlbum'),
+            // ),
             path != null
                 ? Container(
                     height: 200,

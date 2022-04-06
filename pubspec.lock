@@ -317,13 +317,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0+2"
-  images_picker:
-    dependency: "direct main"
-    description:
-      name: images_picker
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.2.10"
   intl:
     dependency: transitive
     description:
@@ -382,6 +375,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+  openinstall_flutter_plugin:
+    dependency: "direct main"
+    description:
+      name: openinstall_flutter_plugin
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.2.0"
   oss_dart:
     dependency: "direct main"
     description:

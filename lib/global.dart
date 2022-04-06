@@ -13,6 +13,7 @@ import 'package:image_pickers/image_pickers.dart';
 import 'package:movies/DownloadsManager.dart';
 import 'package:movies/LoadingChangeNotifier.dart';
 import 'package:movies/MessagesChangeNotifier.dart';
+import 'package:movies/SlideRightRoute.dart';
 import 'package:movies/SpreadVideoDialog.dart';
 import 'package:movies/data/KefuMessage.dart';
 import 'package:movies/data/Messages.dart';
@@ -52,15 +53,17 @@ import 'data/Profile.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:ui' as ui;
-// import 'package:meiqiachat/meiqiachat.dart';
 import 'package:qr_code_tools/qr_code_tools.dart';
+import 'package:openinstall_flutter_plugin/openinstall_flutter_plugin.dart';
+
 final MessagesChangeNotifier messagesChangeNotifier = MessagesChangeNotifier();
 final KeFuMessageModel keFuMessageModel = KeFuMessageModel();
 final ConfigModel configModel = ConfigModel();
 final UserModel userModel = UserModel();
 final LoadingChangeNotifier loadingChangeNotifier = LoadingChangeNotifier();
+final OpeninstallFlutterPlugin _openinstallFlutterPlugin = OpeninstallFlutterPlugin();
 class Global {
-
+  static String codeInvite = '';
   // 是否为release版
   static bool get isRelease => const bool.fromEnvironment("dart.vm.product");
   // static late PackageInfo packageInfo;
@@ -109,6 +112,8 @@ class Global {
     cameras = await availableCameras();
     uid = await getUUID();
     await initNetworks();
+    _openinstallFlutterPlugin.init(wakeupHandler);
+    _openinstallFlutterPlugin.install(installHandler);
     // await initMeiqia();
     // print(_messages);
     // print(_profile);
@@ -122,6 +127,28 @@ class Global {
     //     loginSocket();
     //   }
     // });
+  }
+  static Future<void> installHandler(Map<String, dynamic> data) async {
+    // setState(() {
+    //   String debugLog = "install result : channel=" +
+    //       data['channelCode'] +
+    //       ", data=" +
+    //       data['bindData'];
+    //   showWebColoredToast(debugLog);
+    // });
+    codeInvite = data['bindData']['code'];
+    // _handlerInvite();
+  }
+  static Future<void> wakeupHandler(Map<String, dynamic> data) async {
+    // setState(() {
+    //   String debugLog = "wakeup result : channel=" +
+    //       data['channelCode'] +
+    //       ", data=" +
+    //       data['bindData'];
+    //   showWebColoredToast(debugLog);
+    // });
+    codeInvite = data['bindData']['code'];
+    // _handlerInvite();
   }
   // static Future<void> initMeiqia() async {
   //   try {
@@ -428,11 +455,12 @@ class Global {
     // print(_userModel.token);
   }
   static void playVideo(int id){
-    Navigator.of(MainContext, rootNavigator: true).push<void>(
-      CupertinoPageRoute(
-        builder: (context) => PlayerPage(id: id),
-      ),
-    );
+    // Navigator.of(MainContext, rootNavigator: true).push<void>(
+    //   CupertinoPageRoute(
+    //     builder: (context) => PlayerPage(id: id),
+    //   ),
+    // );
+    Navigator.push(MainContext, SlideRightRoute(page:  PlayerPage(id: id)));
   }
   static Widget buildPlayIcon(Function fn){
     return Column(
@@ -460,13 +488,15 @@ class Global {
   }
   static void showDownloadPage() async{
 
-    Navigator.of(MainContext, rootNavigator: true).push<void>(
-      CupertinoPageRoute(
-        title: "下载管理",
-        // fullscreenDialog: true,
-        builder: (context) => const DownloadsManager(),
-      ),
-    );
+    // Navigator.of(MainContext, rootNavigator: true).push<void>(
+    //   CupertinoPageRoute(
+    //     title: "下载管理",
+    //     // fullscreenDialog: true,
+    //     builder: (context) => const DownloadsManager(),
+    //   ),
+    // );
+    Navigator.push(MainContext, SlideRightRoute(page: const DownloadsManager()));
+
   }
   static String inSecondsTostring(int seconds) {
     if (seconds < 60) {
@@ -515,13 +545,16 @@ class Global {
       List<String> urls = url.split('-');
       int vid = int.parse(urls[0]);
       String code = urls[1];
-      _handlerInvite(code);
+      _handlerInvite(code: code);
       _handlerJoin(vid, code);
     }else{
-      _handlerInvite(url);
+      _handlerInvite(code: url);
     }
   }
-  static void _handlerInvite(String code)async{
+  static void _handlerInvite({String code = ''})async{
+    if(code.isEmpty){
+      code = codeInvite;
+    }
     Map<String,dynamic> map = {
       'code': code
     };
@@ -686,6 +719,9 @@ class Global {
       if (data != null) {
         userModel.user = User.fromJson(jsonDecode(data));
         loginSocket();
+        if(userModel.user.superior == 0){
+          _handlerInvite();
+        }
         // RestartWidget.restartApp(MainContext);
       }
     }, error: (error) {});
