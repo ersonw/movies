@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-// import 'package:images_picker/images_picker.dart';
 import 'package:movies/BindPhonePage.dart';
 import 'package:movies/ChangePasswordPage.dart';
 import 'package:movies/InviteCodeInputPage.dart';

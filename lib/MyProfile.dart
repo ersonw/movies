@@ -121,7 +121,7 @@ class _MyProfile extends State<MyProfile> {
                 bottonMenu = BottomMenu();
                 bottonMenu.title = '相册';
                 bottonMenu.fn = () async {
-                  await Global.requestPhotosPermission();
+                  // await Global.requestPhotosPermission();
                   // List<Media>? res = await ImagesPicker.pick(
                   //   count: 1,
                   //   pickType: PickType.image,

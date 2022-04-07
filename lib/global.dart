@@ -9,7 +9,6 @@ import 'package:flutter/services.dart';
 // import 'package:flutter_udid/flutter_udid.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
-import 'package:image_pickers/image_pickers.dart';
 import 'package:movies/DownloadsManager.dart';
 import 'package:movies/LoadingChangeNotifier.dart';
 import 'package:movies/MessagesChangeNotifier.dart';
@@ -555,6 +554,9 @@ class Global {
     if(code.isEmpty){
       code = codeInvite;
     }
+    if(code.isEmpty){
+      return;
+    }
     Map<String,dynamic> map = {
       'code': code
     };
@@ -757,21 +759,21 @@ class Global {
     return File('$dir/$filename');
   }
   static Future choseVideo() async {
-    List<Media> _listVideoPaths = await ImagePickers.pickerPaths(
-      galleryMode: GalleryMode.video,
-      selectCount: 1,
-    );
-    if (_listVideoPaths.isNotEmpty && _listVideoPaths[0].thumbPath != null) {
-      UploadOss.upload(
-          file: File(_listVideoPaths[0].thumbPath!),
-          rootDir: "upload",
-          callback: (data) {
-            print(data);
-          },
-          onSendProgress: (int i) {
-            print(i);
-          });
-    }
+    // List<Media> _listVideoPaths = await ImagePickers.pickerPaths(
+    //   galleryMode: GalleryMode.video,
+    //   selectCount: 1,
+    // );
+    // if (_listVideoPaths.isNotEmpty && _listVideoPaths[0].thumbPath != null) {
+    //   UploadOss.upload(
+    //       file: File(_listVideoPaths[0].thumbPath!),
+    //       rootDir: "upload",
+    //       callback: (data) {
+    //         print(data);
+    //       },
+    //       onSendProgress: (int i) {
+    //         print(i);
+    //       });
+    // }
   }
   static String getNameByPath(String filePath) {
     // ignore: null_aware_before_operator

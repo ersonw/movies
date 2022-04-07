@@ -56,7 +56,7 @@ class _PhotpGalleryPageState extends State<PhotpGalleryPage> {
                   return PhotoViewGalleryPageOptions(
                     imageProvider: NetworkImage(widget.photoList[index]),
                     initialScale: PhotoViewComputedScale.contained * 1,
-                    heroTag: index,
+                    // heroTag: index,
                   );
                 },
                 itemCount: widget.photoList.length,
