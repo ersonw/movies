@@ -9,6 +9,7 @@ import 'package:movies/image_icon.dart';
 import 'package:movies/MyProfile.dart';
 import 'package:movies/WolfFriendPage.dart';
 
+import 'GamePage.dart';
 import 'global.dart';
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -48,7 +49,7 @@ class _HomePageState extends State<HomePage> {
           case 2:
             return CupertinoTabView(
               // defaultTitle: IndexPage.title,
-              builder: (context) => const FeaturedPage(),
+              builder: (context) => const GamePage(),
             );
           case 3:
             return CupertinoTabView(

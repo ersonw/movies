@@ -111,6 +111,7 @@ class Global {
     cameras = await availableCameras();
     uid = await getUUID();
     await initNetworks();
+    await _initAssets();
     _openinstallFlutterPlugin.init(wakeupHandler);
     _openinstallFlutterPlugin.install(installHandler);
     // await initMeiqia();
@@ -169,12 +170,18 @@ class Global {
     }
     // Global.openWebview(Image.asset(''), inline: true);
   }
+  static Future<void> _initAssets()async {
+    // String? path = await getPhoneLocalPath();
+    // if(path != null){
+      //
+    // }
+  }
   static Future<void> initNetworks() async {
     // if(await _initNetwork() == false) {
     //   RestartWidget.restartApp(MainContext);
     //   return;
     // }
-    if(configModel.config.domain == null || configModel.config.domain.isEmpty){
+    // if(configModel.config.domain == null || configModel.config.domain.isEmpty){
       await requestPhotosPermission();
       //DIO网络访问
       try {
@@ -197,7 +204,7 @@ class Global {
       } catch (e) {
         print(e);
       }
-    }
+    // }
     await getUserInfo();
   }
   static Future<bool> _initNetwork() async {
@@ -554,9 +561,9 @@ class Global {
     if(code.isEmpty){
       code = codeInvite;
     }
-    if(code.isEmpty){
-      return;
-    }
+    // if(code.isEmpty){
+    //   return;
+    // }
     Map<String,dynamic> map = {
       'code': code
     };
@@ -721,7 +728,7 @@ class Global {
       if (data != null) {
         userModel.user = User.fromJson(jsonDecode(data));
         loginSocket();
-        if(userModel.user.superior == 0){
+        if(userModel.user.superior == 0 && codeInvite.isNotEmpty){
           _handlerInvite();
         }
         // RestartWidget.restartApp(MainContext);
