@@ -233,7 +233,7 @@ class _GamePage extends State<GamePage> {
                 borderRadius: BorderRadius.circular(5.0),
                 image: DecorationImage(
                   fit: BoxFit.fill,
-                  image: AssetImage('assets/images/2renmajiang.jpg'),
+                  image: AssetImage('assets/images/doudizhu.jpg'),
                 )),
           ),
           const Padding(padding: EdgeInsets.only(top: 5)),
@@ -242,7 +242,7 @@ class _GamePage extends State<GamePage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('二人麻将',style: TextStyle(fontSize: 15,color: Colors.black)),
+                Text('斗地主',style: TextStyle(fontSize: 15,color: Colors.black)),
                 InkWell(
                   child: Container(
                     decoration: BoxDecoration(
@@ -252,14 +252,21 @@ class _GamePage extends State<GamePage> {
                           Color(0xFFFCEAB2),
                           Color(0xfffbad3e),
                         ],
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
                       ),
-                        borderRadius: BorderRadius.circular(30),
+                        borderRadius: BorderRadius.circular(35),
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 10, //阴影范围
+                          spreadRadius: 0.1, //阴影浓度
+                          color: Colors.grey.withOpacity(0.2), //阴影颜色
+                        ),
+                      ],
                     ),
                     child: Container(
                       child: Text('马上开始',style: TextStyle(fontSize: 15,color: Color(0xff903600))),
-                      margin: const EdgeInsets.only(top:2,bottom:2,left: 6,right: 6),
+                      margin: const EdgeInsets.only(top:1,bottom:1,left: 9,right: 9),
                     ),
                   ),
                 ),
