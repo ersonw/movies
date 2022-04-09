@@ -16,6 +16,9 @@ class NWApi {
   static const joinVideo = "/api/user/joinVideo";
   static const getOrder = '/api/user/getOrder';
   static const getBalance = '/api/user/getBalance';
+  static const getGames = '/api/getGames';
+  static const getGameBalance = '/api/user/getGameBalance';
+  static const enterGame = '/api/user/enterGame';
   static const getShareCount = '/api/user/getShareCount';
   static const crateVipOrder = '/api/user/crateVipOrder';
   static const crateDiamondOrder = '/api/user/crateDiamondOrder';

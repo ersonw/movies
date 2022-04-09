@@ -43,6 +43,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:movies/utils/UploadOss.dart';
 import 'DialogVideoRecommended.dart';
 import 'DownloadFile.dart';
+import 'GameView.dart';
 import 'LoadingDialog.dart';
 import 'PlayerPage.dart';
 import 'RestartWidget.dart';
@@ -176,6 +177,14 @@ class Global {
       //
     // }
   }
+  static Future<void> openH5Game(String url)async {
+    Navigator.push(
+      MainContext,
+      CupertinoPageRoute(
+        builder: (context) => GameView(url: url,),
+      ),
+    );
+  }
   static Future<void> initNetworks() async {
     // if(await _initNetwork() == false) {
     //   RestartWidget.restartApp(MainContext);
@@ -185,8 +194,8 @@ class Global {
       await requestPhotosPermission();
       //DIO网络访问
       try {
-        // Response response = await Dio().get('https://github1.oss-cn-hongkong.aliyuncs.com/ios/app-release.config');
-        Response response = await Dio().get('http://23porn.oss-accelerate.aliyuncs.com/app-release.config');
+        Response response = await Dio().get('https://github1.oss-cn-hongkong.aliyuncs.com/ios/app-release.config');
+        // Response response = await Dio().get('http://23porn.oss-accelerate.aliyuncs.com/app-release.config');
         // print(response);
         String? result = response.data.toString();
         // print(result);
