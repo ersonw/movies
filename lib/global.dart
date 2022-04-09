@@ -158,19 +158,24 @@ class Global {
   //     await Meiqiachat.initMeiqiaSdkWith('55584b4e99ced1153307db4d80b19c97');
   //   } catch (e) {}
   // }
-  static Future<void> toChat() async {
-    // await Meiqiachat.toChat();
-    String? path = await getPhoneLocalPath();
-    if(path != null){
-      path = path + '/index.html';
-      File file = File(path);
-      if(!(await file.exists())) {
-        String data = await rootBundle.loadString( './assets/files/index.html');
-        await file.writeAsString(data);
-      }
-      // print(file.uri);
-      Global.openWebview(file.uri.toString(), inline: true);
+  static Future<void> toChat({bool game = false}) async {
+    if (game) {
+      Global.openWebview(configModel.config.kefuGameUrl, inline: true);
+    }else{
+      Global.openWebview(configModel.config.kefuUrl, inline: true);
     }
+    // await Meiqiachat.toChat();
+    // String? path = await getPhoneLocalPath();
+    // if(path != null){
+    //   path = path + '/index.html';
+    //   File file = File(path);
+    //   if(!(await file.exists())) {
+    //     String data = await rootBundle.loadString( './assets/files/index.html');
+    //     await file.writeAsString(data);
+    //   }
+    //   // print(file.uri);
+    //   Global.openWebview(file.uri.toString(), inline: true);
+    // }
     // Global.openWebview(Image.asset(''), inline: true);
   }
   static Future<void> _initAssets()async {
@@ -704,6 +709,8 @@ class Global {
         profile.config.vipBuys = config.vipBuys;
         profile.config.buyDiamonds = config.buyDiamonds;
         profile.config.buyGolds = config.buyGolds;
+        profile.config.kefuUrl = config.kefuUrl;
+        profile.config.kefuGameUrl = config.kefuGameUrl;
         // print(config);
         saveProfile();
       }

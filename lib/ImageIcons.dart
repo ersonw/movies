@@ -43,6 +43,7 @@ class ImageIcons {
   static const String icon_isfirst = 'assets/images/icon_isfirst.png';
   static const String icon_incisive = 'assets/images/icon_incisive.png';
   static const String age = 'assets/images/age.png';
+  static const String kefu = 'assets/images/kefu.png';
   static const String nan = 'assets/images/nan.png';
   static const String nv = 'assets/images/nv.png';
   static const String sex = 'assets/images/sex.png';

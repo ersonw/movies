@@ -202,492 +202,504 @@ class _MyProfile extends State<MyProfile> {
   }
 
   Widget _buildBody(BuildContext context) {
-    return  Container(
-      margin: const EdgeInsets.all(5),
-      child:  SingleChildScrollView(
-        child: Flex(
-        // mainAxisAlignment: MainAxisAlignment.center,
-        direction: Axis.vertical,
-        children: [
-          // 头像用户名
-          InkWell(
-            onTap: (){
-              Navigator.push(Global.MainContext, SlideRightRoute(page: const AccountManager())).then((value) => setState(() {Global.getUserInfo();}));
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Container(
-                  width: 80,
-                  height: 80,
-                  // margin: EdgeInsets.only(left: vw()),
-                  decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(50.0),
-                      image: DecorationImage(
-                        // image: AssetImage('assets/image/default_head.gif'),
-                        image: _buildAvatar(),
-                      )),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(left: 10, top: 10),
-                  child: Column(
-                    children: [
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              _user.nickname,
-                              style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black),
-                            ),
-                          ]
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(left: 10),
-                  width: 25,
-                  height: 25,
-                  child: Image.asset(_user.sex == 0 ? ImageIcons.nan : ImageIcons.nv,
-                  ),
-                )
-              ],
-            ),
-          ),
-          const Padding(padding: EdgeInsets.only(top: 10)),
-          // 金币数
-         SizedBox(
-          width: ((MediaQuery.of(context).size.width) / 1),
-           child:  Row(
-             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-             children: [
-               const Padding(padding: EdgeInsets.only(top: 10,left: 5)),
-               InkWell(
-                 onTap: () => _enterGold(context),
-                 child: Column(
-                   children: [
-                     Text(Global.getNumbersToChinese(userModel.user.gold),
-                       style: const TextStyle(
-                           fontSize: 18, ),
-                     ),
-                     const Text(
-                       '金币',
-                       style: TextStyle(fontSize: 12, color: Colors.grey),
-                     ),
-                   ],
-                 ),
-               ),
-               InkWell(
-                 onTap: () => _enterDiamond(context),
-                 child: Column(
-                   children: [
-                     Text(Global.getNumbersToChinese(userModel.user.diamond),
-                       style: const TextStyle(
-                           fontSize: 18, ),
-                     ),
-                     const Text(
-                       '钻石',
-                       style: TextStyle(fontSize: 12, color: Colors.grey),
-                     ),
-                   ],
-                 ),
-               ),
-               InkWell(
-                 onTap: (){
-                   // Navigator.of(context, rootNavigator: true).push<void>(
-                   //   CupertinoPageRoute(
-                   //     title: "推荐记录",
-                   //     // fullscreenDialog: true,
-                   //     builder: (context) => const MyRecommendedPage(),
-                   //   ),
-                   // );
-                   Navigator.push(Global.MainContext, SlideRightRoute(page: const MyRecommendedPage())).then((value) => setState(() {Global.getUserInfo();}));
-
-                 },
-                 child: Column(
-                   children: [
-                     Text(
-                       Global.getNumbersToChinese(userModel.user.remommends),
-                       style: const TextStyle(
-                           fontSize: 18,),
-                     ),
-                     const Text(
-                       '推荐',
-                       style: TextStyle(fontSize: 12, color: Colors.grey),
-                     ),
-                   ],
-                 ),
-               ),
-               InkWell(
-                 onTap: (){
-                   // Navigator.of(context, rootNavigator: true).push<void>(
-                   //   CupertinoPageRoute(
-                   //     title: "关注列表",
-                   //     // fullscreenDialog: true,
-                   //     builder: (context) => const FollowsPage(),
-                   //   ),
-                   // );
-                   Navigator.push(Global.MainContext, SlideRightRoute(page: const FollowsPage())).then((value) => setState(() {Global.getUserInfo();}));
-
-                 },
-                 child: Column(
-                   children: [
-                     Text(
-                       Global.getNumbersToChinese(userModel.user.follows),
-                       style: const TextStyle(
-                           fontSize: 18, ),
-                     ),
-                     const Text(
-                       '关注',
-                       style: TextStyle(fontSize: 12, color: Colors.grey),
-                     ),
-                   ],
-                 ),
-               ),
-               InkWell(
-                 onTap: (){
-                   // Navigator.of(context, rootNavigator: true).push<void>(
-                   //   CupertinoPageRoute(
-                   //     title: "粉丝列表 ",
-                   //     // fullscreenDialog: true,
-                   //     builder: (context) => const FansPage(),
-                   //   ),
-                   // );
-                   Navigator.push(Global.MainContext, SlideRightRoute(page: const FansPage())).then((value) => setState(() {Global.getUserInfo();}));
-
-                 },
-                 child: Column(
-                   children: [
-                     Text(
-                       Global.getNumbersToChinese(userModel.user.fans),
-                       style: const TextStyle(
-                           fontSize: 18, ),
-                     ),
-                     const Text(
-                       '粉丝',
-                       style: TextStyle(fontSize: 12, color: Colors.grey),
-                     ),
-                   ],
-                 ),
-               ),
-               const Padding(padding: EdgeInsets.only(right: 5)),
-             ],
-           ),
-         ),
-          InkWell(
-            onTap: (() {
-              Navigator.push(Global.MainContext, SlideRightRoute(page: const VIPBuyPage())).then((value) => setState(() {Global.getUserInfo();}));
-            }),
-            child: Stack(
-              alignment: Alignment.bottomLeft,
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(top: 10,left:5,right:5),
-                  // width: ((MediaQuery.of(context).size.width) / 3.2),
-                  height: 60,
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.circular(10.0),
-                    image: const DecorationImage(
-                      fit: BoxFit.fill,
-                      image: AssetImage(ImageIcons.vipBuy),
+    return  Column(
+      children: [
+        Expanded(
+          child: Container(
+            margin: const EdgeInsets.all(5),
+            child:  SingleChildScrollView(
+              child: Flex(
+                // mainAxisAlignment: MainAxisAlignment.center,
+                direction: Axis.vertical,
+                children: [
+                  // 头像用户名
+                  InkWell(
+                    onTap: (){
+                      Navigator.push(Global.MainContext, SlideRightRoute(page: const AccountManager())).then((value) => setState(() {Global.getUserInfo();}));
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 80,
+                          height: 80,
+                          // margin: EdgeInsets.only(left: vw()),
+                          decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.circular(50.0),
+                              image: DecorationImage(
+                                // image: AssetImage('assets/image/default_head.gif'),
+                                image: _buildAvatar(),
+                              )),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(left: 10, top: 10),
+                          child: Column(
+                            children: [
+                              Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      _user.nickname,
+                                      style: const TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black),
+                                    ),
+                                  ]
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(left: 10),
+                          width: 25,
+                          height: 25,
+                          child: Image.asset(_user.sex == 0 ? ImageIcons.nan : ImageIcons.nv,
+                          ),
+                        )
+                      ],
                     ),
                   ),
-                ),
-                Container(
-                  height: 25,
-                  margin: const EdgeInsets.only(left: 70),
-                  child: Text(
-                      userModel.user.expired > DateTime.now().millisecondsSinceEpoch ? '您的会员将在${Global.getDateToString(_user.expired)}到期' : '尚未开通会员',
-                      style: const TextStyle(color: Colors.white,fontSize: 12)),
-                ),
-              ]
-            ),
-          ),
-          // 三图片
-          // const Padding(padding: EdgeInsets.only(top:20)),
-          Container(
-            margin: const EdgeInsets.only(top: 10,left:5,right:5),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                InkWell(
-                  onTap: () {
-                    if(userModel.user.invite == null){
-                      ShowAlertDialog(context, '友情提示','为了您的账号安全，未绑定手机号无法进行推广哟');
-                      return;
-                    }
-                    Navigator.push(Global.MainContext, SlideRightRoute(page: const UserSharePage())).then((value) => setState(() {Global.getUserInfo();}));
-                  },
-                  child: Container(
-                    // margin: const EdgeInsets.only(top: 10),
-                    width: ((MediaQuery.of(context).size.width) / 2.2),
-                    height: 54,
-                    decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(10.0),
-                        image: const DecorationImage(
-                          fit: BoxFit.fill,
-                          image: AssetImage(ImageIcons.promote),
-                        )),
-                  ),
-                ),
-                InkWell(
-                  onTap: (){
-                    Global.showWebColoredToast('暂未开放，敬请期待!');
-                  },
-                  child: Container(
-                    // margin: const EdgeInsets.only(top: 10),
-                    width: ((MediaQuery.of(context).size.width) / 2.2),
-                    height: 54,
-                    decoration: BoxDecoration(
-                        color: Colors.grey,
-                        borderRadius: BorderRadius.circular(10.0),
-                        image: const DecorationImage(
-                          fit: BoxFit.fill,
-                          image: AssetImage(ImageIcons.income),
-                        )),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            width: (MediaQuery.of(context).size.width),
-            // height: 200,
-            margin: const EdgeInsets.only(top: 20),
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(10)),
-              border: Border.all(width: 1.0, color: Colors.black12),
-              // color: Colors.white30,
-              // image: DecorationImage(
-              //   image: AssetImage(ImageIcons.button_y.assetName),
-              //   fit: BoxFit.fill,
-              // ),
-            ),
-            child: Container(
-              margin: const EdgeInsets.all(10),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      TextButton(
-                        onPressed: () => _enterDiamond(context),
-                        child: Column(
-                          children: [
-                            Image.asset(
-                              ImageIcons.goumaizuanshi,
-                              width: 45,
-                              height: 45,
-                            ),
-                            const Text(
-                              '购买钻石',
-                              style: TextStyle(
-                                  color: Colors.black, fontSize: 14),
-                            ),
-                          ],
+                  const Padding(padding: EdgeInsets.only(top: 10)),
+                  // 金币数
+                  SizedBox(
+                    width: ((MediaQuery.of(context).size.width) / 1),
+                    child:  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Padding(padding: EdgeInsets.only(top: 10,left: 5)),
+                        InkWell(
+                          onTap: () => _enterGold(context),
+                          child: Column(
+                            children: [
+                              Text(Global.getNumbersToChinese(userModel.user.gold),
+                                style: const TextStyle(
+                                  fontSize: 18, ),
+                              ),
+                              const Text(
+                                '金币',
+                                style: TextStyle(fontSize: 12, color: Colors.grey),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      TextButton(
-                        onPressed: () => _enterGold(context),
-                        child: Column(
-                          children: [
-                            Image.asset(
-                              ImageIcons.goumaijinbi,
-                              width: 45,
-                              height: 45,
-                            ),
-                            const Text(
-                              '购买金币',
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          ],
+                        InkWell(
+                          onTap: () => _enterDiamond(context),
+                          child: Column(
+                            children: [
+                              Text(Global.getNumbersToChinese(userModel.user.diamond),
+                                style: const TextStyle(
+                                  fontSize: 18, ),
+                              ),
+                              const Text(
+                                '钻石',
+                                style: TextStyle(fontSize: 12, color: Colors.grey),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          // Navigator.of(context, rootNavigator: true).push<void>(
-                          //   CupertinoPageRoute(
-                          //     // title: "推广分享",
-                          //     // fullscreenDialog: true,
-                          //     builder: (context) => const CollectsPage(),
-                          //   ),
-                          // );
-                          Navigator.push(Global.MainContext, SlideRightRoute(page: const CollectsPage())).then((value) => setState(() {Global.getUserInfo();}));
-                        },
-                        child: Column(
-                          children: [
-                            Image.asset(
-                              ImageIcons.wodeshoucang,
-                              width: 45,
-                              height: 45,
-                            ),
-                            const Text(
-                              '我的收藏',
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          ],
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () => Global.showDownloadPage(),
-                        child: Column(
-                          children: [
-                            Image.asset(
-                              ImageIcons.wodexiazai,
-                              width: 45,
-                              height: 45,
-                            ),
-                            const Text(
-                              '我的下载',
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      TextButton(
-                        onPressed: () async{
-                          String url = configModel.config.groupLink;
-                          if(await canLaunch(url)) launch(url);
-                        },
-                        child: Column(
-                          children: [
-                            Image.asset(
-                              ImageIcons.kaichejinqun,
-                              width: 45,
-                              height: 45,
-                            ),
-                            const Text(
-                              '开车进群',
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          ],
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          // Navigator.of(context, rootNavigator: true).push<void>(
-                          //   CupertinoPageRoute(
-                          //     title: '我的钱包',
-                          //     // fullscreenDialog: true,
-                          //     builder: (context) => const BalancePage(),
-                          //   ),
-                          // );
-                          Navigator.push(Global.MainContext, SlideRightRoute(page: const InviteCodeInputPage())).then((value) => setState(() {Global.getUserInfo();}));
-                        },
-                        child: Column(
-                          children: [
-                            Image.asset(
-                              ImageIcons.yingyongzhongxin,
-                              width: 45,
-                              height: 45,
-                            ),
-                            const Text(
-                              '兑换码',
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          ],
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          // Navigator.of(context, rootNavigator: true).push<void>(
-                          //   CupertinoPageRoute(
-                          //     title: '观看记录',
-                          //     // fullscreenDialog: true,
-                          //     builder: (context) => const VideoRecordsPage(),
-                          //   ),
-                          // );
-                          Navigator.push(Global.MainContext, SlideRightRoute(page: const VideoRecordsPage())).then((value) => setState(() {Global.getUserInfo();}));
+                        InkWell(
+                          onTap: (){
+                            // Navigator.of(context, rootNavigator: true).push<void>(
+                            //   CupertinoPageRoute(
+                            //     title: "推荐记录",
+                            //     // fullscreenDialog: true,
+                            //     builder: (context) => const MyRecommendedPage(),
+                            //   ),
+                            // );
+                            Navigator.push(Global.MainContext, SlideRightRoute(page: const MyRecommendedPage())).then((value) => setState(() {Global.getUserInfo();}));
 
-                        },
-                        child: Column(
-                          children: [
-                            Image.asset(
-                              ImageIcons.guankanjilu,
-                              width: 45,
-                              height: 45,
-                            ),
-                            const Text(
-                              '观看记录',
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          ],
+                          },
+                          child: Column(
+                            children: [
+                              Text(
+                                Global.getNumbersToChinese(userModel.user.remommends),
+                                style: const TextStyle(
+                                  fontSize: 18,),
+                              ),
+                              const Text(
+                                '推荐',
+                                style: TextStyle(fontSize: 12, color: Colors.grey),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          // Navigator.of(context, rootNavigator: true).push<void>(
-                          //   CupertinoPageRoute(
-                          //     title: '反馈中心',
-                          //     // fullscreenDialog: true,
-                          //     builder: (context) => const KeFuMessagePage(),
-                          //   ),
-                          // );
-                          Global.toChat();
-                        },
-                        child: Column(
-                          children: [
-                            Image.asset(
-                              ImageIcons.bangzhufankui,
-                              width: 45,
-                              height: 45,
-                            ),
-                            const Text(
-                              '在线客服',
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          ],
+                        InkWell(
+                          onTap: (){
+                            // Navigator.of(context, rootNavigator: true).push<void>(
+                            //   CupertinoPageRoute(
+                            //     title: "关注列表",
+                            //     // fullscreenDialog: true,
+                            //     builder: (context) => const FollowsPage(),
+                            //   ),
+                            // );
+                            Navigator.push(Global.MainContext, SlideRightRoute(page: const FollowsPage())).then((value) => setState(() {Global.getUserInfo();}));
+
+                          },
+                          child: Column(
+                            children: [
+                              Text(
+                                Global.getNumbersToChinese(userModel.user.follows),
+                                style: const TextStyle(
+                                  fontSize: 18, ),
+                              ),
+                              const Text(
+                                '关注',
+                                style: TextStyle(fontSize: 12, color: Colors.grey),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                        InkWell(
+                          onTap: (){
+                            // Navigator.of(context, rootNavigator: true).push<void>(
+                            //   CupertinoPageRoute(
+                            //     title: "粉丝列表 ",
+                            //     // fullscreenDialog: true,
+                            //     builder: (context) => const FansPage(),
+                            //   ),
+                            // );
+                            Navigator.push(Global.MainContext, SlideRightRoute(page: const FansPage())).then((value) => setState(() {Global.getUserInfo();}));
+
+                          },
+                          child: Column(
+                            children: [
+                              Text(
+                                Global.getNumbersToChinese(userModel.user.fans),
+                                style: const TextStyle(
+                                  fontSize: 18, ),
+                              ),
+                              const Text(
+                                '粉丝',
+                                style: TextStyle(fontSize: 12, color: Colors.grey),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Padding(padding: EdgeInsets.only(right: 5)),
+                      ],
+                    ),
                   ),
+                  InkWell(
+                    onTap: (() {
+                      Navigator.push(Global.MainContext, SlideRightRoute(page: const VIPBuyPage())).then((value) => setState(() {Global.getUserInfo();}));
+                    }),
+                    child: Stack(
+                        alignment: Alignment.bottomLeft,
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(top: 10,left:5,right:5),
+                            // width: ((MediaQuery.of(context).size.width) / 3.2),
+                            height: 60,
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(10.0),
+                              image: const DecorationImage(
+                                fit: BoxFit.fill,
+                                image: AssetImage(ImageIcons.vipBuy),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            height: 25,
+                            margin: const EdgeInsets.only(left: 70),
+                            child: Text(
+                                userModel.user.expired > DateTime.now().millisecondsSinceEpoch ? '您的会员将在${Global.getDateToString(_user.expired)}到期' : '尚未开通会员',
+                                style: const TextStyle(color: Colors.white,fontSize: 12)),
+                          ),
+                        ]
+                    ),
+                  ),
+                  // 三图片
+                  // const Padding(padding: EdgeInsets.only(top:20)),
+                  Container(
+                    margin: const EdgeInsets.only(top: 10,left:5,right:5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            if(userModel.user.invite == null){
+                              ShowAlertDialog(context, '友情提示','为了您的账号安全，未绑定手机号无法进行推广哟');
+                              return;
+                            }
+                            Navigator.push(Global.MainContext, SlideRightRoute(page: const UserSharePage())).then((value) => setState(() {Global.getUserInfo();}));
+                          },
+                          child: Container(
+                            // margin: const EdgeInsets.only(top: 10),
+                            width: ((MediaQuery.of(context).size.width) / 2.2),
+                            height: 54,
+                            decoration: BoxDecoration(
+                                color: Colors.transparent,
+                                borderRadius: BorderRadius.circular(10.0),
+                                image: const DecorationImage(
+                                  fit: BoxFit.fill,
+                                  image: AssetImage(ImageIcons.promote),
+                                )),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: (){
+                            Global.showWebColoredToast('暂未开放，敬请期待!');
+                          },
+                          child: Container(
+                            // margin: const EdgeInsets.only(top: 10),
+                            width: ((MediaQuery.of(context).size.width) / 2.2),
+                            height: 54,
+                            decoration: BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.circular(10.0),
+                                image: const DecorationImage(
+                                  fit: BoxFit.fill,
+                                  image: AssetImage(ImageIcons.income),
+                                )),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: (MediaQuery.of(context).size.width),
+                    // height: 200,
+                    margin: const EdgeInsets.only(top: 20),
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      border: Border.all(width: 1.0, color: Colors.black12),
+                      // color: Colors.white30,
+                      // image: DecorationImage(
+                      //   image: AssetImage(ImageIcons.button_y.assetName),
+                      //   fit: BoxFit.fill,
+                      // ),
+                    ),
+                    child: Container(
+                      margin: const EdgeInsets.all(10),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              TextButton(
+                                onPressed: () => _enterDiamond(context),
+                                child: Column(
+                                  children: [
+                                    Image.asset(
+                                      ImageIcons.goumaizuanshi,
+                                      width: 45,
+                                      height: 45,
+                                    ),
+                                    const Text(
+                                      '购买钻石',
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 14),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () => _enterGold(context),
+                                child: Column(
+                                  children: [
+                                    Image.asset(
+                                      ImageIcons.goumaijinbi,
+                                      width: 45,
+                                      height: 45,
+                                    ),
+                                    const Text(
+                                      '购买金币',
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  // Navigator.of(context, rootNavigator: true).push<void>(
+                                  //   CupertinoPageRoute(
+                                  //     // title: "推广分享",
+                                  //     // fullscreenDialog: true,
+                                  //     builder: (context) => const CollectsPage(),
+                                  //   ),
+                                  // );
+                                  Navigator.push(Global.MainContext, SlideRightRoute(page: const CollectsPage())).then((value) => setState(() {Global.getUserInfo();}));
+                                },
+                                child: Column(
+                                  children: [
+                                    Image.asset(
+                                      ImageIcons.wodeshoucang,
+                                      width: 45,
+                                      height: 45,
+                                    ),
+                                    const Text(
+                                      '我的收藏',
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () => Global.showDownloadPage(),
+                                child: Column(
+                                  children: [
+                                    Image.asset(
+                                      ImageIcons.wodexiazai,
+                                      width: 45,
+                                      height: 45,
+                                    ),
+                                    const Text(
+                                      '我的下载',
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              TextButton(
+                                onPressed: () async{
+                                  String url = configModel.config.groupLink;
+                                  if(await canLaunch(url)) launch(url);
+                                },
+                                child: Column(
+                                  children: [
+                                    Image.asset(
+                                      ImageIcons.kaichejinqun,
+                                      width: 45,
+                                      height: 45,
+                                    ),
+                                    const Text(
+                                      '开车进群',
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  // Navigator.of(context, rootNavigator: true).push<void>(
+                                  //   CupertinoPageRoute(
+                                  //     title: '我的钱包',
+                                  //     // fullscreenDialog: true,
+                                  //     builder: (context) => const BalancePage(),
+                                  //   ),
+                                  // );
+                                  Navigator.push(Global.MainContext, SlideRightRoute(page: const InviteCodeInputPage())).then((value) => setState(() {Global.getUserInfo();}));
+                                },
+                                child: Column(
+                                  children: [
+                                    Image.asset(
+                                      ImageIcons.yingyongzhongxin,
+                                      width: 45,
+                                      height: 45,
+                                    ),
+                                    const Text(
+                                      '兑换码',
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  // Navigator.of(context, rootNavigator: true).push<void>(
+                                  //   CupertinoPageRoute(
+                                  //     title: '观看记录',
+                                  //     // fullscreenDialog: true,
+                                  //     builder: (context) => const VideoRecordsPage(),
+                                  //   ),
+                                  // );
+                                  Navigator.push(Global.MainContext, SlideRightRoute(page: const VideoRecordsPage())).then((value) => setState(() {Global.getUserInfo();}));
+
+                                },
+                                child: Column(
+                                  children: [
+                                    Image.asset(
+                                      ImageIcons.guankanjilu,
+                                      width: 45,
+                                      height: 45,
+                                    ),
+                                    const Text(
+                                      '观看记录',
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  // Navigator.of(context, rootNavigator: true).push<void>(
+                                  //   CupertinoPageRoute(
+                                  //     title: '反馈中心',
+                                  //     // fullscreenDialog: true,
+                                  //     builder: (context) => const KeFuMessagePage(),
+                                  //   ),
+                                  // );
+                                  Global.toChat();
+                                },
+                                child: Column(
+                                  children: [
+                                    Image.asset(
+                                      ImageIcons.bangzhufankui,
+                                      width: 45,
+                                      height: 45,
+                                    ),
+                                    const Text(
+                                      '在线客服',
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  // const LogOutButton(),
                 ],
+              ),),
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Container(
+              margin: const EdgeInsets.only(right: 20,bottom: 20),
+              child: InkWell(
+                onTap: () {
+                  Global.toChat();
+                },
+                child: Container(
+                  width: 60,
+                  height: 60,
+                  decoration: const BoxDecoration(
+                    // color: Colors.blueAccent,
+                    image: DecorationImage(
+                      image: AssetImage(ImageIcons.kefu),
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(50)),
+                  ),
+                  // child: Container(
+                  //   alignment: Alignment.center,
+                  //   child: const Text('客服', textAlign: TextAlign.center)
+                  // ),
+                ),
               ),
             ),
-          ),
-          // const LogOutButton(),
-        ],
-      ),),
+          ]
+        ),
+      ],
     );
   }
 
   void _enterDiamond(BuildContext context) {
-    // Navigator.of(context, rootNavigator: true)
-    //     .push<void>(
-    //       CupertinoPageRoute(
-    //         title: '钻石钱包',
-    //         // fullscreenDialog: true,
-    //         builder: (context) => const BuyDiamondPage(),
-    //       ),
-    //     )
-    //     .then((value) => setState(() {
-    //           Global.getUserInfo();
-    //         }));
     Navigator.push(Global.MainContext, SlideRightRoute(page: const BuyDiamondPage())).then((value) => setState(() {Global.getUserInfo();}));
   }
   void _enterGold(BuildContext context) {
-    // Navigator.of(context, rootNavigator: true)
-    //     .push<void>(
-    //   CupertinoPageRoute(
-    //     title: '金币钱包',
-    //     // fullscreenDialog: true,
-    //     builder: (context) => const BuyGoldPage(),
-    //   ),
-    // )
-    //     .then((value) => setState(() {
-    //   Global.getUserInfo();
-    // }));
     Navigator.push(Global.MainContext, SlideRightRoute(page: const BuyGoldPage())).then((value) => setState(() {Global.getUserInfo();}));
   }
 }

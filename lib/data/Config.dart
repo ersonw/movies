@@ -21,6 +21,8 @@ class Config {
   String urlIos = '';
   String urlAndroid = '';
   String groupLink = '';
+  String kefuGameUrl = '';
+  String kefuUrl = '';
   bool force = false;
   bool bootLock = false;
   String? bootLockPasswd = '';
@@ -39,6 +41,8 @@ class Config {
         urlIos = json['urlIos'],
         urlAndroid = json['urlAndroid'],
         groupLink = json['groupLink'],
+        kefuGameUrl = json['kefuGameUrl'],
+        kefuUrl = json['kefuUrl'],
         domain = json['domain'],
         wsDomain = json['wsDomain'],
         force = json['force'] ?? false,
@@ -79,6 +83,8 @@ class Config {
         'urlIos': urlIos,
         'urlAndroid': urlAndroid,
         'groupLink': groupLink,
+        'kefuGameUrl': kefuGameUrl,
+        'kefuUrl': kefuUrl,
         'domain': domain,
         'wsDomain': wsDomain,
         'force': force,
