@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class ImageIcons {
+class ImageIconss {
   static const AssetImage home = AssetImage('assets/image/home.png');
   static const AssetImage moneyCollect = AssetImage('assets/image/money_collect.png');
   static const AssetImage message = AssetImage('assets/image/message.png');
@@ -37,7 +37,7 @@ class ImageIcons {
   static const AssetImage nomalBg = AssetImage('assets/image/nomalBg.png');
   static const AssetImage diamond = AssetImage('assets/image/diamond.png');
   static const AssetImage remommendIcon = AssetImage('assets/image/remommendIcon.png');
-  static const AssetImage actorIcon = AssetImage('assets/image/fa4b534d-a31f-48b9-b425-4363f244d402.png');
+  static const AssetImage actorIcon = AssetImage('assets/image/actorIcon.png');
   static const AssetImage icon_share = AssetImage('assets/image/icon_share.png');
   static const AssetImage icon_download = AssetImage('assets/image/icon_download.png');
   static const AssetImage zanIcon = AssetImage('assets/image/zanIcon.png');

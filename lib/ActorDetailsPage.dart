@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'HttpManager.dart';
+import 'ImageIcons.dart';
 import 'RoundUnderlineTabIndicator.dart';
 import 'data/ClassData.dart';
 import 'data/SearchActor.dart';
@@ -303,7 +304,7 @@ class _ActorDetailsPage extends State<ActorDetailsPage> with SingleTickerProvide
                     Row(
                       children: [
                         Image.asset(
-                          ImageIcons.remommendIcon.assetName,
+                          ImageIcons.remommendIcon,
                           width: 45,
                           height: 15,
                         ),

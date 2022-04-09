@@ -7,6 +7,7 @@ import 'package:movies/data/UserList.dart';
 import 'package:movies/data/UserPost.dart';
 
 import 'HttpManager.dart';
+import 'ImageIcons.dart';
 import 'PhotpGalleryPage.dart';
 import 'RoundUnderlineTabIndicator.dart';
 import 'data/UserVideo.dart';
@@ -213,7 +214,7 @@ class _UserInfoPage extends State<UserInfoPage>  with SingleTickerProviderStateM
                         onTap: () => _likeVideo(index),
                         child: Row(
                           children: [
-                            Image.asset(ImageIcons.icon_community_zan.assetName,color: video.like ? Colors.red : Colors.grey,width: 45,height: 15,),
+                            Image.asset(ImageIcons.icon_community_zan,color: video.like ? Colors.red : Colors.grey,width: 45,height: 15,),
                             Text('${Global.getNumbersToChinese(video.likes)}人',style: const TextStyle(color: Colors.grey,fontSize: 13),),
                           ],
                         ),
@@ -270,7 +271,7 @@ class _UserInfoPage extends State<UserInfoPage>  with SingleTickerProviderStateM
                               children: [
                                 Container(
                                   // color: Colors.purple,
-                                  child: Image.asset(ImageIcons.king_vip.assetName,width: 36,height: 30,),
+                                  child: Image.asset(ImageIcons.king_vip,width: 36,height: 30,),
                                 ),
                               ],
                             ),
@@ -376,7 +377,7 @@ class _UserInfoPage extends State<UserInfoPage>  with SingleTickerProviderStateM
                       }),
                       child: userPost.isRecommend ? Row(
                         children: [
-                          Image.asset(ImageIcons.icon_community_zan.assetName,width: 18,color: Colors.red,),
+                          Image.asset(ImageIcons.icon_community_zan,width: 18,color: Colors.red,),
                           Container(
                             margin: const EdgeInsets.only(left: 5),
                             child: Text(Global.getNumbersToChinese(userPost.comments),style: const TextStyle(fontSize: 12),),
@@ -384,7 +385,7 @@ class _UserInfoPage extends State<UserInfoPage>  with SingleTickerProviderStateM
                         ],
                       ) : Row(
                         children: [
-                          Image.asset(ImageIcons.icon_community_zan.assetName,width: 18,),
+                          Image.asset(ImageIcons.icon_community_zan,width: 18,),
                           Container(
                             margin: const EdgeInsets.only(left: 5),
                             child: Text(Global.getNumbersToChinese(userPost.comments),style: const TextStyle(fontSize: 12),),

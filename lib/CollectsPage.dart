@@ -7,6 +7,7 @@ import 'package:movies/data/SearchActor.dart';
 import 'dart:io';
 import 'ActorDetailsPage.dart';
 import 'HttpManager.dart';
+import 'ImageIcons.dart';
 import 'PhotpGalleryPage.dart';
 import 'RoundUnderlineTabIndicator.dart';
 import 'data/UserPost.dart';
@@ -365,7 +366,7 @@ class _CollectsPage extends State<CollectsPage>  with SingleTickerProviderStateM
   }
   _buildActorAvatar(String avatar) {
     if (avatar == null || avatar == '') {
-      return AssetImage(ImageIcons.actorIcon.assetName);
+      return const AssetImage(ImageIcons.actorIcon);
     }
     if (avatar.startsWith('http')) {
       return NetworkImage(avatar);
@@ -375,7 +376,7 @@ class _CollectsPage extends State<CollectsPage>  with SingleTickerProviderStateM
   _buildAvatar(String avatar) {
     if ((avatar == null || avatar == '') ||
         avatar.contains('http') == false) {
-      return const AssetImage('assets/image/default_head.gif');
+      return const AssetImage(ImageIcons.default_head);
     }
     return NetworkImage(avatar);
   }
@@ -489,7 +490,7 @@ class _CollectsPage extends State<CollectsPage>  with SingleTickerProviderStateM
                               children: [
                                 Container(
                                   // color: Colors.purple,
-                                  child: Image.asset(ImageIcons.king_vip.assetName,width: 36,height: 30,),
+                                  child: Image.asset(ImageIcons.king_vip,width: 36,height: 30,),
                                 ),
                               ],
                             ),
@@ -595,7 +596,7 @@ class _CollectsPage extends State<CollectsPage>  with SingleTickerProviderStateM
                       }),
                       child: userPost.isRecommend ? Row(
                         children: [
-                          Image.asset(ImageIcons.icon_community_zan.assetName,width: 18,color: Colors.red,),
+                          Image.asset(ImageIcons.icon_community_zan,width: 18,color: Colors.red,),
                           Container(
                             margin: const EdgeInsets.only(left: 5),
                             child: Text(Global.getNumbersToChinese(userPost.comments),style: const TextStyle(fontSize: 12),),
@@ -603,7 +604,7 @@ class _CollectsPage extends State<CollectsPage>  with SingleTickerProviderStateM
                         ],
                       ) : Row(
                         children: [
-                          Image.asset(ImageIcons.icon_community_zan.assetName,width: 18,),
+                          Image.asset(ImageIcons.icon_community_zan,width: 18,),
                           Container(
                             margin: const EdgeInsets.only(left: 5),
                             child: Text(Global.getNumbersToChinese(userPost.comments),style: const TextStyle(fontSize: 12),),

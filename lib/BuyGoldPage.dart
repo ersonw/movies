@@ -14,6 +14,7 @@ import 'BuyDiamondRecordsPage.dart';
 import 'BuyGoldRecordsPage.dart';
 import 'CrateOrderPage.dart';
 import 'HttpManager.dart';
+import 'ImageIcons.dart';
 import 'data/OnlinePay.dart';
 import 'functions.dart';
 import 'image_icon.dart';
@@ -185,7 +186,7 @@ class _BuyGoldPage extends State<BuyGoldPage>
                                 margin: const EdgeInsets.only(top:10,bottom: 10, left:30,right: 30),
                                 child: Row(
                                   children: [
-                                    Image(image: ImageIcons.iconCardList, width: 20),
+                                    Image.asset( ImageIcons.iconCardList, width: 20),
                                     const Text(
                                       '立即提现',
                                       style: TextStyle(
@@ -223,7 +224,7 @@ class _BuyGoldPage extends State<BuyGoldPage>
                                 margin: const EdgeInsets.only(top:10,bottom: 10, left:30,right: 30),
                                 child: Row(
                                   children: [
-                                    Image(image: ImageIcons.iconCoins, width: 20),
+                                    Image.asset(ImageIcons.iconCoins, width: 20),
                                     const Text(
                                       '金币明细',
                                       style: TextStyle(
@@ -343,7 +344,7 @@ class _BuyGoldPage extends State<BuyGoldPage>
             Row(
                 mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Image( image: ImageIcons.GoldCoins, width: 21),
+                Image.asset(ImageIcons.GoldCoins, width: 21),
                 Text('${buyGold.gold}金币',style: const TextStyle(color: Colors.deepOrange,fontSize: 20),),
               ]
             ),

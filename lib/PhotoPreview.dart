@@ -11,11 +11,11 @@ class PhotoPreview extends StatefulWidget {
   final Decoration decoration;//背景设计
 
   PhotoPreview(
-      {this.galleryItems,
+      {required this.galleryItems,
         this.defaultImage = 1,
-        this.pageChanged,
+        required this.pageChanged,
         this.direction = Axis.horizontal,
-        this.decoration
+        required this.decoration
       })
       : assert(galleryItems != null);
   @override
@@ -23,7 +23,7 @@ class PhotoPreview extends StatefulWidget {
 }
 
 class _PhotoPreviewState extends State<PhotoPreview> {
-  int tempSelect;
+  late int tempSelect;
   @override
   void initState() {
     // TODO: implement initState

@@ -14,6 +14,7 @@ import 'package:chewie/chewie.dart';
 import 'package:wakelock/wakelock.dart';
 import 'ActorDetailsPage.dart';
 import 'HttpManager.dart';
+import 'ImageIcons.dart';
 import 'VIPBuyPage.dart';
 import 'VideoFullPage.dart';
 import 'data/SearchList.dart';
@@ -47,7 +48,7 @@ class _PlayerPage extends State<PlayerPage> {
   void initState() {
     // TODO: implement initState
     Wakelock.enable();
-    _controller = VideoPlayerController.asset(ImageIcons.loading_38959.assetName);
+    _controller = VideoPlayerController.asset(ImageIcons.loading_38959);
     _initializeVideoPlayerFuture = _controller.initialize();
     _controller.setLooping(true);
     value = _controller.value;
@@ -160,7 +161,7 @@ class _PlayerPage extends State<PlayerPage> {
   }
   _buildActorAvatar(String avatar) {
     if (avatar == null || avatar == '') {
-      return AssetImage(ImageIcons.actorIcon.assetName);
+      return AssetImage(ImageIcons.actorIcon);
     }
     if (avatar.startsWith('http')) {
       return NetworkImage(avatar);
@@ -860,7 +861,7 @@ class _PlayerPage extends State<PlayerPage> {
                                               style: const TextStyle(color: Colors.orange),
                                               textAlign: TextAlign.right,
                                             ) : Container(),
-                                            Image.asset(ImageIcons.diamond.assetName,width: 12,),
+                                            Image.asset(ImageIcons.diamond,width: 12,),
                                           ],
                                         ),
                                       ],
@@ -1125,7 +1126,7 @@ class _PlayerPage extends State<PlayerPage> {
                                   Row(
                                     children: [
                                       Image.asset(
-                                        ImageIcons.remommendIcon.assetName,
+                                        ImageIcons.remommendIcon,
                                         width: 45,
                                         height: 15,
                                       ),
@@ -1253,7 +1254,7 @@ class _PlayerPage extends State<PlayerPage> {
                           child: Column(
                             children: [
                               Image.asset(
-                                ImageIcons.icon_download.assetName,
+                                ImageIcons.icon_download,
                                 width: 30,
                               ),
                               const Text(
@@ -1270,7 +1271,7 @@ class _PlayerPage extends State<PlayerPage> {
                           child: Column(
                             children: [
                               Image.asset(
-                                ImageIcons.icon_share.assetName,
+                                ImageIcons.icon_share,
                                 width: 30,
                               ),
                               const Text(
@@ -1292,11 +1293,11 @@ class _PlayerPage extends State<PlayerPage> {
                     width: 63,
                     height: 63,
                     margin: const EdgeInsets.only(bottom: 83),
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                         // color: Colors.black54,
                         image: DecorationImage(
                             fit: BoxFit.fill,
-                            image: AssetImage(ImageIcons.zanIcon.assetName))),
+                            image: AssetImage(ImageIcons.zanIcon))),
                   ),
                 ),
               ],
@@ -1399,7 +1400,7 @@ class _PlayerPage extends State<PlayerPage> {
                     Row(
                       children: [
                         Image.asset(
-                          ImageIcons.remommendIcon.assetName,
+                          ImageIcons.remommendIcon,
                           width: 45,
                           height: 15,
                         ),

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:movies/data/ClassData.dart';
 
 import 'HttpManager.dart';
+import 'ImageIcons.dart';
 import 'data/ClassTag.dart';
 import 'global.dart';
 import 'image_icon.dart';
@@ -232,7 +233,7 @@ class _FeaturedPage extends State<FeaturedPage> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Image.asset(
-                        ImageIcons.remommendIcon.assetName,
+                        ImageIcons.remommendIcon,
                         width: 45,
                         height: 15,
                       ),

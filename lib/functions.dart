@@ -13,6 +13,7 @@ import 'package:passcode_screen/passcode_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'HttpManager.dart';
+import 'ImageIcons.dart';
 import 'network/NWApi.dart';
 import 'network/NWMethod.dart';
 
@@ -225,7 +226,7 @@ Future<void> ShowBottomMenu(BuildContext context,List<BottomMenu> lists, {String
 }
 _widgetIconImage(String image){
   if(image == null || image.isEmpty){
-    return Image.asset(ImageIcons.yue.keyName,width: 45,height: 45,errorBuilder: (context, url, StackTrace? error) {
+    return Image.asset(ImageIcons.yue,width: 45,height: 45,errorBuilder: (context, url, StackTrace? error) {
       // print(error!);
       return const Text('！');
     },);

@@ -27,11 +27,11 @@ class _HomePageState extends State<HomePage> {
       controller: _tabController,
       tabBar: CupertinoTabBar(
         items:  [
-          BottomNavigationBarItem(icon: Image.asset(indexTab == 0 ? ImageIcons.remommend_active.assetName : ImageIcons.remommend.assetName), label: "首页"),
-          BottomNavigationBarItem(icon: Image.asset(indexTab == 1 ? ImageIcons.past_active.assetName : ImageIcons.past.assetName), label: '狼友推荐'),
-          const BottomNavigationBarItem(icon: Icon(Icons.add,color: Colors.transparent,)),
-          BottomNavigationBarItem(icon: Image.asset(indexTab == 3 ?  ImageIcons.everyDay_active.assetName : ImageIcons.everyDay.assetName), label: "推荐"),
-          BottomNavigationBarItem(icon: Image.asset(indexTab == 4 ? ImageIcons.user_active.assetName : ImageIcons.user.assetName), label: MyProfile.title),
+          // BottomNavigationBarItem(icon: Image.asset(indexTab == 0 ? ImageIcons.remommend_active.assetName : ImageIcons.remommend.assetName), label: "首页"),
+          // BottomNavigationBarItem(icon: Image.asset(indexTab == 1 ? ImageIcons.past_active.assetName : ImageIcons.past.assetName), label: '狼友推荐'),
+          // const BottomNavigationBarItem(icon: Icon(Icons.add,color: Colors.transparent,)),
+          // BottomNavigationBarItem(icon: Image.asset(indexTab == 3 ?  ImageIcons.everyDay_active.assetName : ImageIcons.everyDay.assetName), label: "推荐"),
+          // BottomNavigationBarItem(icon: Image.asset(indexTab == 4 ? ImageIcons.user_active.assetName : ImageIcons.user.assetName), label: MyProfile.title),
         ],
       ),
       tabBuilder: (context, index) {
@@ -90,50 +90,50 @@ class _HomePageState extends State<HomePage> {
       }
     });
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-          child: Image.asset(
-            ImageIcons.game.assetName,
-            width: 60,
-          ),
-          onPressed: () {
-            setState(() {
-              _tabController.index = 2;
-            });
-          },
-          backgroundColor: Colors.transparent),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      body: Stack(
-        alignment: Alignment.bottomRight,
-        children: [
-          _buildHomePage(context),
-          Container(
-            // width: 60,
-            // height: 60,
-            margin: const EdgeInsets.only(bottom: 90,right: 20),
-            child: InkWell(
-              onTap: () {
-                Global.toChat();
-              },
-              child: Container(
-                width: 60,
-                height: 60,
-                decoration: const BoxDecoration(
-                  // color: Colors.blueAccent,
-                  image: DecorationImage(
-                    image: ImageIcons.kefu,
-                  ),
-                  borderRadius: BorderRadius.all(Radius.circular(50)),
-                ),
-                // child: Container(
-                //   alignment: Alignment.center,
-                //   child: const Text('客服', textAlign: TextAlign.center)
-                // ),
-              ),
-            ),
-          ),
-
-        ],
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //     child: Image.asset(
+      //       ImageIcons.game.assetName,
+      //       width: 60,
+      //     ),
+      //     onPressed: () {
+      //       setState(() {
+      //         _tabController.index = 2;
+      //       });
+      //     },
+      //     backgroundColor: Colors.transparent),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      // body: Stack(
+      //   alignment: Alignment.bottomRight,
+      //   children: [
+      //     _buildHomePage(context),
+      //     Container(
+      //       // width: 60,
+      //       // height: 60,
+      //       margin: const EdgeInsets.only(bottom: 90,right: 20),
+      //       child: InkWell(
+      //         onTap: () {
+      //           Global.toChat();
+      //         },
+      //         child: Container(
+      //           width: 60,
+      //           height: 60,
+      //           decoration: const BoxDecoration(
+      //             // color: Colors.blueAccent,
+      //             image: DecorationImage(
+      //               image: ImageIcons.kefu,
+      //             ),
+      //             borderRadius: BorderRadius.all(Radius.circular(50)),
+      //           ),
+      //           // child: Container(
+      //           //   alignment: Alignment.center,
+      //           //   child: const Text('客服', textAlign: TextAlign.center)
+      //           // ),
+      //         ),
+      //       ),
+      //     ),
+      //
+      //   ],
+      // ),
     );
   }
 }

@@ -6,6 +6,7 @@ import 'package:movies/data/ClassData.dart';
 import 'package:movies/image_icon.dart';
 
 import 'HttpManager.dart';
+import 'ImageIcons.dart';
 import 'RoundUnderlineTabIndicator.dart';
 import 'global.dart';
 import 'network/NWApi.dart';
@@ -127,7 +128,7 @@ class _PopularListPage extends State<PopularListPage>  with SingleTickerProvider
           width: 30,
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: ImageIcons.icon_rank_1,
+              image: AssetImage(ImageIcons.icon_rank_1),
             )
           ),
         );
@@ -137,7 +138,7 @@ class _PopularListPage extends State<PopularListPage>  with SingleTickerProvider
           width: 30,
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: ImageIcons.icon_rank_2,
+              image: AssetImage(ImageIcons.icon_rank_2),
             )
           ),
         );
@@ -147,7 +148,7 @@ class _PopularListPage extends State<PopularListPage>  with SingleTickerProvider
           width: 30,
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: ImageIcons.icon_rank_3,
+              image: AssetImage(ImageIcons.icon_rank_3),
             )
           ),
         );
@@ -218,7 +219,7 @@ class _PopularListPage extends State<PopularListPage>  with SingleTickerProvider
                   Row(
                     children: [
                       Image.asset(
-                        ImageIcons.icon_recommend.assetName,
+                        ImageIcons.icon_recommend,
                         // width: 45,
                         height: 20,
                       ),

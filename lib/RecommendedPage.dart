@@ -8,6 +8,7 @@ import 'package:movies/image_icon.dart';
 import 'package:movies/utils/JhPickerTool.dart';
 
 import 'HttpManager.dart';
+import 'ImageIcons.dart';
 import 'RoundUnderlineTabIndicator.dart';
 import 'data/Recommended.dart';
 import 'global.dart';
@@ -78,7 +79,7 @@ class _RecommendedPage extends State<RecommendedPage> {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(index == 0 ? ImageIcons.top1Bg.assetName : ImageIcons.nomalBg.assetName),
+                image: AssetImage(index == 0 ? ImageIcons.top1Bg : ImageIcons.nomalBg),
                 alignment: Alignment.topLeft,
               ),
             ),
@@ -102,9 +103,9 @@ class _RecommendedPage extends State<RecommendedPage> {
           Container(
               margin: const EdgeInsets.all(10),
               height: 47,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage(ImageIcons.reason.assetName),
+                  image: AssetImage(ImageIcons.reason),
                   alignment: Alignment.topLeft,
                 ),
               ),
@@ -309,7 +310,7 @@ class _RecommendedPage extends State<RecommendedPage> {
               child: Row(
                 children: [
                   Image.asset(
-                    ImageIcons.share.assetName,
+                    ImageIcons.share,
                     width: 15,
                   ),
                   const Text(
@@ -339,7 +340,7 @@ class _RecommendedPage extends State<RecommendedPage> {
 
           child: Row(
             children: [
-              Image.asset(ImageIcons.diamond.assetName,width: 15,),
+              Image.asset(ImageIcons.diamond,width: 15,),
               Text('$diamond钻石',style: const TextStyle(color: Colors.orange),),
             ],
           ),
@@ -356,9 +357,9 @@ class _RecommendedPage extends State<RecommendedPage> {
     List<Widget> widget = [];
     for(int i=1;i< (ii+1);i++){
       if(i < m || i == m){
-        widget.add(Image.asset(ImageIcons.star.assetName,width: 15,));
+        widget.add(Image.asset(ImageIcons.star,width: 15,));
       }else {
-        widget.add(Image.asset(ImageIcons.star_half.assetName,width: 15,));
+        widget.add(Image.asset(ImageIcons.star_half,width: 15,));
       }
     }
     return Row(

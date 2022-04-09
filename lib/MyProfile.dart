@@ -26,6 +26,7 @@ import 'BuyGoldPage.dart';
 import 'FansPage.dart';
 import 'FollowsPage.dart';
 import 'GetQrcode.dart';
+import 'ImageIcons.dart';
 import 'InviteCodeInputPage.dart';
 import 'SlideRightRoute.dart';
 import 'global.dart';
@@ -33,8 +34,6 @@ import 'image_icon.dart';
 import 'dart:ui';
 
 class MyProfile extends StatefulWidget {
-  static const title = '我的';
-  static const icon = ImageIcon(ImageIcons.user);
 
   const MyProfile({Key? key}) : super(key: key);
 
@@ -197,7 +196,7 @@ class _MyProfile extends State<MyProfile> {
   _buildAvatar() {
     if ((_user.avatar == null || _user.avatar == '') ||
         _user.avatar?.contains('http') == false) {
-      return const AssetImage('assets/image/default_head.gif');
+      return const AssetImage(ImageIcons.default_head);
     }
     return NetworkImage(_user.avatar!);
   }
@@ -211,15 +210,8 @@ class _MyProfile extends State<MyProfile> {
         direction: Axis.vertical,
         children: [
           // 头像用户名
-          TextButton(
-            onPressed: () {
-              // Navigator.of(context, rootNavigator: true).push<void>(
-              //   CupertinoPageRoute(
-              //     title: '账号管理',
-              //     // fullscreenDialog: true,
-              //     builder: (context) => const AccountManager(),
-              //   ),
-              // ).then((value) => Global.getUserInfo());
+          InkWell(
+            onTap: (){
               Navigator.push(Global.MainContext, SlideRightRoute(page: const AccountManager())).then((value) => setState(() {Global.getUserInfo();}));
             },
             child: Row(
@@ -238,10 +230,10 @@ class _MyProfile extends State<MyProfile> {
                       )),
                 ),
                 Container(
-                    margin: const EdgeInsets.only(left: 10, top: 10),
-                    child: Column(
-                      children: [
-                        Row(
+                  margin: const EdgeInsets.only(left: 10, top: 10),
+                  child: Column(
+                    children: [
+                      Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
@@ -252,33 +244,21 @@ class _MyProfile extends State<MyProfile> {
                                   color: Colors.black),
                             ),
                           ]
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            userModel.user.expired > DateTime.now().millisecondsSinceEpoch ?
-                            Text(
-                                'VIP到期: ${Global.getDateToString(userModel.user.expired)}',
-                              style: const TextStyle(color: Colors.brown,fontSize: 12,fontWeight: FontWeight.bold),
-                            )
-                                : Container(),
-                          ]
-                        ),
-
-                      ],
-                    ),
+                      ),
+                    ],
+                  ),
                 ),
                 Container(
                   margin: const EdgeInsets.only(left: 10),
-                  width: 35,
-                  height: 35,
-                  child: Image(
-                    image: _user.sex == 0 ? ImageIcons.nan : ImageIcons.nv,
+                  width: 25,
+                  height: 25,
+                  child: Image.asset(_user.sex == 0 ? ImageIcons.nan : ImageIcons.nv,
                   ),
                 )
               ],
             ),
           ),
+          const Padding(padding: EdgeInsets.only(top: 10)),
           // 金币数
          SizedBox(
           width: ((MediaQuery.of(context).size.width) / 1),
@@ -398,107 +378,83 @@ class _MyProfile extends State<MyProfile> {
              ],
            ),
          ),
-          // InkWell(
-          //   onTap: (() {
-          //     Global.showWebColoredToast('暂未开放，敬请期待!');
-          //     // Navigator.of(context, rootNavigator: true).push<void>(
-          //     //   CupertinoPageRoute(
-          //     //     title: SettingsTab.title,
-          //     //     fullscreenDialog: true,
-          //     //     builder: (context) => const SettingsTab(),
-          //     //   ),
-          //     // );
-          //   }),
-          //   child: Container(
-          //     margin: const EdgeInsets.only(left: 5,right: 5,top: 10,bottom: 10),
-          //     width: (MediaQuery.of(context).size.width),
-          //     height: 95,
-          //     decoration: BoxDecoration(
-          //         // color: Colors.grey,
-          //         borderRadius: BorderRadius.circular(5.0),
-          //         image: const DecorationImage(
-          //           fit: BoxFit.fill,
-          //           image: ImageIcons.zhipianrenjihua,
-          //         )),
-          //   ),
-          // ),
+          InkWell(
+            onTap: (() {
+              Navigator.push(Global.MainContext, SlideRightRoute(page: const VIPBuyPage())).then((value) => setState(() {Global.getUserInfo();}));
+            }),
+            child: Stack(
+              alignment: Alignment.bottomLeft,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 10,left:5,right:5),
+                  // width: ((MediaQuery.of(context).size.width) / 3.2),
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(10.0),
+                    image: const DecorationImage(
+                      fit: BoxFit.fill,
+                      image: AssetImage(ImageIcons.vipBuy),
+                    ),
+                  ),
+                ),
+                Container(
+                  height: 25,
+                  margin: const EdgeInsets.only(left: 70),
+                  child: Text(
+                      userModel.user.expired > DateTime.now().millisecondsSinceEpoch ? '您的会员将在${Global.getDateToString(_user.expired)}到期' : '尚未开通会员',
+                      style: const TextStyle(color: Colors.white,fontSize: 12)),
+                ),
+              ]
+            ),
+          ),
           // 三图片
-          const Padding(padding: EdgeInsets.only(top:20)),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              InkWell(
-                onTap: (() {
-                  // Fluttertoast.showToast(msg: '点击我了');
-                  // Navigator.of(context, rootNavigator: true).push<void>(
-                  //   CupertinoPageRoute(
-                  //     title: "VIP购买",
-                  //     // fullscreenDialog: true,
-                  //     builder: (context) => const VIPBuyPage(),
-                  //   ),
-                  // );
-                  Navigator.push(Global.MainContext, SlideRightRoute(page: const VIPBuyPage())).then((value) => setState(() {Global.getUserInfo();}));
-
-                }),
-                child: Container(
-                  // margin: const EdgeInsets.only(top: 10),
-                  width: ((MediaQuery.of(context).size.width) / 3.2),
-                  height: 70,
-                  decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      borderRadius: BorderRadius.circular(10.0),
-                      image: const DecorationImage(
-                        fit: BoxFit.fill,
-                        image: ImageIcons.vipBuy,
-                      )),
+          // const Padding(padding: EdgeInsets.only(top:20)),
+          Container(
+            margin: const EdgeInsets.only(top: 10,left:5,right:5),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                InkWell(
+                  onTap: () {
+                    if(userModel.user.invite == null){
+                      ShowAlertDialog(context, '友情提示','为了您的账号安全，未绑定手机号无法进行推广哟');
+                      return;
+                    }
+                    Navigator.push(Global.MainContext, SlideRightRoute(page: const UserSharePage())).then((value) => setState(() {Global.getUserInfo();}));
+                  },
+                  child: Container(
+                    // margin: const EdgeInsets.only(top: 10),
+                    width: ((MediaQuery.of(context).size.width) / 2.2),
+                    height: 54,
+                    decoration: BoxDecoration(
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(10.0),
+                        image: const DecorationImage(
+                          fit: BoxFit.fill,
+                          image: AssetImage(ImageIcons.promote),
+                        )),
+                  ),
                 ),
-              ),
-              InkWell(
-                onTap: () {
-                  if(userModel.user.invite == null){
-                    ShowAlertDialog(context, '友情提示','为了您的账号安全，未绑定手机号无法进行推广哟');
-                    return;
-                  }
-                  // Navigator.of(context, rootNavigator: true).push<void>(
-                  //   CupertinoPageRoute(
-                  //     title: "推广分享",
-                  //     // fullscreenDialog: true,
-                  //     builder: (context) => const UserSharePage(),
-                  //   ),
-                  // );
-                  Navigator.push(Global.MainContext, SlideRightRoute(page: const UserSharePage())).then((value) => setState(() {Global.getUserInfo();}));
-                },
-                child: Container(
-                  // margin: const EdgeInsets.only(top: 10),
-                  width: ((MediaQuery.of(context).size.width) / 3.2),
-                  height: 70,
-                  decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      borderRadius: BorderRadius.circular(10.0),
-                      image: const DecorationImage(
-                        fit: BoxFit.fill,
-                        image: ImageIcons.promote,
-                      )),
+                InkWell(
+                  onTap: (){
+                    Global.showWebColoredToast('暂未开放，敬请期待!');
+                  },
+                  child: Container(
+                    // margin: const EdgeInsets.only(top: 10),
+                    width: ((MediaQuery.of(context).size.width) / 2.2),
+                    height: 54,
+                    decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(10.0),
+                        image: const DecorationImage(
+                          fit: BoxFit.fill,
+                          image: AssetImage(ImageIcons.income),
+                        )),
+                  ),
                 ),
-              ),
-              InkWell(
-                onTap: (){
-                  Global.showWebColoredToast('暂未开放，敬请期待!');
-                },
-                child: Container(
-                  // margin: const EdgeInsets.only(top: 10),
-                  width: ((MediaQuery.of(context).size.width) / 3.2),
-                  height: 70,
-                  decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(10.0),
-                      image: const DecorationImage(
-                        fit: BoxFit.fill,
-                        image: ImageIcons.income,
-                      )),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
           Container(
             width: (MediaQuery.of(context).size.width),
@@ -525,7 +481,7 @@ class _MyProfile extends State<MyProfile> {
                         child: Column(
                           children: [
                             Image.asset(
-                              ImageIcons.goumaizuanshi.assetName,
+                              ImageIcons.goumaizuanshi,
                               width: 45,
                               height: 45,
                             ),
@@ -542,7 +498,7 @@ class _MyProfile extends State<MyProfile> {
                         child: Column(
                           children: [
                             Image.asset(
-                              ImageIcons.goumaijinbi.assetName,
+                              ImageIcons.goumaijinbi,
                               width: 45,
                               height: 45,
                             ),
@@ -567,7 +523,7 @@ class _MyProfile extends State<MyProfile> {
                         child: Column(
                           children: [
                             Image.asset(
-                              ImageIcons.wodeshoucang.assetName,
+                              ImageIcons.wodeshoucang,
                               width: 45,
                               height: 45,
                             ),
@@ -583,7 +539,7 @@ class _MyProfile extends State<MyProfile> {
                         child: Column(
                           children: [
                             Image.asset(
-                              ImageIcons.goumaizuanshi.assetName,
+                              ImageIcons.wodexiazai,
                               width: 45,
                               height: 45,
                             ),
@@ -607,7 +563,7 @@ class _MyProfile extends State<MyProfile> {
                         child: Column(
                           children: [
                             Image.asset(
-                              ImageIcons.kaichejinqun.assetName,
+                              ImageIcons.kaichejinqun,
                               width: 45,
                               height: 45,
                             ),
@@ -632,7 +588,7 @@ class _MyProfile extends State<MyProfile> {
                         child: Column(
                           children: [
                             Image.asset(
-                              ImageIcons.yingyongzhongxin.assetName,
+                              ImageIcons.yingyongzhongxin,
                               width: 45,
                               height: 45,
                             ),
@@ -658,7 +614,7 @@ class _MyProfile extends State<MyProfile> {
                         child: Column(
                           children: [
                             Image.asset(
-                              ImageIcons.guankanjilu.assetName,
+                              ImageIcons.guankanjilu,
                               width: 45,
                               height: 45,
                             ),
@@ -683,7 +639,7 @@ class _MyProfile extends State<MyProfile> {
                         child: Column(
                           children: [
                             Image.asset(
-                              ImageIcons.bangzhufankui.assetName,
+                              ImageIcons.bangzhufankui,
                               width: 45,
                               height: 45,
                             ),

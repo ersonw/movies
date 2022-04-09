@@ -10,6 +10,7 @@ import 'package:movies/global.dart';
 import 'BuyDiamondRecordsPage.dart';
 import 'CrateOrderPage.dart';
 import 'HttpManager.dart';
+import 'ImageIcons.dart';
 import 'data/OnlinePay.dart';
 import 'functions.dart';
 import 'image_icon.dart';
@@ -180,7 +181,7 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
                                 margin: const EdgeInsets.only(top:10,bottom: 10, left:30,right: 30),
                                 child: Row(
                                   children: [
-                                    Image(image: ImageIcons.iconCardList, width: 20),
+                                    Image.asset(ImageIcons.iconCardList, width: 20),
                                     const Text(
                                       '钻石提现',
                                       style: TextStyle(
@@ -218,7 +219,7 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
                                 margin: const EdgeInsets.only(top:10,bottom: 10, left:30,right: 30),
                                 child: Row(
                                   children: [
-                                    Image(image: ImageIcons.iconCoins, width: 20),
+                                    Image.asset(ImageIcons.iconCoins, width: 20),
                                     const Text(
                                       '收支明细',
                                       style: TextStyle(
@@ -322,8 +323,8 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
         width: ((MediaQuery.of(context).size.width) / 3.6),
         margin: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          image: DecorationImage(
-            image: ImageIcons.bgBuyDinmond
+          image: const DecorationImage(
+            image: AssetImage(ImageIcons.bgBuyDinmond)
           ),
           borderRadius: const BorderRadius.all(Radius.circular(10)),
           color: Colors.white, // 底色

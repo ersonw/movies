@@ -39,6 +39,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:video_compress/video_compress.dart';
+import 'package:wakelock/wakelock.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:movies/utils/UploadOss.dart';
 import 'DialogVideoRecommended.dart';
@@ -81,6 +82,7 @@ class Global {
   static bool isLoading = false;
   //初始化全局信息，会在APP启动时执行
   static Future init() async {
+    WidgetsFlutterBinding.ensureInitialized();
     await initPlatformStateForStringUniLinks();
     // packageInfo = await PackageInfo.fromPlatform();
     loadingChangeNotifier.addListener(() {
@@ -180,9 +182,7 @@ class Global {
   static Future<void> openH5Game(String url)async {
     Navigator.push(
       MainContext,
-      CupertinoPageRoute(
-        builder: (context) => GameView(url: url,),
-      ),
+      SlideRightRoute(page: GameView(url: url,)),
     );
   }
   static Future<void> initNetworks() async {
@@ -537,7 +537,7 @@ class Global {
   }
   static String getDateToString(int t){
     DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(t);
-    return '${dateTime.year}.${dateTime.month}.${dateTime.day}';
+    return '${dateTime.year}-${dateTime.month}-${dateTime.day}';
   }
   static String getNumbersToChinese(int n){
     if(n < 9999){

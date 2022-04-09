@@ -11,6 +11,7 @@ import 'package:movies/functions.dart';
 import 'package:movies/global.dart';
 import 'dart:io';
 import 'HttpManager.dart';
+import 'ImageIcons.dart';
 import 'image_icon.dart';
 import 'network/NWApi.dart';
 import 'network/NWMethod.dart';
@@ -70,7 +71,7 @@ class _VIPBuyPage extends State<VIPBuyPage>
   _buildAvatar() {
     if ((_user.avatar == null || _user.avatar == '') ||
         _user.avatar?.contains('http') == false) {
-      return const AssetImage('assets/image/default_head.gif');
+      return const AssetImage(ImageIcons.default_head);
     }
     return NetworkImage(_user.avatar!);
   }
@@ -181,7 +182,7 @@ class _VIPBuyPage extends State<VIPBuyPage>
         ));
   }
   _buildOnlineImage(String image){
-    if(image == null || image == '') return  ImageIcons.zhipianrenjihua;
+    if(image == null || image == '') return  AssetImage(ImageIcons.everyDay);
     if(image.startsWith('http')){
       return NetworkImage(image);
     }

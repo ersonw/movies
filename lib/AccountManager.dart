@@ -12,6 +12,7 @@ import 'package:movies/image_icon.dart';
 import 'package:movies/system_ttf.dart';
 import 'package:movies/utils/JhPickerTool.dart';
 import 'HttpManager.dart';
+import 'ImageIcons.dart';
 import 'LockScreenCustom.dart';
 import 'global.dart';
 import 'network/NWApi.dart';
@@ -241,7 +242,7 @@ class _AccountManager extends State<AccountManager> {
                 children:  [
                   Container(
                     margin: const EdgeInsets.only(left: 10),
-                    child: const Image( width: 30,color: Colors.grey, image: ImageIcons.sex,),
+                    child:  Image.asset( ImageIcons.sex,width: 30,color: Colors.grey, ),
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 25),
@@ -254,7 +255,7 @@ class _AccountManager extends State<AccountManager> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text(_user.sex == 0 ? '男性':'女性',style: TextStyle(color: Colors.grey,fontSize: 18),),
+                  Text(_user.sex == 0 ? '男性':'女性',style: const TextStyle(color: Colors.grey,fontSize: 18),),
                   const Icon(Icons.chevron_right,size: 30,color: Colors.grey,),
                 ],
               ),
@@ -279,7 +280,7 @@ class _AccountManager extends State<AccountManager> {
                 children:  [
                   Container(
                     margin: const EdgeInsets.only(left: 10),
-                    child: const Image( width: 30,color: Colors.grey, image: ImageIcons.age,),
+                    child:  Image.asset(ImageIcons.age, width: 30,color: Colors.grey, ),
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 25),

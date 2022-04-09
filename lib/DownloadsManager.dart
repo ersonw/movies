@@ -8,6 +8,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:movies/DownloadFile.dart';
 import 'package:video_player/video_player.dart';
+import 'ImageIcons.dart';
 import 'VideoFullPage.dart';
 import 'data/Download.dart';
 import 'global.dart';
@@ -38,7 +39,7 @@ class _DownloadsManager extends State<DownloadsManager>{
     //     // Global.handlerDownload(downloads[i]);
     //   }
     // }
-    _controller = VideoPlayerController.asset(ImageIcons.loading_38959.assetName);
+    _controller = VideoPlayerController.asset(ImageIcons.loading_38959);
     _initializeVideoPlayerFuture = _controller.initialize();
     super.initState();
     configModel.addListener(() {

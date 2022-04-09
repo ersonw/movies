@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:movies/UserShareRecordsPage.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'HttpManager.dart';
+import 'ImageIcons.dart';
 import 'functions.dart';
 import 'global.dart';
 import 'image_icon.dart';
@@ -67,7 +68,7 @@ class _UserSharePage extends State<UserSharePage> {
   }
   _buildBgImage(){
     if(bgImage == null || bgImage == ''){
-      return ImageIcons.shareBgImage;
+      return const AssetImage(ImageIcons.shareBgImage);
     }
     return NetworkImage(bgImage!);
   }
@@ -186,16 +187,16 @@ class _UserSharePage extends State<UserSharePage> {
                         }
                       },
                       child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius:
-                          const BorderRadius.all(Radius.circular(20)),
-                          // border: Border.all(width: 2.0, color: Colors.black),
-                          // color: Colors.yellow,
-                          image: DecorationImage(
-                            image: AssetImage(ImageIcons.button_y.assetName),
-                            fit: BoxFit.fill,
-                          ),
-                        ),
+                        // decoration: BoxDecoration(
+                        //   borderRadius:
+                        //   const BorderRadius.all(Radius.circular(20)),
+                        //   // border: Border.all(width: 2.0, color: Colors.black),
+                        //   // color: Colors.yellow,
+                        //   image: DecorationImage(
+                        //     image: AssetImage(ImageIcons.button_y),
+                        //     fit: BoxFit.fill,
+                        //   ),
+                        // ),
                         width: 150,
                         height: 45,
                         child: Row(
@@ -218,16 +219,16 @@ class _UserSharePage extends State<UserSharePage> {
                         Global.showWebColoredToast('复制成功！');
                       },
                       child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius:
-                          const BorderRadius.all(Radius.circular(20)),
-                          // border: Border.all(width: 2.0, color: Colors.black),
-                          // color: Colors.yellow,
-                          image: DecorationImage(
-                            image: AssetImage(ImageIcons.button_y.assetName),
-                            fit: BoxFit.fill,
-                          ),
-                        ),
+                        // decoration: BoxDecoration(
+                        //   borderRadius:
+                        //   const BorderRadius.all(Radius.circular(20)),
+                        //   // border: Border.all(width: 2.0, color: Colors.black),
+                        //   // color: Colors.yellow,
+                        //   image: DecorationImage(
+                        //     image: AssetImage(ImageIcons.button_y.assetName),
+                        //     fit: BoxFit.fill,
+                        //   ),
+                        // ),
                         width: 150,
                         height: 45,
 
@@ -261,15 +262,15 @@ class _UserSharePage extends State<UserSharePage> {
                     _initCount();
                   },
                   child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      // border: Border.all(width: 2.0, color: Colors.black),
-                      // color: Colors.yellow,
-                      image: DecorationImage(
-                        image: AssetImage(ImageIcons.button_y.assetName),
-                        fit: BoxFit.fill,
-                      ),
-                    ),
+                    // decoration: BoxDecoration(
+                    //   borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    //   // border: Border.all(width: 2.0, color: Colors.black),
+                    //   // color: Colors.yellow,
+                    //   image: DecorationImage(
+                    //     image: AssetImage(ImageIcons.button_y.assetName),
+                    //     fit: BoxFit.fill,
+                    //   ),
+                    // ),
                     width: 200,
                     height: 45,
                     child: Row(

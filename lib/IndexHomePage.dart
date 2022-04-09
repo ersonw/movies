@@ -14,6 +14,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'ActorPage.dart';
 import 'HttpManager.dart';
+import 'ImageIcons.dart';
 import 'RoundUnderlineTabIndicator.dart';
 import 'data/Featured.dart';
 import 'data/SwiperData.dart';
@@ -500,7 +501,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Image.asset(
-                    ImageIcons.remommendIcon.assetName,
+                    ImageIcons.remommendIcon,
                     width: 45,
                     height: 15,
                   ),
@@ -1480,7 +1481,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
                   Row(
                     children: [
                       Image.asset(
-                        ImageIcons.remommendIcon.assetName,
+                        ImageIcons.remommendIcon,
                         width: 45,
                         height: 15,
                       ),

@@ -62,7 +62,7 @@ class _GamePage extends State<GamePage> {
       Map<String, dynamic> map = jsonDecode(result);
       if(map != null) {
         if(map['url'] != null) {
-          Global.openH5Game(map['url']);
+          Global.openH5Game(map['url']).then((value) => _getBalance());
         }
         if(map['msg'] != null) {
           Global.showWebColoredToast(map['msg']);
@@ -329,7 +329,7 @@ class _GamePage extends State<GamePage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 SizedBox(
-                  width: sWith / 4,
+                  width: sWith / 4.4,
                   child: Text(game.name,style: const TextStyle(fontSize: 15,color: Colors.black, overflow: TextOverflow.ellipsis)),
                 ),
                 InkWell(

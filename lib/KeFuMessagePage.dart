@@ -13,6 +13,7 @@ import 'package:movies/image_icon.dart';
 import 'package:movies/model/KeFuMessageModel.dart';
 import 'package:movies/utils/UploadOssUtil.dart';
 
+import 'ImageIcons.dart';
 import 'PhotpGalleryPage.dart';
 import 'global.dart';
 
@@ -100,7 +101,7 @@ class _KeFuMessagePage extends State<KeFuMessagePage> {
                         //   });
                         // }
                       },
-                      child: const Image(image: ImageIcons.tuku)),
+                      child:  Image.asset( ImageIcons.tuku)),
                   Expanded(
                     child: Container(
                       margin: const EdgeInsets.only(top: 10, bottom: 10),

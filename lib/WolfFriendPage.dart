@@ -9,6 +9,7 @@ import 'package:movies/data/WolfFriend.dart';
 import 'package:movies/image_icon.dart';
 
 import 'HttpManager.dart';
+import 'ImageIcons.dart';
 import 'RoundUnderlineTabIndicator.dart';
 import 'global.dart';
 import 'network/NWApi.dart';
@@ -353,12 +354,12 @@ class _WolfFriendPage extends State<WolfFriendPage>  with SingleTickerProviderSt
                   ),
                   comment.isFirst ? Container(
                     margin: const EdgeInsets.only(right: 10),
-                    child: Image.asset(ImageIcons.icon_isfirst.assetName,width: 36,),
+                    child: Image.asset(ImageIcons.icon_isfirst,width: 36,),
                   ) : Container(),
                   incisive ?
                   Container(
                     margin: const EdgeInsets.only(right: 10),
-                    child: Image.asset(ImageIcons.icon_incisive.assetName,width: 45,),
+                    child: Image.asset(ImageIcons.icon_incisive,width: 45,),
                   ) : Container(),
                 ],
               ),
@@ -370,7 +371,7 @@ class _WolfFriendPage extends State<WolfFriendPage>  with SingleTickerProviderSt
                   margin: const EdgeInsets.all(10),
                   child: Row(
                     children: [
-                      Image.asset(ImageIcons.icon_community_zan.assetName,width: 18,height: 18,color: comment.isLike ? Colors.red : Colors.black45,),
+                      Image.asset(ImageIcons.icon_community_zan,width: 18,height: 18,color: comment.isLike ? Colors.red : Colors.black45,),
                       Text(Global.getNumbersToChinese(comment.likes),style: const TextStyle(fontSize: 15),),
                     ],
                   ),
@@ -414,7 +415,7 @@ class _WolfFriendPage extends State<WolfFriendPage>  with SingleTickerProviderSt
   _buildAvatar(String avatar) {
     if ((avatar == null || avatar == '') ||
         avatar.contains('http') == false) {
-      return const AssetImage('assets/image/default_head.gif');
+      return const AssetImage(ImageIcons.default_head);
     }
     return NetworkImage(avatar);
   }

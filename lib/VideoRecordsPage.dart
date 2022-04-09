@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:movies/data/ClassData.dart';
 
 import 'HttpManager.dart';
+import 'ImageIcons.dart';
 import 'global.dart';
 import 'image_icon.dart';
 import 'network/NWApi.dart';
@@ -225,7 +226,7 @@ class _VideoRecordsPage extends State<VideoRecordsPage> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Image.asset(
-                      ImageIcons.remommendIcon.assetName,
+                      ImageIcons.remommendIcon,
                       width: 45,
                       height: 15,
                     ),

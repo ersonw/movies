@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:movies/global.dart';
 import 'package:movies/HomePage.dart';
 
+import 'BottomAppBar.dart';
+
 class SplashPage extends StatefulWidget {
   SplashPage({Key? key, required this.validTime}) : super(key: key);
   int validTime;
@@ -70,7 +72,7 @@ class SplashScreenState extends State<SplashPage> {
   void _next(){
     _timer.cancel();
     Navigator.pushReplacement(context,
-        MaterialPageRoute(builder: (context) => HomePage()));
+        MaterialPageRoute(builder: (context) => BottomAppBarState()));
   }
   String formatTime(int timeNum) {
     return timeNum < 10 ? "0" + timeNum.toString() : timeNum.toString();

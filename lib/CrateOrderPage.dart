@@ -10,6 +10,7 @@ import 'package:path/path.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:io';
 import 'HttpManager.dart';
+import 'ImageIcons.dart';
 import 'global.dart';
 import 'image_icon.dart';
 import 'network/NWApi.dart';
@@ -320,7 +321,7 @@ class _CrateOrderPage extends State<CrateOrderPage> {
   _widgetIconImage(String image) {
     if (image == null || image.isEmpty) {
       return Image.asset(
-        ImageIcons.yue.keyName,
+        ImageIcons.yue,
         width: 45,
         height: 45,
         errorBuilder: (context, url, StackTrace? error) {

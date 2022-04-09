@@ -10,6 +10,7 @@ import 'package:movies/data/UserList.dart';
 import 'package:movies/image_icon.dart';
 import 'dart:io';
 import 'HttpManager.dart';
+import 'ImageIcons.dart';
 import 'RoundUnderlineTabIndicator.dart';
 import 'UserInfoPage.dart';
 import 'global.dart';
@@ -537,7 +538,7 @@ class _SearchPage extends State<SearchPage>
   }
   _buildActorAvatar(String avatar) {
     if (avatar == null || avatar == '') {
-      return AssetImage(ImageIcons.actorIcon.assetName);
+      return const AssetImage(ImageIcons.actorIcon);
     }
     if (avatar.startsWith('http')) {
       return NetworkImage(avatar);
@@ -630,7 +631,7 @@ class _SearchPage extends State<SearchPage>
                     Row(
                       children: [
                         Image.asset(
-                          ImageIcons.remommendIcon.assetName,
+                          ImageIcons.remommendIcon,
                           width: 45,
                           height: 15,
                         ),
