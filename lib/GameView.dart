@@ -65,19 +65,11 @@ class _GameView extends State<GameView> {
           DraggableFloatingActionButton(
             child: InkWell(
               child: Container(
-                width: 30,
-                height: 30,
+                width: 45,
+                height: 45,
                 decoration:  BoxDecoration(
                   borderRadius: const BorderRadius.all(Radius.circular(60)),
-                  gradient: const LinearGradient(
-                    colors: [
-                      // Colors.redAccent,
-                      Color(0xFFEF0505),
-                      Color(0x1a000000),
-                    ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
+                  color: Colors.white,
                   boxShadow: [
                     BoxShadow(
                       blurRadius: 10, //阴影范围
@@ -86,7 +78,22 @@ class _GameView extends State<GameView> {
                     ),
                   ],
                 ),
-                child: const Icon(Icons.exit_to_app_outlined,color: Colors.white,),
+                child: Center(child: Container(
+                  width: 35,
+                  height: 35,
+                  decoration:  BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(60)),
+                    color: Colors.grey,
+                    boxShadow: [
+                      BoxShadow(
+                        blurRadius: 10, //阴影范围
+                        spreadRadius: 0.1, //阴影浓度
+                        color: Colors.grey.withOpacity(0.2), //阴影颜色
+                      ),
+                    ],
+                  ),
+                  child: const Icon(Icons.exit_to_app_outlined,color: Colors.white,),
+                ),),
               ),
               onTap: () async{
                 if(await ShowAlertDialogBool(context,"温馨提醒", "退出游戏还回桌面，未完成的对局将会自动托管，确定继续退出吗?")){
