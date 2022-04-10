@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
 import 'package:device_info/device_info.dart';
@@ -46,6 +47,7 @@ import 'DialogVideoRecommended.dart';
 import 'DownloadFile.dart';
 import 'GameView.dart';
 import 'LoadingDialog.dart';
+import 'OnlinePayPage.dart';
 import 'PlayerPage.dart';
 import 'RestartWidget.dart';
 import 'data/Download.dart';
@@ -131,6 +133,9 @@ class Global {
     //   }
     // });
   }
+  static Future<void> showPayDialog(int type, int id)async{
+    Navigator.push(MainContext, DialogRouter(OnlinePayPage(type, id)));
+  }
   static Future<void> installHandler(Map<String, dynamic> data) async {
     // setState(() {
     //   String debugLog = "install result : channel=" +
@@ -160,9 +165,9 @@ class Global {
   // }
   static Future<void> toChat({bool game = false}) async {
     if (game) {
-      Global.openWebview(configModel.config.kefuGameUrl, inline: true);
+      Global.openWebview('${configModel.config.kefuGameUrl}${getUser()}', inline: true);
     }else{
-      Global.openWebview(configModel.config.kefuUrl, inline: true);
+      Global.openWebview('${configModel.config.kefuUrl}${getUser()}', inline: true);
     }
     // await Meiqiachat.toChat();
     // String? path = await getPhoneLocalPath();
@@ -177,6 +182,14 @@ class Global {
     //   Global.openWebview(file.uri.toString(), inline: true);
     // }
     // Global.openWebview(Image.asset(''), inline: true);
+  }
+  static String getUser(){
+    String u = '/uid/${userModel.user.id}/name/${userModel.user.nickname}';
+    if(userModel.user.avatar != null){
+      // u = '$u/avatar/${Uri.encodeComponent(userModel.user.avatar!)}';
+      // u = '$u/avatar/${userModel.user.avatar}';
+    }
+    return u;
   }
   static Future<void> _initAssets()async {
     // String? path = await getPhoneLocalPath();
@@ -203,7 +216,12 @@ class Global {
         // Response response = await Dio().get('http://23porn.oss-accelerate.aliyuncs.com/app-release.config');
         // print(response);
         String? result = response.data.toString();
-        // print(result);
+        // List<int> bytes = utf8.encode(result);
+        // base64.encode(bytes);
+        // print(base64.encode(bytes));
+        List<int> decoded = base64.decode(result);
+        result = utf8.decode(decoded);
+        print(result);
         if (result != null) {
           Config config = configModel.config;
           Map<String, dynamic> map = jsonDecode(result);
@@ -701,8 +719,8 @@ class Global {
         profile.config.autoLogin = config.autoLogin;
         profile.config.force = config.force;
         profile.config.groupLink = config.groupLink;
-        profile.config.domain = config.domain;
-        profile.config.wsDomain = config.wsDomain;
+        profile.config.shareDomain = config.domain;
+        // profile.config.wsDomain = config.wsDomain;
         profile.config.bootImage = config.bootImage;
         profile.config.ossConfig = config.ossConfig;
         profile.config.onlinePays = config.onlinePays;

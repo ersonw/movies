@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 class User {
+  int id = 0;
   String token = '';
   String nickname = '';
   int sex = 0;
@@ -19,6 +20,7 @@ class User {
   int fans = 0;
   String signature = '';
   String bkImage = '';
+  String email = '';
 
   User();
 
@@ -40,6 +42,7 @@ class User {
         fans = json['fans'],
         signature = json['signature'],
         bkImage = json['bkImage'],
+        email = json['email'],
         diamond = json['diamond'];
 
   Map<String, dynamic> toJson() => {
@@ -61,6 +64,7 @@ class User {
         'remommends': remommends,
         'follows': follows,
         'fans': fans,
+        'email': email,
       };
 
   @override

@@ -18,6 +18,7 @@ class Config {
   String bootImage = '';
   String domain = '';
   String wsDomain = '';
+  String shareDomain = '';
   String urlIos = '';
   String urlAndroid = '';
   String groupLink = '';
@@ -45,6 +46,7 @@ class Config {
         kefuUrl = json['kefuUrl'],
         domain = json['domain'],
         wsDomain = json['wsDomain'],
+        shareDomain = json['shareDomain'],
         force = json['force'] ?? false,
         version = json['version'] ?? 1.0,
         autoLogin = json['autoLogin'] ?? false,
@@ -87,6 +89,7 @@ class Config {
         'kefuUrl': kefuUrl,
         'domain': domain,
         'wsDomain': wsDomain,
+        'shareDomain': shareDomain,
         'force': force,
         'version': version,
         'autoLogin': autoLogin,

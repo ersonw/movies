@@ -443,20 +443,25 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
     ClassData classData = _classDatas[index];
     return Column(
       children: [
-        Container(
-          width: ((MediaQuery.of(context).size.width) / 1),
-          height: 210,
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(10)),
-            image: DecorationImage(
-              image: NetworkImage(classData.image),
-              fit: BoxFit.fill,
-              alignment: Alignment.center,
-            ),
-          ),
-          child: Global.buildPlayIcon(() {
+        InkWell(
+          onTap: (){
             Global.playVideo(classData.id);
-          }),
+          },
+          child: Container(
+            width: ((MediaQuery.of(context).size.width) / 1),
+            height: 210,
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
+              image: DecorationImage(
+                image: NetworkImage(classData.image),
+                fit: BoxFit.fill,
+                alignment: Alignment.center,
+              ),
+            ),
+            // child: Global.buildPlayIcon(() {
+            //   Global.playVideo(classData.id);
+            // }),
+          ),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -531,20 +536,25 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
   _buildClassItem(ClassData classData) {
     return Column(
       children: [
-        Container(
-          width: ((MediaQuery.of(context).size.width) / 2.2),
-          height: 111,
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(10)),
-            image: DecorationImage(
-              image: NetworkImage(classData.image),
-              fit: BoxFit.fill,
-              alignment: Alignment.center,
-            ),
-          ),
-          child: Global.buildPlayIcon(() {
+        InkWell(
+          onTap: () {
             Global.playVideo(classData.id);
-          }),
+          },
+          child: Container(
+            width: ((MediaQuery.of(context).size.width) / 2.2),
+            height: 111,
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
+              image: DecorationImage(
+                image: NetworkImage(classData.image),
+                fit: BoxFit.fill,
+                alignment: Alignment.center,
+              ),
+            ),
+            // child: Global.buildPlayIcon(() {
+            //   Global.playVideo(classData.id);
+            // }),
+          ),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -573,13 +583,13 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
       widgets.add(_buildClassDoubleItem(i));
     }
     widgets.add(Center(
-      child: Container(
+      child: _classPage == _classTotal ? Container(
         margin: const EdgeInsets.only(top: 30, bottom: 30),
         child: const Text(
           '我也是有底线的哦！',
           style: TextStyle(color: Colors.grey, fontSize: 15),
         ),
-      ),
+      ) : Image.asset(ImageIcons.Loading_icon),
     ));
 
     return Column(
@@ -593,13 +603,13 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
       widgets.add(_buildClassSingleItem(i));
     }
     widgets.add(Center(
-      child: Container(
+      child: _classPage == _classTotal ? Container(
         margin: const EdgeInsets.only(top: 30, bottom: 30),
         child: const Text(
           '我也是有底线的哦！',
           style: TextStyle(color: Colors.grey, fontSize: 15),
         ),
-      ),
+      ) : Image.asset(ImageIcons.Loading_icon),
     ));
     return Column(
       children: widgets,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 class ImageIcons {
   static const String loading_38959 = 'assets/images/loading_38959.mp4';
+  static const String Loading_icon = 'assets/images/Loading_icon.gif';
   static const String yue = 'assets/images/yue.jpg';
   static const String shareBgImage = 'assets/images/shareBgImage.jpg';
   static const String icon_community_zan = 'assets/images/icon_community_zan.png';

@@ -4,6 +4,7 @@ class OnlinePay {
   static const int PAY_ONLINE_VIP = 100;
   static const int PAY_ONLINE_GOLD = 101;
   static const int PAY_ONLINE_DIAMOND = 102;
+  static const int PAY_ONLINE_GAMES = 103;
 
   OnlinePay();
 

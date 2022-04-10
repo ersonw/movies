@@ -8,12 +8,12 @@ import 'package:movies/InviteCodeInputPage.dart';
 import 'package:movies/data/Config.dart';
 import 'package:movies/data/User.dart';
 import 'package:movies/functions.dart';
-import 'package:movies/image_icon.dart';
+import 'dart:io';
 import 'package:movies/system_ttf.dart';
 import 'package:movies/utils/JhPickerTool.dart';
 import 'HttpManager.dart';
 import 'ImageIcons.dart';
-import 'LockScreenCustom.dart';
+import 'package:image_picker/image_picker.dart';
 import 'global.dart';
 import 'network/NWApi.dart';
 import 'network/NWMethod.dart';
@@ -123,7 +123,7 @@ class _AccountManager extends State<AccountManager> {
 
   _buildAvatar() {
     if ((_user.avatar == null || _user.avatar == '') || _user.avatar?.contains('http') == false) {
-      return const AssetImage('assets/image/default_head.gif');
+      return const AssetImage(ImageIcons.default_head);
     }
     return NetworkImage(
       _user.avatar!,
@@ -139,6 +139,15 @@ class _AccountManager extends State<AccountManager> {
   String _getPhoneShort(){
     return _user.phone != null && _user.phone !='' ? ('${_user.phone?.substring(0,6)}****${_user.phone?.substring(12)}') : '';
   }
+  Future<String> getImage(isTakePhoto) async {
+    // Navigator.pop(context); // 选完图片后 关闭底部弹框
+    File? image = await ImagePicker.pickImage(
+        source: isTakePhoto ? ImageSource.camera : ImageSource.gallery);
+    if(image == null){
+      return '';
+    }
+    return image.path;
+  }
   _buildList() {
     return ListView(
       children: [
@@ -153,13 +162,15 @@ class _AccountManager extends State<AccountManager> {
               //       aspectRatio: CropAspectRatio.custom,
               //       cropType: CropType.circle),
               // );
-              // if (res != null) {
-              //   String image = res[0].thumbPath!;
-              //   _user.avatar = image;
-              //   Global.changeUserProfile(_user);
-              // }else{
-              //   // Global.showWebColoredToast("修改头像失败！");
-              // }
+              String res = await getImage(false);
+              if (res.isNotEmpty) {
+                String image = res;
+                _user.avatar = image;
+                Global.changeUserProfile(_user);
+              }else{
+                // Global.showWebColoredToast("修改头像失败！");
+              }
+              // print(await getImage(false));
             },
             child: Column(
               children: [
@@ -185,9 +196,10 @@ class _AccountManager extends State<AccountManager> {
               ],
             )
         ),
-        _user.phone==null || _user.phone == '' ? Container() : TextButton(
+        _user.phone==null || _user.phone == '' ? Container() :
+        TextButton(
           onPressed: () async{
-            String input = await ShowInputDialogAsync(context, hintText: '输入需要修改的昵称');
+            String input = await ShowInputDialogAsync(context, text: _user.nickname, hintText: '输入需要修改的昵称');
             if(input == '') return;
               setState(() {
                 _user.nickname = input;
@@ -213,7 +225,51 @@ class _AccountManager extends State<AccountManager> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text(_user.nickname,style: const TextStyle(color: Colors.grey,fontSize: 18),),
+                  SizedBox(
+                    width: ((MediaQuery.of(context).size.width) / 2),
+                    child: Text(_user.nickname,style: const TextStyle(color: Colors.grey,fontSize: 18,overflow: TextOverflow.ellipsis),textAlign: TextAlign.right,),
+                  ),
+                  // Text(_user.nickname,style: const TextStyle(color: Colors.grey,fontSize: 18),),
+                  const Icon(Icons.chevron_right,size: 30,color: Colors.grey,),
+                ],
+              ),
+            ],
+          ),
+        ),
+        _user.phone==null || _user.phone == '' ? Container() :
+        TextButton(
+          onPressed: () async{
+            String input = await ShowInputDialogAsync(context, text: _user.email, hintText: '输入电子邮箱地址');
+            if(input == '') return;
+              setState(() {
+                _user.email = input;
+              });
+              Global.changeUserProfile(_user);
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children:  [
+                  Container(
+                    margin: const EdgeInsets.only(left: 10),
+                    child: const Icon(Icons.assessment,size: 30,color: Colors.grey,),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 25),
+                    child: const Text('电子邮箱',style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold)),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  _user.email != null ? SizedBox(
+                    width: ((MediaQuery.of(context).size.width) / 2),
+                    child: Text(_user.email,style: const TextStyle(color: Colors.grey,fontSize: 18,overflow: TextOverflow.ellipsis),textAlign: TextAlign.right,),
+                  ): Container(),
+                  // Text(_user.email,style: const TextStyle(color: Colors.grey,fontSize: 18),),
                   const Icon(Icons.chevron_right,size: 30,color: Colors.grey,),
                 ],
               ),
@@ -373,40 +429,41 @@ class _AccountManager extends State<AccountManager> {
             ],
           ),
         ),
-        _user.superior > 0 ? Container() :  TextButton(
-          onPressed: () {
-            Navigator.of(context, rootNavigator: true).push<void>(
-              CupertinoPageRoute(
-                // fullscreenDialog: true,
-                title: '兑换礼包码',
-                builder: (context) => const InviteCodeInputPage(),
-              ),
-            );
-          },
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children:  [
-                  Container(
-                    margin: const EdgeInsets.only(left: 10),
-                    child: const Icon(Icons.card_giftcard,color: Colors.grey,size: 25,),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 25),
-                    child: const Text('兑换码',style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold)),
-                  ),
-                ],
-              ),
-              Row(
-                children: const [
-                  Icon(Icons.chevron_right,size: 30,color: Colors.grey,),
-                ],
-              ),
-            ],
-          ),
-        ),
+        // _user.superior > 0 ? Container() :
+        // TextButton(
+        //   onPressed: () {
+        //     Navigator.of(context, rootNavigator: true).push<void>(
+        //       CupertinoPageRoute(
+        //         // fullscreenDialog: true,
+        //         title: '兑换礼包码',
+        //         builder: (context) => const InviteCodeInputPage(),
+        //       ),
+        //     );
+        //   },
+        //   child: Row(
+        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //     children: [
+        //       Row(
+        //         // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //         children:  [
+        //           Container(
+        //             margin: const EdgeInsets.only(left: 10),
+        //             child: const Icon(Icons.card_giftcard,color: Colors.grey,size: 25,),
+        //           ),
+        //           Container(
+        //             margin: const EdgeInsets.only(left: 25),
+        //             child: const Text('兑换码',style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold)),
+        //           ),
+        //         ],
+        //       ),
+        //       Row(
+        //         children: const [
+        //           Icon(Icons.chevron_right,size: 30,color: Colors.grey,),
+        //         ],
+        //       ),
+        //     ],
+        //   ),
+        // ),
         // ListTile(
         //     leading: const Icon(
         //       Icons.screen_lock_portrait,

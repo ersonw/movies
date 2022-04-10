@@ -427,7 +427,7 @@ class _SearchPage extends State<SearchPage>
   _buildAvatar(String avatar) {
     if ((avatar == null || avatar == '') ||
         avatar.contains('http') == false) {
-      return const AssetImage('assets/image/default_head.gif');
+      return const AssetImage(ImageIcons.default_head);
     }
     return NetworkImage(avatar);
   }

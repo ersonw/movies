@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:movies/global.dart';
-import 'package:movies/HomePage.dart';
 
 import 'BottomAppBar.dart';
 

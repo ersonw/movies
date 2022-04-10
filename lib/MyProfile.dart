@@ -21,7 +21,7 @@ import 'package:path/path.dart';
 import 'package:qr_code_tools/qr_code_tools.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'AccountManager.dart';
-import 'BalancePage.dart';
+import 'dart:io';
 import 'BuyGoldPage.dart';
 import 'FansPage.dart';
 import 'FollowsPage.dart';
@@ -30,7 +30,7 @@ import 'ImageIcons.dart';
 import 'InviteCodeInputPage.dart';
 import 'SlideRightRoute.dart';
 import 'global.dart';
-import 'image_icon.dart';
+import 'package:image_picker/image_picker.dart';
 import 'dart:ui';
 
 class MyProfile extends StatefulWidget {
@@ -127,22 +127,24 @@ class _MyProfile extends State<MyProfile> {
                   //   language: Language.System,
                   // );
                   // if (res != null) {
-                  //   var image = res[0].thumbPath;
-                  //   String data = await QrCodeToolsPlugin.decodeFrom(image)
-                  //       .catchError((Object o, StackTrace s)  {
-                  //         print(o.toString());
-                  //   });
-                  //   if (data == null || data.isEmpty) return;
-                  //   if(data.startsWith(configModel.config.domain)){
-                  //     Global.handlerScan(data);
-                  //     return;
-                  //   }
-                  //   if (data.contains('http')) {
-                  //     Global.openWebview(data);
-                  //   } else {
-                  //     ShowCopyDialog(context, "二维码提取", data);
-                  //   }
-                  // }
+                  String res = await getImage(false);
+                  if (res.isNotEmpty) {
+                    var image = res;
+                    String data = await QrCodeToolsPlugin.decodeFrom(image)
+                        .catchError((Object o, StackTrace s)  {
+                          print(o.toString());
+                    });
+                    if (data == null || data.isEmpty) return;
+                    if(data.startsWith(configModel.config.domain)){
+                      Global.handlerScan(data);
+                      return;
+                    }
+                    if (data.contains('http')) {
+                      Global.openWebview(data);
+                    } else {
+                      ShowCopyDialog(context, "二维码提取", data);
+                    }
+                  }
                 };
                 lists.add(bottonMenu);
                 ShowBottomMenu(context, lists);
@@ -200,7 +202,15 @@ class _MyProfile extends State<MyProfile> {
     }
     return NetworkImage(_user.avatar!);
   }
-
+  Future<String> getImage(isTakePhoto) async {
+    // Navigator.pop(context); // 选完图片后 关闭底部弹框
+    File? image = await ImagePicker.pickImage(
+        source: isTakePhoto ? ImageSource.camera : ImageSource.gallery);
+    if(image == null){
+      return '';
+    }
+    return image.path;
+  }
   Widget _buildBody(BuildContext context) {
     return  Column(
       children: [
@@ -223,7 +233,7 @@ class _MyProfile extends State<MyProfile> {
                         Container(
                           width: 80,
                           height: 80,
-                          // margin: EdgeInsets.only(left: vw()),
+                          margin: EdgeInsets.only(left: 20),
                           decoration: BoxDecoration(
                               color: Colors.grey,
                               borderRadius: BorderRadius.circular(50.0),
@@ -664,34 +674,34 @@ class _MyProfile extends State<MyProfile> {
               ),),
           ),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Container(
-              margin: const EdgeInsets.only(right: 20,bottom: 20),
-              child: InkWell(
-                onTap: () {
-                  Global.toChat();
-                },
-                child: Container(
-                  width: 60,
-                  height: 60,
-                  decoration: const BoxDecoration(
-                    // color: Colors.blueAccent,
-                    image: DecorationImage(
-                      image: AssetImage(ImageIcons.kefu),
-                    ),
-                    borderRadius: BorderRadius.all(Radius.circular(50)),
-                  ),
-                  // child: Container(
-                  //   alignment: Alignment.center,
-                  //   child: const Text('客服', textAlign: TextAlign.center)
-                  // ),
-                ),
-              ),
-            ),
-          ]
-        ),
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.end,
+        //   children: [
+        //     Container(
+        //       margin: const EdgeInsets.only(right: 20,bottom: 20),
+        //       child: InkWell(
+        //         onTap: () {
+        //           Global.toChat();
+        //         },
+        //         child: Container(
+        //           width: 60,
+        //           height: 60,
+        //           decoration: const BoxDecoration(
+        //             // color: Colors.blueAccent,
+        //             image: DecorationImage(
+        //               image: AssetImage(ImageIcons.kefu),
+        //             ),
+        //             borderRadius: BorderRadius.all(Radius.circular(50)),
+        //           ),
+        //           // child: Container(
+        //           //   alignment: Alignment.center,
+        //           //   child: const Text('客服', textAlign: TextAlign.center)
+        //           // ),
+        //         ),
+        //       ),
+        //     ),
+        //   ]
+        // ),
       ],
     );
   }

@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 
 import 'HttpManager.dart';
+import 'ImageIcons.dart';
 import 'data/Game.dart';
+import 'data/OnlinePay.dart';
 import 'global.dart';
 import 'network/NWApi.dart';
 import 'network/NWMethod.dart';
@@ -18,15 +20,24 @@ class GamePage extends StatefulWidget {
   _GamePage createState() => _GamePage();
 
 }
-class _GamePage extends State<GamePage> {
+class _GamePage extends State<GamePage> with SingleTickerProviderStateMixin{
   double sWith = 0;
   List<Game> _list = [];
   double gameBalance = 0;
+  late AnimationController controller;
+  bool _refresh = false;
+
   @override
   void initState() {
     _getBalance();
     _initGame();
     super.initState();
+    controller = AnimationController(duration: const Duration(seconds:2), vsync:  this);
+    controller.addStatusListener((status) {
+      if (status == AnimationStatus.completed){
+        controller.reset();
+      }
+    });
   }
   void _initGame()async{
     Map<String, dynamic> parm = { };
@@ -77,206 +88,254 @@ class _GamePage extends State<GamePage> {
       // appBar: AppBar(title: Text('游戏大厅'),),
       // floatingActionButton: ,
       // floatingActionButtonAnimator: FloatingActionButtonAnimation,
+      // backgroundColor: Colors.white10,
       floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
-      body: ListView(
+      body: Stack(
+        alignment: Alignment.bottomRight,
         children: [
-          // const Padding(padding: EdgeInsets.only(top:30)),
-          Center(child: Text('游戏大厅',style: const TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold))),
-          const Padding(padding: EdgeInsets.only(top: 20)),
-          Container(
-            margin: const EdgeInsets.only(left: 10, right: 10),
-            width: ((MediaQuery.of(context).size.width) / 1),
-            height: 100,
-            decoration: BoxDecoration(
-                color: Colors.grey,
-                borderRadius: BorderRadius.circular(15.0),
-                image: const DecorationImage(
-                  fit: BoxFit.fill,
-                  image: AssetImage('assets/images/balanceCard.png'),
-                )),
-            child: Column(
-              children: [
-                Container(
-                  child: const Text('钱包余额',style: TextStyle(color: Colors.white54,fontSize: 12)),
-                  margin: const EdgeInsets.only(left: 20,top: 20,),
-                  width: ((MediaQuery.of(context).size.width) / 1),
-                ),
-                Row(
+          ListView(
+            children: [
+              // const Padding(padding: EdgeInsets.only(top:30)),
+              Center(child: Text('游戏大厅',style: const TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold))),
+              const Padding(padding: EdgeInsets.only(top: 20)),
+              Container(
+                margin: const EdgeInsets.only(left: 10, right: 10),
+                width: ((MediaQuery.of(context).size.width) / 1),
+                height: 100,
+                decoration: BoxDecoration(
+                    color: Colors.grey,
+                    borderRadius: BorderRadius.circular(15.0),
+                    image: const DecorationImage(
+                      fit: BoxFit.fill,
+                      image: AssetImage('assets/images/balanceCard.png'),
+                    )),
+                child: Column(
                   children: [
                     Container(
-                      child: Text('￥${((gameBalance * 100) / 100).toStringAsFixed(2)}',style: const TextStyle(color: Colors.white,fontSize: 25,fontWeight: FontWeight.bold)),
+                      child: const Text('钱包余额',style: TextStyle(color: Colors.white54,fontSize: 12)),
                       margin: const EdgeInsets.only(left: 20,top: 20,),
-                      // width: ((MediaQuery.of(context).size.width) / 1.5),
+                      width: ((MediaQuery.of(context).size.width) / 1),
                     ),
-                    InkWell(
-                      child: Container(
-                        child:  Icon(Icons.refresh_outlined, size: 20,color: Colors.white),
-                        margin: const EdgeInsets.only(left: 5,top: 22,),
-                      ),
-                      onTap: (){
-                        _getBalance();
-                      },
-                    ),
-                  ]
-                ),
-              ],
-            ),
-          ),
-          const Padding(padding: EdgeInsets.only(top: 10)),
-          Container(
-            margin: const EdgeInsets.only(left: 5,right: 5,),
-            child: Row(
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(left: 10,),
-                  width: ((MediaQuery.of(context).size.width) / 4.8),
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    color: Colors.white, // 底色
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 10, //阴影范围
-                        spreadRadius: 0.1, //阴影浓度
-                        color: Colors.grey.withOpacity(0.2), //阴影颜色
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                      children: [
-                        Container(
-                          height: 40,
-                          width: 40,
-                          decoration: const BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage('assets/images/recharge.png'),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: ((MediaQuery.of(context).size.width) / 4.5),
-                          child: const Text('充值',style: TextStyle(color: Colors.black54,fontSize: 13),textAlign: TextAlign.center,),
-                        ),
-                        const Padding(padding: EdgeInsets.only(top: 5)),
-                      ]
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(left: 10,),
-                  width: ((MediaQuery.of(context).size.width) / 4.8),
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    color: Colors.white, // 底色
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 10, //阴影范围
-                        spreadRadius: 0.1, //阴影浓度
-                        color: Colors.grey.withOpacity(0.2), //阴影颜色
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                      children: [
-                        Container(
-                          height: 40,
-                          width: 40,
-                          decoration: const BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage('assets/images/tixian.png'),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: ((MediaQuery.of(context).size.width) / 4.5),
-                          child: const Text('提现',style: TextStyle(color: Colors.black54,fontSize: 13),textAlign: TextAlign.center,),
-                        ),
-                        const Padding(padding: EdgeInsets.only(top: 5)),
-                      ]
-                  ),
-                ),
-                InkWell(
-                  child: Container(
-                    margin: const EdgeInsets.only(left: 10,),
-                    width: ((MediaQuery.of(context).size.width) / 4.8),
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      color: Colors.white, // 底色
-                      boxShadow: [
-                        BoxShadow(
-                          blurRadius: 10, //阴影范围
-                          spreadRadius: 0.1, //阴影浓度
-                          color: Colors.grey.withOpacity(0.2), //阴影颜色
-                        ),
-                      ],
-                    ),
-                    child: Column(
+                    Row(
                         children: [
                           Container(
-                            height: 40,
-                            width: 40,
-                            decoration: const BoxDecoration(
-                              image: DecorationImage(
-                                image: AssetImage('assets/images/game_home.png'),
-                              ),
+                            child: Text('￥${((gameBalance * 100) / 100).toStringAsFixed(2)}',style: const TextStyle(color: Colors.white,fontSize: 25,fontWeight: FontWeight.bold)),
+                            margin: const EdgeInsets.only(left: 20,top: 20,),
+                            // width: ((MediaQuery.of(context).size.width) / 1.5),
+                          ),
+                          _refresh ?  Container(
+                            child:  const Icon(Icons.refresh_outlined, size: 20,color: Colors.white),
+                            margin: const EdgeInsets.only(left: 5,top: 22,),
+                          )
+                          : InkWell(
+                            child: Container(
+                              child:  const Icon(Icons.refresh_outlined, size: 20,color: Colors.white),
+                              margin: const EdgeInsets.only(left: 5,top: 22,),
                             ),
+                            onTap: (){
+                              setState(() {
+                                _refresh = true;
+                              });
+                              _getBalance();
+                            },
                           ),
-                          SizedBox(
-                            width: ((MediaQuery.of(context).size.width) / 4.5),
-                            child: const Text('进入大厅',style: TextStyle(color: Colors.black54,fontSize: 13),textAlign: TextAlign.center,),
-                          ),
-                          const Padding(padding: EdgeInsets.only(top: 5)),
                         ]
                     ),
-                  ),
-                  onTap: (){
-                    _entherGame(0);
-                  }
+                  ],
                 ),
-                Container(
-                  margin: const EdgeInsets.only(left: 10,),
-                  width: ((MediaQuery.of(context).size.width) / 4.8),
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    color: Colors.white, // 底色
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 10, //阴影范围
-                        spreadRadius: 0.1, //阴影浓度
-                        color: Colors.grey.withOpacity(0.2), //阴影颜色
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                      children: [
-                        Container(
-                          height: 40,
-                          width: 40,
-                          decoration: const BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage('assets/images/activity.png'),
+              ),
+              const Padding(padding: EdgeInsets.only(top: 10)),
+              Container(
+                margin: const EdgeInsets.only(left: 5,right: 5,),
+                child: Row(
+                  children: [
+                    InkWell(
+                      onTap: (){
+                        Global.showPayDialog(OnlinePay.PAY_ONLINE_GAMES, 0);
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 10,),
+                        width: ((MediaQuery.of(context).size.width) / 4.8),
+                        decoration: BoxDecoration(
+                          borderRadius: const BorderRadius.all(Radius.circular(10)),
+                          color: Colors.white, // 底色
+                          boxShadow: [
+                            BoxShadow(
+                              blurRadius: 10, //阴影范围
+                              spreadRadius: 0.1, //阴影浓度
+                              color: Colors.grey.withOpacity(0.2), //阴影颜色
                             ),
+                          ],
+                        ),
+                        child: Column(
+                            children: [
+                              Container(
+                                height: 40,
+                                width: 40,
+                                decoration: const BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage('assets/images/recharge.png'),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: ((MediaQuery.of(context).size.width) / 4.5),
+                                child: const Text('充值',style: TextStyle(color: Colors.black54,fontSize: 13),textAlign: TextAlign.center,),
+                              ),
+                              const Padding(padding: EdgeInsets.only(top: 5)),
+                            ]
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(left: 10,),
+                      width: ((MediaQuery.of(context).size.width) / 4.8),
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        color: Colors.white, // 底色
+                        boxShadow: [
+                          BoxShadow(
+                            blurRadius: 10, //阴影范围
+                            spreadRadius: 0.1, //阴影浓度
+                            color: Colors.grey.withOpacity(0.2), //阴影颜色
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                          children: [
+                            Container(
+                              height: 40,
+                              width: 40,
+                              decoration: const BoxDecoration(
+                                image: DecorationImage(
+                                  image: AssetImage('assets/images/tixian.png'),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: ((MediaQuery.of(context).size.width) / 4.5),
+                              child: const Text('提现',style: TextStyle(color: Colors.black54,fontSize: 13),textAlign: TextAlign.center,),
+                            ),
+                            const Padding(padding: EdgeInsets.only(top: 5)),
+                          ]
+                      ),
+                    ),
+                    InkWell(
+                        child: Container(
+                          margin: const EdgeInsets.only(left: 10,),
+                          width: ((MediaQuery.of(context).size.width) / 4.8),
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.all(Radius.circular(10)),
+                            color: Colors.white, // 底色
+                            boxShadow: [
+                              BoxShadow(
+                                blurRadius: 10, //阴影范围
+                                spreadRadius: 0.1, //阴影浓度
+                                color: Colors.grey.withOpacity(0.2), //阴影颜色
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                              children: [
+                                Container(
+                                  height: 40,
+                                  width: 40,
+                                  decoration: const BoxDecoration(
+                                    image: DecorationImage(
+                                      image: AssetImage('assets/images/game_home.png'),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: ((MediaQuery.of(context).size.width) / 4.5),
+                                  child: const Text('进入大厅',style: TextStyle(color: Colors.black54,fontSize: 13),textAlign: TextAlign.center,),
+                                ),
+                                const Padding(padding: EdgeInsets.only(top: 5)),
+                              ]
                           ),
                         ),
-                        SizedBox(
-                          width: ((MediaQuery.of(context).size.width) / 4.5),
-                          child: const Text('活动',style: TextStyle(color: Colors.black54,fontSize: 13),textAlign: TextAlign.center,),
+                        onTap: (){
+                          _entherGame(0);
+                        }
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(left: 10,),
+                      width: ((MediaQuery.of(context).size.width) / 4.8),
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        color: Colors.white, // 底色
+                        boxShadow: [
+                          BoxShadow(
+                            blurRadius: 10, //阴影范围
+                            spreadRadius: 0.1, //阴影浓度
+                            color: Colors.grey.withOpacity(0.2), //阴影颜色
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                          children: [
+                            Container(
+                              height: 40,
+                              width: 40,
+                              decoration: const BoxDecoration(
+                                image: DecorationImage(
+                                  image: AssetImage('assets/images/activity.png'),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: ((MediaQuery.of(context).size.width) / 4.5),
+                              child: const Text('活动',style: TextStyle(color: Colors.black54,fontSize: 13),textAlign: TextAlign.center,),
+                            ),
+                            const Padding(padding: EdgeInsets.only(top: 5)),
+                          ]
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Padding(padding: EdgeInsets.only(top: 10)),
+              Container(
+                margin: const EdgeInsets.only(left: 5,),
+                child: const Text('更多游戏',style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold)),
+              ),
+              // const Padding(padding: EdgeInsets.only(top: 10)),
+              _buildMore(),
+              const Padding(padding: EdgeInsets.only(top: 30)),
+            ],
+          ),
+          Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(right: 20,bottom: 20),
+                  child: InkWell(
+                    onTap: () {
+                      Global.toChat();
+                    },
+                    child: Container(
+                      width: 60,
+                      height: 60,
+                      decoration: const BoxDecoration(
+                        // color: Colors.blueAccent,
+                        image: DecorationImage(
+                          image: AssetImage(ImageIcons.kefu),
+                          fit: BoxFit.fill,
                         ),
-                        const Padding(padding: EdgeInsets.only(top: 5)),
-                      ]
+                        borderRadius: BorderRadius.all(Radius.circular(50)),
+                      ),
+                      // child: Container(
+                      //   alignment: Alignment.center,
+                      //   child: const Text('客服', textAlign: TextAlign.center)
+                      // ),
+                    ),
                   ),
                 ),
-              ],
-            ),
+              ]
           ),
-          const Padding(padding: EdgeInsets.only(top: 10)),
-          Container(
-            margin: const EdgeInsets.only(left: 5,),
-            child: const Text('更多游戏',style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold)),
-          ),
-          // const Padding(padding: EdgeInsets.only(top: 10)),
-          _buildMore(),
-          const Padding(padding: EdgeInsets.only(top: 30)),
         ],
-      ),
+      )
+
     );
   }
   _buildMore(){

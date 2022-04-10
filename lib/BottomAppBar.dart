@@ -1,9 +1,13 @@
+import 'dart:async';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movies/ImageIcons.dart';
 import 'package:path/path.dart';
 
 import 'GamePage.dart';
 import 'IndexHomePage.dart';
+import 'LockScreenCustom.dart';
 import 'MyProfile.dart';
 import 'RecommendedPage.dart';
 import 'WolfFriendPage.dart';
@@ -34,6 +38,20 @@ class _BottomAppBarState extends State<BottomAppBarState> {
   @override
   Widget build(BuildContext context) {
     Global.MainContext = context;
+    Global.checkVersion();
+    // Global.showLockScreen();
+    Timer(const Duration(milliseconds: 100), () {
+      if (Global.profile.config.bootLock &&
+          Global.profile.config.bootLockPasswd != null &&
+          Global.profile.config.bootLockPasswd != '') {
+        Navigator.of(context, rootNavigator: true).push<void>(
+          CupertinoPageRoute(
+            // fullscreenDialog: true,
+            builder: (context) => LockScreenCustom(LockScreenCustom.lock),
+          ),
+        );
+      }
+    });
     return Scaffold(
       body: _eachView[_index],
       floatingActionButton: FloatingActionButton(

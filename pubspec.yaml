@@ -76,6 +76,7 @@ dependencies:
   package_info: ^2.0.2
   uni_links: ^0.4.0
   openinstall_flutter_plugin: ^2.1.2
+  image_picker: ^0.6.2+3
 #  openinstall_flutter_plugin:
 #    path: ./openinstall_flutter_plugin-2.2.0
 #  jmlink_flutter_plugin: ^2.1.2

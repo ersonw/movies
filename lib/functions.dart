@@ -149,17 +149,18 @@ Future<bool> ShowPictureFullSceen(BuildContext context, String? title, String? t
 
 Future<String> ShowInputDialogAsync(BuildContext context, {String? title, String? text, String? hintText})async {
   TextEditingController textEditingController = TextEditingController();
+  textEditingController.text = text!;
   await showCupertinoDialog(
       context: context,
       builder: (context) {
         return CupertinoAlertDialog(
-          title: Text(title ?? '温馨提示'),
+          // title: Text(title ?? '温馨提示'),
           content: Card(
             // color: Colors.white,
             elevation: 0.0,
             child: Column(
               children: <Widget>[
-                text == null ? Container():Text(text),
+                // text == null ? Container():Text(text),
                 TextField(
                   controller: textEditingController,
                   // style: TextStyle(color: Colors.white38),
