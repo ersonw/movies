@@ -156,7 +156,7 @@ class _BuyGoldRecordsPage extends State<BuyGoldRecordsPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('创建时间：${Global.getDateTime(records.ctime ~/ 1000)}'),
+                            Text('创建时间：${Global.getTimeToString(records.ctime)}'),
                             Text('状态：${_switchStatus(records.status)}')
                           ],
                         ),
@@ -167,24 +167,24 @@ class _BuyGoldRecordsPage extends State<BuyGoldRecordsPage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                TextButton(
-                                  style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(Colors.red),
-                                    shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(5))),
-                                  ),
-                                  onPressed: () {
-                                    Navigator.of(context, rootNavigator: true).push<void>(
-                                      CupertinoPageRoute(
-                                        // title: '确认订单',
-                                        builder: (context) => CrateOrderPage(
-                                          type: OnlinePay.PAY_ONLINE_GOLD,
-                                          order_id: records.orderId,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  child: const Text('继续支付',style: TextStyle(color: Colors.white),),
-                                ),
+                                // TextButton(
+                                //   style: ButtonStyle(
+                                //     backgroundColor: MaterialStateProperty.all(Colors.red),
+                                //     shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(5))),
+                                //   ),
+                                //   onPressed: () {
+                                //     Navigator.of(context, rootNavigator: true).push<void>(
+                                //       CupertinoPageRoute(
+                                //         // title: '确认订单',
+                                //         builder: (context) => CrateOrderPage(
+                                //           type: OnlinePay.PAY_ONLINE_GOLD,
+                                //           order_id: records.orderId,
+                                //         ),
+                                //       ),
+                                //     );
+                                //   },
+                                //   child: const Text('继续支付',style: TextStyle(color: Colors.white),),
+                                // ),
                                 Container(
                                   margin: const EdgeInsets.only(left: 10),
                                   child: TextButton(

@@ -12,14 +12,14 @@ import 'image_icon.dart';
 import 'network/NWApi.dart';
 import 'network/NWMethod.dart';
 
-class FeaturedPage extends StatefulWidget {
-  const FeaturedPage({Key? key}) : super(key: key);
+class VIPVideoPage extends StatefulWidget {
+  const VIPVideoPage({Key? key}) : super(key: key);
 
   @override
-  _FeaturedPage createState() => _FeaturedPage();
+  _VIPVideoPage createState() => _VIPVideoPage();
 
 }
-class _FeaturedPage extends State<FeaturedPage> {
+class _VIPVideoPage extends State<VIPVideoPage> {
   final ScrollController _scrollController = ScrollController();
   final List<String> _first = [];
   int _firstIndex = 0;
@@ -48,7 +48,7 @@ class _FeaturedPage extends State<FeaturedPage> {
   _initTags() async{
     Map<String, dynamic> parm = {};
     String? result = (await DioManager().requestAsync(
-        NWMethod.GET, NWApi.featuredTags, {"data": jsonEncode(parm)}));
+        NWMethod.GET, NWApi.classLists, {"data": jsonEncode(parm)}));
     // print(result);
     if (result != null) {
       _second = [];
@@ -73,7 +73,7 @@ class _FeaturedPage extends State<FeaturedPage> {
       'page': page,
     };
     String? result = (await DioManager().requestAsync(
-        NWMethod.GET, NWApi.featuredLists, {"data": jsonEncode(parm)}));
+        NWMethod.GET, NWApi.vipVideoLists, {"data": jsonEncode(parm)}));
     // print(result);
     if (result != null) {
       List<ClassData> list = (jsonDecode(result)['list'] as List).map((e) => ClassData.formJson(e)).toList();
@@ -297,7 +297,7 @@ class _FeaturedPage extends State<FeaturedPage> {
             flex: 9,
             child: ListView.builder(
             controller: _scrollController,
-            itemCount: (_list.length + 1),
+            itemCount: _list.length,
             itemBuilder: (BuildContext context, int index) => _buildList(index),
           ),
           ),

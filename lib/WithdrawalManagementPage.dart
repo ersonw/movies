@@ -19,6 +19,7 @@ class WithdrawalManagementPage extends StatefulWidget {
   static const int WITHDRAWAL_DIAMOND = 100;
   static const int WITHDRAWAL_BALANCE = 101;
   static const int WITHDRAWAL_GOLD = 102;
+  static const int WITHDRAWAL_GAME = 103;
   int type;
 
   @override
@@ -87,12 +88,28 @@ class _WithdrawalManagementPage extends State<WithdrawalManagementPage> {
       case WithdrawalManagementPage.WITHDRAWAL_GOLD:
         balance = userModel.user.gold;
         break;
+      case WithdrawalManagementPage.WITHDRAWAL_GAME:
+        _balanceGame();
+        break;
       default:
         _balance();
         break;
     }
   }
 
+  _balanceGame() async {
+    Map<String, dynamic> parm = { };
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET, NWApi.getGameBalance, {"data": jsonEncode(parm)}));
+    if (result != null) {
+      Map<String, dynamic> map = jsonDecode(result);
+      if(map != null && map['gameBalance'] != null){
+        setState(() {
+          balance =  (map['gameBalance'] * 100).toInt();
+        });
+      }
+    }
+  }
   _balance() async {
     Map<String, dynamic> parm = {};
     String? result = (await DioManager().requestAsync(
@@ -251,7 +268,7 @@ class _WithdrawalManagementPage extends State<WithdrawalManagementPage> {
       return;
     }
     int amount = ((withDrawa) ~/ _proportion());
-    if (widget.type == WithdrawalManagementPage.WITHDRAWAL_BALANCE) {
+    if (widget.type == WithdrawalManagementPage.WITHDRAWAL_BALANCE || widget.type == WithdrawalManagementPage.WITHDRAWAL_GAME) {
       amount = ((withDrawa) * (_proportion() / 100)).toInt();
       if (withDrawa > (balance / 100)) {
         Global.showWebColoredToast('提现大于拥有额度，操作失败！');
@@ -436,7 +453,7 @@ class _WithdrawalManagementPage extends State<WithdrawalManagementPage> {
                       margin:
                           const EdgeInsets.only(left: 20, top: 10, bottom: 10),
                       child: Text(
-                        '余额: ${widget.type == WithdrawalManagementPage.WITHDRAWAL_BALANCE ? (((balance / 100) - withDrawa).toStringAsFixed(2)) : (balance - withDrawa)}',
+                        '余额: ${ widget.type == WithdrawalManagementPage.WITHDRAWAL_BALANCE || widget.type == WithdrawalManagementPage.WITHDRAWAL_GAME ? '￥${(((balance / 100) - withDrawa).toStringAsFixed(2))}' : '￥${(balance - withDrawa)}'}',
                         style: TextStyle(
                             color: (widget.type ==
                                         WithdrawalManagementPage
@@ -497,7 +514,7 @@ class _WithdrawalManagementPage extends State<WithdrawalManagementPage> {
                             ? TextButton(
                                 onPressed: () {
                                   setState(() {
-                                    if(widget.type == WithdrawalManagementPage.WITHDRAWAL_BALANCE){
+                                    if(widget.type == WithdrawalManagementPage.WITHDRAWAL_BALANCE || widget.type == WithdrawalManagementPage.WITHDRAWAL_GAME){
                                       if(  MaxWithdrawal > (balance )){
                                         _textEditingController.text =
                                             (balance ~/ 100).toString();
@@ -548,7 +565,7 @@ class _WithdrawalManagementPage extends State<WithdrawalManagementPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                          '提现比例: ${widget.type == WithdrawalManagementPage.WITHDRAWAL_BALANCE ? _proportion() / 100 : _proportion()} = 1￥'),
+                          '实际到账: ${widget.type == WithdrawalManagementPage.WITHDRAWAL_BALANCE || widget.type == WithdrawalManagementPage.WITHDRAWAL_GAME ? '${_proportion()}%' : '${_proportion()} = 1￥'}'),
                       DropdownButton(
                         hint: const Text('请选择收款方式'),
                         value: _select,

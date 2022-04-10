@@ -51,6 +51,7 @@ import 'OnlinePayPage.dart';
 import 'PlayerPage.dart';
 import 'RestartWidget.dart';
 import 'data/Download.dart';
+import 'data/OnlinePay.dart';
 import 'data/Player.dart';
 import 'data/Profile.dart';
 import 'package:flutter/material.dart';
@@ -134,7 +135,21 @@ class Global {
     // });
   }
   static Future<void> showPayDialog(clickCallback callback)async{
-    Navigator.push(MainContext, DialogRouter(OnlinePayPage(callback: callback,)));
+    List<OnlinePay> list = await _initOnlinePays();
+    Navigator.push(MainContext, DialogRouter(OnlinePayPage(list ,callback: callback,)));
+  }
+  static Future<List<OnlinePay>> _initOnlinePays() async {
+    List<OnlinePay> list = [];
+    Map<String, dynamic> parm = {};
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET, NWApi.getOnlinePays, {"data": jsonEncode(parm)}));
+    if (result != null) {
+      Map<String, dynamic> map = jsonDecode(result);
+      if (map != null && map["list"] != null){
+        list = (map['list'] as List).map((e) => OnlinePay.formJson(e)).toList();
+      }
+    }
+    return list;
   }
   static Future<void> installHandler(Map<String, dynamic> data) async {
     // setState(() {
@@ -720,7 +735,7 @@ class Global {
         profile.config.force = config.force;
         profile.config.groupLink = config.groupLink;
         profile.config.shareDomain = config.domain;
-        // profile.config.wsDomain = config.wsDomain;
+        profile.config.activityUrl = config.activityUrl;
         profile.config.bootImage = config.bootImage;
         profile.config.ossConfig = config.ossConfig;
         profile.config.onlinePays = config.onlinePays;

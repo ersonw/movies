@@ -27,45 +27,47 @@ class _WolfFriendPage extends State<WolfFriendPage>  with SingleTickerProviderSt
   final ScrollController _controller = ScrollController();
   final _tabKey = const ValueKey('tab');
   List<WolfFriend> _list = [];
-  int type = 0;
-  int page = 0;
+  int type = 1;
+  int page = 1;
   int total = 1;
   String loading = '加载更多!';
   // bool post = false;
   @override
   void initState() {
     // TODO: implement initState
+    _init();
     super.initState();
     int initialIndex = PageStorage.of(context)?.readState(context, identifier: _tabKey);
     _innerTabController = TabController(
         length: 3,
         vsync: this,
-        initialIndex: initialIndex != null ? initialIndex : 0);
+        initialIndex: initialIndex != null ? initialIndex : type);
     _innerTabController.addListener(handleTabChange);
     _controller.addListener(() {
       if (_controller.position.pixels ==
           _controller.position.maxScrollExtent) {
-        page++;
+        setState(() {
+          page++;
+        });
         _init();
       }
     });
-    _init();
   }
   void handleTabChange() {
     type = _innerTabController.index;
-    page = 0;
+    setState(() {
+      page = 1;
+      total = 1;
+      _list = [];
+    });
     _init();
     PageStorage.of(context)?.writeState(context, _innerTabController.index, identifier: _tabKey);
   }
   _init() async{
     // if(post) return;
-    if(page < total) {
-      loading = '加载更多!';
-      page++;
-      // post = true;
-    }else{
+    if(page > total) {
       setState(() {
-        loading = '我也是有底线的哦!';
+        page--;
       });
       return;
     }
@@ -102,6 +104,8 @@ class _WolfFriendPage extends State<WolfFriendPage>  with SingleTickerProviderSt
         _list = list;
       }
     });
+    // print(page);
+    // print(total);
   }
   _favorite(int _index, int index) async{
     WolfFriend wolfFriend = _list[index];
@@ -254,21 +258,30 @@ class _WolfFriendPage extends State<WolfFriendPage>  with SingleTickerProviderSt
   }
   _buildListItem(int index){
     if(index >= _list.length){
-      return _list.length > 1 ? Container(
-        height: 30,
-        margin: const EdgeInsets.all(30),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(loading,style: const TextStyle(color: Colors.grey,fontSize: 20),),
-              ],
-            )
-          ],
+      // return _list.length > 1 ? Container(
+      //   height: 30,
+      //   margin: const EdgeInsets.all(30),
+      //   child: Column(
+      //     mainAxisAlignment: MainAxisAlignment.center,
+      //     children: [
+      //       Row(
+      //         mainAxisAlignment: MainAxisAlignment.center,
+      //         children: [
+      //           Text(loading,style: const TextStyle(color: Colors.grey,fontSize: 20),),
+      //         ],
+      //       )
+      //     ],
+      //   ),
+      // ) : Container();
+      return Center(
+        child: page < total ? Image.asset(ImageIcons.Loading_icon) : Container(
+          margin: const EdgeInsets.only(top: 30, bottom: 30),
+          child: const Text(
+            '已经到底了！',
+            style: TextStyle(color: Colors.grey, fontSize: 15),
+          ),
         ),
-      ) : Container();
+      );
     }
     WolfFriend wolfFriend = _list[index];
     return Container(

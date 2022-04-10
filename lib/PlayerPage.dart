@@ -70,6 +70,7 @@ class _PlayerPage extends State<PlayerPage> {
         _canPlay = true;
       }else {
         tryPlay = true;
+        _tryPlayer();
       }
     }else{
       _canPlay = false;
@@ -90,7 +91,7 @@ class _PlayerPage extends State<PlayerPage> {
           if(value.position.inSeconds > (_player.du * 60)){
             _controller.pause();
             setState(() {
-              tryPlay = false;
+              // tryPlay = false;
               _canPlay = false;
             });
           }
@@ -652,7 +653,8 @@ class _PlayerPage extends State<PlayerPage> {
                     child: Container(
                       color: Colors.black87,
                       child: Center(
-                        child: tryPlay ? Column(
+                        child: tryPlay ?
+                        Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Column(
@@ -728,6 +730,76 @@ class _PlayerPage extends State<PlayerPage> {
                                     },
                                     child: const Text(
                                       '马上试看',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                                _player.diamond > 0 ? SizedBox(
+                                  width: 120,
+                                  child: TextButton(
+                                    style: ButtonStyle(
+                                      backgroundColor:
+                                      MaterialStateProperty.all(Colors.red),
+                                      shape: MaterialStateProperty.all(
+                                          RoundedRectangleBorder(
+                                              borderRadius:
+                                              BorderRadius.circular(16))),
+                                    ),
+                                    onPressed: () {
+                                      _buyVideo();
+                                    },
+                                    child:  Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              '支付',
+                                              style: TextStyle(color: Colors.orange),
+                                              textAlign: TextAlign.right,
+                                            ),
+                                            Text(
+                                              Global.getNumbersToChinese(_player.diamond),
+                                              style:  TextStyle(color: Colors.orange, decoration: _player.less > 0 ? TextDecoration.lineThrough : TextDecoration.none),
+                                              textAlign: TextAlign.right,
+                                            ),
+                                            _player.less > 0 ? Text(
+                                              Global.getNumbersToChinese(_player.diamond - _player.less),
+                                              style: const TextStyle(color: Colors.orange),
+                                              textAlign: TextAlign.right,
+                                            ) : Container(),
+                                            Image.asset(ImageIcons.diamond,width: 12,),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ) :
+                                SizedBox(
+                                  width: 120,
+                                  child: TextButton(
+                                    style: ButtonStyle(
+                                      backgroundColor:
+                                      MaterialStateProperty.all(Colors.red),
+                                      shape: MaterialStateProperty.all(
+                                          RoundedRectangleBorder(
+                                              borderRadius:
+                                              BorderRadius.circular(16))),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(context, rootNavigator: true)
+                                          .push<void>(
+                                        CupertinoPageRoute(
+                                          title: "VIP购买",
+                                          // fullscreenDialog: true,
+                                          builder: (context) =>
+                                          const VIPBuyPage(),
+                                        ),
+                                      )
+                                          .then((value) => _initPlayer());
+                                    },
+                                    child: const Text(
+                                      '开通VIP',
                                       style: TextStyle(color: Colors.white),
                                     ),
                                   ),
@@ -871,7 +943,8 @@ class _PlayerPage extends State<PlayerPage> {
                               ],
                             ),
                           ],
-                        ) :Column(
+                        ) :
+                        Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Column(
@@ -1246,10 +1319,11 @@ class _PlayerPage extends State<PlayerPage> {
                               }
                               return;
                             }
-                            Global.downloadFunction(_player.downloadUrl, _player.title);
-                            if(await ShowAlertDialogBool(context, '提交下载', "已提交后台下载！是否转到下载管理？")){
-                              Global.showDownloadPage();
-                            }
+                            Global.showWebColoredToast("暂未开放下载功能!");
+                            // Global.downloadFunction(_player.downloadUrl, _player.title);
+                            // if(await ShowAlertDialogBool(context, '提交下载', "已提交后台下载！是否转到下载管理？")){
+                            //   Global.showDownloadPage();
+                            // }
                           },
                           child: Column(
                             children: [
@@ -1313,6 +1387,7 @@ class _PlayerPage extends State<PlayerPage> {
     setState(() {
       _canPlay = true;
     });
+    _controller.play();
   }
   Widget _buildLists() {
     List<Widget> widgets = [];

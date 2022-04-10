@@ -9,6 +9,7 @@ import 'package:movies/WithdrawalManagementPage.dart';
 import 'package:movies/data/BuyDiamond.dart';
 import 'package:movies/data/BuyGold.dart';
 import 'package:movies/global.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'BuyDiamondRecordsPage.dart';
 import 'BuyGoldRecordsPage.dart';
@@ -259,65 +260,107 @@ class _BuyGoldPage extends State<BuyGoldPage>
           ),
         ));
   }
-  _crateOrder(int id) async{
+  _crateOrder(int id) {
+    Global.showPayDialog((int payId) async{
+      Map<String, dynamic> parm = {
+        'id': id,
+      };
+      String? result = (await DioManager().requestAsync(
+          NWMethod.GET, NWApi.crateGoldOrder, {"data": jsonEncode(parm)}));
+      if (result != null) {
+        // print(result);
+        Map<String, dynamic> map = jsonDecode(result);
+        if(map['crate'] == true && map['id'] != null){
+          _postCrateOrder(orderId: map['id'], payId: payId);
+        }else{
+          Global.showWebColoredToast('存在未付订单，请先支付或取消该订单才可以继续');
+        }
+        Global.getUserInfo();
+      }
+    });
+
+  }
+  _postCrateOrder({required String orderId, required int payId}) async {
     Map<String, dynamic> parm = {
-      'id': id,
+      'order_id': orderId,
+      'type': OnlinePay.PAY_ONLINE_GOLD,
+      'pid': payId,
     };
     String? result = (await DioManager().requestAsync(
-        NWMethod.GET, NWApi.crateGoldOrder, {"data": jsonEncode(parm)}));
+        NWMethod.GET, NWApi.postCrateOrder, {"data": jsonEncode(parm)}));
     if (result != null) {
       // print(result);
       Map<String, dynamic> map = jsonDecode(result);
-      if(map['crate'] == true){
-        Navigator.of(context, rootNavigator: true).push<void>(
-          CupertinoPageRoute(
-            // title: '确认订单',
-            builder: (context) => CrateOrderPage(
-              type: OnlinePay.PAY_ONLINE_GOLD,
-              order_id: map['id'],
-            ),
-          ),
-        ).then((value) {
-          Global.getUserInfo();
-          // Navigator.of(context, rootNavigator: true).push<void>(
-          //   CupertinoPageRoute(
-          //     title: '充值记录',
-          //     builder: (context) => const BuyGoldRecordsPage(),
-          //   ),
-          // );
-        });
-      }else{
-        bool sure = await ShowAlertDialogBool(context, '订单提醒', '您已存在未付订单，请先支付或取消该订单才可以继续，确定前往订单吗?');
-        if(sure){
-          Navigator.of(context, rootNavigator: true).push<void>(
-            CupertinoPageRoute(
-              // title: '确认订单',
-              builder: (context) => CrateOrderPage(
-                type: OnlinePay.PAY_ONLINE_DIAMOND,
-                order_id: map['id'],
-              ),
-            ),
-          ).then((value) {
-            Global.getUserInfo();
-            // Navigator.of(context, rootNavigator: true).push<void>(
-            //   CupertinoPageRoute(
-            //     title: '充值记录',
-            //     builder: (context) => const BuyGoldRecordsPage(),
-            //   ),
-            // );
-          });
+      if(map['state'] == 'ok'){
+        if(map['url'] != null){
+          launch(map['url']);
         }else{
           Global.getUserInfo();
-          // Navigator.of(context, rootNavigator: true).push<void>(
-          //   CupertinoPageRoute(
-          //     title: '充值记录',
-          //     builder: (context) => const BuyGoldRecordsPage(),
-          //   ),
-          // );
         }
+      }else{
+        Global.showWebColoredToast(map['msg']);
       }
     }
   }
+  // _crateOrder(int id) async{
+  //   Map<String, dynamic> parm = {
+  //     'id': id,
+  //   };
+  //   String? result = (await DioManager().requestAsync(
+  //       NWMethod.GET, NWApi.crateGoldOrder, {"data": jsonEncode(parm)}));
+  //   if (result != null) {
+  //     // print(result);
+  //     Map<String, dynamic> map = jsonDecode(result);
+  //     if(map['crate'] == true){
+  //       Navigator.of(context, rootNavigator: true).push<void>(
+  //         CupertinoPageRoute(
+  //           // title: '确认订单',
+  //           builder: (context) => CrateOrderPage(
+  //             type: OnlinePay.PAY_ONLINE_GOLD,
+  //             order_id: map['id'],
+  //           ),
+  //         ),
+  //       ).then((value) {
+  //         Global.getUserInfo();
+  //         // Navigator.of(context, rootNavigator: true).push<void>(
+  //         //   CupertinoPageRoute(
+  //         //     title: '充值记录',
+  //         //     builder: (context) => const BuyGoldRecordsPage(),
+  //         //   ),
+  //         // );
+  //       });
+  //     }else{
+  //       bool sure = await ShowAlertDialogBool(context, '订单提醒', '您已存在未付订单，请先支付或取消该订单才可以继续，确定前往订单吗?');
+  //       if(sure){
+  //         Navigator.of(context, rootNavigator: true).push<void>(
+  //           CupertinoPageRoute(
+  //             // title: '确认订单',
+  //             builder: (context) => CrateOrderPage(
+  //               type: OnlinePay.PAY_ONLINE_DIAMOND,
+  //               order_id: map['id'],
+  //             ),
+  //           ),
+  //         ).then((value) {
+  //           Global.getUserInfo();
+  //           // Navigator.of(context, rootNavigator: true).push<void>(
+  //           //   CupertinoPageRoute(
+  //           //     title: '充值记录',
+  //           //     builder: (context) => const BuyGoldRecordsPage(),
+  //           //   ),
+  //           // );
+  //         });
+  //       }else{
+  //         Global.getUserInfo();
+  //         // Navigator.of(context, rootNavigator: true).push<void>(
+  //         //   CupertinoPageRoute(
+  //         //     title: '充值记录',
+  //         //     builder: (context) => const BuyGoldRecordsPage(),
+  //         //   ),
+  //         // );
+  //       }
+  //     }
+  //   }
+  // }
   _buildItemDiamond(BuyGold buyGold){
     return InkWell(
       onTap: () {

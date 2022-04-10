@@ -16,6 +16,8 @@ import 'ActorPage.dart';
 import 'HttpManager.dart';
 import 'ImageIcons.dart';
 import 'RoundUnderlineTabIndicator.dart';
+import 'SlideRightRoute.dart';
+import 'VIPVideoPage.dart';
 import 'data/Featured.dart';
 import 'data/SwiperData.dart';
 import 'global.dart';
@@ -586,7 +588,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
       child: _classPage == _classTotal ? Container(
         margin: const EdgeInsets.only(top: 30, bottom: 30),
         child: const Text(
-          '我也是有底线的哦！',
+          '已经到底了！',
           style: TextStyle(color: Colors.grey, fontSize: 15),
         ),
       ) : Image.asset(ImageIcons.Loading_icon),
@@ -606,7 +608,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
       child: _classPage == _classTotal ? Container(
         margin: const EdgeInsets.only(top: 30, bottom: 30),
         child: const Text(
-          '我也是有底线的哦！',
+          '已经到底了！',
           style: TextStyle(color: Colors.grey, fontSize: 15),
         ),
       ) : Image.asset(ImageIcons.Loading_icon),
@@ -678,79 +680,79 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
   Widget _buildClassification() {
     return Column(
       children: [
-        _showClassTop
-            ? Container(
-                margin: const EdgeInsets.only(top: 10, bottom: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(right: 10),
-                      decoration: const BoxDecoration(
-                        color: Colors.yellow,
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                      ),
-                      child: Container(
-                        width: ((MediaQuery.of(context).size.width) / 6),
-                        margin: const EdgeInsets.only(
-                            top: 4, bottom: 4, left: 15, right: 15),
-                        child: Text(
-                          _first[_firstIndex],
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 15,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(right: 10),
-                      decoration: const BoxDecoration(
-                        color: Colors.yellow,
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                      ),
-                      child: Container(
-                        width: ((MediaQuery.of(context).size.width) / 6),
-                        margin: const EdgeInsets.only(
-                            top: 4, bottom: 4, left: 15, right: 15),
-                        child: Text(
-                          _getSecondTag(_secondIndex),
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 15,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(right: 10),
-                      decoration: const BoxDecoration(
-                        color: Colors.yellow,
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                      ),
-                      child: Container(
-                        width: ((MediaQuery.of(context).size.width) / 6),
-                        margin: const EdgeInsets.only(
-                            top: 4, bottom: 4, left: 15, right: 15),
-                        child: Text(
-                          _getLastTag(_lastIndex),
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 15,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            : Container(),
+        // _showClassTop
+            // ? Container(
+            //     margin: const EdgeInsets.only(top: 10, bottom: 20),
+            //     child: Row(
+            //       mainAxisAlignment: MainAxisAlignment.center,
+            //       children: [
+            //         Container(
+            //           margin: const EdgeInsets.only(right: 10),
+            //           decoration: const BoxDecoration(
+            //             color: Colors.yellow,
+            //             borderRadius: BorderRadius.all(Radius.circular(20)),
+            //           ),
+            //           child: Container(
+            //             width: ((MediaQuery.of(context).size.width) / 6),
+            //             margin: const EdgeInsets.only(
+            //                 top: 4, bottom: 4, left: 15, right: 15),
+            //             child: Text(
+            //               _first[_firstIndex],
+            //               style: const TextStyle(
+            //                 color: Colors.black,
+            //                 fontSize: 15,
+            //                 overflow: TextOverflow.ellipsis,
+            //               ),
+            //               textAlign: TextAlign.center,
+            //             ),
+            //           ),
+            //         ),
+            //         Container(
+            //           margin: const EdgeInsets.only(right: 10),
+            //           decoration: const BoxDecoration(
+            //             color: Colors.yellow,
+            //             borderRadius: BorderRadius.all(Radius.circular(20)),
+            //           ),
+            //           child: Container(
+            //             width: ((MediaQuery.of(context).size.width) / 6),
+            //             margin: const EdgeInsets.only(
+            //                 top: 4, bottom: 4, left: 15, right: 15),
+            //             child: Text(
+            //               _getSecondTag(_secondIndex),
+            //               style: const TextStyle(
+            //                 color: Colors.black,
+            //                 fontSize: 15,
+            //                 overflow: TextOverflow.ellipsis,
+            //               ),
+            //               textAlign: TextAlign.center,
+            //             ),
+            //           ),
+            //         ),
+            //         Container(
+            //           margin: const EdgeInsets.only(right: 10),
+            //           decoration: const BoxDecoration(
+            //             color: Colors.yellow,
+            //             borderRadius: BorderRadius.all(Radius.circular(20)),
+            //           ),
+            //           child: Container(
+            //             width: ((MediaQuery.of(context).size.width) / 6),
+            //             margin: const EdgeInsets.only(
+            //                 top: 4, bottom: 4, left: 15, right: 15),
+            //             child: Text(
+            //               _getLastTag(_lastIndex),
+            //               style: const TextStyle(
+            //                 color: Colors.black,
+            //                 fontSize: 15,
+            //                 overflow: TextOverflow.ellipsis,
+            //               ),
+            //               textAlign: TextAlign.center,
+            //             ),
+            //           ),
+            //         ),
+            //       ],
+            //     ),
+            //   )
+            // : Container(),
         Expanded(
             child: ListView(
           controller: _scrollController,
@@ -1277,13 +1279,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
         children: [
           InkWell(
             onTap: () {
-              Navigator.of(context, rootNavigator: true).push<void>(
-                CupertinoPageRoute(
-                  title: '精品专区',
-                  // fullscreenDialog: true,
-                  builder: (context) => const FeaturedPage(),
-                ),
-              );
+              Navigator.push(Global.MainContext, SlideRightRoute(page: const FeaturedPage())).then((value) => setState(() {Global.getUserInfo();}));
             },
             child: Container(
               height: 63,
@@ -1311,7 +1307,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
           ),
           InkWell(
             onTap: () {
-              Global.showWebColoredToast('暂未开放，敬请期待!');
+              Navigator.push(Global.MainContext, SlideRightRoute(page: const VIPVideoPage())).then((value) => setState(() {Global.getUserInfo();}));
             },
             child: Container(
               height: 63,
@@ -1329,7 +1325,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
                     size: 30,
                   ),
                   Text(
-                    '制片厂',
+                    'VIP专区',
                     style: TextStyle(color: Colors.brown, fontSize: 10),
                     textAlign: TextAlign.center,
                   )

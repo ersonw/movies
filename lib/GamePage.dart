@@ -3,10 +3,14 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:movies/WithdrawalGamePage.dart';
+import 'package:movies/WithdrawalManagementPage.dart';
 import 'package:path/path.dart';
 
+import 'CashInGamePage.dart';
 import 'HttpManager.dart';
 import 'ImageIcons.dart';
+import 'SlideRightRoute.dart';
 import 'data/Game.dart';
 import 'data/OnlinePay.dart';
 import 'global.dart';
@@ -96,7 +100,7 @@ class _GamePage extends State<GamePage> with SingleTickerProviderStateMixin{
           ListView(
             children: [
               // const Padding(padding: EdgeInsets.only(top:30)),
-              Center(child: Text('游戏大厅',style: const TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold))),
+              const Center(child: Text('游戏大厅',style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold))),
               const Padding(padding: EdgeInsets.only(top: 20)),
               Container(
                 margin: const EdgeInsets.only(left: 10, right: 10),
@@ -151,9 +155,7 @@ class _GamePage extends State<GamePage> with SingleTickerProviderStateMixin{
                   children: [
                     InkWell(
                       onTap: (){
-                        Global.showPayDialog((int type) {
-                          print(type);
-                        });
+                        Navigator.push(Global.MainContext, SlideRightRoute(page: const CashInGamePage())).then((value) => setState(() {Global.getUserInfo();})).then((value) => _getBalance());
                       },
                       child: Container(
                         margin: const EdgeInsets.only(left: 10,),
@@ -189,37 +191,42 @@ class _GamePage extends State<GamePage> with SingleTickerProviderStateMixin{
                         ),
                       ),
                     ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 10,),
-                      width: ((MediaQuery.of(context).size.width) / 4.8),
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
-                        color: Colors.white, // 底色
-                        boxShadow: [
-                          BoxShadow(
-                            blurRadius: 10, //阴影范围
-                            spreadRadius: 0.1, //阴影浓度
-                            color: Colors.grey.withOpacity(0.2), //阴影颜色
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                          children: [
-                            Container(
-                              height: 40,
-                              width: 40,
-                              decoration: const BoxDecoration(
-                                image: DecorationImage(
-                                  image: AssetImage('assets/images/tixian.png'),
+                    InkWell(
+                      onTap: (){
+                        Navigator.push(Global.MainContext, SlideRightRoute(page: WithdrawalManagementPage(type: WithdrawalManagementPage.WITHDRAWAL_GAME))).then((value) => setState(() {Global.getUserInfo();})).then((value) => _getBalance());
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 10,),
+                        width: ((MediaQuery.of(context).size.width) / 4.8),
+                        decoration: BoxDecoration(
+                          borderRadius: const BorderRadius.all(Radius.circular(10)),
+                          color: Colors.white, // 底色
+                          boxShadow: [
+                            BoxShadow(
+                              blurRadius: 10, //阴影范围
+                              spreadRadius: 0.1, //阴影浓度
+                              color: Colors.grey.withOpacity(0.2), //阴影颜色
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                            children: [
+                              Container(
+                                height: 40,
+                                width: 40,
+                                decoration: const BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage('assets/images/tixian.png'),
+                                  ),
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              width: ((MediaQuery.of(context).size.width) / 4.5),
-                              child: const Text('提现',style: TextStyle(color: Colors.black54,fontSize: 13),textAlign: TextAlign.center,),
-                            ),
-                            const Padding(padding: EdgeInsets.only(top: 5)),
-                          ]
+                              SizedBox(
+                                width: ((MediaQuery.of(context).size.width) / 4.5),
+                                child: const Text('提现',style: TextStyle(color: Colors.black54,fontSize: 13),textAlign: TextAlign.center,),
+                              ),
+                              const Padding(padding: EdgeInsets.only(top: 5)),
+                            ]
+                        ),
                       ),
                     ),
                     InkWell(
@@ -260,37 +267,42 @@ class _GamePage extends State<GamePage> with SingleTickerProviderStateMixin{
                           _entherGame(0);
                         }
                     ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 10,),
-                      width: ((MediaQuery.of(context).size.width) / 4.8),
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
-                        color: Colors.white, // 底色
-                        boxShadow: [
-                          BoxShadow(
-                            blurRadius: 10, //阴影范围
-                            spreadRadius: 0.1, //阴影浓度
-                            color: Colors.grey.withOpacity(0.2), //阴影颜色
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                          children: [
-                            Container(
-                              height: 40,
-                              width: 40,
-                              decoration: const BoxDecoration(
-                                image: DecorationImage(
-                                  image: AssetImage('assets/images/activity.png'),
+                    InkWell(
+                      onTap: (){
+                        Global.openWebview(configModel.config.activityUrl, inline: true);
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 10,),
+                        width: ((MediaQuery.of(context).size.width) / 4.8),
+                        decoration: BoxDecoration(
+                          borderRadius: const BorderRadius.all(Radius.circular(10)),
+                          color: Colors.white, // 底色
+                          boxShadow: [
+                            BoxShadow(
+                              blurRadius: 10, //阴影范围
+                              spreadRadius: 0.1, //阴影浓度
+                              color: Colors.grey.withOpacity(0.2), //阴影颜色
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                            children: [
+                              Container(
+                                height: 40,
+                                width: 40,
+                                decoration: const BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage('assets/images/activity.png'),
+                                  ),
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              width: ((MediaQuery.of(context).size.width) / 4.5),
-                              child: const Text('活动',style: TextStyle(color: Colors.black54,fontSize: 13),textAlign: TextAlign.center,),
-                            ),
-                            const Padding(padding: EdgeInsets.only(top: 5)),
-                          ]
+                              SizedBox(
+                                width: ((MediaQuery.of(context).size.width) / 4.5),
+                                child: const Text('活动',style: TextStyle(color: Colors.black54,fontSize: 13),textAlign: TextAlign.center,),
+                              ),
+                              const Padding(padding: EdgeInsets.only(top: 5)),
+                            ]
+                        ),
                       ),
                     ),
                   ],

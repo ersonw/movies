@@ -167,24 +167,24 @@ class _BuyDiamondRecordsPage extends State<BuyDiamondRecordsPage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                TextButton(
-                                  style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(Colors.red),
-                                    shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(5))),
-                                  ),
-                                  onPressed: () {
-                                    Navigator.of(context, rootNavigator: true).push<void>(
-                                      CupertinoPageRoute(
-                                        // title: '确认订单',
-                                        builder: (context) => CrateOrderPage(
-                                          type: OnlinePay.PAY_ONLINE_DIAMOND,
-                                          order_id: records.orderId,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  child: const Text('继续支付',style: TextStyle(color: Colors.white),),
-                                ),
+                                // TextButton(
+                                //   style: ButtonStyle(
+                                //     backgroundColor: MaterialStateProperty.all(Colors.red),
+                                //     shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(5))),
+                                //   ),
+                                //   onPressed: () {
+                                //     Navigator.of(context, rootNavigator: true).push<void>(
+                                //       CupertinoPageRoute(
+                                //         // title: '确认订单',
+                                //         builder: (context) => CrateOrderPage(
+                                //           type: OnlinePay.PAY_ONLINE_DIAMOND,
+                                //           order_id: records.orderId,
+                                //         ),
+                                //       ),
+                                //     );
+                                //   },
+                                //   child: const Text('继续支付',style: TextStyle(color: Colors.white),),
+                                // ),
                                 Container(
                                   margin: const EdgeInsets.only(left: 10),
                                   child: TextButton(

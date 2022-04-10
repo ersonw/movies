@@ -45,6 +45,7 @@ class _MyProfile extends State<MyProfile> {
   User _user = User();
   final _width = window.physicalSize.width;
   final _height = window.physicalSize.height;
+  bool alive = true;
 
   @override
   void initState() {
@@ -53,12 +54,18 @@ class _MyProfile extends State<MyProfile> {
     _user = userModel.user;
     userModel.addListener(() {
       // print(userModel.user);
-      setState(() {
-        _user = userModel.user;
-      });
+      if(alive){
+        setState(() {
+          _user = userModel.user;
+        });
+      }
     });
   }
-
+  @override
+  void dispose() {
+    alive = false;
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     // return Scaffold(

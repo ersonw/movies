@@ -23,6 +23,7 @@ class Config {
   String urlAndroid = '';
   String groupLink = '';
   String kefuGameUrl = '';
+  String activityUrl = '';
   String kefuUrl = '';
   bool force = false;
   bool bootLock = false;
@@ -47,6 +48,7 @@ class Config {
         domain = json['domain'],
         wsDomain = json['wsDomain'],
         shareDomain = json['shareDomain'],
+        activityUrl = json['activityUrl'],
         force = json['force'] ?? false,
         version = json['version'] ?? 1.0,
         autoLogin = json['autoLogin'] ?? false,
@@ -90,6 +92,7 @@ class Config {
         'domain': domain,
         'wsDomain': wsDomain,
         'shareDomain': shareDomain,
+        'activityUrl': activityUrl,
         'force': force,
         'version': version,
         'autoLogin': autoLogin,

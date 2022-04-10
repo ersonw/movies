@@ -17,6 +17,7 @@ class NWApi {
   static const getOrder = '/api/user/getOrder';
   static const getBalance = '/api/user/getBalance';
   static const getGames = '/api/getGames';
+  static const getOnlinePays = '/api/getOnlinePays';
   static const getGameBalance = '/api/user/getGameBalance';
   static const enterGame = '/api/user/enterGame';
   static const getShareCount = '/api/user/getShareCount';
@@ -64,6 +65,7 @@ class NWApi {
   static const featuredTags = '/api/featuredTags';
   static const measurementTags = '/api/measurementTags';
   static const featuredLists = '/api/featuredLists';
+  static const vipVideoLists = '/api/vipVideoLists';
   static const ActorLists = '/api/ActorLists';
   static const PopularList = '/api/PopularList';
   static const Actor = '/api/Actor';
@@ -80,6 +82,8 @@ class NWApi {
   static const reportVideo = '/api/video/report';
   static const likeComment = '/api/video/likeComment';
   static const buyVideo = '/api/video/buy';
+  static const turnDiamondToGame = '/api/user/turnDiamondToGame';
+  static const turnGoldToGame = '/api/user/turnGoldToGame';
   static const recommendVideo = '/api/video/recommend';
   static const recommendVideos = '/api/video/recommends';
 }
