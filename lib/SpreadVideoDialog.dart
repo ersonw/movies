@@ -4,19 +4,20 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:movies/data/Player.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'ImageIcons.dart';
 import 'global.dart';
 import 'dart:io';
 
 class SpreadVideoDialog extends Dialog {
   Player player;
-  String domian = configModel.config.domain;
+  String domian = configModel.config.shareDomain;
   GlobalKey repaintKey = GlobalKey();
   SpreadVideoDialog({Key? key,required this.player})
       : super(key: key);
   _buildAvatar() {
     if ((userModel.avatar == null || userModel.avatar == '') ||
         userModel.avatar?.contains('http') == false) {
-      return const AssetImage('assets/image/default_head.gif');
+      return const AssetImage(ImageIcons.default_head);
     }
     return NetworkImage(userModel.avatar!);
   }

@@ -151,7 +151,9 @@ class _GamePage extends State<GamePage> with SingleTickerProviderStateMixin{
                   children: [
                     InkWell(
                       onTap: (){
-                        Global.showPayDialog(OnlinePay.PAY_ONLINE_GAMES, 0);
+                        Global.showPayDialog((int type) {
+                          print(type);
+                        });
                       },
                       child: Container(
                         margin: const EdgeInsets.only(left: 10,),

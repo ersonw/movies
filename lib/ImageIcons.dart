@@ -50,6 +50,9 @@ class ImageIcons {
   static const String sex = 'assets/images/sex.png';
   static const String game = 'assets/images/game.png';
   static const String home = 'assets/images/remommend.png';
+  static const String alipay = 'assets/images/alipay.png';
+  static const String agent = 'assets/images/agent.png';
+  static const String wechat =  'assets/images/wechat.png';
   static const String home_active = 'assets/images/remommend-active.png';
   static const String everyDay = 'assets/images/everyDay.png';
   static const String everyDay_active = 'assets/images/everyDay-active.png';

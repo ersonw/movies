@@ -133,8 +133,8 @@ class Global {
     //   }
     // });
   }
-  static Future<void> showPayDialog(int type, int id)async{
-    Navigator.push(MainContext, DialogRouter(OnlinePayPage(type, id)));
+  static Future<void> showPayDialog(clickCallback callback)async{
+    Navigator.push(MainContext, DialogRouter(OnlinePayPage(callback: callback,)));
   }
   static Future<void> installHandler(Map<String, dynamic> data) async {
     // setState(() {

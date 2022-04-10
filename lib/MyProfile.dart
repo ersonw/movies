@@ -101,7 +101,7 @@ class _MyProfile extends State<MyProfile> {
                       builder: (context) =>  ScanQRPage(
                         fn: (data){
                           if(data != null) {
-                            if(data.startsWith(configModel.config.domain)){
+                            if(data.startsWith(configModel.config.shareDomain)){
                               Global.handlerScan(data);
                               return;
                             }
@@ -135,7 +135,7 @@ class _MyProfile extends State<MyProfile> {
                           print(o.toString());
                     });
                     if (data == null || data.isEmpty) return;
-                    if(data.startsWith(configModel.config.domain)){
+                    if(data.startsWith(configModel.config.shareDomain)){
                       Global.handlerScan(data);
                       return;
                     }

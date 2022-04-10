@@ -11,6 +11,7 @@ import 'BuyDiamondRecordsPage.dart';
 import 'CrateOrderPage.dart';
 import 'HttpManager.dart';
 import 'ImageIcons.dart';
+import 'OnlinePayPage.dart';
 import 'data/OnlinePay.dart';
 import 'functions.dart';
 import 'image_icon.dart';
@@ -254,7 +255,18 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
           ),
         ));
   }
+  _selectPay(){
+    Global.showPayDialog((int type) {
+      switch (type) {
+        case OnlinePayPage.ALIPAY:
+          break;
+        case OnlinePayPage.WECHAT:
+          break;
+      }
+    });
+  }
   _crateOrder(int id) async{
+
     Map<String, dynamic> parm = {
       'id': id,
     };
