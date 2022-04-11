@@ -57,11 +57,8 @@ class _BottomAppBarState extends State<BottomAppBarState> {
       }
     }
   }
-  @override
-  Widget build(BuildContext context) {
-    Global.MainContext = context;
-    Global.checkVersion();
-    // Global.showLockScreen();
+  _init(BuildContext context){
+    if(Global.initMain) return;
     Timer(const Duration(milliseconds: 100), () {
       if (Global.profile.config.bootLock &&
           Global.profile.config.bootLockPasswd != null &&
@@ -82,6 +79,14 @@ class _BottomAppBarState extends State<BottomAppBarState> {
         }
       });
     });
+    Global.initMain = true;
+  }
+  @override
+  Widget build(BuildContext context) {
+    Global.MainContext = context;
+    Global.checkVersion();
+    _init(context);
+    // Global.showLockScreen();
     return Scaffold(
       body: _eachView[_index],
       floatingActionButton: FloatingActionButton(

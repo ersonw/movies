@@ -73,6 +73,7 @@ class Global {
   // static late PackageInfo packageInfo;
   static late final cameras;
   static bool _isLogin = false;
+  static bool initMain = false;
   static late BuildContext MainContext;
   static late final String uid;
   static WebSocketChannel? channel;
