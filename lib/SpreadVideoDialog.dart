@@ -12,7 +12,7 @@ class SpreadVideoDialog extends Dialog {
   Player player;
   String shareUrl;
   GlobalKey repaintKey = GlobalKey();
-  bool save = false;
+  bool save = true;
   SpreadVideoDialog({Key? key,required this.player,required this.shareUrl})
       : super(key: key);
   _buildAvatar() {
@@ -127,7 +127,9 @@ class SpreadVideoDialog extends Dialog {
                 InkWell(
                   onTap: () async{
                     if(await Global.requestPhotosPermission() || Platform.isIOS){
-                      save = true;
+                      // state((){
+                      //   save = true;
+                      // });
                       await Global.capturePng(repaintKey);
                     }
                     Navigator.pop(context);
@@ -143,7 +145,7 @@ class SpreadVideoDialog extends Dialog {
                     ),
                     child: Container(
                       margin: const EdgeInsets.only(top:10,bottom:10),
-                      child: Text('保存并分享',style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.normal),textAlign: TextAlign.center,),
+                      child: const Text('保存并分享',style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.normal),textAlign: TextAlign.center,),
                     ),
                   ),
                 ),
