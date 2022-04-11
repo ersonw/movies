@@ -537,7 +537,7 @@ class _PlayerPage extends State<PlayerPage> {
                       alignment: Alignment.center,
                     ),
                   ),
-                  height: 200,
+                  height: 230,
                   child: const Center(
                     child: CircularProgressIndicator(),
                   ),

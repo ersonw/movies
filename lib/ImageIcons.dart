@@ -5,7 +5,7 @@ class ImageIcons {
   static const String loading_38959 = 'assets/images/loading_38959.mp4';
   static const String Loading_icon = 'assets/images/Loading_icon.gif';
   static const String yue = 'assets/images/yue.jpg';
-  static const String shareBgImage = 'assets/images/shareBgImage.jpg';
+  static const String shareBgImage = 'assets/images/006-shareBgImage.png';
   static const String icon_community_zan = 'assets/images/icon_community_zan.png';
   static const String tuku = 'assets/images/tuku.png';
   static const String vipBuy = 'assets/images/0d851513e1c83d0a6573777b07de830e-mine.png';
@@ -54,6 +54,12 @@ class ImageIcons {
   static const String agent = 'assets/images/agent.png';
   static const String wechat =  'assets/images/wechat.png';
   static const String turn1 =  'assets/images/turn1.png';
+  static const String bgLogin1 =  'assets/images/bgLogin1.png';
+  static const String iconLoginBack =  'assets/images/IMG_6903.png';
+  // static const String iconLoginBack =  'assets/images/iconLoginBack.png';
+  static const String share_btn =  'assets/images/share_btn.png';
+  static const String yello_btn =  'assets/images/yello_btn.png';
+  static const String mine_huise =  'assets/images/mine_huise.png';
   static const String home_active = 'assets/images/remommend-active.png';
   static const String everyDay = 'assets/images/everyDay.png';
   static const String everyDay_active = 'assets/images/everyDay-active.png';

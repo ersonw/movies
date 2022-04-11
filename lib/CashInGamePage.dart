@@ -80,116 +80,146 @@ class _CashInGamePage extends State<CashInGamePage> {
                   Container(
                     margin: const EdgeInsets.only(left: 10, right: 10),
                     width: ((MediaQuery.of(context).size.width) / 1),
-                    // height: 120,
+                    height: 100,
                     decoration: BoxDecoration(
                         color: Colors.grey,
-                        borderRadius: BorderRadius.circular(20.0),
+                        borderRadius: BorderRadius.circular(15.0),
                         image: const DecorationImage(
                           fit: BoxFit.fill,
                           image: AssetImage('assets/images/balanceCard.png'),
                         )),
                     child: Column(
                       children: [
-                        Row(
-                          children: [
-                            Container(
-                              child: const Text('游戏余额',style: TextStyle(color: Colors.white70,fontSize: 15)),
-                              margin: const EdgeInsets.only(left: 20,top: 20,),
-                              // width: ((MediaQuery.of(context).size.width) / 1),
-                            ),
-                            Row(
-                                children: [
-                                  Container(
-                                    child: Text('￥${((gameBalance * 100) / 100).toStringAsFixed(2)}',style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.bold)),
-                                    margin: const EdgeInsets.only(left: 5,top: 20,),
-                                    // width: ((MediaQuery.of(context).size.width) / 1.5),
-                                  ),
-                                ]
-                            ),
-                          ],
+                        Container(
+                          child: const Text('钱包余额',style: TextStyle(color: Colors.white54,fontSize: 12)),
+                          margin: const EdgeInsets.only(left: 20,top: 20,),
+                          width: ((MediaQuery.of(context).size.width) / 1),
                         ),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                  child: const Text('钻石余额',style: TextStyle(color: Colors.white70,fontSize: 15)),
-                                  margin: const EdgeInsets.only(left: 20,top: 10,),
-                                  // width: ((MediaQuery.of(context).size.width) / 1),
-                                ),
-                                Row(
-                                    children: [
-                                      Container(
-                                        child: Text('${_user.diamond}',style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.bold)),
-                                        margin: const EdgeInsets.only(left: 5,top: 10,),
-                                        // width: ((MediaQuery.of(context).size.width) / 1.5),
-                                      ),
-                                    ]
-                                ),
-                              ],
-                            ),
-                            InkWell(
-                              onTap: (){
-                                _turnDiamond(context);
-                              },
-                              child: Container(
-                                height:30,
-                                width: 80,
-                                margin: const EdgeInsets.only(right: 20, top: 10),
-                                decoration: const BoxDecoration(
-                                  image: DecorationImage(
-                                    image: AssetImage(ImageIcons.turn1),
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
+                            children: [
+                              Container(
+                                child: Text('￥${((gameBalance * 100) / 100).toStringAsFixed(2)}',style: const TextStyle(color: Colors.white,fontSize: 25,fontWeight: FontWeight.bold)),
+                                margin: const EdgeInsets.only(left: 20,top: 20,),
+                                // width: ((MediaQuery.of(context).size.width) / 1.5),
                               ),
-                            ),
-                          ]
+                            ]
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                  child: const Text('金币余额',style: TextStyle(color: Colors.white70,fontSize: 15)),
-                                  margin: const EdgeInsets.only(left: 20,top: 10,),
-                                  // width: ((MediaQuery.of(context).size.width) / 1),
-                                ),
-                                Row(
-                                    children: [
-                                      Container(
-                                        child: Text('${_user.gold}',style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.bold)),
-                                        margin: const EdgeInsets.only(left: 5,top: 10,),
-                                        // width: ((MediaQuery.of(context).size.width) / 1.5),
-                                      ),
-                                    ]
-                                ),
-                              ],
-                            ),
-                            InkWell(
-                              onTap: (){
-                                _turnGold(context);
-                              },
-                              child: Container(
-                                height:30,
-                                width: 80,
-                                margin: const EdgeInsets.only(right: 20, top: 10),
-                                decoration: const BoxDecoration(
-                                  image: DecorationImage(
-                                    image: AssetImage(ImageIcons.turn1),
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ]
-                        ),
-                        const Padding(padding: EdgeInsets.only(bottom:10)),
                       ],
                     ),
                   ),
+                  // Container(
+                  //   margin: const EdgeInsets.only(left: 10, right: 10),
+                  //   width: ((MediaQuery.of(context).size.width) / 1),
+                  //   // height: 120,
+                  //   decoration: BoxDecoration(
+                  //       color: Colors.grey,
+                  //       borderRadius: BorderRadius.circular(20.0),
+                  //       image: const DecorationImage(
+                  //         fit: BoxFit.fill,
+                  //         image: AssetImage('assets/images/balanceCard.png'),
+                  //       )),
+                  //   child: Column(
+                  //     children: [
+                  //       Row(
+                  //         children: [
+                  //           Container(
+                  //             child: const Text('游戏余额',style: TextStyle(color: Colors.white70,fontSize: 15)),
+                  //             margin: const EdgeInsets.only(left: 20,top: 20,),
+                  //             // width: ((MediaQuery.of(context).size.width) / 1),
+                  //           ),
+                  //           Row(
+                  //               children: [
+                  //                 Container(
+                  //                   child: Text('￥${((gameBalance * 100) / 100).toStringAsFixed(2)}',style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.bold)),
+                  //                   margin: const EdgeInsets.only(left: 5,top: 20,),
+                  //                   // width: ((MediaQuery.of(context).size.width) / 1.5),
+                  //                 ),
+                  //               ]
+                  //           ),
+                  //         ],
+                  //       ),
+                  //       // Row(
+                  //       //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //       //   children: [
+                  //       //     Row(
+                  //       //       children: [
+                  //       //         Container(
+                  //       //           child: const Text('钻石余额',style: TextStyle(color: Colors.white70,fontSize: 15)),
+                  //       //           margin: const EdgeInsets.only(left: 20,top: 10,),
+                  //       //           // width: ((MediaQuery.of(context).size.width) / 1),
+                  //       //         ),
+                  //       //         Row(
+                  //       //             children: [
+                  //       //               Container(
+                  //       //                 child: Text('${_user.diamond}',style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.bold)),
+                  //       //                 margin: const EdgeInsets.only(left: 5,top: 10,),
+                  //       //                 // width: ((MediaQuery.of(context).size.width) / 1.5),
+                  //       //               ),
+                  //       //             ]
+                  //       //         ),
+                  //       //       ],
+                  //       //     ),
+                  //       //     InkWell(
+                  //       //       onTap: (){
+                  //       //         _turnDiamond(context);
+                  //       //       },
+                  //       //       child: Container(
+                  //       //         height:30,
+                  //       //         width: 80,
+                  //       //         margin: const EdgeInsets.only(right: 20, top: 10),
+                  //       //         decoration: const BoxDecoration(
+                  //       //           image: DecorationImage(
+                  //       //             image: AssetImage(ImageIcons.turn1),
+                  //       //             fit: BoxFit.fill,
+                  //       //           ),
+                  //       //         ),
+                  //       //       ),
+                  //       //     ),
+                  //       //   ]
+                  //       // ),
+                  //       // Row(
+                  //       //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //       //   children: [
+                  //       //     Row(
+                  //       //       children: [
+                  //       //         Container(
+                  //       //           child: const Text('金币余额',style: TextStyle(color: Colors.white70,fontSize: 15)),
+                  //       //           margin: const EdgeInsets.only(left: 20,top: 10,),
+                  //       //           // width: ((MediaQuery.of(context).size.width) / 1),
+                  //       //         ),
+                  //       //         Row(
+                  //       //             children: [
+                  //       //               Container(
+                  //       //                 child: Text('${_user.gold}',style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.bold)),
+                  //       //                 margin: const EdgeInsets.only(left: 5,top: 10,),
+                  //       //                 // width: ((MediaQuery.of(context).size.width) / 1.5),
+                  //       //               ),
+                  //       //             ]
+                  //       //         ),
+                  //       //       ],
+                  //       //     ),
+                  //       //     InkWell(
+                  //       //       onTap: (){
+                  //       //         _turnGold(context);
+                  //       //       },
+                  //       //       child: Container(
+                  //       //         height:30,
+                  //       //         width: 80,
+                  //       //         margin: const EdgeInsets.only(right: 20, top: 10),
+                  //       //         decoration: const BoxDecoration(
+                  //       //           image: DecorationImage(
+                  //       //             image: AssetImage(ImageIcons.turn1),
+                  //       //             fit: BoxFit.fill,
+                  //       //           ),
+                  //       //         ),
+                  //       //       ),
+                  //       //     ),
+                  //       //   ]
+                  //       // ),
+                  //       const Padding(padding: EdgeInsets.only(bottom:20)),
+                  //     ],
+                  //   ),
+                  // ),
                 ]
             ),
           ]

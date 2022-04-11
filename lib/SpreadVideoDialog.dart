@@ -10,9 +10,10 @@ import 'dart:io';
 
 class SpreadVideoDialog extends Dialog {
   Player player;
-  String domian = configModel.config.shareDomain;
+  String shareUrl;
   GlobalKey repaintKey = GlobalKey();
-  SpreadVideoDialog({Key? key,required this.player})
+  bool save = false;
+  SpreadVideoDialog({Key? key,required this.player,required this.shareUrl})
       : super(key: key);
   _buildAvatar() {
     if ((userModel.avatar == null || userModel.avatar == '') ||
@@ -21,11 +22,10 @@ class SpreadVideoDialog extends Dialog {
     }
     return NetworkImage(userModel.avatar!);
   }
+
   @override
   Widget build(BuildContext context) {
-    if(domian != null && !domian.endsWith('/')){
-      domian='$domian/';
-    }
+    shareUrl = '$shareUrl&video=${player.id}';
     return Center(
       child: Material(
 
@@ -48,16 +48,19 @@ class SpreadVideoDialog extends Dialog {
   }
 
   Widget _dialog(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        RepaintBoundary(
+    return Center(
+      child: Stack(
+        // mainAxisAlignment: MainAxisAlignment.center,
+        alignment: Alignment.bottomCenter,
+        children: [
+          RepaintBoundary(
             key: repaintKey,
             child: Container(
+                height: 550,
                 margin: const EdgeInsets.all(30),
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                decoration:  BoxDecoration(
+                  color: save ? Colors.deepOrange : Colors.white,
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
                 ),
                 child: Column(
                   children: [
@@ -80,13 +83,13 @@ class SpreadVideoDialog extends Dialog {
                         Container(
                           margin: const EdgeInsets.all(10),
                           width: (MediaQuery.of(context).size.width) / 1.3,
-                          child: Text(player.title,
-                            style: const TextStyle(color: Colors.black,fontSize: 17,fontWeight: FontWeight.normal,overflow: TextOverflow.ellipsis),),
+                          child: Text(player.title.length > 35 ? '${player.title.substring(0,35)}...' : player.title,
+                            style: const TextStyle(color: Colors.black,fontSize: 17,fontWeight: FontWeight.normal,overflow: TextOverflow.clip),),
                         )
                       ],
                     ),
                     Row(
-                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
                           margin: const EdgeInsets.only(left: 10,right: 10, bottom: 60),
@@ -100,8 +103,8 @@ class SpreadVideoDialog extends Dialog {
                             // ),
                           ),
                           child: QrImage(
-                            data: '$domian${player.id}-${userModel.user.invite}',
-                            size: 130,
+                            data: shareUrl,
+                            size: 180,
                             version: QrVersions.auto,
                             embeddedImageStyle: QrEmbeddedImageStyle(
                               size: const Size(36, 36),
@@ -109,62 +112,46 @@ class SpreadVideoDialog extends Dialog {
                             // embeddedImage: _buildAvatar(),
                           ),
                         ),
-                        Container(
-                          margin: const EdgeInsets.only(right: 10),
-                          child: Column(
-                            children: [
-                              Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                children:const [
-                                  Text('下载地址：'),
-                                ]
-                              ),
-                              SizedBox(
-                                width: (MediaQuery.of(context).size.width) / 2.7,
-                                child: Text('$domian${player.id}-${userModel.user.invite}'),
-                              ),
-                              SizedBox(
-                                width: 120,
-                                child: TextButton(
-                                  style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(Colors.grey),
-                                    shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
-                                  ),
-                                  onPressed: () async{
-                                    await Clipboard.setData(ClipboardData(text: '$domian${player.id}-${userModel.user.invite}'));
-                                    Global.showWebColoredToast('复制成功！');
-                                  },
-                                  child: const Text('复制链接',style: TextStyle(color: Colors.black),),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 120,
-                                child: TextButton(
-                                  style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(Colors.red),
-                                    shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
-                                  ),
-                                  onPressed: () async{
-                                    // await capturePng();
-                                    // requestPermission();
-                                    if(await Global.requestPhotosPermission() || Platform.isIOS){
-                                      await Global.capturePng(repaintKey);
-                                    }
-                                  },
-                                  child: const Text('保存图片',style: TextStyle(color: Colors.white),),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
                       ],
                     ),
 
                   ],
                 )),
-        ),
-
-      ],
+          ),
+          Container(
+            height: 100,
+            margin: const EdgeInsets.only(right: 18,left: 18),
+            // color: Colors.white,
+            child: Column(
+              children: [
+                InkWell(
+                  onTap: () async{
+                    if(await Global.requestPhotosPermission() || Platform.isIOS){
+                      save = true;
+                      await Global.capturePng(repaintKey);
+                    }
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    // height: 60,
+                    width: (MediaQuery.of(context).size.height) / 3,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(ImageIcons.yello_btn),
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                    child: Container(
+                      margin: const EdgeInsets.only(top:10,bottom:10),
+                      child: Text('保存并分享',style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.normal),textAlign: TextAlign.center,),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

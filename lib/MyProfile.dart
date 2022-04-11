@@ -28,6 +28,7 @@ import 'FollowsPage.dart';
 import 'GetQrcode.dart';
 import 'ImageIcons.dart';
 import 'InviteCodeInputPage.dart';
+import 'LoginPage.dart';
 import 'SlideRightRoute.dart';
 import 'global.dart';
 import 'package:image_picker/image_picker.dart';
@@ -412,17 +413,24 @@ class _MyProfile extends State<MyProfile> {
                             decoration: BoxDecoration(
                               color: Colors.transparent,
                               borderRadius: BorderRadius.circular(10.0),
-                              image: const DecorationImage(
+                              image:  DecorationImage(
                                 fit: BoxFit.fill,
-                                image: AssetImage(ImageIcons.vipBuy),
+                                image: AssetImage(userModel.user.expired > DateTime.now().millisecondsSinceEpoch ? ImageIcons.vipBuy : ImageIcons.mine_huise),
                               ),
                             ),
                           ),
+                          userModel.user.expired > DateTime.now().millisecondsSinceEpoch ?  Container(
+                            height: 25,
+                            margin: const EdgeInsets.only(left: 70),
+                            child: Text(
+                                '您的会员将在${Global.getDateToString(_user.expired)}到期',
+                                style: const TextStyle(color: Colors.white,fontSize: 12)),
+                          ) :
                           Container(
                             height: 25,
                             margin: const EdgeInsets.only(left: 70),
                             child: Text(
-                                userModel.user.expired > DateTime.now().millisecondsSinceEpoch ? '您的会员将在${Global.getDateToString(_user.expired)}到期' : '尚未开通会员',
+                                userModel.user.expired > 0 ? '您的会员已于${Global.getDateToString(_user.expired)}到期' : '您尚未开通会员',
                                 style: const TextStyle(color: Colors.white,fontSize: 12)),
                           ),
                         ]
@@ -459,6 +467,7 @@ class _MyProfile extends State<MyProfile> {
                         InkWell(
                           onTap: (){
                             Global.showWebColoredToast('暂未开放，敬请期待!');
+                            // Navigator.push(Global.MainContext, SlideRightRoute(page: const LoginPage())).then((value) => setState(() {Global.getUserInfo();}));
                           },
                           child: Container(
                             // margin: const EdgeInsets.only(top: 10),

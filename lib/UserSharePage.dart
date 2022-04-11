@@ -28,6 +28,7 @@ class _UserSharePage extends State<UserSharePage> {
   int count = 0;
   String? bgImage;
   String shareText='推广奖励';
+  String shareUrl='';
 
   @override
   void initState() {
@@ -38,7 +39,7 @@ class _UserSharePage extends State<UserSharePage> {
   _buildAvatar() {
     if ((userModel.avatar == null || userModel.avatar == '') ||
         userModel.avatar?.contains('http') == false) {
-      return const AssetImage('assets/image/default_head.gif');
+      return const AssetImage(ImageIcons.default_head);
     }
     return NetworkImage(userModel.avatar!);
   }
@@ -64,6 +65,11 @@ class _UserSharePage extends State<UserSharePage> {
           shareText = map['shareText'];
         });
       }
+      if(map['shareUrl'] != null){
+        setState(() {
+          shareText = map['shareUrl'];
+        });
+      }
     }
   }
   _buildBgImage(){
@@ -74,10 +80,6 @@ class _UserSharePage extends State<UserSharePage> {
   }
   @override
   Widget build(BuildContext context) {
-
-    if(domian != null && !domian.endsWith('/')){
-      domian='$domian/';
-    }
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         trailing: Row(
@@ -119,33 +121,7 @@ class _UserSharePage extends State<UserSharePage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          // color: Colors.black,
-                          child: Column(
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.all(5),
-                                child: const Text('我的推广码',style: TextStyle(color: Colors.amberAccent,fontWeight: FontWeight.bold,fontSize: 18),),
-                              ),
-                              Container(
-                                margin: const EdgeInsets.all(5),
-                                // decoration: BoxDecoration(
-                                  // border: Border.all(color: Colors.white,),
-                                // ),
-                                child: Text(userModel.user.invite!,style: const TextStyle(color: Colors.amber,fontWeight: FontWeight.bold,fontSize: 18),),
-                              ),
-                              // const Padding(padding: EdgeInsets.only(top: 10)),
 
-                            ],
-                          ),
-
-                        ),
-                      ],
-                    ),
-                    const Padding(padding: EdgeInsets.only(top: 10)),
                     Container(
                       // margin: const EdgeInsets.only(left: 15, bottom: 90),
                       decoration: BoxDecoration(
@@ -158,8 +134,8 @@ class _UserSharePage extends State<UserSharePage> {
                         // ),
                       ),
                       child: QrImage(
-                        data: '$domian${userModel.user.invite}',
-                        size: 150,
+                        data: shareUrl,
+                        size: 170,
                         version: QrVersions.auto,
                         embeddedImageStyle: QrEmbeddedImageStyle(
                           size: const Size(30, 30),
@@ -167,94 +143,52 @@ class _UserSharePage extends State<UserSharePage> {
                         // embeddedImage: _buildAvatar(),
                       ),
                     ),
+                    const Padding(padding: EdgeInsets.only(top: 10)),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text('邀请码',style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold)),
+                        const Padding(padding: EdgeInsets.only(left: 20)),
+                        Text(userModel.user.invite!,style: const TextStyle(color: Colors.redAccent,fontWeight: FontWeight.bold,fontSize: 18),),
+                        const Padding(padding: EdgeInsets.only(left: 20)),
+                        InkWell(
+                          onTap: () async{
+                            await Clipboard.setData(ClipboardData(text: shareUrl,));
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(width: 1.0, color: Colors.deepOrange),
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: Container(
+                              margin: const EdgeInsets.only(left: 10,right: 10),
+                              child: Text('复制',style: TextStyle(fontSize: 15,color: Colors.deepOrangeAccent,fontWeight: FontWeight.bold),textAlign: TextAlign.center),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      width: 300,
+                      // color: Colors.white,
+                      decoration: const BoxDecoration(
+                        // border: Border(bottom: BorderSide(color: Colors.black, width: 1)),
+                      ),
+                      child: Container(
+                        margin: const EdgeInsets.all(5),
+                        child: Text(shareText.length > 36 ? '${shareText.substring(0,36)}...' : shareText,style: const TextStyle(color: Colors.black,fontSize: 15),),
+                      ),
+                    ),
+                    const Padding(padding: EdgeInsets.only(top: 10)),
                   ],
                 ),
               ),
           ),
-          Container(
-            height: 100,
-            margin: const EdgeInsets.only(right: 18,left: 18),
-            // color: Colors.black54,
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    InkWell(
-                      onTap: () async{
-                        if(await Global.requestPhotosPermission() || Platform.isIOS){
-                          await Global.capturePng(repaintKey);
-                        }
-                      },
-                      child: Container(
-                        // decoration: BoxDecoration(
-                        //   borderRadius:
-                        //   const BorderRadius.all(Radius.circular(20)),
-                        //   // border: Border.all(width: 2.0, color: Colors.black),
-                        //   // color: Colors.yellow,
-                        //   image: DecorationImage(
-                        //     image: AssetImage(ImageIcons.button_y),
-                        //     fit: BoxFit.fill,
-                        //   ),
-                        // ),
-                        width: 150,
-                        height: 45,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Text(
-                              '保存分享二维码',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.normal),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () async{
-                        await Clipboard.setData(ClipboardData(text: '$domian${userModel.user.invite}',));
-                        Global.showWebColoredToast('复制成功！');
-                      },
-                      child: Container(
-                        // decoration: BoxDecoration(
-                        //   borderRadius:
-                        //   const BorderRadius.all(Radius.circular(20)),
-                        //   // border: Border.all(width: 2.0, color: Colors.black),
-                        //   // color: Colors.yellow,
-                        //   image: DecorationImage(
-                        //     image: AssetImage(ImageIcons.button_y.assetName),
-                        //     fit: BoxFit.fill,
-                        //   ),
-                        // ),
-                        width: 150,
-                        height: 45,
 
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Text(
-                              '复制分享链接',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.normal),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
           Container(
             height: 250,
             // color: Colors.black54,
-            margin: const EdgeInsets.only(left: 40, right: 40),
+            margin:  EdgeInsets.only(left: 40, right: 40,bottom: ((MediaQuery.of(context).size.height) / 2.8)),
             child: Column(
               children: [
                 InkWell(
@@ -288,20 +222,36 @@ class _UserSharePage extends State<UserSharePage> {
                   ),
                 ),
                 // const Padding(padding: EdgeInsets.only(top: 5)),
-                Container(
-                  width: 200,
-                  // color: Colors.white,
-                  decoration: const BoxDecoration(
-                    border: Border(bottom: BorderSide(color: Colors.black, width: 1)),
-                  ),
+
+              ],
+            ),
+          ),
+          Container(
+            height: 100,
+            margin: const EdgeInsets.only(right: 18,left: 18),
+            // color: Colors.black54,
+            child: Column(
+              children: [
+                InkWell(
+                  onTap: () async{
+                    if(await Global.requestPhotosPermission() || Platform.isIOS){
+                      await Global.capturePng(repaintKey);
+                    }
+                  },
                   child: Container(
-                    margin: const EdgeInsets.all(5),
-                    child: Text(shareText.length > 36 ? '${shareText.substring(0,36)}...' : shareText,style: const TextStyle(color: Colors.amber,fontSize: 15),),
+                    height: 60,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(ImageIcons.share_btn),
+                        fit: BoxFit.fill,
+                      ),
+                    ),
                   ),
                 ),
               ],
             ),
           ),
+
         ],
       ),
     );

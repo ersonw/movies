@@ -13,6 +13,7 @@ import 'ImageIcons.dart';
 import 'SlideRightRoute.dart';
 import 'data/Game.dart';
 import 'data/OnlinePay.dart';
+import 'data/User.dart';
 import 'global.dart';
 import 'network/NWApi.dart';
 import 'network/NWMethod.dart';
@@ -30,6 +31,8 @@ class _GamePage extends State<GamePage> with SingleTickerProviderStateMixin{
   double gameBalance = 0;
   late AnimationController controller;
   bool _refresh = false;
+  bool alive = true;
+  User _user = userModel.user;
 
   @override
   void initState() {
@@ -40,6 +43,11 @@ class _GamePage extends State<GamePage> with SingleTickerProviderStateMixin{
     controller.addStatusListener((status) {
       if (status == AnimationStatus.completed){
         controller.reset();
+      }
+    });
+    userModel.addListener(() {
+      if(alive){
+        _user = userModel.user;
       }
     });
   }

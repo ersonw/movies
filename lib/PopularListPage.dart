@@ -193,9 +193,10 @@ class _PopularListPage extends State<PopularListPage>  with SingleTickerProvider
                 children: [
                   SizedBox(
                       width: ((MediaQuery.of(context).size.width) / 2.5),
+                      height: 80,
                       child: Text(
                         data.title,
-                        style: const TextStyle(fontSize: 15),
+                        style: const TextStyle(fontSize: 15,overflow: TextOverflow.clip),
                         textAlign: TextAlign.left,
                       )
                   ),

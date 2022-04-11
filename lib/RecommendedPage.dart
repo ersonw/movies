@@ -55,7 +55,7 @@ class _RecommendedPage extends State<RecommendedPage> {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       child: DefaultTabController(
-          length: 2,
+          length: 1,
           child: _buildBody(context)),
     );
   }
@@ -143,14 +143,14 @@ class _RecommendedPage extends State<RecommendedPage> {
               );
             }),
           ),
-          Container(
+          recommended.video.actor != null ? Container(
             margin: const EdgeInsets.only(left: 20),
             child: Row(
               children: [
                 Text('主演：${recommended.video.actor.name}')
               ],
             ),
-          ),
+          ) : Container(),
           Container(
             margin: const EdgeInsets.only(left: 20,right: 20),
             child: Row(
@@ -275,7 +275,7 @@ class _RecommendedPage extends State<RecommendedPage> {
                   ],
                 ),
               ),
-              const Text("暂未开放"),
+              // const Text("暂未开放"),
             ])),
       ],
     );

@@ -159,8 +159,17 @@ class Global {
     //       data['bindData'];
     //   showWebColoredToast(debugLog);
     // });
-    codeInvite = data['bindData']['code'];
-    // _handlerInvite();
+    if(null != data['bindData']){
+      if(null != data['bindData']['code']){
+        codeInvite = data['bindData']['code'];
+      }
+      if(null != data['bindData']['video']){
+        if(int.tryParse(data['bindData']['video']) != null){
+          playVideo(int.parse(data['bindData']['video']));
+        }
+      }
+    }
+    _handlerInvite();
   }
   static Future<void> wakeupHandler(Map<String, dynamic> data) async {
     // setState(() {
@@ -170,8 +179,17 @@ class Global {
     //       data['bindData'];
     //   showWebColoredToast(debugLog);
     // });
-    codeInvite = data['bindData']['code'];
-    // _handlerInvite();
+    if(null != data['bindData']){
+      if(null != data['bindData']['code']){
+        codeInvite = data['bindData']['code'];
+      }
+      if(null != data['bindData']['video']){
+        if(int.tryParse(data['bindData']['video']) != null){
+          playVideo(int.parse(data['bindData']['video']));
+        }
+      }
+    }
+    _handlerInvite();
   }
   // static Future<void> initMeiqia() async {
   //   try {
@@ -199,12 +217,25 @@ class Global {
     // Global.openWebview(Image.asset(''), inline: true);
   }
   static String getUser(){
-    String u = '/uid/${userModel.user.id}/name/${userModel.user.nickname}';
+    String u = '/uid/${userModel.user.id}/name/${Uri.encodeComponent(userModel.user.nickname)}';
     if(userModel.user.avatar != null){
       // u = '$u/avatar/${Uri.encodeComponent(userModel.user.avatar!)}';
       // u = '$u/avatar/${userModel.user.avatar}';
     }
     return u;
+  }
+  static Future<String> _getShareUrl() async {
+    Map<String, dynamic> parm = {};
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET, NWApi.getShareCount, {"data": jsonEncode(parm)}));
+    if (result != null) {
+      // print(result);
+      Map<String, dynamic> map = jsonDecode(result);
+      if(map['shareUrl'] != null){
+        return map['shareUrl'];
+      }
+    }
+    return '';
   }
   static Future<void> _initAssets()async {
     // String? path = await getPhoneLocalPath();
@@ -236,7 +267,7 @@ class Global {
         // print(base64.encode(bytes));
         List<int> decoded = base64.decode(result);
         result = utf8.decode(decoded);
-        print(result);
+        // print(result);
         if (result != null) {
           Config config = configModel.config;
           Map<String, dynamic> map = jsonDecode(result);
@@ -870,8 +901,10 @@ class Global {
     loadingChangeNotifier.isLoading = load;
   }
   static Future<void> showDialogVideo(Player player) async {
+    String shareUrl = await _getShareUrl();
     Navigator.push(MainContext, DialogRouter(SpreadVideoDialog(
       player: player,
+      shareUrl: shareUrl,
     )));
   }
   static Future<void> showDialogVideoRecommended(Player player) async {
