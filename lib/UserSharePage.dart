@@ -67,7 +67,7 @@ class _UserSharePage extends State<UserSharePage> {
       }
       if(map['shareUrl'] != null){
         setState(() {
-          shareText = map['shareUrl'];
+          shareUrl = map['shareUrl'];
         });
       }
     }
@@ -153,7 +153,8 @@ class _UserSharePage extends State<UserSharePage> {
                         const Padding(padding: EdgeInsets.only(left: 20)),
                         InkWell(
                           onTap: () async{
-                            await Clipboard.setData(ClipboardData(text: shareUrl,));
+                            await Clipboard.setData(ClipboardData(text: userModel.user.invite,));
+                            Global.showWebColoredToast('邀请码复制成功!');
                           },
                           child: Container(
                             decoration: BoxDecoration(
@@ -162,7 +163,7 @@ class _UserSharePage extends State<UserSharePage> {
                             ),
                             child: Container(
                               margin: const EdgeInsets.only(left: 10,right: 10),
-                              child: Text('复制',style: TextStyle(fontSize: 15,color: Colors.deepOrangeAccent,fontWeight: FontWeight.bold),textAlign: TextAlign.center),
+                              child: const Text('复制',style: TextStyle(fontSize: 15,color: Colors.deepOrangeAccent,fontWeight: FontWeight.bold),textAlign: TextAlign.center),
                             ),
                           ),
                         ),
@@ -188,7 +189,7 @@ class _UserSharePage extends State<UserSharePage> {
           Container(
             height: 250,
             // color: Colors.black54,
-            margin:  EdgeInsets.only(left: 40, right: 40,bottom: ((MediaQuery.of(context).size.height) / 2.8)),
+            margin:  EdgeInsets.only(left: 40, right: 40,bottom: ((MediaQuery.of(context).size.height) / 2.9)),
             child: Column(
               children: [
                 InkWell(
@@ -214,7 +215,7 @@ class _UserSharePage extends State<UserSharePage> {
                           '已邀请$count人',
                           style: const TextStyle(
                               color: Colors.black,
-                              fontSize: 18,
+                              fontSize: 15,
                               fontWeight: FontWeight.bold),
                         )
                       ],

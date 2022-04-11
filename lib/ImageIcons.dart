@@ -5,6 +5,8 @@ class ImageIcons {
   static const String loading_38959 = 'assets/images/loading_38959.mp4';
   static const String Loading_icon = 'assets/images/Loading_icon.gif';
   static const String yue = 'assets/images/yue.jpg';
+  static const String appBootBg = 'assets/images/appBootBg.jpg';
+  static const String close = 'assets/images/close.png';
   static const String shareBgImage = 'assets/images/006-shareBgImage.png';
   static const String icon_community_zan = 'assets/images/icon_community_zan.png';
   static const String tuku = 'assets/images/tuku.png';

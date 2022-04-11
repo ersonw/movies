@@ -61,134 +61,129 @@ class DialogVideoRecommended extends Dialog {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        InkWell(
-          onTap: () {
-            // _close(context);
-          },
-          child: Container(
+        Container(
 
-            margin: const EdgeInsets.all(30),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-            ),
-            child: Column(
-              children: [
-                Container(
-                  width: 350,
-                  height: 200,
-                  margin: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    image: DecorationImage(
-                      image: NetworkImage(player.pic),
-                      fit: BoxFit.fill,
-                      alignment: Alignment.center,
+          margin: const EdgeInsets.all(30),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+          ),
+          child: Column(
+            children: [
+              Container(
+                width: 350,
+                height: 200,
+                margin: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
+                  image: DecorationImage(
+                    image: NetworkImage(player.pic),
+                    fit: BoxFit.fill,
+                    alignment: Alignment.center,
+                  ),
+                ),
+                child: Global.buildPlayIcon(() {}),
+              ),
+              Row(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.all(10),
+                    width: (MediaQuery.of(context).size.width) / 1.3,
+                    child: Text(player.title,
+                      style: const TextStyle(color: Colors.black,fontSize: 17,fontWeight: FontWeight.normal,overflow: TextOverflow.ellipsis),),
+                  )
+                ],
+              ),
+              player.tag != null ? Row(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.all(10),
+                    width: (MediaQuery.of(context).size.width) / 1.3,
+                    child: Text(player.tag,
+                      style: const TextStyle(color: Colors.grey,fontSize: 15,fontWeight: FontWeight.normal,overflow: TextOverflow.ellipsis),),
+                  )
+                ],
+              ) : Container(),
+              SingleChildScrollView(
+                child: InkWell(
+                  child:  Container(
+                    height: 100,
+                    margin: const EdgeInsets.all(10),
+                    decoration: const BoxDecoration(
+                      color: Colors.black12,
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    ),
+                    child: TextField(
+                      focusNode: _commentFocus,
+                      maxLength: 100,
+                      maxLines: 5,
+                      minLines: 1,
+                      controller: _textEditingController,
+                      keyboardType: TextInputType.multiline,
+                      onEditingComplete: () {
+                        _commentFocus.unfocus();
+                      },
+                      inputFormatters: <TextInputFormatter>[
+                        LengthLimitingTextInputFormatter(100)
+                      ],
+                      // controller: _controller,
+                      decoration: const InputDecoration(
+                        // isDense: true,
+                          contentPadding: EdgeInsets.only(
+                              left: 10, right: 10, top: 5, bottom: 0),
+                          border: InputBorder.none,
+                          hintStyle: TextStyle(color: Colors.black45),
+                          hintText: "请详细描述你推荐此片的理由"),
                     ),
                   ),
-                  child: Global.buildPlayIcon(() {}),
                 ),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.all(10),
-                      width: (MediaQuery.of(context).size.width) / 1.3,
-                      child: Text(player.title,
-                        style: const TextStyle(color: Colors.black,fontSize: 17,fontWeight: FontWeight.normal,overflow: TextOverflow.ellipsis),),
-                    )
-                  ],
-                ),
-                player.tag != null ? Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.all(10),
-                      width: (MediaQuery.of(context).size.width) / 1.3,
-                      child: Text(player.tag,
-                        style: const TextStyle(color: Colors.grey,fontSize: 15,fontWeight: FontWeight.normal,overflow: TextOverflow.ellipsis),),
-                    )
-                  ],
-                ) : Container(),
-                SingleChildScrollView(
-                  child: InkWell(
-                    child:  Container(
-                      height: 100,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InkWell(
+                    onTap: (){
+                      _close(context);
+                    },
+                    child: Container(
+                      width: 120,
+                      height: 45,
                       margin: const EdgeInsets.all(10),
                       decoration: const BoxDecoration(
                         color: Colors.black12,
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        borderRadius: BorderRadius.all(Radius.circular(27)),
                       ),
-                      child: TextField(
-                        focusNode: _commentFocus,
-                        maxLength: 100,
-                        maxLines: 5,
-                        minLines: 1,
-                        controller: _textEditingController,
-                        keyboardType: TextInputType.multiline,
-                        onEditingComplete: () {
-                          _commentFocus.unfocus();
-                        },
-                        inputFormatters: <TextInputFormatter>[
-                          LengthLimitingTextInputFormatter(100)
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Text('取消',style: TextStyle(fontSize: 15,color: Colors.black),textAlign: TextAlign.center,),
                         ],
-                        // controller: _controller,
-                        decoration: const InputDecoration(
-                            // isDense: true,
-                            contentPadding: EdgeInsets.only(
-                                left: 10, right: 10, top: 5, bottom: 0),
-                            border: InputBorder.none,
-                            hintStyle: TextStyle(color: Colors.black45),
-                            hintText: "请详细描述你推荐此片的理由"),
                       ),
                     ),
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    InkWell(
-                      onTap: (){
-                        _close(context);
-                      },
-                      child: Container(
-                        width: 120,
-                        height: 45,
-                        margin: const EdgeInsets.all(10),
-                        decoration: const BoxDecoration(
-                          color: Colors.black12,
-                          borderRadius: BorderRadius.all(Radius.circular(27)),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Text('取消',style: TextStyle(fontSize: 15,color: Colors.black),textAlign: TextAlign.center,),
-                          ],
-                        ),
+                  InkWell(
+                    onTap: (){
+                      _post(context);
+                    },
+                    child: Container(
+                      width: 120,
+                      height: 45,
+                      margin: const EdgeInsets.all(10),
+                      decoration: const BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.all(Radius.circular(27)),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Text('推荐',style: TextStyle(fontSize: 15,color: Colors.white),textAlign: TextAlign.center,),
+                        ],
                       ),
                     ),
-                    InkWell(
-                      onTap: (){
-                        _post(context);
-                      },
-                      child: Container(
-                        width: 120,
-                        height: 45,
-                        margin: const EdgeInsets.all(10),
-                        decoration: const BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.all(Radius.circular(27)),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Text('推荐',style: TextStyle(fontSize: 15,color: Colors.white),textAlign: TextAlign.center,),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ],

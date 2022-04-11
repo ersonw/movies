@@ -1,17 +1,24 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movies/ImageIcons.dart';
+import 'package:movies/SystemNotificationDialog.dart';
+import 'package:movies/data/SystemMessage.dart';
 import 'package:path/path.dart';
 
 import 'GamePage.dart';
+import 'HttpManager.dart';
 import 'IndexHomePage.dart';
 import 'LockScreenCustom.dart';
 import 'MyProfile.dart';
+import 'PopUpsDialog.dart';
 import 'RecommendedPage.dart';
 import 'WolfFriendPage.dart';
 import 'global.dart';
+import 'network/NWApi.dart';
+import 'network/NWMethod.dart';
 
 ///自定义不规则底部导航栏
 class BottomAppBarState extends StatefulWidget {
@@ -22,18 +29,33 @@ class BottomAppBarState extends StatefulWidget {
 class _BottomAppBarState extends State<BottomAppBarState> {
   List<Widget> _eachView = [];
   int _index = 0;
+  SystemMessage systemMessage = SystemMessage();
 
   @override
   void initState() {
     super.initState();
-
+    if(messagesChangeNotifier.messages.systemMessage.isNotEmpty) systemMessage = messagesChangeNotifier.messages.systemMessage.last;
     _eachView.add(const IndexHomePage());
     _eachView.add(const WolfFriendPage());
     _eachView.add(const RecommendedPage());
     _eachView.add(const MyProfile());
     _eachView.add(const GamePage());
   }
-  _enterView(int index){
+  Future<void> _popUps(BuildContext context)async {
+    Map<String, dynamic> parm = { };
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET, NWApi.getPopUpsDialog, {"data": jsonEncode(parm)}));
+    if (result != null) {
+      print(result);
+      Map<String, dynamic> map = jsonDecode(result);
+      if(map != null){
+        if(map['image'] != null && map['url'] != null){
+          Navigator.push(context, DialogRouter(PopUpsDialog(map['image'], url: map['url'])));
+        }else if(map['image'] != null){
+          Navigator.push(context, DialogRouter(PopUpsDialog(map['image'])));
+        }
+      }
+    }
   }
   @override
   Widget build(BuildContext context) {
@@ -51,6 +73,14 @@ class _BottomAppBarState extends State<BottomAppBarState> {
           ),
         );
       }
+    });
+    Timer(const Duration(milliseconds: 50), () {
+      _popUps(context).then((v) {
+        if(messagesChangeNotifier.messages.systemMessage.isNotEmpty){
+          Navigator.push(context, DialogRouter(SystemNotificationDialog(systemMessage)));
+          // showDialog(context: context, builder: (BuildContext _context) => SystemNotificationDialog(systemMessage));
+        }
+      });
     });
     return Scaffold(
       body: _eachView[_index],

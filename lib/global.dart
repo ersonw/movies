@@ -152,44 +152,41 @@ class Global {
     return list;
   }
   static Future<void> installHandler(Map<String, dynamic> data) async {
-    // setState(() {
-    //   String debugLog = "install result : channel=" +
-    //       data['channelCode'] +
-    //       ", data=" +
-    //       data['bindData'];
-    //   showWebColoredToast(debugLog);
-    // });
+    // print(jsonEncode(data));
     if(null != data['bindData']){
-      if(null != data['bindData']['code']){
-        codeInvite = data['bindData']['code'];
+      Map<String, dynamic> map = jsonDecode(data['bindData']);
+      if(null != map['code']){
+        codeInvite = map['code'];
+        _handlerInvite();
       }
-      if(null != data['bindData']['video']){
-        if(int.tryParse(data['bindData']['video']) != null){
-          playVideo(int.parse(data['bindData']['video']));
+      if(null != map['video']){
+        if(int.tryParse(map['video']) != null){
+          playVideo(int.parse(map['video']));
         }
       }
     }
-    _handlerInvite();
+    if(null != data['channelCode']){
+      handlerChannel(data['channelCode']);
+    }
+    // _handlerInvite();
   }
+  static void handlerChannel(String code){}
   static Future<void> wakeupHandler(Map<String, dynamic> data) async {
-    // setState(() {
-    //   String debugLog = "wakeup result : channel=" +
-    //       data['channelCode'] +
-    //       ", data=" +
-    //       data['bindData'];
-    //   showWebColoredToast(debugLog);
-    // });
     if(null != data['bindData']){
-      if(null != data['bindData']['code']){
-        codeInvite = data['bindData']['code'];
+      Map<String, dynamic> map = jsonDecode(data['bindData']);
+      if(null != map['code']){
+        codeInvite = map['code'];
+        _handlerInvite();
       }
-      if(null != data['bindData']['video']){
-        if(int.tryParse(data['bindData']['video']) != null){
-          playVideo(int.parse(data['bindData']['video']));
+      if(null != map['video']){
+        if(int.tryParse(map['video']) != null){
+          playVideo(int.parse(map['video']));
         }
       }
     }
-    _handlerInvite();
+    if(null != data['channelCode']){
+      handlerChannel(data['channelCode']);
+    }
   }
   // static Future<void> initMeiqia() async {
   //   try {
@@ -353,6 +350,7 @@ class Global {
           showWebColoredToast("头像上传成功！");
         }else{
           showWebColoredToast("头像上传失败！不能上传带有二维码的图片作为头像");
+          return;
         }
       }
     }
@@ -621,24 +619,60 @@ class Global {
       }
     }
   }
-  static void handlerScan(String data){
+  static Future<Map<String, String>> getQueryString(String url)async{
+    Map<String, String> map = <String, String>{};
+    if(url.contains('?')){
+      List<String> urls = url.split('?');
+      if(urls.length > 1){
+        url = urls[1];
+        if(url.contains('&')){
+          urls = url.split('&');
+          for (int i =0;i< urls.length; i++){
+            if(urls[i].contains('=')){
+              List<String> temp = url.split('=');
+              if(temp.length>1){
+                map[temp[0]] = temp[1];
+              }
+            }
+          }
+        }else{
+          List<String> temp = url.split('=');
+          if(temp.length>1){
+            map[temp[0]] = temp[1];
+          }
+        }
+      }
+    }
+    return map;
+  }
+  static void handlerScan(String data) async{
     print(data);
-    String url = data.replaceAll(configModel.config.domain, '');
-    if(url.contains('/')) url = url.replaceAll('/', '');
-    if(url.contains('-')){
-      List<String> urls = url.split('-');
-      int vid = int.parse(urls[0]);
-      String code = urls[1];
-      _handlerInvite(code: code);
-      _handlerJoin(vid, code);
-    }else{
-      _handlerInvite(code: url);
+    // String url = data.replaceAll(configModel.config.shareDomain, '');
+    // if(url.contains('/')) url = url.replaceAll('/', '');
+    // if(url.contains('-')){
+    //   List<String> urls = url.split('-');
+    //   int vid = int.parse(urls[0]);
+    //   String code = urls[1];
+    //   _handlerInvite(code: code);
+    //   _handlerJoin(vid, code);
+    // }else{
+    //   _handlerInvite(code: url);
+    // }
+    Map<String, String> map = await getQueryString(data);
+    if(map['code'] != null){
+      _handlerInvite(code: map['code']! );
+    }
+    if(map['video'] != null && int.tryParse(map['video']!) != null){
+      int vid = int.parse(map['video']!);
+      playVideo(vid);
     }
   }
   static void _handlerInvite({String code = ''})async{
     if(code.isEmpty){
       code = codeInvite;
     }
+    // showWebColoredToast(code);
+    // showWebColoredToast(codeInvite);
     // if(code.isEmpty){
     //   return;
     // }
