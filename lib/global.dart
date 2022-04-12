@@ -67,6 +67,13 @@ final UserModel userModel = UserModel();
 final LoadingChangeNotifier loadingChangeNotifier = LoadingChangeNotifier();
 final OpeninstallFlutterPlugin _openinstallFlutterPlugin = OpeninstallFlutterPlugin();
 class Global {
+  static const String REPORT_TESTS = 'effect_test';
+  static const String REPORT_CREATE_ORDER = 'createOrder';
+  static const String REPORT_OPEN_VIP = 'openVip';
+  static const String REPORT_BIND_PHONE = 'bindPhone';
+  static const String REPORT_PHONE_LOGIN = 'phoneLogin';
+  static const String REPORT_PLAYER_GAME = 'playerGame';
+  static const String REPORT_CASH_IN_GAME = 'cashInGame';
   static String codeInvite = '';
   static String channelCode = '';
   static bool channelIs = false;
@@ -131,6 +138,9 @@ class Global {
     List<OnlinePay> list = await _initOnlinePays();
     Navigator.push(MainContext, DialogRouter(OnlinePayPage(list ,callback: callback,)));
   }
+  static Future<void> reportOpen(String type)async{
+    _openinstallFlutterPlugin.reportEffectPoint(type, 1);
+  }
   static Future<List<OnlinePay>> _initOnlinePays() async {
     List<OnlinePay> list = [];
     Map<String, dynamic> parm = {};
@@ -146,7 +156,7 @@ class Global {
   }
   static Future<void> installHandler(Map<String, dynamic> data) async {
     // print(data['channelCode']);
-    channelCode = '101';
+    // channelCode = '101';
     if(null != data['bindData']){
       Map<String, dynamic> map = jsonDecode(data['bindData']);
       if(null != map['code']){

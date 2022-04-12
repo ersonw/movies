@@ -706,7 +706,7 @@ class _PlayerPage extends State<PlayerPage> {
                               ],
                             ),
                             Text(
-                              '未开通Vip或购买只能试看${_player.du}分钟哦',
+                              '试看已结束,${_player.member != true && _player.diamond ==0 ? '非会员': '未购买'}只能试看${_player.du}分钟哦',
                               style:
                               const TextStyle(color: Colors.white, fontSize: 20),
                             ),
@@ -1419,78 +1419,84 @@ class _PlayerPage extends State<PlayerPage> {
     SearchList list = _avLists[index];
     return Container(
       margin: const EdgeInsets.all(10),
-      child: Row(
-        children: [
-          Container(
-            width: 150,
-            height: 100,
-            decoration: BoxDecoration(
+      child: InkWell(
+        onTap: () {
+          _controller.pause();
+          Global.playVideo(list.id);
+        },
+        child: Row(
+          children: [
+            Container(
+              width: 150,
+              height: 100,
+              decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: NetworkImage(list.image),
-                    fit: BoxFit.fill,
+                  image: NetworkImage(list.image),
+                  fit: BoxFit.fill,
                 ),
+              ),
+              // child: Global.buildPlayIcon(() {
+              //   // Navigator.pop(context);
+              //   _controller.pause();
+              //   Global.playVideo(list.id);
+              // }),
             ),
-            child: Global.buildPlayIcon(() {
-              // Navigator.pop(context);
-              _controller.pause();
-              Global.playVideo(list.id);
-            }),
-          ),
-          Container(
-            margin: const EdgeInsets.only(left: 10),
-            height: 100,
-            width: ((MediaQuery.of(context).size.width) / 2.2),
-            // color: Colors.black54,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                        width: ((MediaQuery.of(context).size.width) / 2.5),
-                        child: Text(
-                          list.title.length > 30 ? '${list.title.substring(0,30)}...' : list.title,
-                          style: const TextStyle(fontSize: 15),
-                          textAlign: TextAlign.left,
-                        )
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          Global.getNumbersToChinese(list.play),
-                          style: const TextStyle(color: Colors.black, fontSize: 13),
-                        ),
-                        const Text(
-                          '播放',
-                          style: TextStyle(color: Colors.grey, fontSize: 13),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Image.asset(
-                          ImageIcons.remommendIcon,
-                          width: 45,
-                          height: 15,
-                        ),
-                        Text(
-                          '${Global.getNumbersToChinese(list.remommends)}人',
-                          style: const TextStyle(color: Colors.grey, fontSize: 13),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
+            Container(
+              margin: const EdgeInsets.only(left: 10),
+              height: 100,
+              width: ((MediaQuery.of(context).size.width) / 2.2),
+              // color: Colors.black54,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                          width: ((MediaQuery.of(context).size.width) / 2.5),
+                          child: Text(
+                            list.title.length > 30 ? '${list.title.substring(0,30)}...' : list.title,
+                            style: const TextStyle(fontSize: 15),
+                            textAlign: TextAlign.left,
+                          )
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            Global.getNumbersToChinese(list.play),
+                            style: const TextStyle(color: Colors.black, fontSize: 13),
+                          ),
+                          const Text(
+                            '播放',
+                            style: TextStyle(color: Colors.grey, fontSize: 13),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Image.asset(
+                            ImageIcons.remommendIcon,
+                            width: 45,
+                            height: 15,
+                          ),
+                          Text(
+                            '${Global.getNumbersToChinese(list.remommends)}人',
+                            style: const TextStyle(color: Colors.grey, fontSize: 13),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

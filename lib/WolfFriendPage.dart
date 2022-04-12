@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:movies/UserInfoPage.dart';
@@ -30,7 +31,7 @@ class _WolfFriendPage extends State<WolfFriendPage>  with SingleTickerProviderSt
   int type = 1;
   int page = 1;
   int total = 1;
-  String loading = '加载更多!';
+  bool loading = false;
   // bool post = false;
   @override
   void initState() {
@@ -89,11 +90,12 @@ class _WolfFriendPage extends State<WolfFriendPage>  with SingleTickerProviderSt
     };
     String? result = (await DioManager().requestAsync(
         NWMethod.GET, NWApi.recommendVideos, {"data": jsonEncode(parm)}));
-    // print(result);
-    // post = false;
     if (result == null) {
       return;
     }
+    setState(() {
+      loading = false;
+    });
     Map<String, dynamic> map = jsonDecode(result);
     total = map['total'] > 0 ? map['total'] : 1;
     List<WolfFriend> list = (map['list'] as List).map((e) => WolfFriend.formJson(e)).toList();
@@ -104,8 +106,7 @@ class _WolfFriendPage extends State<WolfFriendPage>  with SingleTickerProviderSt
         _list = list;
       }
     });
-    // print(page);
-    // print(total);
+
   }
   _favorite(int _index, int index) async{
     WolfFriend wolfFriend = _list[index];
@@ -188,6 +189,13 @@ class _WolfFriendPage extends State<WolfFriendPage>  with SingleTickerProviderSt
     },
     );
   }
+  Future<void> _onRefresh() async {
+    setState(() {
+      loading = true;
+    });
+    page = 1;
+    _init();
+  }
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -229,21 +237,27 @@ class _WolfFriendPage extends State<WolfFriendPage>  with SingleTickerProviderSt
             Expanded(child: TabBarView(
                 controller: _innerTabController,
                 children: [
-                  ListView.builder(
+                RefreshIndicator(
+                  onRefresh: _onRefresh,
+                  child: ListView(
                     controller: _controller,
-                    itemCount: _list.length+1,
-                    itemBuilder: (BuildContext _context, int index) => _buildListItem(index),
+                    children: _buildList(),
                   ),
-                  ListView.builder(
+                ),
+                RefreshIndicator(
+                  onRefresh: _onRefresh,
+                  child: ListView(
                     controller: _controller,
-                    itemCount: _list.length+1,
-                    itemBuilder: (BuildContext _context, int index) => _buildListItem(index),
+                    children: _buildList(),
                   ),
-                  ListView.builder(
+                ),
+                RefreshIndicator(
+                  onRefresh: _onRefresh,
+                  child: ListView(
                     controller: _controller,
-                    itemCount: _list.length+1,
-                    itemBuilder: (BuildContext _context, int index) => _buildListItem(index),
+                    children: _buildList(),
                   ),
+                ),
                 ]
             )),
             // Expanded(child: ListView.builder(
@@ -256,33 +270,29 @@ class _WolfFriendPage extends State<WolfFriendPage>  with SingleTickerProviderSt
       ),
     );
   }
-  _buildListItem(int index){
-    if(index >= _list.length){
-      // return _list.length > 1 ? Container(
-      //   height: 30,
-      //   margin: const EdgeInsets.all(30),
-      //   child: Column(
-      //     mainAxisAlignment: MainAxisAlignment.center,
-      //     children: [
-      //       Row(
-      //         mainAxisAlignment: MainAxisAlignment.center,
-      //         children: [
-      //           Text(loading,style: const TextStyle(color: Colors.grey,fontSize: 20),),
-      //         ],
-      //       )
-      //     ],
-      //   ),
-      // ) : Container();
-      return Center(
-        child: page < total ? Image.asset(ImageIcons.Loading_icon) : Container(
-          margin: const EdgeInsets.only(top: 30, bottom: 30),
-          child: const Text(
-            '已经到底了！',
-            style: TextStyle(color: Colors.grey, fontSize: 15),
-          ),
-        ),
-      );
+  List<Widget> _buildList(){
+    List<Widget> widgets = [];
+    widgets.add(
+        Center(child: Container(
+          // margin: const EdgeInsets.only(top: 30, bottom: 30),
+          child: loading ? Image.asset(ImageIcons.Loading_icon,width: 150,) : Container(),
+        ),)
+    );
+    for(int i=0; i<_list.length; i++){
+      widgets.add(_buildListItem(i));
     }
+    widgets.add(Center(
+      child: page < total ? Image.asset(ImageIcons.Loading_icon,width: 150,) : Container(
+        margin: const EdgeInsets.only(top: 30, bottom: 30),
+        child: Text(
+          _list.length > 2 ? '已经到底了！' : (_list.isEmpty ? '暂时还没有' : ''),
+          style: const TextStyle(color: Colors.grey, fontSize: 15),
+        ),
+      ),
+    ));
+    return widgets;
+  }
+  _buildListItem(int index){
     WolfFriend wolfFriend = _list[index];
     return Container(
       margin: const EdgeInsets.only(top: 10),
@@ -294,26 +304,40 @@ class _WolfFriendPage extends State<WolfFriendPage>  with SingleTickerProviderSt
           SizedBox(
             width: (MediaQuery.of(context).size.width),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Text('狼友推荐的第${wolfFriend.id}部大片',style: const TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.bold),),
-                Text('共${wolfFriend.recommends}人推荐',style: const TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.bold),),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    const Text('共',style: const TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold),),
+                    Text('${wolfFriend.recommends}',style: const TextStyle(color: Colors.deepOrange,fontSize: 20,fontWeight: FontWeight.bold),),
+                    const Text('人推荐',style:  TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold),),
+                  ]
+                ),
               ],
             ),
           ),
-          Container(
-            height: 240,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(10)),
-              image: DecorationImage(
-                image: NetworkImage(wolfFriend.image),
-                fit: BoxFit.fill,
-                alignment: Alignment.center,
-              ),
-            ),
-            child: Global.buildPlayIcon((){
+          const Padding(padding: EdgeInsets.only(top: 30)),
+          InkWell(
+            onTap: (){
               Global.playVideo(wolfFriend.vid);
-            }),
+            },
+            child: Container(
+              height: 210,
+              margin: const EdgeInsets.only(right: 20,left: 20),
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                image: DecorationImage(
+                  image: NetworkImage(wolfFriend.image),
+                  fit: BoxFit.fill,
+                  alignment: Alignment.center,
+                ),
+              ),
+              // child: Global.buildPlayIcon((){
+              //   Global.playVideo(wolfFriend.vid);
+              // }),
+            ),
           ),
           Container(
             margin: const EdgeInsets.only(top: 10,bottom: 10),

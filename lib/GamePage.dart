@@ -28,6 +28,7 @@ class GamePage extends StatefulWidget {
 class _GamePage extends State<GamePage> with SingleTickerProviderStateMixin{
   double sWith = 0;
   List<Game> _list = [];
+  List<Game> _records = [];
   double gameBalance = 0;
   late AnimationController controller;
   bool _refresh = false;
@@ -38,6 +39,7 @@ class _GamePage extends State<GamePage> with SingleTickerProviderStateMixin{
   void initState() {
     _getBalance();
     _initGame();
+    _initRecords();
     super.initState();
     controller = AnimationController(duration: const Duration(seconds:2), vsync:  this);
     controller.addStatusListener((status) {
@@ -58,6 +60,16 @@ class _GamePage extends State<GamePage> with SingleTickerProviderStateMixin{
     if (result != null) {
      setState(() {
        _list = (jsonDecode(result)['list'] as List).map((e) => Game.formJson(e)).toList();
+     });
+    }
+  }
+  void _initRecords()async{
+    Map<String, dynamic> parm = { };
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET, NWApi.getRecords, {"data": jsonEncode(parm)}));
+    if (result != null) {
+     setState(() {
+       _records = (jsonDecode(result)['list'] as List).map((e) => Game.formJson(e)).toList();
      });
     }
   }
@@ -85,7 +97,11 @@ class _GamePage extends State<GamePage> with SingleTickerProviderStateMixin{
       Map<String, dynamic> map = jsonDecode(result);
       if(map != null) {
         if(map['url'] != null) {
-          Global.openH5Game(map['url']).then((value) => _getBalance());
+          await Global.reportOpen(Global.REPORT_PLAYER_GAME);
+          Global.openH5Game(map['url']).then((value) {
+            _getBalance();
+            _initRecords();
+          });
         }
         if(map['msg'] != null) {
           Global.showWebColoredToast(map['msg']);
@@ -317,9 +333,15 @@ class _GamePage extends State<GamePage> with SingleTickerProviderStateMixin{
                 ),
               ),
               const Padding(padding: EdgeInsets.only(top: 10)),
+              _records.isNotEmpty ? Container(
+                margin: const EdgeInsets.only(left: 5,),
+                child: const Text('最近玩过',style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold)),
+              ) : Container(),
+              // const Padding(padding: EdgeInsets.only(top: 10)),
+              _buildRecords(),
               Container(
                 margin: const EdgeInsets.only(left: 5,),
-                child: const Text('更多游戏',style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold)),
+                child: const Text('全部游戏',style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold)),
               ),
               // const Padding(padding: EdgeInsets.only(top: 10)),
               _buildMore(),
@@ -369,6 +391,25 @@ class _GamePage extends State<GamePage> with SingleTickerProviderStateMixin{
      child: Column(children: widgets,),
      margin: const EdgeInsets.only(left: 5,right: 5,),
    );
+  }
+  _buildRecords(){
+   List<Widget> widgets = [];
+   for (int i = 0; i < (_records.length /2) + 1; i++){
+     widgets.add(_buildRecordsRow(i));
+   }
+   return Container(
+     child: Column(children: widgets,),
+     margin: const EdgeInsets.only(left: 5,right: 5,),
+   );
+  }
+  _buildRecordsRow(int index){
+    List<Widget> widgets = [];
+    if(index*2 < _records.length) widgets.add(_buildItem(_records[index*2]));
+    if(index*2+1 < _records.length) widgets.add(_buildItem(_records[index*2+1]));
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: widgets,
+    );
   }
   _buildRow(int index){
     List<Widget> widgets = [];

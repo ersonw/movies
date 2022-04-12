@@ -189,6 +189,7 @@ class _BindPhonePage extends State<BindPhonePage> {
     if(result != null){
       Map<String, dynamic> map = jsonDecode(result);
       if(map['verify'] == true){
+        await Global.reportOpen(Global.REPORT_BIND_PHONE);
         Global.showWebColoredToast('绑定成功!');
         Global.getUserInfo().then((value) => _callBack());
       }
@@ -209,6 +210,7 @@ class _BindPhonePage extends State<BindPhonePage> {
     if(result != null){
       Map<String, dynamic> map = jsonDecode(result);
       if(map['verify'] == true){
+        await Global.reportOpen(Global.REPORT_PHONE_LOGIN);
         Global.showWebColoredToast('登录成功!');
         setState(() {
           // userModel.user = User();

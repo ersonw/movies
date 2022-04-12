@@ -278,6 +278,8 @@ class _VIPBuyPage extends State<VIPBuyPage>
       Map<String, dynamic> map = jsonDecode(result);
       if(map['state'] == 'ok'){
         if(map['url'] != null){
+          await Global.reportOpen(Global.REPORT_CREATE_ORDER);
+          await Global.reportOpen(Global.REPORT_OPEN_VIP);
           launch(map['url']);
         }else{
           Global.getUserInfo();

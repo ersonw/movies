@@ -48,7 +48,7 @@ class _SearchPage extends State<SearchPage>
     int initialIndex =
         PageStorage.of(context)?.readState(context, identifier: _tabKey);
     _innerTabController = TabController(
-        length: 5,
+        length: 4,
         vsync: this,
         initialIndex: initialIndex != null ? initialIndex : 0);
     _innerTabController.addListener(handleTabChange);
@@ -64,7 +64,9 @@ class _SearchPage extends State<SearchPage>
   }
   _search() async{
     if(_page > total){
-      _page--;
+      setState(() {
+        _page--;
+      });
       return;
     }
     Map<String, dynamic> parm = {
@@ -77,7 +79,9 @@ class _SearchPage extends State<SearchPage>
     if (result != null) {
       // print(result);
       Map<String,dynamic> map = jsonDecode(result);
-      if(map['total'] != null) total = map['total'];
+      setState(() {
+        if(map['total'] != null) total = map['total'];
+      });
       switch(_tabIndex){
         case 1:
           List<SearchList> avLists = (map['list'] as List).map((e) => SearchList.formJson(e)).toList();
@@ -130,7 +134,6 @@ class _SearchPage extends State<SearchPage>
           });
           break;
       }
-
     }
   }
   void handleTabChange() {
@@ -219,38 +222,53 @@ class _SearchPage extends State<SearchPage>
                 )),
                 tabs: const [
                   Tab(text: 'AV'),
-                  Tab(text: '作品'),
                   Tab(text: '番号'),
                   Tab(text: '用户'),
                   Tab(text: '女优'),
                 ]),
             Expanded(
               child: TabBarView(controller: _innerTabController, children: [
-                ListView.builder(
+                // ListView.builder(
+                //   controller: _scrollController,
+                //   itemCount: _avLists.length,
+                //   itemBuilder: _buildListAv,
+                // ),
+                // ListView.builder(
+                //   controller: _scrollController,
+                //   itemCount: _workLists.length,
+                //   itemBuilder: _buildListWork,
+                // ),
+                // ListView.builder(
+                //   controller: _scrollController,
+                //   itemCount: _numberLists.length,
+                //   itemBuilder: _buildListNumber,
+                // ),
+                ListView(
                   controller: _scrollController,
-                  itemCount: _avLists.length,
-                  itemBuilder: _buildListAv,
+                  children: _buildListAv(),
                 ),
-                ListView.builder(
+                ListView(
                   controller: _scrollController,
-                  itemCount: _workLists.length,
-                  itemBuilder: _buildListWork,
+                  children: _buildListNumber(),
                 ),
-                ListView.builder(
+                ListView(
                   controller: _scrollController,
-                  itemCount: _numberLists.length,
-                  itemBuilder: _buildListNumber,
+                  children: _buildListUser(),
                 ),
-                ListView.builder(
+                ListView(
                   controller: _scrollController,
-                  itemCount: _userLists.length,
-                  itemBuilder: _buildListUser,
+                  children: _buildListActor(),
                 ),
-                ListView.builder(
-                  controller: _scrollController,
-                  itemCount: _actorLists.length,
-                  itemBuilder: _buildListActor,
-                ),
+                // ListView.builder(
+                //   controller: _scrollController,
+                //   itemCount: _userLists.length,
+                //   itemBuilder: _buildListUser,
+                // ),
+                // ListView.builder(
+                //   controller: _scrollController,
+                //   itemCount: _actorLists.length,
+                //   itemBuilder: _buildListActor,
+                // ),
               ]),
             ),
           ],
@@ -258,7 +276,39 @@ class _SearchPage extends State<SearchPage>
       ),
     );
   }
-  Widget _buildListUser(BuildContext context, int index){
+  List<Widget> _buildListUser(){
+    List<Widget> widgets = [];
+    for (int i = 0; i < _userLists.length; i++){
+      widgets.add(_buildListUserItem(i));
+    }
+    widgets.add(Center(
+      child: _page < total ? Image.asset(ImageIcons.Loading_icon,width: 150,) : Container(
+        margin: const EdgeInsets.only(top: 30, bottom: 30),
+        child: Text(
+          _userLists.length > 2 ? '已经到底了！' : (_userLists.isEmpty ? '暂时还没有' : ''),
+          style: const TextStyle(color: Colors.grey, fontSize: 15),
+        ),
+      ),
+    ));
+    return widgets;
+  }
+  List<Widget> _buildListActor(){
+    List<Widget> widgets = [];
+    for (int i = 0; i < _actorLists.length; i++){
+      widgets.add(_buildListUserItem(i));
+    }
+    widgets.add(Center(
+      child: _page < total ? Image.asset(ImageIcons.Loading_icon,width: 150,) : Container(
+        margin: const EdgeInsets.only(top: 30, bottom: 30),
+        child: Text(
+          _actorLists.length > 2 ? '已经到底了！' : (_actorLists.isEmpty ? '暂时还没有' : ''),
+          style: const TextStyle(color: Colors.grey, fontSize: 15),
+        ),
+      ),
+    ));
+    return widgets;
+  }
+  Widget _buildListUserItem(int index){
     UserList userList = _userLists[index];
     return Container(
       margin: const EdgeInsets.only(top: 5,bottom: 5),
@@ -431,7 +481,7 @@ class _SearchPage extends State<SearchPage>
     }
     return NetworkImage(avatar);
   }
-  Widget _buildListActor(BuildContext context, int index){
+  Widget _buildListActorItem(int index){
     SearchActor actor = _actorLists[index];
     return Container(
       margin: const EdgeInsets.only(top: 5,bottom: 5),
@@ -545,108 +595,161 @@ class _SearchPage extends State<SearchPage>
     }
     return FileImage(File(avatar));
   }
-  Widget _buildListAv(BuildContext context, int index) {
-    SearchList searchList = _avLists[index];
-    return _buildVideoItem(searchList);
+  // Widget _buildListAv(BuildContext context, int index) {
+  //   SearchList searchList = _avLists[index];
+  //   return _buildVideoItem(searchList);
+  // }
+  // Widget _buildListWork(BuildContext context, int index) {
+  //   SearchList searchList = _workLists[index];
+  //   return _buildVideoItem(searchList);
+  // }
+  // Widget _buildListNumber(BuildContext context, int index) {
+  //   SearchList searchList = _numberLists[index];
+  //   return _buildVideoItem(searchList);
+  // }
+  List<Widget> _buildListAv(){
+    List<Widget> widgets = [];
+    for (int i = 0; i < _avLists.length; i++){
+      widgets.add(_buildVideoItem(_avLists[i]));
+    }
+    widgets.add(Center(
+      child: _page < total ? Image.asset(ImageIcons.Loading_icon,width: 150,) : Container(
+        margin: const EdgeInsets.only(top: 30, bottom: 30),
+        child: Text(
+          _avLists.length > 2 ? '已经到底了！' : (_avLists.isEmpty ? '暂时还没有' : ''),
+          style: const TextStyle(color: Colors.grey, fontSize: 15),
+        ),
+      ),
+    ));
+    return widgets;
   }
-  Widget _buildListWork(BuildContext context, int index) {
-    SearchList searchList = _workLists[index];
-    return _buildVideoItem(searchList);
+  List<Widget> _buildListWork(){
+    List<Widget> widgets = [];
+    for (int i = 0; i < _avLists.length; i++){
+      widgets.add(_buildVideoItem(_avLists[i]));
+    }
+    widgets.add(Center(
+      child: _page < total ? Image.asset(ImageIcons.Loading_icon,width: 150,) : Container(
+        margin: const EdgeInsets.only(top: 30, bottom: 30),
+        child: Text(
+          _avLists.length > 2 ? '已经到底了！' : (_avLists.isEmpty ? '暂时还没有' : ''),
+          style: const TextStyle(color: Colors.grey, fontSize: 15),
+        ),
+      ),
+    ));
+    return widgets;
   }
-  Widget _buildListNumber(BuildContext context, int index) {
-    SearchList searchList = _numberLists[index];
-    return _buildVideoItem(searchList);
+  List<Widget> _buildListNumber(){
+    List<Widget> widgets = [];
+    for (int i = 0; i < _numberLists.length; i++){
+      widgets.add(_buildVideoItem(_numberLists[i]));
+    }
+    widgets.add(Center(
+      child: _page < total ? Image.asset(ImageIcons.Loading_icon,width: 150,) : Container(
+        margin: const EdgeInsets.only(top: 30, bottom: 30),
+        child: Text(
+          _numberLists.length > 2 ? '已经到底了！' : (_numberLists.isEmpty ? '暂时还没有' : ''),
+          style: const TextStyle(color: Colors.grey, fontSize: 15),
+        ),
+      ),
+    ));
+    return widgets;
   }
   Widget _buildVideoItem(SearchList searchList){
     return Container(
       height: 100,
       margin: const EdgeInsets.only(top: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-            width: ((MediaQuery.of(context).size.width) / 2.2),
-            // width: 200,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(10)),
-              image: DecorationImage(
-                image: NetworkImage(searchList.image),
-                fit: BoxFit.fill,
-                alignment: Alignment.center,
+      child: InkWell(
+        onTap: () {
+          Global.playVideo(searchList.id);
+        },
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Container(
+              width: ((MediaQuery.of(context).size.width) / 2.2),
+              // width: 200,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                image: DecorationImage(
+                  image: NetworkImage(searchList.image),
+                  fit: BoxFit.fill,
+                  alignment: Alignment.center,
+                ),
+              ),
+              // child: Global.buildPlayIcon(() {
+              //   Global.playVideo(searchList.id);
+              // }),
+            ),
+            SizedBox(
+              width: ((MediaQuery.of(context).size.width) / 2.2),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: ((MediaQuery.of(context).size.width) / 2.2),
+                        child: Text(
+                          searchList.title,
+                          style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 15,
+                              overflow: TextOverflow.ellipsis),
+                        ),
+                      ),
+                    ],),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: ((MediaQuery.of(context).size.width) / 2.2),
+                        child: Text(
+                          '番号:${searchList.number}',
+                          style: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 10,
+                              overflow: TextOverflow.ellipsis),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            Global.getNumbersToChinese(searchList.play),
+                            style: const TextStyle(color: Colors.black, fontSize: 13),
+                          ),
+                          const Text(
+                            '播放',
+                            style: TextStyle(color: Colors.grey, fontSize: 13),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Image.asset(
+                            ImageIcons.remommendIcon,
+                            width: 45,
+                            height: 15,
+                          ),
+                          Text(
+                            '${Global.getNumbersToChinese(searchList.remommends)}人',
+                            style: const TextStyle(color: Colors.grey, fontSize: 13),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-            child: Global.buildPlayIcon(() {
-              Global.playVideo(searchList.id);
-            }),
-          ),
-          SizedBox(
-            width: ((MediaQuery.of(context).size.width) / 2.2),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                  SizedBox(
-                    width: ((MediaQuery.of(context).size.width) / 2.2),
-                    child: Text(
-                      searchList.title,
-                      style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 15,
-                          overflow: TextOverflow.ellipsis),
-                    ),
-                  ),
-                ],),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: ((MediaQuery.of(context).size.width) / 2.2),
-                      child: Text(
-                        '番号:${searchList.number}',
-                        style: const TextStyle(
-                            color: Colors.grey,
-                            fontSize: 10,
-                            overflow: TextOverflow.ellipsis),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          Global.getNumbersToChinese(searchList.play),
-                          style: const TextStyle(color: Colors.black, fontSize: 13),
-                        ),
-                        const Text(
-                          '播放',
-                          style: TextStyle(color: Colors.grey, fontSize: 13),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Image.asset(
-                          ImageIcons.remommendIcon,
-                          width: 45,
-                          height: 15,
-                        ),
-                        Text(
-                          '${Global.getNumbersToChinese(searchList.remommends)}人',
-                          style: const TextStyle(color: Colors.grey, fontSize: 13),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

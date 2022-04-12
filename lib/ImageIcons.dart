@@ -7,6 +7,7 @@ class ImageIcons {
   static const String yue = 'assets/images/yue.jpg';
   static const String appBootBg = 'assets/images/appBootBg.jpg';
   static const String close = 'assets/images/close.png';
+  static const String redPoint = 'assets/images/redPoint.png';
   static const String shareBgImage = 'assets/images/006-shareBgImage.png';
   static const String icon_community_zan = 'assets/images/icon_community_zan.png';
   static const String tuku = 'assets/images/tuku.png';

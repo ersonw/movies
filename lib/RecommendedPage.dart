@@ -120,73 +120,73 @@ class _RecommendedPage extends State<RecommendedPage> {
                 ],
               )
           ),
-          Container(
-            width: 350,
-            height: 200,
-            margin: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(10)),
-              image: DecorationImage(
-                image: NetworkImage(recommended.video.image),
-                fit: BoxFit.fill,
-                alignment: Alignment.center,
-              ),
-            ),
-            child: Global.buildPlayIcon((){
-              // print(recommended.title);
-              Navigator.of(context, rootNavigator: true).push<void>(
-                CupertinoPageRoute(
-                  // title: '金币钱包',
-                  // fullscreenDialog: true,
-                  builder: (context) => PlayerPage(id: recommended.video.id),
-                ),
-              );
-            }),
-          ),
-          recommended.video.actor != null ? Container(
-            margin: const EdgeInsets.only(left: 20),
-            child: Row(
-              children: [
-                Text('主演：${recommended.video.actor.name}')
-              ],
-            ),
-          ) : Container(),
-          Container(
-            margin: const EdgeInsets.only(left: 20,right: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text('搞笑指数',style:  TextStyle(fontSize: 15),),
-                    _buildStar(recommended.funny),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text('热门指数',style: TextStyle(fontSize: 15),),
-                    _buildStar(recommended.hot),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.only(left: 20,right: 20,top: 10,bottom: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text('颜值指数',style: TextStyle(fontSize: 15),),
-                    _buildStar(recommended.face),
-                  ],
-                ),
-                Container(),
-              ],
+          InkWell(
+            onTap: (){
+              Global.playVideo(recommended.video.id);
+            },
+            child: Column(
+                children: [
+                  Container(
+                    width: 350,
+                    height: 200,
+                    margin: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      image: DecorationImage(
+                        image: NetworkImage(recommended.video.image),
+                        fit: BoxFit.fill,
+                        alignment: Alignment.center,
+                      ),
+                    ),
+                  ),
+                  recommended.video.actor != null && recommended.video.actor.name != null && recommended.video.actor.name.isNotEmpty ?
+                  Container(
+                    margin: const EdgeInsets.only(left: 20),
+                    child: Row(
+                      children: [
+                        Text('主演：${recommended.video.actor.name}')
+                      ],
+                    ),
+                  ) : Container(),
+                  Container(
+                    margin: const EdgeInsets.only(left: 20,right: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('搞笑指数',style:  TextStyle(fontSize: 15),),
+                            _buildStar(recommended.funny),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('热门指数',style: TextStyle(fontSize: 15),),
+                            _buildStar(recommended.hot),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 20,right: 20,top: 10,bottom: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('颜值指数',style: TextStyle(fontSize: 15),),
+                            _buildStar(recommended.face),
+                          ],
+                        ),
+                        Container(),
+                      ],
+                    ),
+                  ),
+                ]
             ),
           ),
         ],
@@ -252,7 +252,7 @@ class _RecommendedPage extends State<RecommendedPage> {
                                       _init();
                                     });
                                   },
-                                  child: Text(_getDate(),style: const TextStyle(color: Colors.black,fontSize: 18),),
+                                  child: Text(_getDate(),style: const TextStyle(color: Colors.deepOrange,fontSize: 18,fontWeight: FontWeight.bold),),
                                 ),
                               ],
                             ),

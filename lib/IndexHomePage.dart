@@ -53,6 +53,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
   int _classPage = 1;
   int _classTotal = 1;
   bool _layout = true;
+  bool alive = true;
   List<ClassData> _classDatas = [];
   void handleTabChange() {
     switch(_innerTabController.index){
@@ -90,9 +91,11 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
     _innerTabController.addListener(handleTabChange);
     super.initState();
     configModel.addListener(() {
-      setState(() {
-        _Records = configModel.searchRecords;
-      });
+      if(alive){
+        setState(() {
+          _Records = configModel.searchRecords;
+        });
+      }
     });
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
@@ -591,7 +594,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
           '已经到底了！',
           style: TextStyle(color: Colors.grey, fontSize: 15),
         ),
-      ) : Image.asset(ImageIcons.Loading_icon),
+      ) : Image.asset(ImageIcons.Loading_icon,width: 150,),
     ));
 
     return Column(
@@ -611,7 +614,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
           '已经到底了！',
           style: TextStyle(color: Colors.grey, fontSize: 15),
         ),
-      ) : Image.asset(ImageIcons.Loading_icon),
+      ) : Image.asset(ImageIcons.Loading_icon,width: 150,),
     ));
     return Column(
       children: widgets,
@@ -880,11 +883,11 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
           _addRecord(_searchTags[i * 4]);
         }),
         child: Container(
-            width: ((MediaQuery.of(context).size.width) / 5),
-            height: 30,
-            margin: const EdgeInsets.only(top: 15, left: 10),
+            width: ((MediaQuery.of(context).size.width) / 4.5),
+            height: 35,
+            margin: const EdgeInsets.only(top: 15, left: 5),
             decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(15)),
+                borderRadius: BorderRadius.all(Radius.circular(20)),
                 color: Color(0xFFD6D6D6)),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -894,7 +897,10 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
                   child: Text(
                     _searchTags[i * 4],
                     style: const TextStyle(
-                        fontSize: 15, overflow: TextOverflow.ellipsis),
+                        fontSize: 12,
+                        overflow: TextOverflow.ellipsis,
+                      fontWeight: FontWeight.normal,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 )
@@ -909,7 +915,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
         }),
         child: Container(
             width: ((MediaQuery.of(context).size.width) / 5),
-            height: 30,
+            height: 35,
             margin: const EdgeInsets.only(top: 15, left: 10),
             decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -922,7 +928,10 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
                   child: Text(
                     _searchTags[i * 4 + 1],
                     style: const TextStyle(
-                        fontSize: 15, overflow: TextOverflow.ellipsis),
+                      fontSize: 12,
+                      overflow: TextOverflow.ellipsis,
+                      fontWeight: FontWeight.normal,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 )
@@ -937,7 +946,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
         }),
         child: Container(
             width: ((MediaQuery.of(context).size.width) / 5),
-            height: 30,
+            height: 35,
             margin: const EdgeInsets.only(top: 15, left: 10),
             decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -950,7 +959,10 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
                   child: Text(
                     _searchTags[i * 4 + 2],
                     style: const TextStyle(
-                        fontSize: 15, overflow: TextOverflow.ellipsis),
+                      fontSize: 12,
+                      overflow: TextOverflow.ellipsis,
+                      fontWeight: FontWeight.normal,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 )
@@ -965,7 +977,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
         }),
         child: Container(
             width: ((MediaQuery.of(context).size.width) / 5),
-            height: 30,
+            height: 35,
             margin: const EdgeInsets.only(top: 15, left: 10),
             decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -978,7 +990,10 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
                   child: Text(
                     _searchTags[i * 4 + 3],
                     style: const TextStyle(
-                        fontSize: 15, overflow: TextOverflow.ellipsis),
+                      fontSize: 12,
+                      overflow: TextOverflow.ellipsis,
+                      fontWeight: FontWeight.normal,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 )
@@ -1036,7 +1051,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
         }),
         child: Container(
             width: ((MediaQuery.of(context).size.width) / 5),
-            height: 30,
+            height: 35,
             margin: const EdgeInsets.only(top: 5, left: 10),
             decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -1049,7 +1064,10 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
                   child: Text(
                     _records[i * 4],
                     style: const TextStyle(
-                        fontSize: 15, overflow: TextOverflow.ellipsis),
+                      fontSize: 12,
+                      overflow: TextOverflow.ellipsis,
+                      fontWeight: FontWeight.normal,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 )
@@ -1064,7 +1082,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
         }),
         child: Container(
             width: ((MediaQuery.of(context).size.width) / 5),
-            height: 30,
+            height: 35,
             margin: const EdgeInsets.only(top: 5, left: 10),
             decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -1077,7 +1095,10 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
                   child: Text(
                     _records[i * 4 + 1],
                     style: const TextStyle(
-                        fontSize: 15, overflow: TextOverflow.ellipsis),
+                      fontSize: 12,
+                      overflow: TextOverflow.ellipsis,
+                      fontWeight: FontWeight.normal,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 )
@@ -1092,7 +1113,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
         }),
         child: Container(
             width: ((MediaQuery.of(context).size.width) / 5),
-            height: 30,
+            height: 35,
             margin: const EdgeInsets.only(top: 5, left: 10),
             decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -1105,7 +1126,10 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
                   child: Text(
                     _records[i * 4 + 2],
                     style: const TextStyle(
-                        fontSize: 15, overflow: TextOverflow.ellipsis),
+                      fontSize: 12,
+                      overflow: TextOverflow.ellipsis,
+                      fontWeight: FontWeight.normal,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 )
@@ -1120,7 +1144,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
         }),
         child: Container(
             width: ((MediaQuery.of(context).size.width) / 5),
-            height: 30,
+            height: 35,
             margin: const EdgeInsets.only(top: 5, left: 10),
             decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -1133,7 +1157,10 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
                   child: Text(
                     _records[i * 4 + 3],
                     style: const TextStyle(
-                        fontSize: 15, overflow: TextOverflow.ellipsis),
+                      fontSize: 12,
+                      overflow: TextOverflow.ellipsis,
+                      fontWeight: FontWeight.normal,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 )
@@ -1275,18 +1302,19 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
     widgets.add(Container(
       margin: const EdgeInsets.only(top: 20, bottom: 20),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           InkWell(
             onTap: () {
               Navigator.push(Global.MainContext, SlideRightRoute(page: const FeaturedPage())).then((value) => setState(() {Global.getUserInfo();}));
             },
             child: Container(
-              height: 63,
-              width: ((MediaQuery.of(context).size.width) / 5),
+              height: 72,
+              width: 72,
+              // width: ((MediaQuery.of(context).size.width) / 5),
               decoration: BoxDecoration(
                 color: Colors.pink.shade50,
-                borderRadius: const BorderRadius.all(Radius.circular(15)),
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -1310,11 +1338,11 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
               Navigator.push(Global.MainContext, SlideRightRoute(page: const VIPVideoPage())).then((value) => setState(() {Global.getUserInfo();}));
             },
             child: Container(
-              height: 63,
-              width: ((MediaQuery.of(context).size.width) / 5),
+              height: 72,
+              width: 72,
               decoration: BoxDecoration(
                 color: Colors.pink.shade50,
-                borderRadius: const BorderRadius.all(Radius.circular(15)),
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -1344,11 +1372,11 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
               );
             },
             child: Container(
-              height: 63,
-              width: ((MediaQuery.of(context).size.width) / 5),
+              height: 72,
+              width: 72,
               decoration: BoxDecoration(
                 color: Colors.pink.shade50,
-                borderRadius: const BorderRadius.all(Radius.circular(15)),
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -1378,11 +1406,11 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
               );
             },
             child: Container(
-              height: 63,
-              width: ((MediaQuery.of(context).size.width) / 5),
+              height: 72,
+              width: 72,
               decoration: BoxDecoration(
                 color: Colors.pink.shade50,
-                borderRadius: const BorderRadius.all(Radius.circular(15)),
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -1508,7 +1536,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    alive = false;
     _scrollController.dispose();
     _textEditingController.dispose();
     _controller.dispose();

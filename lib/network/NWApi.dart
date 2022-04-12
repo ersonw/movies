@@ -17,7 +17,9 @@ class NWApi {
   static const getOrder = '/api/user/getOrder';
   static const getBalance = '/api/user/getBalance';
   static const getGames = '/api/getGames';
+  static const getRecords = '/api/user/getRecords';
   static const getOnlinePays = '/api/getOnlinePays';
+  static const getCashIns = '/api/getCashIns';
   static const getGameBalance = '/api/user/getGameBalance';
   static const getBoots = '/api/getBoots';
   static const getPopUpsDialog = '/api/getPopUpsDialog';
@@ -25,6 +27,7 @@ class NWApi {
   static const getShareCount = '/api/user/getShareCount';
   static const crateVipOrder = '/api/user/crateVipOrder';
   static const crateDiamondOrder = '/api/user/crateDiamondOrder';
+  static const crateGameOrder = '/api/user/crateGameOrder';
   static const crateGoldOrder = '/api/user/crateGoldOrder';
   static const getVipOrder = '/api/user/getVipOrder';
   static const getDiamondOrder = '/api/user/getDiamondOrder';

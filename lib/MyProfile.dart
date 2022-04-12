@@ -409,7 +409,7 @@ class _MyProfile extends State<MyProfile> {
                           Container(
                             margin: const EdgeInsets.only(top: 10,left:5,right:5),
                             // width: ((MediaQuery.of(context).size.width) / 3.2),
-                            height: 60,
+                            height: 81,
                             decoration: BoxDecoration(
                               color: Colors.transparent,
                               borderRadius: BorderRadius.circular(10.0),
@@ -441,7 +441,7 @@ class _MyProfile extends State<MyProfile> {
                   Container(
                     margin: const EdgeInsets.only(top: 10,left:5,right:5),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         InkWell(
                           onTap: () {
@@ -453,8 +453,8 @@ class _MyProfile extends State<MyProfile> {
                           },
                           child: Container(
                             // margin: const EdgeInsets.only(top: 10),
-                            width: ((MediaQuery.of(context).size.width) / 2.2),
-                            height: 54,
+                            width: ((MediaQuery.of(context).size.width) / 2.15),
+                            height: 63,
                             decoration: BoxDecoration(
                                 color: Colors.transparent,
                                 borderRadius: BorderRadius.circular(10.0),
@@ -471,8 +471,8 @@ class _MyProfile extends State<MyProfile> {
                           },
                           child: Container(
                             // margin: const EdgeInsets.only(top: 10),
-                            width: ((MediaQuery.of(context).size.width) / 2.2),
-                            height: 54,
+                            width: ((MediaQuery.of(context).size.width) / 2.15),
+                            height: 63,
                             decoration: BoxDecoration(
                                 color: Colors.grey,
                                 borderRadius: BorderRadius.circular(10.0),

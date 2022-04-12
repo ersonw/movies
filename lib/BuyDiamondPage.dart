@@ -289,6 +289,7 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
       Map<String, dynamic> map = jsonDecode(result);
       if(map['state'] == 'ok'){
         if(map['url'] != null){
+          await Global.reportOpen(Global.REPORT_CREATE_ORDER);
           launch(map['url']);
         }else{
           Global.getUserInfo();

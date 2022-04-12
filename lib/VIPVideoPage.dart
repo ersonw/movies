@@ -76,14 +76,20 @@ class _VIPVideoPage extends State<VIPVideoPage> {
         NWMethod.GET, NWApi.vipVideoLists, {"data": jsonEncode(parm)}));
     // print(result);
     if (result != null) {
-      List<ClassData> list = (jsonDecode(result)['list'] as List).map((e) => ClassData.formJson(e)).toList();
-    setState(() {
-      if(page>1){
-        _list.addAll(list);
-      }else{
-        _list = list;
+      Map<String, dynamic> map = jsonDecode(result);
+      if(map['total'] != null){
+        total = map['total'];
       }
-    });
+      if(map['list'] != null){
+        List<ClassData> list = (map['list'] as List).map((e) => ClassData.formJson(e)).toList();
+        setState(() {
+          if(page>1){
+            _list.addAll(list);
+          }else{
+            _list = list;
+          }
+        });
+      }
     }
     // page++;
   }
@@ -170,11 +176,11 @@ class _VIPVideoPage extends State<VIPVideoPage> {
   Widget _buildList(int index){
     if(index >  (_list.length -1)){
       return Center(
-        child: page < total ? Image.asset(ImageIcons.Loading_icon) : Container(
+        child: page < total ? Image.asset(ImageIcons.Loading_icon,width: 150,) : Container(
           margin: const EdgeInsets.only(top: 30, bottom: 30),
-          child: const Text(
-            '已经到底了！',
-            style: TextStyle(color: Colors.grey, fontSize: 15),
+          child: Text(
+            _list.length > 2 ? '已经到底了！' : (_list.isEmpty ? '暂时还没有' : ''),
+            style: const TextStyle(color: Colors.grey, fontSize: 15),
           ),
         ),
       );
@@ -297,7 +303,7 @@ class _VIPVideoPage extends State<VIPVideoPage> {
             flex: 9,
             child: ListView.builder(
             controller: _scrollController,
-            itemCount: _list.length,
+            itemCount: (_list.length+1),
             itemBuilder: (BuildContext context, int index) => _buildList(index),
           ),
           ),

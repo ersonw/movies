@@ -162,81 +162,86 @@ class _PopularListPage extends State<PopularListPage>  with SingleTickerProvider
   }
   _buildList(int index){
     ClassData data = _list[index];
-    return Row(
-      children: [
-        _buildNumber(index),
-        Container(
-          width: 150,
-          height: 100,
-          margin: const EdgeInsets.all(5),
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(5)),
-            image: DecorationImage(
-              image: NetworkImage(data.image),
-              fit: BoxFit.fill,
+    return InkWell(
+      onTap: () {
+        Global.playVideo(data.id);
+      },
+      child: Row(
+        children: [
+          _buildNumber(index),
+          Container(
+            width: 150,
+            height: 100,
+            margin: const EdgeInsets.all(5),
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(Radius.circular(5)),
+              image: DecorationImage(
+                image: NetworkImage(data.image),
+                fit: BoxFit.fill,
+              ),
+            ),
+            // child: Global.buildPlayIcon(() {
+            //   Global.playVideo(data.id);
+            // }),
+          ),
+          Container(
+            margin: const EdgeInsets.only(left: 5),
+            height: 100,
+            width: ((MediaQuery.of(context).size.width) / 2.5),
+            // color: Colors.black54,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                        width: ((MediaQuery.of(context).size.width) / 2.5),
+                        height: 80,
+                        child: Text(
+                          data.title,
+                          style: const TextStyle(fontSize: 15,overflow: TextOverflow.clip),
+                          textAlign: TextAlign.left,
+                        )
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          Global.getNumbersToChinese(data.play),
+                          style: const TextStyle(color: Colors.black, fontSize: 13),
+                        ),
+                        const Text(
+                          '播放',
+                          style: TextStyle(color: Colors.grey, fontSize: 13),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Image.asset(
+                          ImageIcons.icon_recommend,
+                          // width: 45,
+                          height: 20,
+                        ),
+                        const Padding(padding: EdgeInsets.only(left: 5)),
+                        Text(
+                          '${Global.getNumbersToChinese(data.remommends)}人',
+                          style: const TextStyle(color: Colors.grey, fontSize: 13),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
-          child: Global.buildPlayIcon(() {
-            Global.playVideo(data.id);
-          }),
-        ),
-        Container(
-          margin: const EdgeInsets.only(left: 5),
-          height: 100,
-          width: ((MediaQuery.of(context).size.width) / 2.5),
-          // color: Colors.black54,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(
-                      width: ((MediaQuery.of(context).size.width) / 2.5),
-                      height: 80,
-                      child: Text(
-                        data.title,
-                        style: const TextStyle(fontSize: 15,overflow: TextOverflow.clip),
-                        textAlign: TextAlign.left,
-                      )
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        Global.getNumbersToChinese(data.play),
-                        style: const TextStyle(color: Colors.black, fontSize: 13),
-                      ),
-                      const Text(
-                        '播放',
-                        style: TextStyle(color: Colors.grey, fontSize: 13),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Image.asset(
-                        ImageIcons.icon_recommend,
-                        // width: 45,
-                        height: 20,
-                      ),
-                      const Padding(padding: EdgeInsets.only(left: 5)),
-                      Text(
-                        '${Global.getNumbersToChinese(data.remommends)}人',
-                        style: const TextStyle(color: Colors.grey, fontSize: 13),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
   @override
