@@ -13,7 +13,7 @@ class NWApi {
   static const changePhoneCheck = '/api/user/changePhoneCheck';
   static const getInfo = "/api/user/info";
   static const joinInvite = "/api/user/joinInvite";
-  static const joinVideo = "/api/user/joinVideo";
+  static const joinChannel = "/api/user/joinChannel";
   static const getOrder = '/api/user/getOrder';
   static const getBalance = '/api/user/getBalance';
   static const getGames = '/api/getGames';

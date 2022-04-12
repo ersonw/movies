@@ -68,6 +68,8 @@ final LoadingChangeNotifier loadingChangeNotifier = LoadingChangeNotifier();
 final OpeninstallFlutterPlugin _openinstallFlutterPlugin = OpeninstallFlutterPlugin();
 class Global {
   static String codeInvite = '';
+  static String channelCode = '';
+  static bool channelIs = false;
   // 是否为release版
   static bool get isRelease => const bool.fromEnvironment("dart.vm.product");
   // static late PackageInfo packageInfo;
@@ -121,19 +123,9 @@ class Global {
     await _initAssets();
     _openinstallFlutterPlugin.init(wakeupHandler);
     _openinstallFlutterPlugin.install(installHandler);
-    // await initMeiqia();
-    // print(_messages);
-    // print(_profile);
     await _init();
     await initSock();
-    // await loginSocket();
-    // userModel.addListener(() {
-    //   if (UserModel().isLogin == false) {
-    //     getUserInfo();
-    //   } else if (_isLogin == false) {
-    //     loginSocket();
-    //   }
-    // });
+    // handlerChannel();
   }
   static Future<void> showPayDialog(clickCallback callback)async{
     List<OnlinePay> list = await _initOnlinePays();
@@ -153,7 +145,8 @@ class Global {
     return list;
   }
   static Future<void> installHandler(Map<String, dynamic> data) async {
-    // print(jsonEncode(data));
+    // print(data['channelCode']);
+    channelCode = '101';
     if(null != data['bindData']){
       Map<String, dynamic> map = jsonDecode(data['bindData']);
       if(null != map['code']){
@@ -166,12 +159,31 @@ class Global {
         }
       }
     }
-    if(null != data['channelCode']){
-      handlerChannel(data['channelCode']);
+    if(null != data['channelCode'] && data['channelCode'].toString().isNotEmpty){
+      channelCode = data['channelCode'];
     }
-    // _handlerInvite();
+    // handlerChannel();
   }
-  static void handlerChannel(String code){}
+  static void handlerChannel(){
+    if(channelCode == null || channelCode.isEmpty){
+      return;
+    }
+    if(channelIs){
+      return;
+    }
+    Map<String,dynamic> map = {
+      'code': channelCode
+    };
+    DioManager().request(NWMethod.POST, NWApi.joinChannel,
+        params: {'data': jsonEncode(map)}, success: (data) {
+          print("success data = $data");
+          if (data != null) {
+            map = jsonDecode(data);
+            if(map['msg'] != null) showWebColoredToast(map['msg']);
+            if(map['verify'] != null) channelIs = (map['verify']);
+          }
+        }, error: (error) {});
+  }
   static Future<void> wakeupHandler(Map<String, dynamic> data) async {
     if(null != data['bindData']){
       Map<String, dynamic> map = jsonDecode(data['bindData']);
@@ -186,14 +198,9 @@ class Global {
       }
     }
     if(null != data['channelCode']){
-      handlerChannel(data['channelCode']);
+      channelCode = (data['channelCode']);
     }
   }
-  // static Future<void> initMeiqia() async {
-  //   try {
-  //     await Meiqiachat.initMeiqiaSdkWith('55584b4e99ced1153307db4d80b19c97');
-  //   } catch (e) {}
-  // }
   static Future<void> toChat({bool game = false}) async {
     if (game) {
       Global.openWebview('${configModel.config.kefuGameUrl}${getUser()}', inline: true);
@@ -502,7 +509,7 @@ class Global {
         break;
       case WebSocketMessage.login_fail:
         _isLogin = false;
-        userModel.token = '';
+        // userModel.token = '';
         break;
       case WebSocketMessage.message_kefu_send_fail:
         showWebColoredToast(message.message!);
@@ -689,21 +696,6 @@ class Global {
           }
         }, error: (error) {});
   }
-  static void _handlerJoin(int vid, String code)async{
-    Map<String,dynamic> map = {
-      'id': vid,
-      'code': code
-    };
-    DioManager().request(NWMethod.POST, NWApi.joinVideo,
-        params: {'data': jsonEncode(map)}, success: (data) {
-          print("success data = $data");
-          if (data != null) {
-            map = jsonDecode(data);
-            if(map['msg'] != null) showWebColoredToast(map['msg']);
-            playVideo(vid);
-          }
-        }, error: (error) {});
-  }
   static String getDateTime(int date) {
     int t = ((DateTime.now().millisecondsSinceEpoch ~/ 1000) - date);
     String str = '';
@@ -843,6 +835,7 @@ class Global {
       if (data != null) {
         userModel.user = User.fromJson(jsonDecode(data));
         loginSocket();
+        handlerChannel();
         if(userModel.user.superior == 0 && codeInvite.isNotEmpty){
           _handlerInvite();
         }

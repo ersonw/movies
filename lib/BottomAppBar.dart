@@ -46,7 +46,7 @@ class _BottomAppBarState extends State<BottomAppBarState> {
     String? result = (await DioManager().requestAsync(
         NWMethod.GET, NWApi.getPopUpsDialog, {"data": jsonEncode(parm)}));
     if (result != null) {
-      print(result);
+      // print(result);
       Map<String, dynamic> map = jsonDecode(result);
       if(map != null){
         if(map['image'] != null && map['url'] != null){
@@ -59,6 +59,9 @@ class _BottomAppBarState extends State<BottomAppBarState> {
   }
   _init(BuildContext context){
     if(Global.initMain) return;
+    Global.MainContext = context;
+    Global.checkVersion();
+    // Global.handlerChannel();
     Timer(const Duration(milliseconds: 100), () {
       if (Global.profile.config.bootLock &&
           Global.profile.config.bootLockPasswd != null &&
@@ -83,8 +86,6 @@ class _BottomAppBarState extends State<BottomAppBarState> {
   }
   @override
   Widget build(BuildContext context) {
-    Global.MainContext = context;
-    Global.checkVersion();
     _init(context);
     // Global.showLockScreen();
     return Scaffold(

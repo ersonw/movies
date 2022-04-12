@@ -21,7 +21,7 @@
               android:resource="@style/NormalTheme"
               />
             <meta-data
-                    android:name="com.openinstall.APP_KEY"
+                    android:name="com.invitation.APP_KEY"
                     android:value="${OPENINSTALL_APPKEY}"/>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
