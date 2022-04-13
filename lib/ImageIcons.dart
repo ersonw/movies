@@ -57,9 +57,9 @@ class ImageIcons {
   static const String agent = 'assets/images/agent.png';
   static const String wechat =  'assets/images/wechat.png';
   static const String turn1 =  'assets/images/turn1.png';
-  static const String bgLogin1 =  'assets/images/bgLogin1.png';
-  static const String iconLoginBack =  'assets/images/IMG_6903.png';
-  // static const String iconLoginBack =  'assets/images/iconLoginBack.png';
+  // static const String bgLogin1 =  'assets/images/bgLogin1.png';
+  static const String bgLogin1 =  'assets/images/IMG_6903.PNG';
+  static const String iconLoginBack =  'assets/images/iconLoginBack.png';
   static const String share_btn =  'assets/images/share_btn.png';
   static const String yello_btn =  'assets/images/yello_btn.png';
   static const String mine_huise =  'assets/images/mine_huise.png';

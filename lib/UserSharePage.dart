@@ -9,6 +9,7 @@ import 'package:movies/UserShareRecordsPage.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'HttpManager.dart';
 import 'ImageIcons.dart';
+import 'SlideRightRoute.dart';
 import 'functions.dart';
 import 'global.dart';
 import 'image_icon.dart';
@@ -90,12 +91,7 @@ class _UserSharePage extends State<UserSharePage> {
               CupertinoButton(
                 padding: EdgeInsets.zero,
                 onPressed: () {
-                  Navigator.of(context, rootNavigator: true).push<void>(
-                    CupertinoPageRoute(
-                      title: '邀请记录',
-                      builder: (context) => const UserShareRecordsPage(),
-                    ),
-                  );
+                  Navigator.push(Global.MainContext, SlideRightRoute(page: const UserShareRecordsPage())).then((value) => setState(() {Global.getUserInfo();}));
                 },
                 child: const Text(
                   "邀请记录",

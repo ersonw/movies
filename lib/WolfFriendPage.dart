@@ -304,15 +304,24 @@ class _WolfFriendPage extends State<WolfFriendPage>  with SingleTickerProviderSt
           SizedBox(
             width: (MediaQuery.of(context).size.width),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Text('狼友推荐的第${wolfFriend.id}部大片',style: const TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.bold),),
                 Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      const Text('狼友推荐的第 ',style:  TextStyle(color: Colors.black,fontSize: 13,),),
+                      Text('${wolfFriend.id*1}',style: const TextStyle(color: Colors.red,fontSize: 22,fontWeight: FontWeight.bold),),
+                      const Text(' 部大片',style:  TextStyle(color: Colors.black,fontSize: 13,),),
+                    ]
+                ),
+                Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    const Text('共',style: const TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold),),
-                    Text('${wolfFriend.recommends}',style: const TextStyle(color: Colors.deepOrange,fontSize: 20,fontWeight: FontWeight.bold),),
-                    const Text('人推荐',style:  TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold),),
+                    const Text('共 ',style:  TextStyle(color: Colors.black,fontSize: 13),),
+                    Text('${wolfFriend.recommends * 1}',style: const TextStyle(color: Colors.red,fontSize: 22,fontWeight: FontWeight.bold),),
+                    const Text(' 人推荐',style:  TextStyle(color: Colors.black,fontSize: 13,),),
                   ]
                 ),
               ],

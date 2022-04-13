@@ -33,20 +33,23 @@ class _LoginPage extends State<LoginPage>{
                     )
                 ),
               ),
-
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Container(
-                  height: 30,
-                  width: 30,
-                  margin: const EdgeInsets.only(left: 20,top:20),
-                  decoration: const BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(ImageIcons.iconLoginBack),
-                        fit: BoxFit.fill,
-                      )
+              SizedBox(
+                height: 70,
+                width: 70,
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    // height: 30,
+                    // width: 30,
+                    margin: const EdgeInsets.only(left: 20,top:20),
+                    decoration: const BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage(ImageIcons.iconLoginBack),
+                          fit: BoxFit.fill,
+                        )
+                    ),
                   ),
                 ),
               ),
@@ -177,7 +180,7 @@ class _LoginPage extends State<LoginPage>{
                           onPressed: () {
                           },
                           child: const Text(
-                            '注册',
+                            '登录',
                             style: TextStyle(color: Colors.white,fontSize: 18),
                           ),
                         ),

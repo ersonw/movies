@@ -65,6 +65,7 @@ class NWApi {
   static const shareRecords = '/api/user/shareRecords';
   static const PushRecords = '/api/user/PushRecords';
   static const getUserInfo = '/api/user/getUserInfo';
+  static const getCashInOrders = '/api/user/getCashInOrders';
   static const classLists = '/api/classLists';
   static const classTags = '/api/classTags';
   static const featuredTags = '/api/featuredTags';

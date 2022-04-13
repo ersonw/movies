@@ -30,6 +30,7 @@ import 'ImageIcons.dart';
 import 'InviteCodeInputPage.dart';
 import 'LoginPage.dart';
 import 'SlideRightRoute.dart';
+import 'UserShareRecordsPage.dart';
 import 'global.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:ui';
@@ -231,53 +232,67 @@ class _MyProfile extends State<MyProfile> {
                 direction: Axis.vertical,
                 children: [
                   // 头像用户名
-                  InkWell(
-                    onTap: (){
-                      Navigator.push(Global.MainContext, SlideRightRoute(page: const AccountManager())).then((value) => setState(() {Global.getUserInfo();}));
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: 80,
-                          height: 80,
-                          margin: EdgeInsets.only(left: 20),
-                          decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(50.0),
-                              image: DecorationImage(
-                                // image: AssetImage('assets/image/default_head.gif'),
-                                image: _buildAvatar(),
-                              )),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(left: 10, top: 10),
-                          child: Column(
-                            children: [
-                              Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      _user.nickname,
-                                      style: const TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black),
-                                    ),
-                                  ]
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      InkWell(
+                        onTap: (){
+                          Navigator.push(Global.MainContext, SlideRightRoute(page: const AccountManager())).then((value) => setState(() {Global.getUserInfo();}));
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: 80,
+                              height: 80,
+                              // margin: const EdgeInsets.only(left: 20),
+                              decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.circular(50.0),
+                                  image: DecorationImage(
+                                    // image: AssetImage('assets/image/default_head.gif'),
+                                    image: _buildAvatar(),
+                                  )),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(left: 10, top: 10),
+                              child: Column(
+                                children: [
+                                  Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          _user.nickname,
+                                          style: const TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black),
+                                        ),
+                                      ]
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(left: 10),
+                              width: 25,
+                              height: 25,
+                              child: Image.asset(_user.sex == 0 ? ImageIcons.nan : ImageIcons.nv,
+                              ),
+                            )
+                          ],
                         ),
-                        Container(
-                          margin: const EdgeInsets.only(left: 10),
-                          width: 25,
-                          height: 25,
-                          child: Image.asset(_user.sex == 0 ? ImageIcons.nan : ImageIcons.nv,
-                          ),
-                        )
-                      ],
-                    ),
+                      ),
+                      InkWell(
+                        onTap: (){
+                          Navigator.push(Global.MainContext, SlideRightRoute(page: const LoginPage())).then((value) => setState(() {Global.getUserInfo();}));
+                        },
+                        child: Container(
+                          child: Text("立即登录",style: TextStyle()),
+                        ),
+                      ),
+                    ],
                   ),
                   const Padding(padding: EdgeInsets.only(top: 10)),
                   // 金币数
@@ -466,8 +481,7 @@ class _MyProfile extends State<MyProfile> {
                         ),
                         InkWell(
                           onTap: (){
-                            Global.showWebColoredToast('暂未开放，敬请期待!');
-                            // Navigator.push(Global.MainContext, SlideRightRoute(page: const LoginPage())).then((value) => setState(() {Global.getUserInfo();}));
+                            Navigator.push(Global.MainContext, SlideRightRoute(page: const UserShareRecordsPage())).then((value) => setState(() {Global.getUserInfo();}));
                           },
                           child: Container(
                             // margin: const EdgeInsets.only(top: 10),

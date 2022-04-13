@@ -28,6 +28,7 @@ class _CashInGamePage extends State<CashInGamePage> {
   bool alive = true;
   User _user = userModel.user;
   List<CashIn> _list = [];
+  bool loading = false;
   @override
   void initState() {
     _getBalance();
@@ -41,10 +42,20 @@ class _CashInGamePage extends State<CashInGamePage> {
       }
     });
   }
+  Future<void> _onRefresh() async {
+    setState(() {
+      loading = true;
+    });
+    _init();
+    _getBalance();
+  }
   _init() async {
     Map<String, dynamic> parm = {};
     String? result = (await DioManager().requestAsync(
         NWMethod.GET, NWApi.getCashIns, {"data": jsonEncode(parm)}));
+    setState(() {
+      loading = false;
+    });
     if (result != null) {
       Map<String, dynamic> map = jsonDecode(result);
       if (map != null && map["list"] != null){
@@ -58,6 +69,9 @@ class _CashInGamePage extends State<CashInGamePage> {
     Map<String, dynamic> parm = { };
     String? result = (await DioManager().requestAsync(
         NWMethod.GET, NWApi.getGameBalance, {"data": jsonEncode(parm)}));
+    setState(() {
+      loading = false;
+    });
     if (result != null) {
       Map<String, dynamic> map = jsonDecode(result);
       if(map != null && map['gameBalance'] != null){
@@ -73,268 +87,280 @@ class _CashInGamePage extends State<CashInGamePage> {
       body: Stack(
           alignment: Alignment.bottomRight,
           children: [
-            ListView(
+            RefreshIndicator(
+              onRefresh: _onRefresh,
+              child: ListView(
+                  children: [
+                    Center(child: Container(
+                      // margin: const EdgeInsets.only(top: 30, bottom: 30),
+                      child: loading ? Image.asset(ImageIcons.Loading_icon,width: 150,) : Container(),
+                    ),),
+                    Container(
+                      margin: const EdgeInsets.only(left:20,right: 20),
+                      child: Row(
+                          children: [
+                            SizedBox(
+                              width: ((MediaQuery.of(context).size.width) / 2.5),
+                              child: InkWell(
+                                onTap: (){
+                                  Navigator.pop(context);
+                                },
+                                child: Row(
+                                    children: const [
+                                      Icon(Icons.arrow_back_ios,size: 20,color: Colors.black,),
+                                    ]
+                                ),
+                              ),
+                            ),
+                            const Center(child: Text('充值',style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold))),
+                          ]
+                      ),
+                    ),
+                    const Padding(padding: EdgeInsets.only(top: 20)),
+                    Container(
+                      margin: const EdgeInsets.only(left: 10, right: 10),
+                      width: ((MediaQuery.of(context).size.width) / 1),
+                      height: 100,
+                      decoration: BoxDecoration(
+                          color: Colors.grey,
+                          borderRadius: BorderRadius.circular(15.0),
+                          image: const DecorationImage(
+                            fit: BoxFit.fill,
+                            image: AssetImage('assets/images/balanceCard.png'),
+                          )),
+                      child: Column(
+                        children: [
+                          Container(
+                            child: const Text('钱包余额',style: TextStyle(color: Colors.white54,fontSize: 12)),
+                            margin: const EdgeInsets.only(left: 20,top: 20,),
+                            width: ((MediaQuery.of(context).size.width) / 1),
+                          ),
+                          Row(
+                              children: [
+                                Container(
+                                  child: Text('￥${((gameBalance * 100) / 100).toStringAsFixed(2)}',style: const TextStyle(color: Colors.white,fontSize: 25,fontWeight: FontWeight.bold)),
+                                  margin: const EdgeInsets.only(left: 20,top: 20,),
+                                  // width: ((MediaQuery.of(context).size.width) / 1.5),
+                                ),
+                              ]
+                          ),
+                        ],
+                      ),
+                    ),
+                    // Container(
+                    //   margin: const EdgeInsets.only(left: 10, right: 10),
+                    //   width: ((MediaQuery.of(context).size.width) / 1),
+                    //   // height: 120,
+                    //   decoration: BoxDecoration(
+                    //       color: Colors.grey,
+                    //       borderRadius: BorderRadius.circular(20.0),
+                    //       image: const DecorationImage(
+                    //         fit: BoxFit.fill,
+                    //         image: AssetImage('assets/images/balanceCard.png'),
+                    //       )),
+                    //   child: Column(
+                    //     children: [
+                    //       Row(
+                    //         children: [
+                    //           Container(
+                    //             child: const Text('游戏余额',style: TextStyle(color: Colors.white70,fontSize: 15)),
+                    //             margin: const EdgeInsets.only(left: 20,top: 20,),
+                    //             // width: ((MediaQuery.of(context).size.width) / 1),
+                    //           ),
+                    //           Row(
+                    //               children: [
+                    //                 Container(
+                    //                   child: Text('￥${((gameBalance * 100) / 100).toStringAsFixed(2)}',style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.bold)),
+                    //                   margin: const EdgeInsets.only(left: 5,top: 20,),
+                    //                   // width: ((MediaQuery.of(context).size.width) / 1.5),
+                    //                 ),
+                    //               ]
+                    //           ),
+                    //         ],
+                    //       ),
+                    //       // Row(
+                    //       //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //       //   children: [
+                    //       //     Row(
+                    //       //       children: [
+                    //       //         Container(
+                    //       //           child: const Text('钻石余额',style: TextStyle(color: Colors.white70,fontSize: 15)),
+                    //       //           margin: const EdgeInsets.only(left: 20,top: 10,),
+                    //       //           // width: ((MediaQuery.of(context).size.width) / 1),
+                    //       //         ),
+                    //       //         Row(
+                    //       //             children: [
+                    //       //               Container(
+                    //       //                 child: Text('${_user.diamond}',style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.bold)),
+                    //       //                 margin: const EdgeInsets.only(left: 5,top: 10,),
+                    //       //                 // width: ((MediaQuery.of(context).size.width) / 1.5),
+                    //       //               ),
+                    //       //             ]
+                    //       //         ),
+                    //       //       ],
+                    //       //     ),
+                    //       //     InkWell(
+                    //       //       onTap: (){
+                    //       //         _turnDiamond(context);
+                    //       //       },
+                    //       //       child: Container(
+                    //       //         height:30,
+                    //       //         width: 80,
+                    //       //         margin: const EdgeInsets.only(right: 20, top: 10),
+                    //       //         decoration: const BoxDecoration(
+                    //       //           image: DecorationImage(
+                    //       //             image: AssetImage(ImageIcons.turn1),
+                    //       //             fit: BoxFit.fill,
+                    //       //           ),
+                    //       //         ),
+                    //       //       ),
+                    //       //     ),
+                    //       //   ]
+                    //       // ),
+                    //       // Row(
+                    //       //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //       //   children: [
+                    //       //     Row(
+                    //       //       children: [
+                    //       //         Container(
+                    //       //           child: const Text('金币余额',style: TextStyle(color: Colors.white70,fontSize: 15)),
+                    //       //           margin: const EdgeInsets.only(left: 20,top: 10,),
+                    //       //           // width: ((MediaQuery.of(context).size.width) / 1),
+                    //       //         ),
+                    //       //         Row(
+                    //       //             children: [
+                    //       //               Container(
+                    //       //                 child: Text('${_user.gold}',style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.bold)),
+                    //       //                 margin: const EdgeInsets.only(left: 5,top: 10,),
+                    //       //                 // width: ((MediaQuery.of(context).size.width) / 1.5),
+                    //       //               ),
+                    //       //             ]
+                    //       //         ),
+                    //       //       ],
+                    //       //     ),
+                    //       //     InkWell(
+                    //       //       onTap: (){
+                    //       //         _turnGold(context);
+                    //       //       },
+                    //       //       child: Container(
+                    //       //         height:30,
+                    //       //         width: 80,
+                    //       //         margin: const EdgeInsets.only(right: 20, top: 10),
+                    //       //         decoration: const BoxDecoration(
+                    //       //           image: DecorationImage(
+                    //       //             image: AssetImage(ImageIcons.turn1),
+                    //       //             fit: BoxFit.fill,
+                    //       //           ),
+                    //       //         ),
+                    //       //       ),
+                    //       //     ),
+                    //       //   ]
+                    //       // ),
+                    //       const Padding(padding: EdgeInsets.only(bottom:20)),
+                    //     ],
+                    //   ),
+                    // ),
+                    const Padding(padding: EdgeInsets.only(top: 20)),
+                    Container(
+                      margin: const EdgeInsets.only(left: 20,right: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('游戏余额充值',style: TextStyle(color: Colors.black,fontSize: 18)),
+                          InkWell(
+                            onTap: (){
+                              Navigator.push(context, SlideRightRoute(page: const CashInGameRecordPage()));
+                            },
+                            child: const Text('充值记录>',style: TextStyle(color:  Colors.black54)),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Padding(padding: EdgeInsets.only(top: 20)),
+                    _buildList(),
+                    const Padding(padding: EdgeInsets.only(top: 20)),
+                    Container(
+                      margin: const EdgeInsets.only(left: 20,right: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: const [
+                          Text('常见问题',style: TextStyle(color: Colors.black,fontSize: 18)),
+                        ],
+                      ),
+                    ),
+                    _buildQuestionList(),
+                  ]
+              ),
+            ),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Container(
-                    margin: const EdgeInsets.only(left:20,right: 20),
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: ((MediaQuery.of(context).size.width) / 2.5),
-                          child: InkWell(
-                            onTap: (){
-                              Navigator.pop(context);
-                            },
-                            child: Row(
-                              children: const [
-                                Icon(Icons.arrow_back_ios,size: 20,color: Colors.black,),
-                              ]
-                            ),
+                    margin: const EdgeInsets.only(right: 20,bottom: 20),
+                    child: InkWell(
+                      onTap: () {
+                        Global.toChat();
+                      },
+                      child: Container(
+                        width: 60,
+                        height: 60,
+                        decoration: const BoxDecoration(
+                          // color: Colors.blueAccent,
+                          image: DecorationImage(
+                            image: AssetImage(ImageIcons.kefu),
+                            fit: BoxFit.fill,
                           ),
+                          borderRadius: BorderRadius.all(Radius.circular(50)),
                         ),
-                        const Center(child: Text('充值',style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold))),
-                      ]
-                    ),
-                  ),
-                  const Padding(padding: EdgeInsets.only(top: 20)),
-                  Container(
-                    margin: const EdgeInsets.only(left: 10, right: 10),
-                    width: ((MediaQuery.of(context).size.width) / 1),
-                    height: 100,
-                    decoration: BoxDecoration(
-                        color: Colors.grey,
-                        borderRadius: BorderRadius.circular(15.0),
-                        image: const DecorationImage(
-                          fit: BoxFit.fill,
-                          image: AssetImage('assets/images/balanceCard.png'),
-                        )),
-                    child: Column(
-                      children: [
-                        Container(
-                          child: const Text('钱包余额',style: TextStyle(color: Colors.white54,fontSize: 12)),
-                          margin: const EdgeInsets.only(left: 20,top: 20,),
-                          width: ((MediaQuery.of(context).size.width) / 1),
-                        ),
-                        Row(
-                            children: [
-                              Container(
-                                child: Text('￥${((gameBalance * 100) / 100).toStringAsFixed(2)}',style: const TextStyle(color: Colors.white,fontSize: 25,fontWeight: FontWeight.bold)),
-                                margin: const EdgeInsets.only(left: 20,top: 20,),
-                                // width: ((MediaQuery.of(context).size.width) / 1.5),
-                              ),
-                            ]
-                        ),
-                      ],
-                    ),
-                  ),
-                  // Container(
-                  //   margin: const EdgeInsets.only(left: 10, right: 10),
-                  //   width: ((MediaQuery.of(context).size.width) / 1),
-                  //   // height: 120,
-                  //   decoration: BoxDecoration(
-                  //       color: Colors.grey,
-                  //       borderRadius: BorderRadius.circular(20.0),
-                  //       image: const DecorationImage(
-                  //         fit: BoxFit.fill,
-                  //         image: AssetImage('assets/images/balanceCard.png'),
-                  //       )),
-                  //   child: Column(
-                  //     children: [
-                  //       Row(
-                  //         children: [
-                  //           Container(
-                  //             child: const Text('游戏余额',style: TextStyle(color: Colors.white70,fontSize: 15)),
-                  //             margin: const EdgeInsets.only(left: 20,top: 20,),
-                  //             // width: ((MediaQuery.of(context).size.width) / 1),
-                  //           ),
-                  //           Row(
-                  //               children: [
-                  //                 Container(
-                  //                   child: Text('￥${((gameBalance * 100) / 100).toStringAsFixed(2)}',style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.bold)),
-                  //                   margin: const EdgeInsets.only(left: 5,top: 20,),
-                  //                   // width: ((MediaQuery.of(context).size.width) / 1.5),
-                  //                 ),
-                  //               ]
-                  //           ),
-                  //         ],
-                  //       ),
-                  //       // Row(
-                  //       //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //       //   children: [
-                  //       //     Row(
-                  //       //       children: [
-                  //       //         Container(
-                  //       //           child: const Text('钻石余额',style: TextStyle(color: Colors.white70,fontSize: 15)),
-                  //       //           margin: const EdgeInsets.only(left: 20,top: 10,),
-                  //       //           // width: ((MediaQuery.of(context).size.width) / 1),
-                  //       //         ),
-                  //       //         Row(
-                  //       //             children: [
-                  //       //               Container(
-                  //       //                 child: Text('${_user.diamond}',style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.bold)),
-                  //       //                 margin: const EdgeInsets.only(left: 5,top: 10,),
-                  //       //                 // width: ((MediaQuery.of(context).size.width) / 1.5),
-                  //       //               ),
-                  //       //             ]
-                  //       //         ),
-                  //       //       ],
-                  //       //     ),
-                  //       //     InkWell(
-                  //       //       onTap: (){
-                  //       //         _turnDiamond(context);
-                  //       //       },
-                  //       //       child: Container(
-                  //       //         height:30,
-                  //       //         width: 80,
-                  //       //         margin: const EdgeInsets.only(right: 20, top: 10),
-                  //       //         decoration: const BoxDecoration(
-                  //       //           image: DecorationImage(
-                  //       //             image: AssetImage(ImageIcons.turn1),
-                  //       //             fit: BoxFit.fill,
-                  //       //           ),
-                  //       //         ),
-                  //       //       ),
-                  //       //     ),
-                  //       //   ]
-                  //       // ),
-                  //       // Row(
-                  //       //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //       //   children: [
-                  //       //     Row(
-                  //       //       children: [
-                  //       //         Container(
-                  //       //           child: const Text('金币余额',style: TextStyle(color: Colors.white70,fontSize: 15)),
-                  //       //           margin: const EdgeInsets.only(left: 20,top: 10,),
-                  //       //           // width: ((MediaQuery.of(context).size.width) / 1),
-                  //       //         ),
-                  //       //         Row(
-                  //       //             children: [
-                  //       //               Container(
-                  //       //                 child: Text('${_user.gold}',style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.bold)),
-                  //       //                 margin: const EdgeInsets.only(left: 5,top: 10,),
-                  //       //                 // width: ((MediaQuery.of(context).size.width) / 1.5),
-                  //       //               ),
-                  //       //             ]
-                  //       //         ),
-                  //       //       ],
-                  //       //     ),
-                  //       //     InkWell(
-                  //       //       onTap: (){
-                  //       //         _turnGold(context);
-                  //       //       },
-                  //       //       child: Container(
-                  //       //         height:30,
-                  //       //         width: 80,
-                  //       //         margin: const EdgeInsets.only(right: 20, top: 10),
-                  //       //         decoration: const BoxDecoration(
-                  //       //           image: DecorationImage(
-                  //       //             image: AssetImage(ImageIcons.turn1),
-                  //       //             fit: BoxFit.fill,
-                  //       //           ),
-                  //       //         ),
-                  //       //       ),
-                  //       //     ),
-                  //       //   ]
-                  //       // ),
-                  //       const Padding(padding: EdgeInsets.only(bottom:20)),
-                  //     ],
-                  //   ),
-                  // ),
-                  const Padding(padding: EdgeInsets.only(top: 20)),
-                  Container(
-                    margin: const EdgeInsets.only(left: 20,right: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text('游戏余额充值',style: TextStyle(color: Colors.black,fontSize: 18)),
-                        InkWell(
-                          onTap: (){
-                            Navigator.push(context, SlideRightRoute(page: const CashInGameRecordPage()));
-                          },
-                          child: const Text('充值记录>',style: TextStyle(color:  Colors.black54)),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Padding(padding: EdgeInsets.only(top: 20)),
-                  _buildList(),
-                  const Padding(padding: EdgeInsets.only(top: 20)),
-                  Container(
-                    margin: const EdgeInsets.only(left: 20,right: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: const [
-                        Text('常见问题',style: TextStyle(color: Colors.black,fontSize: 18)),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    width: ((MediaQuery.of(context).size.width) / 1),
-                    margin: const EdgeInsets.only(left:20,right: 20),
-                    decoration: const BoxDecoration(
-                      color: Colors.black12,
-                    ),
-                    child: Container(
-                      margin: const EdgeInsets.only(left:10,right:10),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.all(10),
-                              child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      alignment: Alignment.topCenter,
-                                      margin: const EdgeInsets.only(right:10),
-                                      child: Image.asset(ImageIcons.redPoint,width: 10,),
-                                    ),
-                                    SizedBox(
-                                      width: ((MediaQuery.of(context).size.width) / 1.4),
-                                      child: Text('如多次支付失败,请尝试请尝试其他支付方式再试'),
-                                    ),
-                                  ]
-                              ),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.all(10),
-                              child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      alignment: Alignment.topCenter,
-                                      margin: const EdgeInsets.only(right:10),
-                                      child: Image.asset(ImageIcons.redPoint,width: 10,),
-                                    ),
-                                    SizedBox(
-                                      width: ((MediaQuery.of(context).size.width) / 1.4),
-                                      child: Text('支付成功后一般10分钟内到账,若超过30分钟请联系客服'),
-                                    ),
-                                  ]
-                              ),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.all(10),
-                              child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      alignment: Alignment.topCenter,
-                                      margin: const EdgeInsets.only(right:10),
-                                      child: Image.asset(ImageIcons.redPoint,width: 10,),
-                                    ),
-                                    SizedBox(
-                                      width: ((MediaQuery.of(context).size.width) / 1.4),
-                                      child: Text('部分安卓手机支付时报毒,请选择忽略即可'),
-                                    ),
-                                  ]
-                              ),
-                            ),
-                          ]
+                        // child: Container(
+                        //   alignment: Alignment.center,
+                        //   child: const Text('客服', textAlign: TextAlign.center)
+                        // ),
                       ),
                     ),
                   ),
                 ]
+            ),
+          ]
+      ),
+    );
+  }
+  _buildQuestionList(){
+    List<Widget> widgets = [];
+    widgets.add(_buildQuestionItem('如多次支付失败,请尝试请尝试其他支付方式再试'));
+    widgets.add(_buildQuestionItem('支付成功后一般10分钟内到账,若超过30分钟请联系客服'));
+    widgets.add(_buildQuestionItem('部分安卓手机支付时报毒,请选择忽略即可'));
+    return Container(
+      width: ((MediaQuery.of(context).size.width) / 1),
+      margin: const EdgeInsets.only(left:20,right: 20),
+      decoration: const BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(5)),
+        color: Colors.black12,
+      ),
+      child: Container(
+        margin: const EdgeInsets.only(left:10,right:10),
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: widgets,
+        ),
+      ),
+    );
+  }
+  _buildQuestionItem(String text){
+    return Container(
+      margin: const EdgeInsets.all(10),
+      child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Container(
+              alignment: Alignment.topCenter,
+              margin: const EdgeInsets.only(right:10),
+              child: Image.asset(ImageIcons.redPoint,width: 10,),
+            ),
+            SizedBox(
+              width: ((MediaQuery.of(context).size.width) / 1.4),
+              child: Text(text),
             ),
           ]
       ),
