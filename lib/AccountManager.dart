@@ -14,6 +14,8 @@ import 'package:movies/utils/JhPickerTool.dart';
 import 'HttpManager.dart';
 import 'ImageIcons.dart';
 import 'package:image_picker/image_picker.dart';
+import 'LoginPage.dart';
+import 'SlideRightRoute.dart';
 import 'global.dart';
 import 'network/NWApi.dart';
 import 'network/NWMethod.dart';
@@ -112,7 +114,7 @@ class _AccountManager extends State<AccountManager> {
                    }
                  }
                 },
-                child: const Text('解除绑定',style: TextStyle(fontSize: 20,color: Colors.red),),
+                child: const Text('解除手机号',style: TextStyle(fontSize: 20,color: Colors.red),),
               ),
             ),
           )
@@ -152,7 +154,8 @@ class _AccountManager extends State<AccountManager> {
     return ListView(
       children: [
         const Padding(padding: EdgeInsets.only(top: 24)),
-        _user.phone==null || _user.phone == '' ? Container() : TextButton(
+        (_user.phone != null || _user.phone != '') && (_user.email != null || _user.email != '') ?
+        TextButton(
             onPressed: () async {
               // List<Media>? res = await ImagesPicker.pick(
               //   count: 1,
@@ -195,8 +198,8 @@ class _AccountManager extends State<AccountManager> {
                 )
               ],
             )
-        ),
-        _user.phone==null || _user.phone == '' ? Container() :
+        ) : Container(),
+        (_user.phone != null || _user.phone != '') && (_user.email != null || _user.email != '') ?
         TextButton(
           onPressed: () async{
             String input = await ShowInputDialogAsync(context, text: _user.nickname, hintText: '输入需要修改的昵称');
@@ -235,8 +238,8 @@ class _AccountManager extends State<AccountManager> {
               ),
             ],
           ),
-        ),
-        _user.phone==null || _user.phone == '' ? Container() :
+        ) : Container(),
+        (_user.phone != null || _user.phone != '') && (_user.email != null || _user.email != '') ?
         TextButton(
           onPressed: () async{
             String input = await ShowInputDialogAsync(context, text: _user.email, hintText: '输入电子邮箱地址');
@@ -275,8 +278,9 @@ class _AccountManager extends State<AccountManager> {
               ),
             ],
           ),
-        ),
-        _user.phone==null || _user.phone == '' ? Container() : TextButton(
+        ) : Container(),
+        (_user.phone != null || _user.phone != '') && (_user.email != null || _user.email != '') ?
+        TextButton(
           onPressed: () async{
             List<BottomMenu> lists = [];
             BottomMenu botton = BottomMenu();
@@ -317,8 +321,9 @@ class _AccountManager extends State<AccountManager> {
               ),
             ],
           ),
-        ),
-        _user.phone==null || _user.phone == '' ? Container() : TextButton(
+        ) : Container(),
+        (_user.phone != null || _user.phone != '') && (_user.email != null || _user.email != '') ?
+        TextButton(
           onPressed: () async{
             JhPickerTool.showDatePicker(context, dateType: DateType.YMD, value: DateTime.fromMillisecondsSinceEpoch(_user.birthday), clickCallBack: (t,p) {
               if(_user.birthday == p) return;
@@ -355,8 +360,9 @@ class _AccountManager extends State<AccountManager> {
               ),
             ],
           ),
-        ),
-        _user.phone==null || _user.phone == '' ? Container() : TextButton(
+        ) : Container(),
+        (_user.phone != null || _user.phone != '') && (_user.email != null || _user.email != '') ?
+        TextButton(
           onPressed: () {
             Navigator.of(context, rootNavigator: true).push<void>(
               CupertinoPageRoute(
@@ -386,6 +392,37 @@ class _AccountManager extends State<AccountManager> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: const [
                   Icon(Icons.chevron_right,size: 30,color: Colors.grey,),
+                ],
+              ),
+            ],
+          ),
+        ) : Container(),
+        (_user.phone != null || _user.phone != '') && (_user.email != null || _user.email != '') ? Container() :
+        TextButton(
+          onPressed: () {
+            Navigator.push(Global.MainContext, SlideRightRoute(page: const LoginPage())).then((value) => setState(() {Global.getUserInfo();}));
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(left: 10),
+                    child: const Icon(Icons.phone_android_outlined,color: Colors.grey,size: 30,),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 25),
+                    child: const Text('账号登录',style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold)),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(_getPhoneShort(),style: const TextStyle(color: Colors.redAccent,fontSize: 18),),
+                  const Icon(Icons.chevron_right,size: 30,color: Colors.grey,),
                 ],
               ),
             ],
@@ -429,125 +466,6 @@ class _AccountManager extends State<AccountManager> {
             ],
           ),
         ),
-        // _user.superior > 0 ? Container() :
-        // TextButton(
-        //   onPressed: () {
-        //     Navigator.of(context, rootNavigator: true).push<void>(
-        //       CupertinoPageRoute(
-        //         // fullscreenDialog: true,
-        //         title: '兑换礼包码',
-        //         builder: (context) => const InviteCodeInputPage(),
-        //       ),
-        //     );
-        //   },
-        //   child: Row(
-        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //     children: [
-        //       Row(
-        //         // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //         children:  [
-        //           Container(
-        //             margin: const EdgeInsets.only(left: 10),
-        //             child: const Icon(Icons.card_giftcard,color: Colors.grey,size: 25,),
-        //           ),
-        //           Container(
-        //             margin: const EdgeInsets.only(left: 25),
-        //             child: const Text('兑换码',style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold)),
-        //           ),
-        //         ],
-        //       ),
-        //       Row(
-        //         children: const [
-        //           Icon(Icons.chevron_right,size: 30,color: Colors.grey,),
-        //         ],
-        //       ),
-        //     ],
-        //   ),
-        // ),
-        // ListTile(
-        //     leading: const Icon(
-        //       Icons.screen_lock_portrait,
-        //       color: Colors.grey,
-        //       size: 30,
-        //     ),
-        //     title: const Text('设置锁屏',style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold)),
-        //     // The Material switch has a platform adaptive constructor.
-        //     trailing: Row(
-        //       mainAxisSize: MainAxisSize.min,
-        //       children: [
-        //         Switch.adaptive(
-        //           value: _config.bootLock,
-        //           onChanged: (value) => setState(() {
-        //             // print(value);
-        //             // _configModel.lock = value;
-        //             if (_config.bootLockPasswd == null || configModel.lockPasswd == '') {
-        //               Navigator.of(context, rootNavigator: true).push<void>(
-        //                 CupertinoPageRoute(
-        //                   // fullscreenDialog: true,
-        //                   builder: (context) =>
-        //                       LockScreenCustom(LockScreenCustom.setPasswd),
-        //                 ),
-        //               );
-        //             } else {
-        //               configModel.lock = value;
-        //             }
-        //           }),
-        //         ),
-        //       ],
-        //     )),
-        // ListTile(
-        //     leading: const Icon(
-        //       Icons.edit_road_outlined,
-        //       size: 30,
-        //     ),
-        //     title: const Text('修改锁屏密码',style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold)),
-        //     // The Material switch has a platform adaptive constructor.
-        //     onTap: () {
-        //       Navigator.of(context, rootNavigator: true).push<void>(
-        //         CupertinoPageRoute(
-        //           // fullscreenDialog: true,
-        //           builder: (context) =>
-        //               LockScreenCustom((configModel.lockPasswd == null || configModel.lockPasswd == '') ? LockScreenCustom.setPasswd : LockScreenCustom.changePasswd),
-        //         ),
-        //       );
-        //     },
-        //     trailing: const Icon(Icons.chevron_right)),
-        // ListTile(
-        //     leading: const Icon(
-        //       Icons.edit_road_outlined,
-        //       size: 30,
-        //     ),
-        //     title: const Text('重置锁屏密码',style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold)),
-        //     // The Material switch has a platform adaptive constructor.
-        //     onTap: () async{
-        //       if(configModel.lockPasswd == null || configModel.lockPasswd == ''){
-        //         ShowAlertDialog(context, '重置锁屏密码', '未设置锁屏密码，请先配置锁屏密码!');
-        //       }else{
-        //         if(await ShowAlertDialogBool(context, '重置锁屏密码', '密码一旦重置不可找回，如需开启锁屏可重新设置密码,确定要重置锁屏密码吗？')){
-        //           setState(() {
-        //             configModel.lockPasswd = '';
-        //             configModel.lock = false;
-        //           });
-        //         }
-        //       }
-        //     },
-        //     trailing: const Icon(Icons.chevron_right)),
-        // ListTile(
-        //     leading: const Icon(
-        //       Icons.delete_forever,
-        //       size: 30,
-        //     ),
-        //     title: const Text('清理缓存',style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold)),
-        //     // The Material switch has a platform adaptive constructor.
-        //     onTap: () async{
-        //       if(await ShowAlertDialogBool(context, '清除缓存', '一键清除缓存将清除应用所有缓存，包括视频数据等等，确定继续吗？')){
-        //         await Global.clearApplicationCache();
-        //         setState(() {
-        //           _initCache();
-        //         });
-        //       }
-        //     },
-        //     trailing: Text(_cacheSize)),
         ListTile(
           leading: const Icon(
             Icons.fact_check,

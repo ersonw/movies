@@ -1,8 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'HttpManager.dart';
 import 'ImageIcons.dart';
+import 'data/User.dart';
 import 'global.dart';
+import 'network/NWApi.dart';
+import 'network/NWMethod.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -15,6 +21,66 @@ class _LoginPage extends State<LoginPage>{
   final TextEditingController usernameEditingController = TextEditingController();
   final TextEditingController passwordEditingController = TextEditingController();
   bool eyes = false;
+  _login() async{
+    if(usernameEditingController.text.isEmpty || passwordEditingController.text.isEmpty){
+      Global.showWebColoredToast('账号或者密码不允许为空');
+      return;
+    }
+    String uid = await Global.getUUID();
+    Map<String, dynamic> parm = {
+      'identifier': uid,
+      'email': usernameEditingController.text,
+      'passwd': Global.generateMd5(passwordEditingController.text),
+    };
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET, NWApi.login, {"data": jsonEncode(parm)}));
+    if (result != null) {
+      // print(result);
+      Map<String, dynamic> map = jsonDecode(result);
+      if(map != null) {
+        if(map['verify'] == true) {
+          User user = userModel.user;
+          user.token = map['token'];
+          userModel.user = user;
+          Navigator.pop(context);
+          Global.getUserInfo();
+        }
+        if(map['msg'] != null) {
+          Global.showWebColoredToast(map['msg']);
+        }
+      }
+    }
+  }
+  _register() async{
+    if(usernameEditingController.text.isEmpty || passwordEditingController.text.isEmpty){
+      Global.showWebColoredToast('账号或者密码不允许为空');
+      return;
+    }
+    String uid = await Global.getUUID();
+    Map<String, dynamic> parm = {
+      'identifier': uid,
+      'email': usernameEditingController.text,
+      'passwd': Global.generateMd5(passwordEditingController.text),
+    };
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET, NWApi.registerEmail, {"data": jsonEncode(parm)}));
+    if (result != null) {
+      // print(result);
+      Map<String, dynamic> map = jsonDecode(result);
+      if(map != null) {
+        if(map['verify'] == true) {
+          User user = userModel.user;
+          user.token = map['token'];
+          userModel.user = user;
+          Navigator.pop(context);
+          Global.getUserInfo();
+        }
+        if(map['msg'] != null) {
+          Global.showWebColoredToast(map['msg']);
+        }
+      }
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,7 +160,7 @@ class _LoginPage extends State<LoginPage>{
                         },
                         keyboardType: TextInputType.text,
                         decoration: const InputDecoration(
-                          hintText: '请输入账号',
+                          hintText: '请输入邮箱账号',
                           hintStyle: TextStyle(color: Colors.black26,fontSize: 14),
                           border: InputBorder.none,
                           filled: true,
@@ -158,6 +224,7 @@ class _LoginPage extends State<LoginPage>{
                                     BorderRadius.circular(30))),
                           ),
                           onPressed: () {
+                            _register();
                           },
                           child: const Text(
                             '注册',
@@ -178,6 +245,7 @@ class _LoginPage extends State<LoginPage>{
                                     BorderRadius.circular(30))),
                           ),
                           onPressed: () {
+                            _login();
                           },
                           child: const Text(
                             '登录',

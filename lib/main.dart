@@ -6,8 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:movies/SplashPage.dart';
 import 'package:movies/global.dart';
 import 'package:movies/routes.dart';
-void main() => Global.init().then((e) => runApp(const MyAdaptingApp()));
 
+import 'GongGaoPage.dart';
+// void main() => Global.init().then((e) => runApp(const MyAdaptingApp()));
+void main()  {
+  Global.init();
+}
 class MyAdaptingApp extends StatelessWidget {
   const MyAdaptingApp({Key? key}) : super(key: key);
 
@@ -42,6 +46,22 @@ class MyAdaptingApp extends StatelessWidget {
         );
       },
       home: SplashPage( validTime: 9),
+    );
+  }
+}
+class GongGaoApp extends StatelessWidget {
+  const GongGaoApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(context) {
+    // Either Material or Cupertino widgets work in either Material or Cupertino
+    // Apps.
+    // return MultiProvider(
+    //   providers: [],
+    //   child: ,
+    // );
+    return MaterialApp(
+      home: GongGaoPage(),
     );
   }
 }

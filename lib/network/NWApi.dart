@@ -1,6 +1,6 @@
 class NWApi {
-  static const baseApi = "https://23api.vanaheimm.cn";
-  static const baseWs = "ws://23api.vanaheimm.cn";
+  static const baseApi = "https://api.telebott.com";
+  static const baseWs = "wss://api.telebott.com";
   // static const baseApi = "http://192.168.254.142:8015";
   // static const baseWs = "ws://192.168.254.142:8015";
   // static const baseWs = "ws://172.21.68.12:8015";
@@ -24,6 +24,8 @@ class NWApi {
   static const getBoots = '/api/getBoots';
   static const getPopUpsDialog = '/api/getPopUpsDialog';
   static const enterGame = '/api/user/enterGame';
+  static const registerEmail = '/api/registerEmail';
+  static const login = '/api/login';
   static const getShareCount = '/api/user/getShareCount';
   static const crateVipOrder = '/api/user/crateVipOrder';
   static const crateDiamondOrder = '/api/user/crateDiamondOrder';

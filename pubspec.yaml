@@ -79,6 +79,7 @@ dependencies:
 #  openinstall_flutter_plugin: ^2.1.2
   openinstall_flutter_plugin:
     path: ./openinstall-flutter-plugin
+  encrypt: ^5.0.0
 #  jmlink_flutter_plugin: ^2.1.2
 #  flutter_udid: ^1.0.1
 

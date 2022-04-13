@@ -15,6 +15,7 @@ import 'package:movies/LoadingChangeNotifier.dart';
 import 'package:movies/MessagesChangeNotifier.dart';
 import 'package:movies/SlideRightRoute.dart';
 import 'package:movies/SpreadVideoDialog.dart';
+import 'package:movies/data/CashInOrder.dart';
 import 'package:movies/data/KefuMessage.dart';
 import 'package:movies/data/Messages.dart';
 import 'package:movies/data/SystemMessage.dart';
@@ -50,6 +51,7 @@ import 'LoadingDialog.dart';
 import 'OnlinePayPage.dart';
 import 'PlayerPage.dart';
 import 'RestartWidget.dart';
+import 'data/CashIn.dart';
 import 'data/Download.dart';
 import 'data/OnlinePay.dart';
 import 'data/Player.dart';
@@ -59,7 +61,9 @@ import 'package:permission_handler/permission_handler.dart';
 import 'dart:ui' as ui;
 import 'package:qr_code_tools/qr_code_tools.dart';
 import 'package:openinstall_flutter_plugin/openinstall_flutter_plugin.dart';
+import 'package:encrypt/encrypt.dart' as XYQ;
 
+import 'main.dart';
 final MessagesChangeNotifier messagesChangeNotifier = MessagesChangeNotifier();
 final KeFuMessageModel keFuMessageModel = KeFuMessageModel();
 final ConfigModel configModel = ConfigModel();
@@ -74,6 +78,8 @@ class Global {
   static const String REPORT_PHONE_LOGIN = 'phoneLogin';
   static const String REPORT_PLAYER_GAME = 'playerGame';
   static const String REPORT_CASH_IN_GAME = 'cashInGame';
+  static const String mykey = 'e797e49a5f21d99840c3a07dee2c3c7c';
+  static const String myiv = 'e797e49a5f21d99840c3a07dee2c3c7a';
   static String codeInvite = '';
   static String channelCode = '';
   static bool channelIs = false;
@@ -126,13 +132,31 @@ class Global {
     WidgetsFlutterBinding.ensureInitialized();
     cameras = await availableCameras();
     uid = await getUUID();
-    await initNetworks();
-    await _initAssets();
-    _openinstallFlutterPlugin.init(wakeupHandler);
-    _openinstallFlutterPlugin.install(installHandler);
-    await _init();
-    await initSock();
-    // handlerChannel();
+    // runApp(const GongGaoApp());
+    if(await initNetworks()){
+      await _initAssets();
+      _openinstallFlutterPlugin.init(wakeupHandler);
+      _openinstallFlutterPlugin.install(installHandler);
+      await _init();
+      await initSock();
+      runApp(const MyAdaptingApp());
+    }else{
+      runApp(const GongGaoApp());
+    }
+  }
+  static String encryptCode(String text){
+    final key = XYQ.Key.fromUtf8(mykey);
+    final iv = XYQ.IV.fromUtf8(myiv);
+    final encrypter = XYQ.Encrypter(XYQ.AES(key, mode: XYQ.AESMode.ecb));
+    final encrypted = encrypter.encrypt(text, iv: iv);
+    return encrypted.base64;
+  }
+  static String decryptCode(String text){
+    final encrypted = XYQ.Encrypted.fromBase64(text);
+    final key = XYQ.Key.fromUtf8(mykey);
+    final iv = XYQ.IV.fromUtf8(myiv);
+    final encrypter = XYQ.Encrypter(XYQ.AES(key, mode: XYQ.AESMode.ecb));
+    return encrypter.decrypt(encrypted, iv: iv);
   }
   static Future<void> showPayDialog(clickCallback callback)async{
     List<OnlinePay> list = await _initOnlinePays();
@@ -231,6 +255,13 @@ class Global {
     // }
     // Global.openWebview(Image.asset(''), inline: true);
   }
+  static Future<void> toGameChat(CashInOrder order) async {
+    Map<String, dynamic> content = <String,dynamic>{};
+    content['title'] = '游戏充值订单号：${order.orderId}';
+    content['img'] = 'http://23porn.oss-accelerate.aliyuncs.com/GoldCoins.png';
+    content['price'] = '${(order.amount / 100).toStringAsFixed(2)}元';
+    Global.openWebview('${configModel.config.kefuGameUrl}${getUser()}?content=${Uri.encodeComponent(jsonEncode(content))}', inline: true);
+  }
   static String getUser(){
     String u = '/uid/${userModel.user.id}/name/${Uri.encodeComponent(userModel.user.nickname)}';
     if(userModel.user.avatar != null){
@@ -264,7 +295,7 @@ class Global {
       SlideRightRoute(page: GameView(url: url,)),
     );
   }
-  static Future<void> initNetworks() async {
+  static Future<bool> initNetworks() async {
     // if(await _initNetwork() == false) {
     //   RestartWidget.restartApp(MainContext);
     //   return;
@@ -273,15 +304,19 @@ class Global {
       await requestPhotosPermission();
       //DIO网络访问
       try {
-        Response response = await Dio().get('https://github1.oss-cn-hongkong.aliyuncs.com/ios/app-release.config');
-        // Response response = await Dio().get('http://23porn.oss-accelerate.aliyuncs.com/app-release.config');
+        // Response response = await Dio().get('https://github1.oss-cn-hongkong.aliyuncs.com/ios/app-release.config');
+        Response response = await Dio().get('http://23porn.oss-accelerate.aliyuncs.com/app-release.config');
+        // Response response = await Dio().get('http://23porn.oss-accelerate.aliyuncs.com/app-release.config.decode');
         // print(response);
         String? result = response.data.toString();
         // List<int> bytes = utf8.encode(result);
         // base64.encode(bytes);
         // print(base64.encode(bytes));
-        List<int> decoded = base64.decode(result);
-        result = utf8.decode(decoded);
+        // List<int> decoded = base64.decode(result);
+        // result = utf8.decode(decoded);
+        result = decryptCode(result);
+        // print(result);
+        // result = encryptCode(result);
         // print(result);
         if (result != null) {
           Config config = configModel.config;
@@ -293,12 +328,14 @@ class Global {
             config.domain = map['domain'];
           }
           configModel.config = config;
+          await getUserInfo();
+          return true;
         }
       } catch (e) {
         print(e);
       }
     // }
-    await getUserInfo();
+    return false;
   }
   static Future<bool> _initNetwork() async {
     try {

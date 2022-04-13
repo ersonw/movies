@@ -284,12 +284,12 @@ class _MyProfile extends State<MyProfile> {
                           ],
                         ),
                       ),
-                      InkWell(
+                      (_user.phone != null || _user.phone != '') && (_user.email != null || _user.email != '') ? Container() : InkWell(
                         onTap: (){
                           Navigator.push(Global.MainContext, SlideRightRoute(page: const LoginPage())).then((value) => setState(() {Global.getUserInfo();}));
                         },
                         child: Container(
-                          child: Text("立即登录",style: TextStyle()),
+                          child: const Text("立即登录",style: TextStyle(color: Colors.blueAccent,fontSize: 15)),
                         ),
                       ),
                     ],

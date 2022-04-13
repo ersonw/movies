@@ -31,10 +31,8 @@ class SystemNotificationDialog extends Dialog {
     // systemMessage.str += systemMessage.str;
     // print(systemMessage.str);
     return Center(
-      child: ConstrainedBox(
-        constraints: BoxConstraints(maxHeight: (MediaQuery.of(context).size.height) / 1.4, ),
         child: Container(
-          // height: (MediaQuery.of(context).size.height) / 3,
+            // constraints: BoxConstraints(maxHeight: (MediaQuery.of(context).size.height) / 1.4, ),
             width: (MediaQuery.of(context).size.width) / 1,
             margin: const EdgeInsets.only(left: 20, right: 20),
             decoration:  const BoxDecoration(
@@ -42,6 +40,8 @@ class SystemNotificationDialog extends Dialog {
               borderRadius: BorderRadius.all(Radius.circular(20)),
             ),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 const Padding(padding: EdgeInsets.only(top: 10)),
                 Center(child: Text(systemMessage.title,style: const TextStyle(color:  Colors.black,fontSize: 20,fontWeight: FontWeight.normal)),),
@@ -52,12 +52,9 @@ class SystemNotificationDialog extends Dialog {
                 ),
                 Container(
                   margin: const EdgeInsets.all(10),
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(maxHeight: (MediaQuery.of(context).size.height) / 1.9, ),
-                    child: Text(systemMessage.str.replaceAll('\\n','\n'),style: const TextStyle(color: Colors.black,fontSize: 17)),
-                  ),
+                  child: Text(systemMessage.str.replaceAll('\\n','\n'),style: const TextStyle(color: Colors.black,fontSize: 17)),
                 ),
-                InkWell(
+                Center(child: InkWell(
                   onTap: () {
                     Navigator.pop(context);
                   },
@@ -84,12 +81,12 @@ class SystemNotificationDialog extends Dialog {
                       ),
                     ),
                   ),
-                ),
-                const Padding(padding: EdgeInsets.only(top: 10)),
+                ),),
+                const Padding(padding: EdgeInsets.only(top: 20)),
               ],
-            )
+            ),
         ),
-      )
+
     );
   }
 }
