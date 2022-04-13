@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.movies">
    <application
-        android:label="23PORN-視頻社區"
+        android:label="23Porn 亚洲AV社区"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

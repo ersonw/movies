@@ -122,6 +122,7 @@ class Global {
       }
     }
     var _messages = _prefs.getString("messages");
+    // print(_messages);
     if (_messages != null) {
       try {
         messages = Messages.formJson(jsonDecode(_messages));
@@ -304,8 +305,9 @@ class Global {
       await requestPhotosPermission();
       //DIO网络访问
       try {
-        // Response response = await Dio().get('https://github1.oss-cn-hongkong.aliyuncs.com/ios/app-release.config');
-        Response response = await Dio().get('http://23porn.oss-accelerate.aliyuncs.com/app-release.config');
+        Response response = await Dio().get('https://github1.oss-cn-hongkong.aliyuncs.com/ios/app-release.config');
+        // Response response = await Dio().get('https://github1.oss-cn-hongkong.aliyuncs.com/ios/app-release.config.decode');
+        // Response response = await Dio().get('http://23porn.oss-accelerate.aliyuncs.com/app-release.config');
         // Response response = await Dio().get('http://23porn.oss-accelerate.aliyuncs.com/app-release.config.decode');
         // print(response);
         String? result = response.data.toString();
