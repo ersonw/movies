@@ -80,7 +80,7 @@ class DioManager {
         UserModel().token = '';
         // Global.saveProfile();
         // ShowAlertDialog(Global.MainContext, '访问受限', '原因:登录已失效');
-        Global.showWebColoredToast('原因:登录已失效');
+        // Global.showWebColoredToast('原因:登录已失效');
       } else {
         print(dio.options.baseUrl+path);
         print(e.message);
@@ -108,7 +108,7 @@ class DioManager {
         UserModel().token = '';
         // Global.saveProfile();
         // ShowAlertDialog(Global.MainContext, '访问受限', '原因:登录已失效');
-        Global.showWebColoredToast('原因:登录已失效');
+        // Global.showWebColoredToast('原因:登录已失效');
       } else {
         print(dio.options.baseUrl+path);
         print(e.message);
@@ -161,7 +161,7 @@ class DioManager {
         UserModel().token = '';
         // Global.saveProfile();
         // ShowAlertDialog(Global.MainContext, '访问受限', '原因:登录已失效');
-        Global.showWebColoredToast('原因:登录已失效');
+        // Global.showWebColoredToast('原因:登录已失效');
       } else {
         print(dio.options.baseUrl+path);
         print(e.message);

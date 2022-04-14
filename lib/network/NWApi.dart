@@ -54,7 +54,8 @@ class NWApi {
   static const checkPhone = '/api/checkPhone';
   static const sendSms = '/api/sendSms';
   static const register = '/api/register';
-  static const loginPhone = '/api/login';
+  // static const loginPhone = '/api/login';
+  static const loginPhone = '/api/loginPhone';
   static const carousels = '/api/carousels';
   static const featureds = '/api/featureds';
   static const classVideos = '/api/classVideos';
