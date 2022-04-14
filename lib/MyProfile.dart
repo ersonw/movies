@@ -22,6 +22,7 @@ import 'package:qr_code_tools/qr_code_tools.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'AccountManager.dart';
 import 'dart:io';
+import 'BindPhonePage.dart';
 import 'BuyGoldPage.dart';
 import 'FansPage.dart';
 import 'FollowsPage.dart';
@@ -284,7 +285,7 @@ class _MyProfile extends State<MyProfile> {
                           ],
                         ),
                       ),
-                      (_user.phone != null || _user.phone != '') && (_user.email != null || _user.email != '') ? Container() : InkWell(
+                      (_user.phone != null && _user.phone != '') || (_user.email != null && _user.email != '') ? Container() : InkWell(
                         onTap: (){
                           Navigator.push(Global.MainContext, SlideRightRoute(page: const LoginPage())).then((value) => setState(() {Global.getUserInfo();}));
                         },
@@ -302,21 +303,21 @@ class _MyProfile extends State<MyProfile> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Padding(padding: EdgeInsets.only(top: 10,left: 5)),
-                        InkWell(
-                          onTap: () => _enterGold(context),
-                          child: Column(
-                            children: [
-                              Text(Global.getNumbersToChinese(userModel.user.gold),
-                                style: const TextStyle(
-                                  fontSize: 18, ),
-                              ),
-                              const Text(
-                                '金币',
-                                style: TextStyle(fontSize: 12, color: Colors.grey),
-                              ),
-                            ],
-                          ),
-                        ),
+                        // InkWell(
+                        //   onTap: () => _enterGold(context),
+                        //   child: Column(
+                        //     children: [
+                        //       Text(Global.getNumbersToChinese(userModel.user.gold),
+                        //         style: const TextStyle(
+                        //           fontSize: 18, ),
+                        //       ),
+                        //       const Text(
+                        //         '金币',
+                        //         style: TextStyle(fontSize: 12, color: Colors.grey),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
                         InkWell(
                           onTap: () => _enterDiamond(context),
                           child: Column(
@@ -424,7 +425,7 @@ class _MyProfile extends State<MyProfile> {
                           Container(
                             margin: const EdgeInsets.only(top: 10,left:5,right:5),
                             // width: ((MediaQuery.of(context).size.width) / 3.2),
-                            height: 81,
+                            height: 63,
                             decoration: BoxDecoration(
                               color: Colors.transparent,
                               borderRadius: BorderRadius.circular(10.0),
@@ -461,7 +462,8 @@ class _MyProfile extends State<MyProfile> {
                         InkWell(
                           onTap: () {
                             if(userModel.user.invite == null){
-                              ShowAlertDialog(context, '友情提示','为了您的账号安全，未绑定手机号无法进行推广哟');
+                              Navigator.push(Global.MainContext, SlideRightRoute(page: const BindPhonePage())).then((value) => setState(() {Global.getUserInfo();}));
+                              ShowAlertDialog(Global.MainContext, '友情提示','为了您的账号安全，未绑定手机号无法进行推广哟');
                               return;
                             }
                             Navigator.push(Global.MainContext, SlideRightRoute(page: const UserSharePage())).then((value) => setState(() {Global.getUserInfo();}));
@@ -537,7 +539,10 @@ class _MyProfile extends State<MyProfile> {
                                 ),
                               ),
                               TextButton(
-                                onPressed: () => _enterGold(context),
+                                // onPressed: () => _enterGold(context),
+                                onPressed: () {
+                                  Global.showWebColoredToast('暂未开放!');
+                                },
                                 child: Column(
                                   children: [
                                     Image.asset(

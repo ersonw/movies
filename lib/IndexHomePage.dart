@@ -886,9 +886,9 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
             width: ((MediaQuery.of(context).size.width) / 4.5),
             height: 35,
             margin: const EdgeInsets.only(top: 15, left: 5),
-            decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-                color: Color(0xFFD6D6D6)),
+            decoration:  BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(15)),
+                color: Colors.grey.withOpacity(0.2)),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -897,7 +897,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
                   child: Text(
                     _searchTags[i * 4],
                     style: const TextStyle(
-                        fontSize: 12,
+                        fontSize: 15,
                         overflow: TextOverflow.ellipsis,
                       fontWeight: FontWeight.normal,
                     ),
@@ -917,9 +917,9 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
             width: ((MediaQuery.of(context).size.width) / 5),
             height: 35,
             margin: const EdgeInsets.only(top: 15, left: 10),
-            decoration: const BoxDecoration(
+            decoration:  BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(15)),
-                color: Color(0xFFD6D6D6)),
+                color: Colors.grey.withOpacity(0.2)),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -928,7 +928,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
                   child: Text(
                     _searchTags[i * 4 + 1],
                     style: const TextStyle(
-                      fontSize: 12,
+                      fontSize: 15,
                       overflow: TextOverflow.ellipsis,
                       fontWeight: FontWeight.normal,
                     ),
@@ -948,9 +948,9 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
             width: ((MediaQuery.of(context).size.width) / 5),
             height: 35,
             margin: const EdgeInsets.only(top: 15, left: 10),
-            decoration: const BoxDecoration(
+            decoration:  BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(15)),
-                color: Color(0xFFD6D6D6)),
+                color: Colors.grey.withOpacity(0.2)),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -959,7 +959,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
                   child: Text(
                     _searchTags[i * 4 + 2],
                     style: const TextStyle(
-                      fontSize: 12,
+                      fontSize: 15,
                       overflow: TextOverflow.ellipsis,
                       fontWeight: FontWeight.normal,
                     ),
@@ -979,9 +979,9 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
             width: ((MediaQuery.of(context).size.width) / 5),
             height: 35,
             margin: const EdgeInsets.only(top: 15, left: 10),
-            decoration: const BoxDecoration(
+            decoration:  BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(15)),
-                color: Color(0xFFD6D6D6)),
+                color: Colors.grey.withOpacity(0.2)),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -990,7 +990,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
                   child: Text(
                     _searchTags[i * 4 + 3],
                     style: const TextStyle(
-                      fontSize: 12,
+                      fontSize: 15,
                       overflow: TextOverflow.ellipsis,
                       fontWeight: FontWeight.normal,
                     ),
@@ -1053,9 +1053,9 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
             width: ((MediaQuery.of(context).size.width) / 5),
             height: 35,
             margin: const EdgeInsets.only(top: 5, left: 10),
-            decoration: const BoxDecoration(
+            decoration:  BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(15)),
-                color: Color(0xFFD6D6D6)),
+                color: Colors.grey.withOpacity(0.2)),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -1064,7 +1064,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
                   child: Text(
                     _records[i * 4],
                     style: const TextStyle(
-                      fontSize: 12,
+                      fontSize: 15,
                       overflow: TextOverflow.ellipsis,
                       fontWeight: FontWeight.normal,
                     ),
@@ -1084,9 +1084,9 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
             width: ((MediaQuery.of(context).size.width) / 5),
             height: 35,
             margin: const EdgeInsets.only(top: 5, left: 10),
-            decoration: const BoxDecoration(
+            decoration:  BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(15)),
-                color: Color(0xFFD6D6D6)),
+                color: Colors.grey.withOpacity(0.2)),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -1095,7 +1095,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
                   child: Text(
                     _records[i * 4 + 1],
                     style: const TextStyle(
-                      fontSize: 12,
+                      fontSize: 15,
                       overflow: TextOverflow.ellipsis,
                       fontWeight: FontWeight.normal,
                     ),
@@ -1115,9 +1115,9 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
             width: ((MediaQuery.of(context).size.width) / 5),
             height: 35,
             margin: const EdgeInsets.only(top: 5, left: 10),
-            decoration: const BoxDecoration(
+            decoration:  BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(15)),
-                color: Color(0xFFD6D6D6)),
+                color: Colors.grey.withOpacity(0.2)),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -1126,7 +1126,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
                   child: Text(
                     _records[i * 4 + 2],
                     style: const TextStyle(
-                      fontSize: 12,
+                      fontSize: 15,
                       overflow: TextOverflow.ellipsis,
                       fontWeight: FontWeight.normal,
                     ),
@@ -1146,9 +1146,9 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
             width: ((MediaQuery.of(context).size.width) / 5),
             height: 35,
             margin: const EdgeInsets.only(top: 5, left: 10),
-            decoration: const BoxDecoration(
+            decoration:  BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(15)),
-                color: Color(0xFFD6D6D6)),
+                color: Colors.grey.withOpacity(0.2)),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -1157,7 +1157,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
                   child: Text(
                     _records[i * 4 + 3],
                     style: const TextStyle(
-                      fontSize: 12,
+                      fontSize: 15,
                       overflow: TextOverflow.ellipsis,
                       fontWeight: FontWeight.normal,
                     ),
@@ -1326,7 +1326,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
                   ),
                   Text(
                     '精品专区',
-                    style: TextStyle(color: Colors.brown, fontSize: 10),
+                    style: TextStyle(color: Colors.brown, fontSize: 12,fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   )
                 ],
@@ -1354,7 +1354,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
                   ),
                   Text(
                     'VIP专区',
-                    style: TextStyle(color: Colors.brown, fontSize: 10),
+                    style: TextStyle(color: Colors.brown, fontSize: 12,fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   )
                 ],
@@ -1388,7 +1388,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
                   ),
                   Text(
                     '女优列表',
-                    style: TextStyle(color: Colors.brown, fontSize: 10),
+                    style: TextStyle(color: Colors.brown, fontSize: 12,fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   )
                 ],
@@ -1421,7 +1421,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
                   ),
                   Text(
                     '热门榜单',
-                    style: TextStyle(color: Colors.brown, fontSize: 10),
+                    style: TextStyle(color: Colors.brown, fontSize: 12,fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   )
                 ],

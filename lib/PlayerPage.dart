@@ -653,161 +653,161 @@ class _PlayerPage extends State<PlayerPage> {
                     child: Container(
                       color: Colors.black87,
                       child: Center(
-                        child: tryPlay ?
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.only(
-                                      left: 5, right: 20),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.start,
-                                        children: [
-                                          InkWell(
-                                            onTap: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: const Icon(
-                                              Icons.arrow_back,
-                                              color: Colors.grey,
-                                              size: 30,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      _isReport
-                                          ? Container()
-                                          : InkWell(
-                                        onTap: () {
-                                          _report();
-                                        },
-                                        child: Container(
-                                          color: Colors.transparent,
-                                          margin: const EdgeInsets.only(
-                                              right: 20),
-                                          child: const Text(
-                                            '举报',
-                                            style: TextStyle(
-                                                color: Colors.black),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Text(
-                              '试看已结束,${_player.member != true && _player.diamond ==0 ? '非会员': '未购买'}只能试看${_player.du}分钟哦',
-                              style:
-                              const TextStyle(color: Colors.white, fontSize: 20),
-                            ),
-                            const Padding(padding: EdgeInsets.all(10)),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                SizedBox(
-                                  width: 120,
-                                  child: TextButton(
-                                    style: ButtonStyle(
-                                      backgroundColor:
-                                      MaterialStateProperty.all(Colors.red),
-                                      shape: MaterialStateProperty.all(
-                                          RoundedRectangleBorder(
-                                              borderRadius:
-                                              BorderRadius.circular(16))),
-                                    ),
-                                    onPressed: () {
-                                      _tryPlayer();
-                                    },
-                                    child: const Text(
-                                      '马上试看',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ),
-                                ),
-                                _player.diamond > 0 ? SizedBox(
-                                  width: 120,
-                                  child: TextButton(
-                                    style: ButtonStyle(
-                                      backgroundColor:
-                                      MaterialStateProperty.all(Colors.red),
-                                      shape: MaterialStateProperty.all(
-                                          RoundedRectangleBorder(
-                                              borderRadius:
-                                              BorderRadius.circular(16))),
-                                    ),
-                                    onPressed: () {
-                                      _buyVideo();
-                                    },
-                                    child:  Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            const Text(
-                                              '支付',
-                                              style: TextStyle(color: Colors.orange),
-                                              textAlign: TextAlign.right,
-                                            ),
-                                            Text(
-                                              Global.getNumbersToChinese(_player.diamond),
-                                              style:  TextStyle(color: Colors.orange, decoration: _player.less > 0 ? TextDecoration.lineThrough : TextDecoration.none),
-                                              textAlign: TextAlign.right,
-                                            ),
-                                            _player.less > 0 ? Text(
-                                              Global.getNumbersToChinese(_player.diamond - _player.less),
-                                              style: const TextStyle(color: Colors.orange),
-                                              textAlign: TextAlign.right,
-                                            ) : Container(),
-                                            Image.asset(ImageIcons.diamond,width: 12,),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ) :
-                                SizedBox(
-                                  width: 120,
-                                  child: TextButton(
-                                    style: ButtonStyle(
-                                      backgroundColor:
-                                      MaterialStateProperty.all(Colors.red),
-                                      shape: MaterialStateProperty.all(
-                                          RoundedRectangleBorder(
-                                              borderRadius:
-                                              BorderRadius.circular(16))),
-                                    ),
-                                    onPressed: () {
-                                      Navigator.of(context, rootNavigator: true)
-                                          .push<void>(
-                                        CupertinoPageRoute(
-                                          title: "VIP购买",
-                                          // fullscreenDialog: true,
-                                          builder: (context) =>
-                                          const VIPBuyPage(),
-                                        ),
-                                      )
-                                          .then((value) => _initPlayer());
-                                    },
-                                    child: const Text(
-                                      '开通VIP',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ) :
+                        child:
+                        // tryPlay ?
+                        // Column(
+                        //   mainAxisAlignment: MainAxisAlignment.center,
+                        //   children: [
+                        //     Column(
+                        //       mainAxisAlignment: MainAxisAlignment.start,
+                        //       children: [
+                        //         Container(
+                        //           margin: const EdgeInsets.only(
+                        //               left: 5, right: 20),
+                        //           child: Row(
+                        //             mainAxisAlignment:
+                        //             MainAxisAlignment.spaceBetween,
+                        //             children: [
+                        //               Row(
+                        //                 mainAxisAlignment:
+                        //                 MainAxisAlignment.start,
+                        //                 children: [
+                        //                   InkWell(
+                        //                     onTap: () {
+                        //                       Navigator.pop(context);
+                        //                     },
+                        //                     child: const Icon(
+                        //                       Icons.arrow_back,
+                        //                       color: Colors.grey,
+                        //                       size: 30,
+                        //                     ),
+                        //                   ),
+                        //                 ],
+                        //               ),
+                        //               _isReport
+                        //                   ? Container()
+                        //                   : InkWell(
+                        //                 onTap: () {
+                        //                   _report();
+                        //                 },
+                        //                 child: Container(
+                        //                   color: Colors.transparent,
+                        //                   margin: const EdgeInsets.only(
+                        //                       right: 20),
+                        //                   child: const Text(
+                        //                     '举报',
+                        //                     style: TextStyle(
+                        //                         color: Colors.black),
+                        //                   ),
+                        //                 ),
+                        //               ),
+                        //             ],
+                        //           ),
+                        //         ),
+                        //       ],
+                        //     ),
+                        //     Text(
+                        //       '试看已结束,${_player.member != true && _player.diamond ==0 ? '非会员': '未购买'}只能试看${_player.du}分钟哦',
+                        //       style:
+                        //       const TextStyle(color: Colors.white, fontSize: 20),
+                        //     ),
+                        //     const Padding(padding: EdgeInsets.all(10)),
+                        //     Row(
+                        //       mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        //       children: [
+                        //         SizedBox(
+                        //           width: 120,
+                        //           child: TextButton(
+                        //             style: ButtonStyle(
+                        //               backgroundColor:
+                        //               MaterialStateProperty.all(Colors.red),
+                        //               shape: MaterialStateProperty.all(
+                        //                   RoundedRectangleBorder(
+                        //                       borderRadius:
+                        //                       BorderRadius.circular(16))),
+                        //             ),
+                        //             onPressed: () {
+                        //               _tryPlayer();
+                        //             },
+                        //             child: const Text(
+                        //               '马上试看',
+                        //               style: TextStyle(color: Colors.white),
+                        //             ),
+                        //           ),
+                        //         ),
+                        //         _player.diamond > 0 ? SizedBox(
+                        //           width: 120,
+                        //           child: TextButton(
+                        //             style: ButtonStyle(
+                        //               backgroundColor:
+                        //               MaterialStateProperty.all(Colors.red),
+                        //               shape: MaterialStateProperty.all(
+                        //                   RoundedRectangleBorder(
+                        //                       borderRadius:
+                        //                       BorderRadius.circular(16))),
+                        //             ),
+                        //             onPressed: () {
+                        //               _buyVideo();
+                        //             },
+                        //             child:  Row(
+                        //               mainAxisAlignment: MainAxisAlignment.center,
+                        //               children: [
+                        //                 Row(
+                        //                   children: [
+                        //                     const Text(
+                        //                       '支付',
+                        //                       style: TextStyle(color: Colors.orange),
+                        //                       textAlign: TextAlign.right,
+                        //                     ),
+                        //                     Text(
+                        //                       Global.getNumbersToChinese(_player.diamond),
+                        //                       style:  TextStyle(color: Colors.orange, decoration: _player.less > 0 ? TextDecoration.lineThrough : TextDecoration.none),
+                        //                       textAlign: TextAlign.right,
+                        //                     ),
+                        //                     _player.less > 0 ? Text(
+                        //                       Global.getNumbersToChinese(_player.diamond - _player.less),
+                        //                       style: const TextStyle(color: Colors.orange),
+                        //                       textAlign: TextAlign.right,
+                        //                     ) : Container(),
+                        //                     Image.asset(ImageIcons.diamond,width: 12,),
+                        //                   ],
+                        //                 ),
+                        //               ],
+                        //             ),
+                        //           ),
+                        //         ) :
+                        //         SizedBox(
+                        //           width: 120,
+                        //           child: TextButton(
+                        //             style: ButtonStyle(
+                        //               backgroundColor:
+                        //               MaterialStateProperty.all(Colors.red),
+                        //               shape: MaterialStateProperty.all(
+                        //                   RoundedRectangleBorder(
+                        //                       borderRadius:
+                        //                       BorderRadius.circular(16))),
+                        //             ),
+                        //             onPressed: () {
+                        //               Navigator.of(context, rootNavigator: true)
+                        //                   .push<void>(
+                        //                 CupertinoPageRoute(
+                        //                   title: "VIP购买",
+                        //                   // fullscreenDialog: true,
+                        //                   builder: (context) =>
+                        //                   const VIPBuyPage(),
+                        //                 ),
+                        //               ).then((value) => _initPlayer());
+                        //             },
+                        //             child: const Text(
+                        //               '开通VIP',
+                        //               style: TextStyle(color: Colors.white),
+                        //             ),
+                        //           ),
+                        //         ),
+                        //       ],
+                        //     ),
+                        //   ],
+                        // ) :
                         (_player.diamond > 0 ?
                         Column(
                           // mainAxisAlignment: MainAxisAlignment.center,
@@ -1070,65 +1070,65 @@ class _PlayerPage extends State<PlayerPage> {
                   context: context,
                   child: ListView(
                     children: [
-                      _isValid() ? Container(
-                        color: Colors.white,
-                        // margin: const EdgeInsets.only(top: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            SizedBox(
-                              width: 120,
-                              child: TextButton(
-                                style: ButtonStyle(
-                                  backgroundColor:
-                                  MaterialStateProperty.all(Colors.red),
-                                  shape: MaterialStateProperty.all(
-                                      RoundedRectangleBorder(
-                                          borderRadius:
-                                          BorderRadius.circular(16))),
-                                ),
-                                onPressed: () {
-                                  Global.showDialogVideo(_player);
-                                },
-                                child: const Text(
-                                  '分享得无限',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 120,
-                              child: TextButton(
-                                style: ButtonStyle(
-                                  backgroundColor:
-                                  MaterialStateProperty.all(Colors.red),
-                                  shape: MaterialStateProperty.all(
-                                      RoundedRectangleBorder(
-                                          borderRadius:
-                                          BorderRadius.circular(16))),
-                                ),
-                                onPressed: () {
-                                  Navigator.of(context, rootNavigator: true)
-                                      .push<void>(
-                                    CupertinoPageRoute(
-                                      title: "钻石购买",
-                                      // fullscreenDialog: true,
-                                      builder: (context) =>
-                                      const BuyDiamondPage(),
-                                    ),
-                                  )
-                                      .then((value) => setState);
-                                },
-                                child: const Text(
-                                    '充值钻石',
-                                    style: TextStyle(color: Colors.white,),
-                                    textAlign: TextAlign.right
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ) : Container(),
+                      // _isValid() ? Container(
+                      //   color: Colors.white,
+                      //   // margin: const EdgeInsets.only(top: 20),
+                      //   child: Row(
+                      //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      //     children: [
+                      //       SizedBox(
+                      //         width: 120,
+                      //         child: TextButton(
+                      //           style: ButtonStyle(
+                      //             backgroundColor:
+                      //             MaterialStateProperty.all(Colors.red),
+                      //             shape: MaterialStateProperty.all(
+                      //                 RoundedRectangleBorder(
+                      //                     borderRadius:
+                      //                     BorderRadius.circular(16))),
+                      //           ),
+                      //           onPressed: () {
+                      //             Global.showDialogVideo(_player);
+                      //           },
+                      //           child: const Text(
+                      //             '分享得无限',
+                      //             style: TextStyle(color: Colors.white),
+                      //           ),
+                      //         ),
+                      //       ),
+                      //       SizedBox(
+                      //         width: 120,
+                      //         child: TextButton(
+                      //           style: ButtonStyle(
+                      //             backgroundColor:
+                      //             MaterialStateProperty.all(Colors.red),
+                      //             shape: MaterialStateProperty.all(
+                      //                 RoundedRectangleBorder(
+                      //                     borderRadius:
+                      //                     BorderRadius.circular(16))),
+                      //           ),
+                      //           onPressed: () {
+                      //             Navigator.of(context, rootNavigator: true)
+                      //                 .push<void>(
+                      //               CupertinoPageRoute(
+                      //                 title: "钻石购买",
+                      //                 // fullscreenDialog: true,
+                      //                 builder: (context) =>
+                      //                 const BuyDiamondPage(),
+                      //               ),
+                      //             )
+                      //                 .then((value) => setState);
+                      //           },
+                      //           child: const Text(
+                      //               '充值钻石',
+                      //               style: TextStyle(color: Colors.white,),
+                      //               textAlign: TextAlign.right
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ) : Container(),
                       const Padding(padding: EdgeInsets.only(top: 5)),
                       Container(
                         color: Colors.white,
