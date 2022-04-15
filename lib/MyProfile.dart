@@ -232,57 +232,61 @@ class _MyProfile extends State<MyProfile> {
                 // mainAxisAlignment: MainAxisAlignment.center,
                 direction: Axis.vertical,
                 children: [
+                  const Padding(padding: EdgeInsets.only(top: 20)),
                   // 头像用户名
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       InkWell(
                         onTap: (){
                           Navigator.push(Global.MainContext, SlideRightRoute(page: const AccountManager())).then((value) => setState(() {Global.getUserInfo();}));
                         },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: 80,
-                              height: 80,
-                              // margin: const EdgeInsets.only(left: 20),
-                              decoration: BoxDecoration(
-                                  color: Colors.grey,
-                                  borderRadius: BorderRadius.circular(50.0),
-                                  image: DecorationImage(
-                                    // image: AssetImage('assets/image/default_head.gif'),
-                                    image: _buildAvatar(),
-                                  )),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.only(left: 10, top: 10),
-                              child: Column(
-                                children: [
-                                  Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          _user.nickname,
-                                          style: const TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black),
-                                        ),
-                                      ]
-                                  ),
-                                ],
+                        child: Container(
+                          margin: EdgeInsets.only(left: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: 80,
+                                height: 80,
+                                // margin: const EdgeInsets.only(left: 20),
+                                decoration: BoxDecoration(
+                                    color: Colors.grey,
+                                    borderRadius: BorderRadius.circular(50.0),
+                                    image: DecorationImage(
+                                      // image: AssetImage('assets/image/default_head.gif'),
+                                      image: _buildAvatar(),
+                                    )),
                               ),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.only(left: 10),
-                              width: 25,
-                              height: 25,
-                              child: Image.asset(_user.sex == 0 ? ImageIcons.nan : ImageIcons.nv,
+                              Container(
+                                margin: const EdgeInsets.only(left: 10, top: 10),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            _user.nickname,
+                                            style: const TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black),
+                                          ),
+                                        ]
+                                    ),
+                                  ],
+                                ),
                               ),
-                            )
-                          ],
+                              Container(
+                                margin: const EdgeInsets.only(left: 10),
+                                width: 25,
+                                height: 25,
+                                child: Image.asset(_user.sex == 0 ? ImageIcons.nan : ImageIcons.nv,
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                       (_user.phone != null && _user.phone != '') || (_user.email != null && _user.email != '') ? Container() : InkWell(
@@ -290,6 +294,7 @@ class _MyProfile extends State<MyProfile> {
                           Navigator.push(Global.MainContext, SlideRightRoute(page: const LoginPage())).then((value) => setState(() {Global.getUserInfo();}));
                         },
                         child: Container(
+                          margin: EdgeInsets.only(right: 10),
                           child: const Text("立即登录",style: TextStyle(color: Colors.blueAccent,fontSize: 15)),
                         ),
                       ),

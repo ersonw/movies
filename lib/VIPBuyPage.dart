@@ -335,14 +335,14 @@ class _VIPBuyPage extends State<VIPBuyPage>
                           Container(
                             margin: const EdgeInsets.only(top: 30),
                             child: Text(vipBuy.currency,
-                              style: const TextStyle(color: Colors.brown, fontSize: 19),
+                              style: const TextStyle(color: Color(0xFF946656), fontSize: 19),
                             ),
                           ),
                           Container(
                             // color: Colors.yellow,
                             margin: const EdgeInsets.only(right: 10, top: 20),
                             child: Text('${vipBuy.amount ~/ 100}',
-                              style: const TextStyle(color: Colors.brown, fontSize: 45),
+                              style: const TextStyle(color: Color(0xFFC7806C), fontSize: 40),
                             ),
                           ),
                         ],

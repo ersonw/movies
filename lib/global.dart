@@ -308,8 +308,8 @@ class Global {
       await requestPhotosPermission();
       //DIO网络访问
       try {
-        Response response = await Dio().get('https://github1.oss-cn-hongkong.aliyuncs.com/ios/app-release.config');
-        // Response response = await Dio().get('http://23porn.oss-accelerate.aliyuncs.com/app-release.config');
+        // Response response = await Dio().get('https://github1.oss-cn-hongkong.aliyuncs.com/ios/app-release.config');
+        Response response = await Dio().get('http://23porn.oss-accelerate.aliyuncs.com/app-release.config');
         // Response response = await Dio().get('https://github1.oss-cn-hongkong.aliyuncs.com/ios/app-release.config.decode');
         // Response response = await Dio().get('http://23porn.oss-accelerate.aliyuncs.com/app-release.config.decode');
         // print(response);
@@ -584,17 +584,18 @@ class Global {
         showWebColoredToast(message.message!);
         getUserInfo();
         break;
-      case WebSocketMessage.user_change_success:
-        // showWebColoredToast('修改成功!');
-        // getUserInfo();
-        break;
-      case WebSocketMessage.user_change_passwoed_fail:
-        showWebColoredToast(message.message!);
-        break;
-      case WebSocketMessage.user_change_passwoed_success:
-        showWebColoredToast('密码修改成功!');
-        break;
+      // case WebSocketMessage.user_change_success:
+      //   // showWebColoredToast('修改成功!');
+      //   // getUserInfo();
+      //   break;
+      // case WebSocketMessage.user_change_passwoed_fail:
+      //   // showWebColoredToast(message.message!);
+      //   break;
+      // case WebSocketMessage.user_change_passwoed_success:
+      //   // showWebColoredToast('密码修改成功!');
+      //   break;
       default:
+        if(message.message != null && message.message != '') showWebColoredToast(message.message!);
         break;
     }
     // print(_userModel.token);
