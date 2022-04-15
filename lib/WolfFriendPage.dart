@@ -313,7 +313,7 @@ class _WolfFriendPage extends State<WolfFriendPage>  with SingleTickerProviderSt
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       const Text('狼友推荐的第 ',style:  TextStyle(color: Colors.black,fontSize: 13,),),
-                      Text('${wolfFriend.id*1}',style: const TextStyle(color: Colors.red,fontSize: 22,fontWeight: FontWeight.bold),),
+                      Text('${wolfFriend.id*1}',style: const TextStyle(color: Colors.red,fontSize: 18,fontWeight: FontWeight.bold),),
                       const Text(' 部大片',style:  TextStyle(color: Colors.black,fontSize: 13,),),
                     ]
                 ),
@@ -322,7 +322,7 @@ class _WolfFriendPage extends State<WolfFriendPage>  with SingleTickerProviderSt
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     const Text('共 ',style:  TextStyle(color: Colors.black,fontSize: 13),),
-                    Text('${wolfFriend.recommends * 1}',style: const TextStyle(color: Colors.red,fontSize: 22,fontWeight: FontWeight.bold),),
+                    Text('${wolfFriend.recommends * 1}',style: const TextStyle(color: Colors.red,fontSize: 18,fontWeight: FontWeight.bold),),
                     const Text(' 人推荐',style:  TextStyle(color: Colors.black,fontSize: 13,),),
                   ]
                 ),

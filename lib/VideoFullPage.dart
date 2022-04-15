@@ -22,6 +22,9 @@ class _VideoFullState extends State<VideoFullPage> {
   bool showControls = false;
   bool _isAlive = true;
 
+  Timer? _hideTimer;
+  double dragValue = 0;
+  bool _hideStuff = false;
   @override
   void initState() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
@@ -60,23 +63,25 @@ class _VideoFullState extends State<VideoFullPage> {
     var d = Duration(seconds:seconds);
     List<String> parts = d.toString().split('.');
     return parts[0];
-    // if (seconds < 60) {
-    //   return '00:${seconds}';
-    // } else {
-    //   int i = seconds ~/ 60;
-    //   double d = seconds / 60;
-    //   if (d < 60) {
-    //     return '$i:${((d - i) * 60).toStringAsFixed(0)}';
-    //   } else {
-    //     int ih = i ~/ 60;
-    //     double id = i / 60;
-    //     return '$ih:${((id - ih) * 60).toStringAsFixed(0)}:${((d - i) * 60).toStringAsFixed(0)}';
-    //   }
-    // }
   }
+  void _cancelAndRestartTimer() {
+    _hideTimer?.cancel();
+    _startHideTimer();
 
+    setState(() {
+      _hideStuff = false;
+    });
+  }
+  void _startHideTimer() {
+    _hideTimer = Timer(const Duration(seconds: 3), () {
+      setState(() {
+        _hideStuff = true;
+      });
+    });
+  }
   @override
   Widget build(BuildContext context) {
+
     return CupertinoPageScaffold(
       child: Container(
         color: Colors.black,
@@ -85,198 +90,280 @@ class _VideoFullState extends State<VideoFullPage> {
             Center(
               child: Hero(
                 tag: "player",
-                child: AspectRatio(
-                  aspectRatio: widget.controller.value.aspectRatio,
-                  child: Stack(
-                    alignment: Alignment.bottomCenter,
-                    children: [
-                      VideoPlayer(_controller),
-                      // ClosedCaption(text: _controller.value.caption.text),
-                      AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 50),
-                        reverseDuration: const Duration(milliseconds: 200),
-                        child: _controller.value.isPlaying
-                            ? Container(
-                          // color: Colors.black54,
-                          margin: const EdgeInsets.all(40),
-                          child: InkWell(
-                              onTap: () {
-                                _showControls();
-                              },
-                              child: Container()),
-                        )
-                            : Center(
-                            child: InkWell(
+                child: GestureDetector(
+                    onHorizontalDragUpdate: (detail) {
+                      setState(() {
+                        _hideStuff = true;
+                      });
+                      dragValue += detail.delta.dx;
+                    },
+                    onHorizontalDragEnd: (detail) {
+                      setState(() {
+                        _hideStuff = false;
+                      });
+                      _controller.seekTo(Duration(seconds: _controller.value.position.inSeconds + dragValue.floor()));
+                    },
+                    onHorizontalDragStart: (details) {
+                      dragValue = 0;
+                    },
+                    onTap: () => _cancelAndRestartTimer(),
+                    child: AspectRatio(
+                      aspectRatio: widget.controller.value.aspectRatio,
+                      child: Stack(
+                        alignment: Alignment.bottomCenter,
+                        children: [
+                          VideoPlayer(_controller),
+                          // ClosedCaption(text: _controller.value.caption.text),
+                          _hideStuff ?
+                          Container(
+                            color: Colors.black26,
+                            alignment: Alignment.center,
+                            width: (MediaQuery.of(context).size.width),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  // width: (MediaQuery.of(context).size.width / 3),
+                                  margin: const EdgeInsets.all(10),
+                                  color: Colors.black12,
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        '${_inSecondsTostring(Duration(seconds: _controller.value.position.inSeconds + dragValue.floor()).inSeconds)}/${_inSecondsTostring(value.duration.inSeconds)}',
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 30),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ) : Container(),
+                          AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 50),
+                            reverseDuration: const Duration(milliseconds: 200),
+                            child: _controller.value.isPlaying
+                                ? Container(
+                              // color: Colors.black54,
+                              margin: const EdgeInsets.all(40),
+                              child: InkWell(
+                                  onTap: () {
+                                    _showControls();
+                                  },
+                                  child: Container()),
+                            )
+                                : InkWell(
                               onTap: () {
                                 setState(() {
                                   _controller.play();
                                 });
                               },
-                              child: Container(
-                                color: Colors.black26,
-                                child: const Icon(
-                                  Icons.play_arrow,
-                                  color: Colors.white,
-                                  size: 100.0,
-                                  semanticLabel: 'Play',
+                              child: Center(
+                                child: Container(
+                                  color: Colors.black26,
+                                  child: const Icon(
+                                    Icons.play_arrow,
+                                    color: Colors.white,
+                                    size: 100.0,
+                                    semanticLabel: 'Play',
+                                  ),
                                 ),
                               ),
-                            )),
-                      ),
-                      showControls
-                          ? AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 50),
-                        reverseDuration:
-                        const Duration(milliseconds: 200),
-                        child: Container(
-                          width: ((MediaQuery.of(context).size.width) / 1.0),
-                          color: Colors.black26,
-                          // color: Colors.black,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(widget.title!,style: const TextStyle(color: Colors.white,fontSize: 15),)
-                            ],
+                            ),
                           ),
-                        ),
-                      ) : Container(),
-                      showControls
-                          ? AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 50),
-                        reverseDuration:
-                        const Duration(milliseconds: 200),
-                        child: Container(
-                          color: Colors.black26,
-                          height: 60,
-                          // color: Colors.black,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              VideoProgressIndicator(
-                                _controller,
-                                allowScrubbing: true,
-                                padding: const EdgeInsets.only(
-                                    left: 10, top: 15, right: 10),
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                          showControls
+                              ? AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 50),
+                            reverseDuration:
+                            const Duration(milliseconds: 200),
+                            child: Container(
+                              width: ((MediaQuery.of(context).size.width) / 1.0),
+                              color: Colors.black26,
+                              // color: Colors.black,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  Row(
-                                    children: [
-                                      InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            _controller.value.isPlaying
-                                                ? _controller.pause()
-                                                : _controller.play();
-                                          });
-                                        },
-                                        child: Icon(
-                                          _controller.value.isPlaying
-                                              ? Icons.pause
-                                              : Icons.play_arrow,
-                                          color: Colors.white,
-                                          size: 36.0,
-                                          semanticLabel: 'Play',
-                                        ),
-                                      ),
-                                      value.volume > 0
-                                          ? InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            _controller
-                                                .setVolume(0);
-                                          });
-                                        },
-                                        child: const Icon(
-                                          Icons.volume_up,
-                                          color: Colors.white,
-                                          size: 36.0,
-                                          semanticLabel: 'Play',
-                                        ),
-                                      )
-                                          : InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            _controller
-                                                .setVolume(100);
-                                          });
-                                        },
-                                        child: const Icon(
-                                          Icons.volume_off,
-                                          color: Colors.white,
-                                          size: 36.0,
-                                          semanticLabel: 'Play',
-                                        ),
-                                      ),
-                                      Container(
-                                        margin: const EdgeInsets.only(
-                                            left: 10),
-                                        color: Colors.transparent,
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              '${_inSecondsTostring(value.position.inSeconds)}/${_inSecondsTostring(value.duration.inSeconds)}',
-                                              style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 12),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
+                                  Text(widget.title!,style: const TextStyle(color: Colors.white,fontSize: 15),)
+                                ],
+                              ),
+                            ),
+                          ) : Container(),
+                          showControls
+                              ? AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 50),
+                            reverseDuration:
+                            const Duration(milliseconds: 200),
+                            child: Container(
+                              color: Colors.black26,
+                              height: 60,
+                              // color: Colors.black,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  VideoProgressIndicator(
+                                    _controller,
+                                    allowScrubbing: true,
+                                    padding: const EdgeInsets.only(
+                                        left: 10,  right: 10),
                                   ),
                                   Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Container(
-                                        margin: const EdgeInsets.only(right: 10),
-                                        child: InkWell(
-                                          onTap: () {
-                                            setState(() {
-                                              if (isLand) {
-                                                isLand = !isLand;
-                                                AutoOrientation
-                                                    .portraitUpMode();
-                                              } else {
-                                                isLand = !isLand;
-                                                AutoOrientation
-                                                    .landscapeLeftMode();
-                                              }
-                                            });
-                                          },
-                                          child: const Icon(
-                                            Icons.screen_rotation_outlined,
-                                            color: Colors.white,
-                                            size: 27.0,
-                                            semanticLabel: 'Play',
+                                      Row(
+                                        children: [
+                                          InkWell(
+                                            onTap: () {
+                                              setState(() {
+                                                _controller.value.isPlaying
+                                                    ? _controller.pause()
+                                                    : _controller.play();
+                                              });
+                                            },
+                                            child: Icon(
+                                              _controller.value.isPlaying
+                                                  ? Icons.pause
+                                                  : Icons.play_arrow,
+                                              color: Colors.white,
+                                              size: 36.0,
+                                              semanticLabel: 'Play',
+                                            ),
                                           ),
-                                        ),
+                                          value.volume > 0
+                                              ? InkWell(
+                                            onTap: () {
+                                              setState(() {
+                                                _controller
+                                                    .setVolume(0);
+                                              });
+                                            },
+                                            child: const Icon(
+                                              Icons.volume_up,
+                                              color: Colors.white,
+                                              size: 36.0,
+                                              semanticLabel: 'Play',
+                                            ),
+                                          )
+                                              : InkWell(
+                                            onTap: () {
+                                              setState(() {
+                                                _controller
+                                                    .setVolume(100);
+                                              });
+                                            },
+                                            child: const Icon(
+                                              Icons.volume_off,
+                                              color: Colors.white,
+                                              size: 36.0,
+                                              semanticLabel: 'Play',
+                                            ),
+                                          ),
+                                          Container(
+                                            margin: const EdgeInsets.only(
+                                                left: 10),
+                                            color: Colors.transparent,
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  '${_inSecondsTostring(value.position.inSeconds)}/${_inSecondsTostring(value.duration.inSeconds)}',
+                                                  style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 12),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      InkWell(
-                                        onTap: () {
-                                          _isAlive = false;
-                                          Navigator.pop(context);
-                                        },
-                                        child: const Icon(
-                                          Icons.fit_screen,
-                                          color: Colors.white,
-                                          size: 36.0,
-                                          semanticLabel: 'Play',
-                                        ),
+                                      Row(
+                                        children: [
+                                          Container(
+                                            margin: const EdgeInsets.only(right: 10),
+                                            child: InkWell(
+                                              onTap: () {
+                                                setState(() {
+                                                  if (isLand) {
+                                                    isLand = !isLand;
+                                                    AutoOrientation
+                                                        .portraitUpMode();
+                                                  } else {
+                                                    isLand = !isLand;
+                                                    AutoOrientation
+                                                        .landscapeLeftMode();
+                                                  }
+                                                });
+                                              },
+                                              child: const Icon(
+                                                Icons.screen_rotation_outlined,
+                                                color: Colors.white,
+                                                size: 27.0,
+                                                semanticLabel: 'Play',
+                                              ),
+                                            ),
+                                          ),
+                                          InkWell(
+                                            onTap: () {
+                                              _isAlive = false;
+                                              Navigator.pop(context);
+                                            },
+                                            child: const Icon(
+                                              Icons.fit_screen,
+                                              color: Colors.white,
+                                              size: 36.0,
+                                              semanticLabel: 'Play',
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
                                 ],
                               ),
-                            ],
-                          ),
-                        ),
-                      )
-                          : VideoProgressIndicator(_controller,
-                          allowScrubbing: true,padding: const EdgeInsets.only(top: 20),),
-                    ],
-                  ),
+                            ),
+                          )
+                              : VideoProgressIndicator(_controller,
+                            allowScrubbing: true,padding: const EdgeInsets.only(top: 5),),
+                          // showControls ? Row(
+                          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //   children: [
+                          //     InkWell(
+                          //       onTap: () {
+                          //         _controller.seekTo(Duration(seconds: _controller.value.position.inSeconds - 15));
+                          //       },
+                          //       child: Center(
+                          //         child: Container(
+                          //           // color: Colors.black26,
+                          //           child: const Icon(
+                          //             Icons.arrow_left_sharp,
+                          //             color: Colors.white,
+                          //             size: 150.0,
+                          //             semanticLabel: 'Play',
+                          //           ),
+                          //         ),
+                          //       ),
+                          //     ),
+                          //     InkWell(
+                          //       onTap: () {
+                          //         _controller.seekTo(Duration(seconds: _controller.value.position.inSeconds + 15));
+                          //       },
+                          //       child: Center(
+                          //         child: Container(
+                          //           // color: Colors.black26,
+                          //           child: const Icon(
+                          //             Icons.arrow_right_sharp,
+                          //             color: Colors.white,
+                          //             size: 150.0,
+                          //             semanticLabel: 'Play',
+                          //           ),
+                          //         ),
+                          //       ),
+                          //     ),
+                          //   ],
+                          // ) : Container(),
+                        ],
+                      ),
+                    ),
                 ),
               ),
             ),

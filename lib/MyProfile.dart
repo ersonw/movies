@@ -303,21 +303,24 @@ class _MyProfile extends State<MyProfile> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Padding(padding: EdgeInsets.only(top: 10,left: 5)),
-                        // InkWell(
-                        //   onTap: () => _enterGold(context),
-                        //   child: Column(
-                        //     children: [
-                        //       Text(Global.getNumbersToChinese(userModel.user.gold),
-                        //         style: const TextStyle(
-                        //           fontSize: 18, ),
-                        //       ),
-                        //       const Text(
-                        //         '金币',
-                        //         style: TextStyle(fontSize: 12, color: Colors.grey),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
+                        InkWell(
+                          // onTap: () => _enterGold(context),
+                          onTap: (){
+                            Global.showWebColoredToast("暂未开放");
+                          },
+                          child: Column(
+                            children: [
+                              Text(Global.getNumbersToChinese(userModel.user.gold),
+                                style: const TextStyle(
+                                  fontSize: 18, ),
+                              ),
+                              const Text(
+                                '金币',
+                                style: TextStyle(fontSize: 12, color: Colors.grey),
+                              ),
+                            ],
+                          ),
+                        ),
                         InkWell(
                           onTap: () => _enterDiamond(context),
                           child: Column(
@@ -461,7 +464,7 @@ class _MyProfile extends State<MyProfile> {
                       children: [
                         InkWell(
                           onTap: () {
-                            if(userModel.user.invite == null){
+                            if(userModel.user.phone == null || userModel.user.phone == ''){
                               Navigator.push(Global.MainContext, SlideRightRoute(page: const BindPhonePage())).then((value) => setState(() {Global.getUserInfo();}));
                               ShowAlertDialog(Global.MainContext, '友情提示','为了您的账号安全，未绑定手机号无法进行推广哟');
                               return;

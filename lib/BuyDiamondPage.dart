@@ -13,6 +13,7 @@ import 'CrateOrderPage.dart';
 import 'HttpManager.dart';
 import 'ImageIcons.dart';
 import 'OnlinePayPage.dart';
+import 'SlideRightRoute.dart';
 import 'data/OnlinePay.dart';
 import 'functions.dart';
 import 'image_icon.dart';
@@ -68,25 +69,27 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
         navigationBar: CupertinoNavigationBar(
           trailing: Row(
               mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context, rootNavigator: true).push<void>(
-                      CupertinoPageRoute(
-                        // title: '确认订单',
-                        builder: (context) => const BuyDiamondRecordsPage(),
-                      ),
-                    );
-                  },
-                  child: const Text(
-                    "充值记录",
-                    style: TextStyle(color: Colors.black, fontSize: 18),
-                  ),
-                ),
+              children: const [
+                // TextButton(
+                //   onPressed: () {
+                //     Navigator.of(context, rootNavigator: true).push<void>(
+                //       CupertinoPageRoute(
+                //         // title: '确认订单',
+                //         builder: (context) => const BuyDiamondRecordsPage(),
+                //       ),
+                //     );
+                //   },
+                //   child: const Text(
+                //     "充值记录",
+                //     style: TextStyle(color: Colors.black, fontSize: 18),
+                //   ),
+                // ),
+                Text('我的钻石',style: TextStyle(color: Colors.black, fontSize: 21,fontWeight: FontWeight.bold),),
               ]),
         ),
+        // navigationBar: const CupertinoNavigationBar(),
         child: Container(
           width: MediaQuery.of(context).size.width,
           decoration: const BoxDecoration(
@@ -149,92 +152,7 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
                         // ),
                       ],
                     ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 20,bottom: 20,left: 10,right: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              Navigator.of(context, rootNavigator: true).push<void>(
-                                CupertinoPageRoute(
-                                  title: '钻石提现',
-                                  builder: (context) =>  WithdrawalManagementPage(
-                                    type: WithdrawalManagementPage.WITHDRAWAL_DIAMOND,
-                                  ),
-                                ),
-                              );
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                gradient: const LinearGradient(
-                                  colors: [
-                                    // Colors.redAccent,
-                                    Color(0xFFFC8A7D),
-                                    Color(0xffff0010),
-                                  ],
-                                  begin: Alignment.centerLeft,
-                                  end: Alignment.centerRight,
-                                ),
-                                borderRadius: const BorderRadius.all(Radius.circular(30)),
-                                border: Border.all(width: 1.0, color: Colors.black12),
-                              ),
-                              child: Container(
-                                margin: const EdgeInsets.only(top:10,bottom: 10, left:30,right: 30),
-                                child: Row(
-                                  children: [
-                                    Image.asset(ImageIcons.iconCardList, width: 20),
-                                    const Text(
-                                      '钻石提现',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 18),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () {
-                              Navigator.of(context, rootNavigator: true).push<void>(
-                                CupertinoPageRoute(
-                                  // title: '确认订单',
-                                  builder: (context) => const DiamondRecordsPage(),
-                                ),
-                              );
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                gradient: const LinearGradient(
-                                  colors: [
-                                    // Colors.redAccent,
-                                    Color(0xFFFC8A7D),
-                                    Color(0xffff0010),
-                                  ],
-                                  begin: Alignment.centerLeft,
-                                  end: Alignment.centerRight,
-                                ),
-                                borderRadius: const BorderRadius.all(Radius.circular(30)),
-                                border: Border.all(width: 1.0, color: Colors.black12),
-                              ),
-                              child: Container(
-                                margin: const EdgeInsets.only(top:10,bottom: 10, left:30,right: 30),
-                                child: Row(
-                                  children: [
-                                    Image.asset(ImageIcons.iconCoins, width: 20),
-                                    const Text(
-                                      '收支明细',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 18),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    const Padding(padding: EdgeInsets.only(top: 20)),
                   ],
                 ),
               ),
@@ -249,6 +167,93 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
               //         child: Text('代理充值'),
               //       )
               //     ]),
+              Container(
+                margin: const EdgeInsets.only(top: 20,bottom: 20,left: 10,right: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        // Navigator.of(context, rootNavigator: true).push<void>(
+                        //   CupertinoPageRoute(
+                        //     title: '钻石提现',
+                        //     builder: (context) =>  WithdrawalManagementPage(
+                        //       type: WithdrawalManagementPage.WITHDRAWAL_DIAMOND,
+                        //     ),
+                        //   ),
+                        // );
+                        Navigator.push(Global.MainContext, SlideRightRoute(page: const BuyDiamondRecordsPage())).then((value) => setState(() {Global.getUserInfo();}));
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [
+                              // Colors.redAccent,
+                              Color(0xFFFC8A7D),
+                              Color(0xffff0010),
+                            ],
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                          ),
+                          borderRadius: const BorderRadius.all(Radius.circular(30)),
+                          border: Border.all(width: 1.0, color: Colors.black12),
+                        ),
+                        child: Container(
+                          margin: const EdgeInsets.only(top:10,bottom: 10, left:30,right: 30),
+                          child: Row(
+                            children: [
+                              Image.asset(ImageIcons.iconCardList, width: 20),
+                              const Text(
+                                '充值记录',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 18),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context, rootNavigator: true).push<void>(
+                          CupertinoPageRoute(
+                            // title: '确认订单',
+                            builder: (context) => const DiamondRecordsPage(),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [
+                              // Colors.redAccent,
+                              Color(0xFFFC8A7D),
+                              Color(0xffff0010),
+                            ],
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                          ),
+                          borderRadius: const BorderRadius.all(Radius.circular(30)),
+                          border: Border.all(width: 1.0, color: Colors.black12),
+                        ),
+                        child: Container(
+                          margin: const EdgeInsets.only(top:10,bottom: 10, left:30,right: 30),
+                          child: Row(
+                            children: [
+                              Image.asset(ImageIcons.iconCoins, width: 20),
+                              const Text(
+                                '收支明细',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 18),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               Expanded(
                 child: _buildBody(),
               ),
