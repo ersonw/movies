@@ -43,13 +43,13 @@ class _CashInGamePage extends State<CashInGamePage> {
     });
   }
   Future<void> _onRefresh() async {
-    setState(() {
-      loading = true;
-    });
     _init();
     _getBalance();
   }
   _init() async {
+    setState(() {
+      loading = true;
+    });
     Map<String, dynamic> parm = {};
     String? result = (await DioManager().requestAsync(
         NWMethod.GET, NWApi.getCashIns, {"data": jsonEncode(parm)}));
@@ -92,10 +92,6 @@ class _CashInGamePage extends State<CashInGamePage> {
               onRefresh: _onRefresh,
               child: ListView(
                   children: [
-                    Center(child: Container(
-                      // margin: const EdgeInsets.only(top: 30, bottom: 30),
-                      child: loading ? Image.asset(ImageIcons.Loading_icon,width: 150,) : Container(),
-                    ),),
                     Container(
                       margin: const EdgeInsets.only(left:20,right: 20),
                       child: Row(
@@ -278,6 +274,10 @@ class _CashInGamePage extends State<CashInGamePage> {
                       ),
                     ),
                     const Padding(padding: EdgeInsets.only(top: 20)),
+                    Center(child: Container(
+                      // margin: const EdgeInsets.only(top: 30, bottom: 30),
+                      child: loading ? Image.asset(ImageIcons.Loading_icon,width: 150,) : Container(),
+                    ),),
                     _buildList(),
                     const Padding(padding: EdgeInsets.only(top: 20)),
                     Container(

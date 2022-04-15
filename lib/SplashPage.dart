@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:movies/global.dart';
-
 import 'BottomAppBar.dart';
 import 'HttpManager.dart';
 import 'ImageIcons.dart';
@@ -77,7 +76,8 @@ class SplashScreenState extends State<SplashPage> {
         color: Colors.white,
         image: _list.isEmpty ? null : (sIndex < (_list.length) ?
         DecorationImage(
-          image:NetworkImage(_list[sIndex].image),
+          // image:NetworkImage(_list[sIndex].image),
+          image: NetworkImage( _list[sIndex].image),
           fit: BoxFit.fill,
         ) : null),
       ),

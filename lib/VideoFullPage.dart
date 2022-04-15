@@ -9,7 +9,7 @@ import 'package:video_player/video_player.dart';
 class VideoFullPage extends StatefulWidget {
   final VideoPlayerController controller;
   String? title;
-  VideoFullPage(this.controller,{this.title});
+  VideoFullPage(this.controller,{Key? key, this.title}) : super(key: key);
 
   @override
   _VideoFullState createState() => _VideoFullState();
@@ -57,19 +57,22 @@ class _VideoFullState extends State<VideoFullPage> {
   }
 
   _inSecondsTostring(int seconds) {
-    if (seconds < 60) {
-      return '00:${seconds}';
-    } else {
-      int i = seconds ~/ 60;
-      double d = seconds / 60;
-      if (d < 60) {
-        return '$i:${((d - i) * 60).toStringAsFixed(0)}';
-      } else {
-        int ih = i ~/ 60;
-        double id = i / 60;
-        return '$ih:${((id - ih) * 60).toStringAsFixed(0)}:${((d - i) * 60).toStringAsFixed(0)}';
-      }
-    }
+    var d = Duration(seconds:seconds);
+    List<String> parts = d.toString().split('.');
+    return parts[0];
+    // if (seconds < 60) {
+    //   return '00:${seconds}';
+    // } else {
+    //   int i = seconds ~/ 60;
+    //   double d = seconds / 60;
+    //   if (d < 60) {
+    //     return '$i:${((d - i) * 60).toStringAsFixed(0)}';
+    //   } else {
+    //     int ih = i ~/ 60;
+    //     double id = i / 60;
+    //     return '$ih:${((id - ih) * 60).toStringAsFixed(0)}:${((d - i) * 60).toStringAsFixed(0)}';
+    //   }
+    // }
   }
 
   @override

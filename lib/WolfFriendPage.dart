@@ -31,7 +31,7 @@ class _WolfFriendPage extends State<WolfFriendPage>  with SingleTickerProviderSt
   int type = 1;
   int page = 1;
   int total = 1;
-  bool loading = false;
+  bool loading = true;
   // bool post = false;
   @override
   void initState() {
@@ -65,13 +65,15 @@ class _WolfFriendPage extends State<WolfFriendPage>  with SingleTickerProviderSt
     PageStorage.of(context)?.writeState(context, _innerTabController.index, identifier: _tabKey);
   }
   _init() async{
-    // if(post) return;
     if(page > total) {
       setState(() {
         page--;
       });
       return;
     }
+    setState(() {
+      loading = true;
+    });
     String ty = '';
     switch(type){
       case 0:

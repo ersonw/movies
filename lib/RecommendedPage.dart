@@ -25,6 +25,7 @@ class RecommendedPage extends StatefulWidget {
 class _RecommendedPage extends State<RecommendedPage> {
   List<Recommended> _recommendeds = [];
   DateTime _dateTime = DateTime.now();
+  bool loading = true;
 
   @override
   void initState() {
@@ -37,12 +38,17 @@ class _RecommendedPage extends State<RecommendedPage> {
     return '${_dateTime.year}-${_dateTime.month}-${_dateTime.day}';
   }
   _init()async{
+    setState(() {
+      loading = true;
+    });
     Map<String, dynamic> parm = {
       'date': _getDate(),
     };
     String? result = (await DioManager().requestAsync(
         NWMethod.GET, NWApi.Recommends, {"data": jsonEncode(parm)}));
-    // print(result);
+    setState(() {
+      loading = false;
+    });
     if (result != null) {
       Map<String, dynamic> map = jsonDecode(result);
       List<Recommended> list = (map['list'] as List).map((e) => Recommended.formJson(e)).toList();
@@ -264,6 +270,10 @@ class _RecommendedPage extends State<RecommendedPage> {
                                 )
                               ],
                             ),
+                            Center(child: Container(
+                              // margin: const EdgeInsets.only(top: 30, bottom: 30),
+                              child: loading ? Image.asset(ImageIcons.Loading_icon,width: 150,) : Container(),
+                            ),),
                             Expanded(
                               child: ListView.builder(
                                 itemBuilder: _buildItem,

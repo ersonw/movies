@@ -99,15 +99,14 @@ class Global {
   static bool mounted = false;
   static String? link;
   static bool isLoading = false;
-  static double version = 1.0;
+  static double version = 0.2;
   static late PackageInfo packageInfo;
   //初始化全局信息，会在APP启动时执行
   static Future init() async {
     WidgetsFlutterBinding.ensureInitialized();
     await initPlatformStateForStringUniLinks();
     packageInfo = await PackageInfo.fromPlatform();
-    // version = double.parse(packageInfo.version);
-    // print(jsonEncode(packageInfo.version));
+    print(packageInfo.buildNumber);
     loadingChangeNotifier.addListener(() {
       if(isLoading){
         Navigator.push(MainContext, DialogRouter(LoadingDialog(false)));
@@ -309,9 +308,9 @@ class Global {
       await requestPhotosPermission();
       //DIO网络访问
       try {
-        Response response = await Dio().get('https://github1.oss-cn-hongkong.aliyuncs.com/ios/app-release.config');
+        // Response response = await Dio().get('https://github1.oss-cn-hongkong.aliyuncs.com/ios/app-release.config');
+        Response response = await Dio().get('http://23porn.oss-accelerate.aliyuncs.com/app-release.config');
         // Response response = await Dio().get('https://github1.oss-cn-hongkong.aliyuncs.com/ios/app-release.config.decode');
-        // Response response = await Dio().get('http://23porn.oss-accelerate.aliyuncs.com/app-release.config');
         // Response response = await Dio().get('http://23porn.oss-accelerate.aliyuncs.com/app-release.config.decode');
         // print(response);
         String? result = response.data.toString();
@@ -343,6 +342,9 @@ class Global {
     // }
     return false;
   }
+  // static ImageProvider getImage(String url){
+  //
+  // }
   static Future<bool> _initNetwork() async {
     try {
       String hostname = 'baidu.com';
@@ -642,22 +644,9 @@ class Global {
 
   }
   static String inSecondsTostring(int seconds) {
-    if (seconds < 60) {
-      return '00:${seconds < 10 ? '0$seconds' : seconds}';
-    } else {
-      int i = seconds ~/ 60;
-      double d = seconds / 60;
-      if (d < 60) {
-        int t = ((d - i) * 60).toInt();
-        return '${i < 10 ? '0$i': i}:${t < 10 ? '0$t': t}';
-      } else {
-        int ih = i ~/ 60;
-        double id = i / 60;
-        int t1 = ((id - ih) * 60).toInt();
-        int t2 = ((d - i) * 60).toInt();
-        return '${ih < 10 ? '0$ih' : ih }:${t1 < 10 ? '0$t1' : t1}:${t2 < 10 ? '0$t2' : t2}';
-      }
-    }
+    var d = Duration(seconds:seconds);
+    List<String> parts = d.toString().split('.');
+    return parts[0];
   }
   static String getTimeToString(int t){
     DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(t);
@@ -807,14 +796,15 @@ class Global {
   static Future<void> checkVersion() async {
     DioManager().request(NWMethod.GET, NWApi.checkVersion, params: {},
         success: (data) {
-      // print("success data = $data == ${configModel.config.hash}");
+      // print("success data = $data");
       if (data != null && data.isNotEmpty) {
         Config config = Config.fromJson(jsonDecode(data));
         if (config.hash != (configModel.config.hash)) {
           getConfig();
         }
         if (MainContext != null) {
-          if (config.version.compareTo(profile.config.version) > 0) {
+          if (int.parse(packageInfo.buildNumber) == config.version) {
+          }else{
             String url = '';
             if(Platform.isIOS){
               // url = 'itms-services://?action=download-manifest&url=${config.urlIos}';
@@ -825,7 +815,8 @@ class Global {
             ShowOptionDialog(
                 MainContext,
                 '新版本上线',
-                '当前版本：${profile.config.version}    最新版本:${config.version}\n${config.text}',
+                // '当前版本：${packageInfo.version}    最新版本: 1.${config.version / 10}\n${config.text}',
+                '最新版本: 1.${config.version / 10}\n${config.text}',
                 url,
                 config.force);
           }

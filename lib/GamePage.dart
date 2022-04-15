@@ -34,6 +34,7 @@ class _GamePage extends State<GamePage> with SingleTickerProviderStateMixin{
   bool _refresh = false;
   bool alive = true;
   User _user = userModel.user;
+  bool loading = true;
 
   @override
   void initState() {
@@ -54,6 +55,9 @@ class _GamePage extends State<GamePage> with SingleTickerProviderStateMixin{
     });
   }
   void _initGame()async{
+    setState(() {
+      loading = true;
+    });
     Map<String, dynamic> parm = { };
     String? result = (await DioManager().requestAsync(
         NWMethod.GET, NWApi.getGames, {"data": jsonEncode(parm)}));
@@ -62,6 +66,9 @@ class _GamePage extends State<GamePage> with SingleTickerProviderStateMixin{
        _list = (jsonDecode(result)['list'] as List).map((e) => Game.formJson(e)).toList();
      });
     }
+    setState(() {
+      loading = false;
+    });
   }
   void _initRecords()async{
     Map<String, dynamic> parm = { };
@@ -343,7 +350,10 @@ class _GamePage extends State<GamePage> with SingleTickerProviderStateMixin{
                 margin: const EdgeInsets.only(left: 5,),
                 child: const Text('全部游戏',style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold)),
               ),
-              // const Padding(padding: EdgeInsets.only(top: 10)),
+              Center(child: Container(
+                // margin: const EdgeInsets.only(top: 30, bottom: 30),
+                child: loading ? Image.asset(ImageIcons.Loading_icon,width: 150,) : Container(),
+              ),),
               _buildMore(),
               const Padding(padding: EdgeInsets.only(top: 30)),
             ],

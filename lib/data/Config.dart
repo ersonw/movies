@@ -11,7 +11,7 @@ import '../global.dart';
 
 class Config {
   // double version = double.parse(Global.packageInfo.version);
-  double version = 0.1;
+  int version = 0;
   String hash = '';
   String text = '';
   bool autoLogin = false;
@@ -50,7 +50,7 @@ class Config {
         shareDomain = json['shareDomain'],
         activityUrl = json['activityUrl'],
         force = json['force'] ?? false,
-        version = json['version'] ?? 1.0,
+        version = json['version'] ?? 0,
         autoLogin = json['autoLogin'] ?? false,
         bootImage = json['bootImage'],
         bootLock = json['bootLock'] ?? false,

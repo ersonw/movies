@@ -58,8 +58,8 @@ class _BottomAppBarState extends State<BottomAppBarState> {
     }
   }
   _init(BuildContext context){
-    if(Global.initMain) return;
     Global.MainContext = context;
+    if(Global.initMain) return;
     Global.checkVersion();
     // Global.handlerChannel();
     Timer(const Duration(milliseconds: 100), () {

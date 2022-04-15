@@ -48,7 +48,7 @@ class _PlayerPage extends State<PlayerPage> {
   void initState() {
     // TODO: implement initState
     Wakelock.enable();
-    _controller = VideoPlayerController.asset('');
+    _controller = VideoPlayerController.asset(ImageIcons.loading_38959);
     _initializeVideoPlayerFuture = _controller.initialize();
     _controller.setLooping(true);
     value = _controller.value;

@@ -45,18 +45,20 @@ class _CashInGameRecordPage extends State<CashInGameRecordPage> {
       });
       return;
     }
+    setState(() {
+      loading = true;
+    });
     Map<String, dynamic> parm = {
       'page': page,
     };
     String? result = (await DioManager().requestAsync(
         NWMethod.GET, NWApi.getCashInOrders, {"data": jsonEncode(parm)}));
-    if (result == null) {
-      return;
-    }
-    // print(result);
     setState(() {
       loading = false;
     });
+    if (result == null) {
+      return;
+    }
     Map<String, dynamic> map = jsonDecode(result);
     total = map['total'] > 0 ? map['total'] : 1;
     List<CashInOrder> list = (map['list'] as List).map((e) => CashInOrder.formJson(e)).toList();
@@ -82,10 +84,6 @@ class _CashInGameRecordPage extends State<CashInGameRecordPage> {
                   child: ListView(
                       controller: _controller,
                       children: [
-                        Center(child: Container(
-                          // margin: const EdgeInsets.only(top: 30, bottom: 30),
-                          child: loading ? Image.asset(ImageIcons.Loading_icon,width: 150,) : Container(),
-                        ),),
                         Container(
                           margin: const EdgeInsets.only(left: 20, right: 20),
                           child: Row(children: [
@@ -113,6 +111,10 @@ class _CashInGameRecordPage extends State<CashInGameRecordPage> {
                           ]),
                         ),
                         const Padding(padding: EdgeInsets.only(top: 20)),
+                        Center(child: Container(
+                          // margin: const EdgeInsets.only(top: 30, bottom: 30),
+                          child: loading ? Image.asset(ImageIcons.Loading_icon,width: 150,) : Container(),
+                        ),),
                         _buildList(),
                       ]),
                 ),

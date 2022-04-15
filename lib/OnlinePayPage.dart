@@ -66,7 +66,7 @@ class OnlinePayPage extends Dialog {
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.network(pay.iconImage,width: 27,),
+                  Image.network(pay.title.contains('微信') ? ImageIcons.wechat : ImageIcons.alipay,width: 27,),
                   const Padding(padding: EdgeInsets.only(left: 10)),
                    Text(pay.title,style: const TextStyle(fontSize: 15,color: Colors.white)),
                 ]
