@@ -15,6 +15,7 @@ import 'HttpManager.dart';
 import 'ImageIcons.dart';
 import 'package:image_picker/image_picker.dart';
 import 'LoginPage.dart';
+import 'QRCodeDialog.dart';
 import 'SlideRightRoute.dart';
 import 'global.dart';
 import 'network/NWApi.dart';
@@ -473,7 +474,9 @@ class _AccountManager extends State<AccountManager> {
           ),
           title: const Text('保存身份ID，账号防丢失',style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold)),
           // The Material switch has a platform adaptive constructor.
-          onTap: () => ShowCopyDialog(context, '身份卡信息', _user.uid),
+          onTap: () {
+            Navigator.push(context, DialogRouter(QRCodeDialog(_user.uid)));
+          },
         ),
       ],
     );

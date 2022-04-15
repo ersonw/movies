@@ -1318,13 +1318,9 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Icon(
-                    Icons.local_fire_department,
-                    color: Colors.red,
-                    size: 30,
-                  ),
-                  Text(
+                children:  [
+                  Image.asset(ImageIcons.jingpin,width: 30,),
+                  const Text(
                     '精品专区',
                     style: TextStyle(color: Colors.brown, fontSize: 12,fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
@@ -1346,13 +1342,9 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Icon(
-                    Icons.local_movies_outlined,
-                    color: Colors.black,
-                    size: 30,
-                  ),
-                  Text(
+                children: [
+                  Image.asset(ImageIcons.huiyuan,width: 30,),
+                  const Text(
                     'VIP专区',
                     style: TextStyle(color: Colors.brown, fontSize: 12,fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
@@ -1380,13 +1372,9 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Icon(
-                    Icons.assistant_rounded,
-                    color: Colors.purple,
-                    size: 30,
-                  ),
-                  Text(
+                children: [
+                  Image.asset(ImageIcons.nvyou,width: 30,),
+                  const Text(
                     '女优列表',
                     style: TextStyle(color: Colors.brown, fontSize: 12,fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
@@ -1414,12 +1402,9 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Text(
-                    '👑',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  Text(
+                children: [
+                  Image.asset(ImageIcons.bangdan,width: 30,),
+                  const Text(
                     '热门榜单',
                     style: TextStyle(color: Colors.brown, fontSize: 12,fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,

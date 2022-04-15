@@ -11,7 +11,7 @@ import '../global.dart';
 
 class Config {
   // double version = double.parse(Global.packageInfo.version);
-  double version = 1.0;
+  double version = 0.1;
   String hash = '';
   String text = '';
   bool autoLogin = false;

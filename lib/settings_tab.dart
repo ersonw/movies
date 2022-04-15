@@ -13,6 +13,7 @@ import 'package:movies/model/ConfigModel.dart';
 import 'package:movies/system_ttf.dart';
 
 import 'LockScreenCustom.dart';
+import 'QRCodeDialog.dart';
 import 'widgets.dart';
 
 class SettingsTab extends StatefulWidget {
@@ -145,7 +146,9 @@ class _SettingsTabState extends State<SettingsTab> {
           ),
           title: const Text('账号丢失找回'),
           // The Material switch has a platform adaptive constructor.
-          onTap: () => {},
+          onTap: ()  {
+          Navigator.push(context, DialogRouter(QRCodeDialog(userModel.user.uid)));
+          },
         ),
       ],
     );

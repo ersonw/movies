@@ -57,6 +57,7 @@ class _CashInGamePage extends State<CashInGamePage> {
       loading = false;
     });
     if (result != null) {
+      // print(result);
       Map<String, dynamic> map = jsonDecode(result);
       if (map != null && map["list"] != null){
         setState(() {
@@ -420,21 +421,39 @@ class _CashInGamePage extends State<CashInGamePage> {
                   ),
                 ),
               ),
-              cashIn.vip > 0 ? Container(
+              _checkVip() ? Container(
                 alignment: Alignment.center,
                 margin: const EdgeInsets.all(5),
-                child: Text('赠 ${cashIn.vip}天会员',style: const TextStyle(color: Colors.red,fontSize: 12)),
+                child: Text(_buildText(cashIn),style: const TextStyle(color: Colors.red,fontSize: 12)),
               ) :
-              Container(
-                alignment: Alignment.center,
-                margin: const EdgeInsets.all(5),
-                child: const Text('无赠送',style:  TextStyle(color: Colors.red,fontSize: 12)),
-              ),
+              Container(),
               // const Padding(padding: EdgeInsets.only(bottom: 10)),
             ]
         ),
       ),
     );
+  }
+  bool _checkVip(){
+    for (int i = 0; i < _list.length; i++){
+      if(_list[i].vip > 0){
+        return true;
+      }
+    }
+    return false;
+  }
+  _buildText(CashIn cashIn){
+    switch(cashIn.type){
+      case 0:
+        return '赠 ${cashIn.vip}天会员';
+      case 1:
+        return '赠 ${cashIn.vip}游戏币';
+      case 2:
+        return '赠 ${cashIn.vip}钻石';
+      case 3:
+        return '赠 ${cashIn.vip}金币';
+      default:
+        return '无赠送';
+    }
   }
   _crateOrder(int id) {
     Global.showPayDialog((int payId) async{

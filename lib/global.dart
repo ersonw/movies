@@ -99,11 +99,15 @@ class Global {
   static bool mounted = false;
   static String? link;
   static bool isLoading = false;
+  static double version = 1.0;
+  static late PackageInfo packageInfo;
   //初始化全局信息，会在APP启动时执行
   static Future init() async {
     WidgetsFlutterBinding.ensureInitialized();
     await initPlatformStateForStringUniLinks();
-    // packageInfo = await PackageInfo.fromPlatform();
+    packageInfo = await PackageInfo.fromPlatform();
+    // version = double.parse(packageInfo.version);
+    // print(jsonEncode(packageInfo.version));
     loadingChangeNotifier.addListener(() {
       if(isLoading){
         Navigator.push(MainContext, DialogRouter(LoadingDialog(false)));

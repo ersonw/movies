@@ -137,39 +137,24 @@ class _LoginPage extends State<LoginPage>{
             ),
             child: Container(
               margin: const EdgeInsets.all(10),
-              child: Column(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(top:10,bottom: 20),
-                    child: const Text('登录', style: TextStyle(color: Colors.black,fontSize: 18,fontWeight: FontWeight.bold),),
-                  ),
-                  Container(
-                    height: 45,
-                    // width: ((MediaQuery.of(context).size.width) / 1.2),
-                    margin: const EdgeInsets.only(top:10,bottom: 20, left: 25, right: 25),
-                    decoration: const BoxDecoration(
-                      border:
-                      Border(bottom: BorderSide(color: Colors.black12, width: 2)),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(top:10,bottom: 20),
+                      child: const Text('登录', style: TextStyle(color: Colors.black,fontSize: 18,fontWeight: FontWeight.bold),),
                     ),
-                    child: Expanded(
-                      flex: 2,
-                      child: TextField(
-                        controller: usernameEditingController,
-                        // style: TextStyle(color: Colors.white38),
-                        onEditingComplete: () {
-                        },
-                        keyboardType: TextInputType.text,
-                        decoration: const InputDecoration(
-                          hintText: '请输入邮箱账号',
-                          hintStyle: TextStyle(color: Colors.black26,fontSize: 14),
-                          border: InputBorder.none,
-                          filled: true,
-                          fillColor: Colors.transparent,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
+                    // Container(
+                    //   height: 45,
+                    //   // width: ((MediaQuery.of(context).size.width) / 1.2),
+                    //   margin: const EdgeInsets.only(top:10,bottom: 20, left: 25, right: 25),
+                    //   decoration: const BoxDecoration(
+                    //     border:
+                    //     Border(bottom: BorderSide(color: Colors.black12, width: 2)),
+                    //   ),
+                    //   child: ,
+                    // )
+                    Container(
                       height: 45,
                       // width: ((MediaQuery.of(context).size.width) / 1.6),
                       margin: const EdgeInsets.only(top:10,bottom: 20, left: 25, right: 25),
@@ -180,7 +165,35 @@ class _LoginPage extends State<LoginPage>{
                       child: Row(
                         children: [
                           Expanded(
-                            flex: 2,
+                            child: TextField(
+                              controller: usernameEditingController,
+                              // style: TextStyle(color: Colors.white38),
+                              onEditingComplete: () {
+                              },
+                              keyboardType: TextInputType.text,
+                              decoration: const InputDecoration(
+                                hintText: '请输入邮箱账号',
+                                hintStyle: TextStyle(color: Colors.black26,fontSize: 14),
+                                border: InputBorder.none,
+                                filled: true,
+                                fillColor: Colors.transparent,
+                              ),
+                            ),
+                          ),
+                        ]
+                      ),
+                    ),
+                    Container(
+                      height: 45,
+                      // width: ((MediaQuery.of(context).size.width) / 1.6),
+                      margin: const EdgeInsets.only(top:10,bottom: 20, left: 25, right: 25),
+                      decoration: const BoxDecoration(
+                        border:
+                        Border(bottom: BorderSide(color: Colors.black12, width: 2)),
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
                             child: TextField(
                               controller: passwordEditingController,
                               // style: TextStyle(color: Colors.white38),
@@ -207,55 +220,56 @@ class _LoginPage extends State<LoginPage>{
                           ),
                         ],
                       ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      SizedBox(
-                        width: 120,
-                        height: 45,
-                        child: TextButton(
-                          style: ButtonStyle(
-                            backgroundColor:
-                            MaterialStateProperty.all(Colors.red),
-                            shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                                    borderRadius:
-                                    BorderRadius.circular(30))),
-                          ),
-                          onPressed: () {
-                            _register();
-                          },
-                          child: const Text(
-                            '注册',
-                            style: TextStyle(color: Colors.white,fontSize: 18),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 120,
-                        height: 45,
-                        child: TextButton(
-                          style: ButtonStyle(
-                            backgroundColor:
-                            MaterialStateProperty.all(Colors.red),
-                            shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                                    borderRadius:
-                                    BorderRadius.circular(30))),
-                          ),
-                          onPressed: () {
-                            _login();
-                          },
-                          child: const Text(
-                            '登录',
-                            style: TextStyle(color: Colors.white,fontSize: 18),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        SizedBox(
+                          width: 120,
+                          height: 45,
+                          child: TextButton(
+                            style: ButtonStyle(
+                              backgroundColor:
+                              MaterialStateProperty.all(Colors.red),
+                              shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                      borderRadius:
+                                      BorderRadius.circular(30))),
+                            ),
+                            onPressed: () {
+                              _register();
+                            },
+                            child: const Text(
+                              '注册',
+                              style: TextStyle(color: Colors.white,fontSize: 18),
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                        SizedBox(
+                          width: 120,
+                          height: 45,
+                          child: TextButton(
+                            style: ButtonStyle(
+                              backgroundColor:
+                              MaterialStateProperty.all(Colors.red),
+                              shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                      borderRadius:
+                                      BorderRadius.circular(30))),
+                            ),
+                            onPressed: () {
+                              _login();
+                            },
+                            child: const Text(
+                              '登录',
+                              style: TextStyle(color: Colors.white,fontSize: 18),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           )
@@ -266,8 +280,8 @@ class _LoginPage extends State<LoginPage>{
   @override
   void dispose() {
     // TODO: implement dispose
-    usernameEditingController.dispose();
-    passwordEditingController.dispose();
+    // usernameEditingController.dispose();
+    // passwordEditingController.dispose();
     super.dispose();
   }
 }
