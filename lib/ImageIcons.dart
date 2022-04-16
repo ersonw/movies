@@ -6,6 +6,7 @@ class ImageIcons {
   static const String Loading_icon = 'assets/images/Loading_icon.gif';
   static const String tingji = 'assets/images/tingji.gif';
   static const String yue = 'assets/images/yue.jpg';
+  static const String bgImage = 'assets/images/bgImage.jpg';
   static const String jingpin = 'assets/images/48x48-01.png';
   static const String qrcodeBg = 'assets/images/photo_2022-04-14_23-16-33.png';
   static const String huiyuan = 'assets/images/48x48-02.png';

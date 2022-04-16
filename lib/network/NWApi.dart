@@ -19,6 +19,7 @@ class NWApi {
   static const getGames = '/api/getGames';
   static const getRecords = '/api/user/getRecords';
   static const getOnlinePays = '/api/getOnlinePays';
+  static const getGamePays = '/api/getGamePays';
   static const getCashIns = '/api/getCashIns';
   static const getGameBalance = '/api/user/getGameBalance';
   static const getBoots = '/api/getBoots';
@@ -36,6 +37,14 @@ class NWApi {
   static const getGoldOrder = '/api/user/getGoldOrder';
   static const getWithdrawal= '/api/user/getWithdrawal';
   static const addCard= '/api/user/addCard';
+  static const changeNickname= '/api/user/changeNickname';
+  static const unBindPhone= '/api/user/unBindPhone';
+  static const changeAvatar= '/api/user/changeAvatar';
+  static const changeBgImage= '/api/user/changeBgImage';
+  static const changeSex= '/api/user/changeSex';
+  static const changeAge= '/api/user/changeAge';
+  static const changeEmail= '/api/user/changeEmail';
+  static const changePassword= '/api/user/changePassword';
   static const getWithdrawalRecords= '/api/user/getWithdrawalRecords';
   static const getBalanceRecords= '/api/user/getBalanceRecords';
   static const Withdrawal = '/api/user/Withdrawal';

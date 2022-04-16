@@ -14,13 +14,13 @@ import 'dart:io';
 
 import 'network/NWApi.dart';
 import 'network/NWMethod.dart';
-class OnlinePayPage extends Dialog {
+class GamePayPage extends Dialog {
   static const int ALIPAY = 100;
   static const int WECHAT = 101;
   final clickCallback callback;
   List<OnlinePay> list;
 
-  OnlinePayPage(this.list,{Key? key, required this.callback}) : super(key: key);
+  GamePayPage(this.list,{Key? key, required this.callback}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -101,8 +101,9 @@ class OnlinePayPage extends Dialog {
               const Padding(padding: EdgeInsets.only(top: 10)),
               InkWell(
                 onTap: (){
-                  Navigator.pop(context);
-                  Global.toChat(game: true);
+                  // Navigator.pop(context);
+                  // Global.toChat(game: true);
+                  callback(0);
                 },
                 child: Container(
                   decoration: const BoxDecoration(

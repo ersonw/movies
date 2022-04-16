@@ -452,20 +452,78 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
           onTap: (){
             Global.playVideo(classData.id);
           },
-          child: Container(
-            width: ((MediaQuery.of(context).size.width) / 1),
-            height: 210,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(10)),
-              image: DecorationImage(
-                image: NetworkImage(classData.image),
-                fit: BoxFit.fill,
-                alignment: Alignment.center,
-              ),
-            ),
-            // child: Global.buildPlayIcon(() {
-            //   Global.playVideo(classData.id);
-            // }),
+          child: Stack(
+              children: [
+                Container(
+                  width: ((MediaQuery.of(context).size.width) / 1),
+                  height: 210,
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    image: DecorationImage(
+                      image: NetworkImage(classData.image),
+                      fit: BoxFit.fill,
+                      alignment: Alignment.center,
+                    ),
+                  ),
+                  // child: Global.buildPlayIcon(() {
+                  //   Global.playVideo(classData.id);
+                  // }),
+                ),
+                Container(
+                  height: 210,
+                  alignment: Alignment.bottomRight,
+                  // color: Colors.black54,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      classData.diamond > 0 ? Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Container(
+                            decoration: const BoxDecoration(
+                              color: Color(0xffff0010),
+                              borderRadius: BorderRadius.only(topRight: Radius.circular(5)),
+                            ),
+                            height: 25,
+                            child: Container(
+                              margin: const EdgeInsets.all(5),
+                              child: Row(
+                                children: [
+                                  Text("${classData.diamond}",style: const TextStyle(fontSize: 13,color: Colors.white)),
+                                  const Padding(padding: EdgeInsets.only(right: 2)),
+                                  Image.asset(ImageIcons.diamond),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ) : Container(),
+                      Column(
+                        children: [
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Container(
+                                  decoration: const BoxDecoration(
+                                    color: Colors.black45,
+                                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                                  ),
+                                  // height: 20,
+                                  child: Container(
+                                    margin: const EdgeInsets.all(2),
+                                    child: Text(Global.inSecondsTostring(classData.duration),style: const TextStyle(fontSize: 15,color: Colors.white)),
+                                  ),
+                                ),
+                                const Padding(padding: EdgeInsets.only(right: 10)),
+                              ]
+                          ),
+                          const Padding(padding: EdgeInsets.only(top: 10)),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ]
           ),
         ),
         Row(
@@ -473,13 +531,24 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
           children: [
             SizedBox(
               width: ((MediaQuery.of(context).size.width) / 1.1),
-              child: Text(
-                classData.title,
-                style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    overflow: TextOverflow.ellipsis),
+              // child: Text(
+              //   classData.title,
+              //   style: const TextStyle(
+              //       color: Colors.black,
+              //       fontSize: 15,
+              //       fontWeight: FontWeight.bold,
+              //       overflow: TextOverflow.ellipsis),
+              // ),
+              child: LimitedBox(
+                maxHeight: 50,
+                child: Text(
+                  classData.title,
+                  style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      overflow: TextOverflow.clip),
+                ),
               ),
             ),
           ],
@@ -1466,18 +1535,77 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
         },
         child: Column(
           children: [
-            Container(
-              height: 120,
-              // margin: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.all(Radius.circular(10)),
-                image: DecorationImage(
-                  image: NetworkImage(video.image),
-                  fit: BoxFit.fill,
-                  alignment: Alignment.center,
+            Stack(
+              // alignment: Alignment.centerRight,
+              children: [
+                Container(
+                  height: 120,
+                  // margin: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(5)),
+                    image: DecorationImage(
+                      image: NetworkImage(video.image),
+                      fit: BoxFit.fill,
+                      alignment: Alignment.center,
+                    ),
+                  ),
+                  // child: Global.buildPlayIcon(() {}),
                 ),
-              ),
-              // child: Global.buildPlayIcon(() {}),
+                Container(
+                  height: 120,
+                  alignment: Alignment.bottomRight,
+                  // color: Colors.black54,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      video.diamond > 0 ? Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Container(
+                            decoration: const BoxDecoration(
+                              color: Color(0xffff0010),
+                              borderRadius: BorderRadius.only(topRight: Radius.circular(5)),
+                            ),
+                              height: 20,
+                              child: Container(
+                                margin: const EdgeInsets.all(5),
+                                child: Row(
+                                  children: [
+                                    Text("${video.diamond}",style: const TextStyle(fontSize: 10,color: Colors.white)),
+                                    const Padding(padding: EdgeInsets.only(right: 2)),
+                                    Image.asset(ImageIcons.diamond),
+                                  ],
+                                ),
+                              ),
+                          ),
+                        ],
+                      ) : Container(),
+                      Column(
+                        children: [
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Container(
+                                  decoration: const BoxDecoration(
+                                    color: Colors.black45,
+                                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                                  ),
+                                  // height: 20,
+                                  child: Container(
+                                    margin: const EdgeInsets.all(2),
+                                    child: Text(Global.inSecondsTostring(video.duration),style: const TextStyle(fontSize: 10,color: Colors.white)),
+                                  ),
+                                ),
+                                const Padding(padding: EdgeInsets.only(right: 10)),
+                              ]
+                          ),
+                          const Padding(padding: EdgeInsets.only(top: 10)),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
             Container(
               width: ((MediaQuery.of(context).size.width) / 2.3),
@@ -1485,13 +1613,21 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
               child: Text(
                 video.title,
                 style: const TextStyle(
-                    fontSize: 15, overflow: TextOverflow.ellipsis),
+                    fontSize: 12, overflow: TextOverflow.ellipsis),
               ),
+              // child: LimitedBox(
+              //   maxHeight: 50,
+              //   child: Text(
+              //     video.title,
+              //     style: const TextStyle(
+              //         fontSize: 13, overflow: TextOverflow.clip),
+              //   ),
+              // ),
             ),
             Container(
               margin: const EdgeInsets.only(top: 5),
               child: Row(
-                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Text(
                     '${Global.getNumbersToChinese(video.play)} 次播放',
@@ -1515,6 +1651,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
             ),
           ],
         ),
+
       ),
     );
   }

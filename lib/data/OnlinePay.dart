@@ -11,6 +11,8 @@ class OnlinePay {
   String title = '';
   String iconImage = '';
   int type = 0;
+  int mini = 0;
+  int max = 0;
   int id = 0;
 
   OnlinePay.formJson(Map<String, dynamic> json)

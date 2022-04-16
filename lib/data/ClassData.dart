@@ -12,6 +12,7 @@ class ClassData {
   int play = 0;
   int remommends = 0;
   int diamond = 0;
+  int duration = 0;
 
   ClassData.formJson(Map<String, dynamic> json)
       : id = json['id'],
@@ -22,6 +23,7 @@ class ClassData {
             : SearchActor(),
         play = json['play'],
         diamond = json['diamond'],
+        duration = json['duration'],
         remommends = json['remommends'];
 
   Map<String, dynamic> toJson() => {
@@ -32,6 +34,7 @@ class ClassData {
         'play': play,
         'remommends': remommends,
         'diamond': diamond,
+        'duration': duration,
       };
 
   @override

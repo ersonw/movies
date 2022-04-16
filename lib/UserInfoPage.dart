@@ -149,7 +149,7 @@ class _UserInfoPage extends State<UserInfoPage>  with SingleTickerProviderStateM
   _buildBgImage(String avatar) {
     if ((avatar == null || avatar == '') ||
         avatar.contains('http') == false) {
-      return const AssetImage('assets/image/06b6f2f7-484e-41e1-82e8-4b31d199e813.jpg');
+      return const AssetImage(ImageIcons.bgImage);
     }
     return NetworkImage(avatar);
   }

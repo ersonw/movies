@@ -111,7 +111,7 @@ class _ChangePasswordPage extends State<ChangePasswordPage> {
             ),
             SizedBox(
               child: TextButton(
-                  onPressed: () {
+                  onPressed: () async{
                     if(_controllerNew.text == ''){
                       Global.showWebColoredToast('新密码不能为空密码!');
                       return;
@@ -124,7 +124,9 @@ class _ChangePasswordPage extends State<ChangePasswordPage> {
                       Global.showWebColoredToast('新密码必须大于或者等于6位数');
                       return;
                     }
-                    Global.changePassword(_controllerSoure.text, _controllerNew.text);
+                    if(await Global.changePassword(_controllerSoure.text, _controllerNew.text)){
+                      Navigator.pop(context);
+                    }
                   },
                   child: Container(
                     height: 50,

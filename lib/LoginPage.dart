@@ -172,7 +172,7 @@ class _LoginPage extends State<LoginPage>{
                               },
                               keyboardType: TextInputType.text,
                               decoration: const InputDecoration(
-                                hintText: '请输入邮箱账号',
+                                hintText: '请输入手机号码(+8613800138000)',
                                 hintStyle: TextStyle(color: Colors.black26,fontSize: 14),
                                 border: InputBorder.none,
                                 filled: true,

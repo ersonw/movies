@@ -340,6 +340,7 @@ class _SearchPage extends State<SearchPage>
                     image: DecorationImage(
                       // image: AssetImage('assets/image/default_head.gif'),
                       image: _buildAvatar(userList.avatar),
+                      fit: BoxFit.fill,
                     ),
                   ),
                 ),

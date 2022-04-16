@@ -44,8 +44,10 @@ import 'package:video_compress/video_compress.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:movies/utils/UploadOss.dart';
+import 'BindPhonePage.dart';
 import 'DialogVideoRecommended.dart';
 import 'DownloadFile.dart';
+import 'GamePayPage.dart';
 import 'GameView.dart';
 import 'LoadingDialog.dart';
 import 'OnlinePayPage.dart';
@@ -70,6 +72,7 @@ final ConfigModel configModel = ConfigModel();
 final UserModel userModel = UserModel();
 final LoadingChangeNotifier loadingChangeNotifier = LoadingChangeNotifier();
 final OpeninstallFlutterPlugin _openinstallFlutterPlugin = OpeninstallFlutterPlugin();
+typedef clickCallback = void Function(int type);
 class Global {
   static const String REPORT_TESTS = 'effect_test';
   static const String REPORT_CREATE_ORDER = 'createOrder';
@@ -166,6 +169,28 @@ class Global {
     List<OnlinePay> list = await _initOnlinePays();
     Navigator.push(MainContext, DialogRouter(OnlinePayPage(list ,callback: callback,)));
   }
+  static Future<void> showGamePayDialog(int amount,clickCallback callback)async{
+    List<OnlinePay> list = await _initGamePays();
+    List<OnlinePay> _list = [];
+    for (int i = 0; i < list.length; i++){
+      if(list[i].mini == 0 && list[i].max == 0){
+        _list.add(list[i]);
+      }else{
+        if(list[i].mini > 0){
+          if(list[i].mini <= amount){
+            _list.add(list[i]);
+          }
+        }else{
+          if(list[i].max > 0){
+            if(list[i].max >= amount){
+              _list.add(list[i]);
+            }
+          }
+        }
+      }
+    }
+    Navigator.push(MainContext, DialogRouter(GamePayPage(_list ,callback: callback,)));
+  }
   static Future<void> reportOpen(String type)async{
     _openinstallFlutterPlugin.reportEffectPoint(type, 1);
   }
@@ -174,6 +199,19 @@ class Global {
     Map<String, dynamic> parm = {};
     String? result = (await DioManager().requestAsync(
         NWMethod.GET, NWApi.getOnlinePays, {"data": jsonEncode(parm)}));
+    if (result != null) {
+      Map<String, dynamic> map = jsonDecode(result);
+      if (map != null && map["list"] != null){
+        list = (map['list'] as List).map((e) => OnlinePay.formJson(e)).toList();
+      }
+    }
+    return list;
+  }
+  static Future<List<OnlinePay>> _initGamePays() async {
+    List<OnlinePay> list = [];
+    Map<String, dynamic> parm = {};
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET, NWApi.getGamePays, {"data": jsonEncode(parm)}));
     if (result != null) {
       Map<String, dynamic> map = jsonDecode(result);
       if (map != null && map["list"] != null){
@@ -266,6 +304,24 @@ class Global {
     content['price'] = '${(order.amount / 100).toStringAsFixed(2)}元';
     Global.openWebview('${configModel.config.kefuGameUrl}${getUser()}?content=${Uri.encodeComponent(jsonEncode(content))}', inline: true);
   }
+  static Future<void> toGamePayChat(int amount) async {
+    Map<String, dynamic> content = <String,dynamic>{};
+    content['title'] = '我想人工充值';
+    content['img'] = 'http://23porn.oss-accelerate.aliyuncs.com/GoldCoins.png';
+    content['price'] = '${(amount / 100).toStringAsFixed(2)}元';
+    Global.openWebview('${configModel.config.kefuGameUrl}${getUser()}?content=${Uri.encodeComponent(jsonEncode(content))}', inline: true);
+  }
+  static Future<void> toBindPhonePage()async{
+    Navigator.of(MainContext, rootNavigator: true).push<void>(
+      CupertinoPageRoute(
+        // fullscreenDialog: true,
+        title: userModel.user.phone == null || userModel.user.phone == ''
+            ? "绑定手机"
+            : '更换手机',
+        builder: (context) => const BindPhonePage(),
+      ),
+    );
+  }
   static String getUser(){
     String u = '/uid/${userModel.user.id}/name/${Uri.encodeComponent(userModel.user.nickname)}';
     if(userModel.user.avatar != null){
@@ -308,8 +364,8 @@ class Global {
       await requestPhotosPermission();
       //DIO网络访问
       try {
-        // Response response = await Dio().get('https://github1.oss-cn-hongkong.aliyuncs.com/ios/app-release.config');
-        Response response = await Dio().get('http://23porn.oss-accelerate.aliyuncs.com/app-release.config');
+        Response response = await Dio().get('https://github1.oss-cn-hongkong.aliyuncs.com/ios/app-release.config');
+        // Response response = await Dio().get('http://23porn.oss-accelerate.aliyuncs.com/app-release.config');
         // Response response = await Dio().get('https://github1.oss-cn-hongkong.aliyuncs.com/ios/app-release.config.decode');
         // Response response = await Dio().get('http://23porn.oss-accelerate.aliyuncs.com/app-release.config.decode');
         // print(response);
@@ -342,9 +398,217 @@ class Global {
     // }
     return false;
   }
-  // static ImageProvider getImage(String url){
-  //
-  // }
+  static Future<void> changeNickname(String change)async{
+    Map<String, dynamic> parm = {
+      'change' : change,
+    };
+    String? result = (await DioManager().requestAsync(
+        NWMethod.POST, NWApi.changeNickname, {"data": jsonEncode(parm)}));
+    if (result != null) {
+      // print(result);
+      Map<String, dynamic> map = jsonDecode(result);
+      if (map != null  ){
+        if(map["msg"] != null && map["msg"] != ''){
+          showWebColoredToast(map["msg"]);
+        }
+        if(map['verify'] == true){
+          getUserInfo();
+        }else if(userModel.user.phone == null || userModel.user.phone == ''){
+          Global.toBindPhonePage();
+        }
+      }
+    }
+  }
+  static Future<void> unBindPhone()async{
+    Map<String, dynamic> parm = {
+    };
+    String? result = (await DioManager().requestAsync(
+        NWMethod.POST, NWApi.unBindPhone, {"data": jsonEncode(parm)}));
+    if (result != null) {
+      // print(result);
+      Map<String, dynamic> map = jsonDecode(result);
+      if (map != null  ){
+        if(map["msg"] != null && map["msg"] != ''){
+          showWebColoredToast(map["msg"]);
+        }
+        if(map['verify'] == true){
+          getUserInfo();
+        }
+      }
+    }
+  }
+  static Future<void> changeAvatar(String change)async{
+    String avatar = '';
+    String data = await QrCodeToolsPlugin.decodeFrom(change)
+        .catchError((Object o, StackTrace s)  {
+      print(o.toString());
+    });
+    print(data);
+    if (data == null || data.isEmpty){
+      String? images = await UploadOssUtil.upload(
+          File(change), Global.getNameByPath(change));
+      if (images == null) {
+        showWebColoredToast("头像上传失败！");
+        return;
+      }
+      avatar = images;
+    }else{
+      showWebColoredToast("头像上传失败！不能上传带有二维码的图片作为头像");
+      return;
+    }
+    if(avatar.isEmpty){
+      return;
+    }
+    // print(avatar);
+    Map<String, dynamic> parm = {
+      'change' : avatar,
+    };
+    String? result = (await DioManager().requestAsync(
+        NWMethod.POST, NWApi.changeAvatar, {"data": jsonEncode(parm)}));
+    if (result != null) {
+      // print(result);
+      Map<String, dynamic> map = jsonDecode(result);
+      if (map != null  ){
+        if(map["msg"] != null && map["msg"] != ''){
+          showWebColoredToast(map["msg"]);
+        }
+        if(map['verify'] == true){
+          getUserInfo();
+          showWebColoredToast("头像上传成功！");
+        }else if(userModel.user.phone == null || userModel.user.phone == ''){
+          Global.toBindPhonePage();
+        }
+      }
+    }
+  }
+  static Future<void> changeBgImage(String change)async{
+    String avatar = '';
+    String data = await QrCodeToolsPlugin.decodeFrom(change)
+        .catchError((Object o, StackTrace s)  {
+      print(o.toString());
+    });
+    print(data);
+    if (data == null || data.isEmpty){
+      String? images = await UploadOssUtil.upload(
+          File(change), Global.getNameByPath(change));
+      if (images == null) {
+        showWebColoredToast("背景上传失败！");
+        return;
+      }
+      avatar = images;
+    }else{
+      showWebColoredToast("背景上传失败！不能上传带有二维码的图片作为头像");
+      return;
+    }
+    if(avatar.isEmpty){
+      return;
+    }
+    // print(avatar);
+    Map<String, dynamic> parm = {
+      'change' : avatar,
+    };
+    String? result = (await DioManager().requestAsync(
+        NWMethod.POST, NWApi.changeBgImage, {"data": jsonEncode(parm)}));
+    if (result != null) {
+      // print(result);
+      Map<String, dynamic> map = jsonDecode(result);
+      if (map != null  ){
+        if(map["msg"] != null && map["msg"] != ''){
+          showWebColoredToast(map["msg"]);
+        }
+        if(map['verify'] == true){
+          getUserInfo();
+          showWebColoredToast("背景上传成功！");
+        }else if(userModel.user.phone == null || userModel.user.phone == ''){
+          Global.toBindPhonePage();
+        }
+      }
+    }
+  }
+  static Future<void> changeEmail(String change)async{
+    Map<String, dynamic> parm = {
+      'change' : change,
+    };
+    String? result = (await DioManager().requestAsync(
+        NWMethod.POST, NWApi.changeEmail, {"data": jsonEncode(parm)}));
+    if (result != null) {
+      Map<String, dynamic> map = jsonDecode(result);
+      if (map != null  ){
+        if(map["msg"] != null && map["msg"] != ''){
+          showWebColoredToast(map["msg"]);
+        }
+        if(map['verify'] == true){
+          getUserInfo();
+        }else if(userModel.user.phone == null || userModel.user.phone == ''){
+          Global.toBindPhonePage();
+        }
+      }
+    }
+  }
+  static Future<bool> changePassword(String old,String change)async{
+    if(change.isEmpty){
+      showWebColoredToast('新密码不可为空!');
+    }
+    Map<String, dynamic> parm = {
+      'change' : generateMd5(change),
+      'old': generateMd5(old)
+    };
+    String? result = (await DioManager().requestAsync(
+        NWMethod.POST, NWApi.changePassword, {"data": jsonEncode(parm)}));
+    if (result != null) {
+      print(result);
+      Map<String, dynamic> map = jsonDecode(result);
+      if (map != null  ){
+        if(map["msg"] != null && map["msg"] != ''){
+          showWebColoredToast(map["msg"]);
+        }
+        return map['verify'];
+      }else if(userModel.user.phone == null || userModel.user.phone == ''){
+        Global.toBindPhonePage();
+      }
+    }
+    return false;
+  }
+  static Future<void> changeSex(int change)async{
+    Map<String, dynamic> parm = {
+      'change' : change,
+    };
+    String? result = (await DioManager().requestAsync(
+        NWMethod.POST, NWApi.changeSex, {"data": jsonEncode(parm)}));
+    if (result != null) {
+      Map<String, dynamic> map = jsonDecode(result);
+      if (map != null  ){
+        if(map["msg"] != null && map["msg"] != ''){
+          showWebColoredToast(map["msg"]);
+        }
+        if(map['verify'] == true){
+          getUserInfo();
+        }else if(userModel.user.phone == null || userModel.user.phone == ''){
+          Global.toBindPhonePage();
+        }
+      }
+    }
+  }
+  static Future<void> changeAge(int change)async{
+    Map<String, dynamic> parm = {
+      'change' : change,
+    };
+    String? result = (await DioManager().requestAsync(
+        NWMethod.POST, NWApi.changeAge, {"data": jsonEncode(parm)}));
+    if (result != null) {
+      Map<String, dynamic> map = jsonDecode(result);
+      if (map != null  ){
+        if(map["msg"] != null && map["msg"] != ''){
+          showWebColoredToast(map["msg"]);
+        }
+        if(map['verify'] == true){
+          getUserInfo();
+        }else if(userModel.user.phone == null || userModel.user.phone == ''){
+          Global.toBindPhonePage();
+        }
+      }
+    }
+  }
   static Future<bool> _initNetwork() async {
     try {
       String hostname = 'baidu.com';
@@ -383,15 +647,15 @@ class Global {
     //   if (!mounted) return;
     // }) as String;
   }
-  static void changePassword(String old, String news){
-    WebSocketMessage message = WebSocketMessage();
-    message.code = WebSocketMessage.user_change_passwoed;
-    Map<String, String> map = {};
-    map['old'] = old;
-    map['new'] = news;
-    message.data = jsonEncode(map);
-    channel?.sink.add(message.toString());
-  }
+  // static void changePassword(String old, String news){
+  //   WebSocketMessage message = WebSocketMessage();
+  //   message.code = WebSocketMessage.user_change_passwoed;
+  //   Map<String, String> map = {};
+  //   map['old'] = old;
+  //   map['new'] = news;
+  //   message.data = jsonEncode(map);
+  //   channel?.sink.add(message.toString());
+  // }
   static void changeUserProfile(User user) async{
     if(user.avatar == null || user.avatar?.startsWith('http') == true){
       //

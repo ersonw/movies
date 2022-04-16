@@ -32,7 +32,7 @@ class _WolfFriendPage extends State<WolfFriendPage>  with SingleTickerProviderSt
   int page = 1;
   int total = 1;
   bool loading = true;
-  // bool post = false;
+  bool alive = true;
   @override
   void initState() {
     // TODO: implement initState
@@ -95,20 +95,23 @@ class _WolfFriendPage extends State<WolfFriendPage>  with SingleTickerProviderSt
     if (result == null) {
       return;
     }
-    setState(() {
-      loading = false;
-    });
+    if(alive){
+      setState(() {
+        loading = false;
+      });
+    }
     Map<String, dynamic> map = jsonDecode(result);
     total = map['total'] > 0 ? map['total'] : 1;
     List<WolfFriend> list = (map['list'] as List).map((e) => WolfFriend.formJson(e)).toList();
-    setState(() {
-      if(page > 1){
-        _list.addAll(list);
-      }else{
-        _list = list;
-      }
-    });
-
+    if(alive){
+      setState(() {
+        if(page > 1){
+          _list.addAll(list);
+        }else{
+          _list = list;
+        }
+      });
+    }
   }
   _favorite(int _index, int index) async{
     WolfFriend wolfFriend = _list[index];
@@ -469,7 +472,7 @@ class _WolfFriendPage extends State<WolfFriendPage>  with SingleTickerProviderSt
   }
   @override
   void dispose() {
-    // TODO: implement dispose
+    alive = false;
     super.dispose();
   }
 }

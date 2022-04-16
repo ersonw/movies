@@ -194,32 +194,101 @@ class _FeaturedPage extends State<FeaturedPage> {
         margin: const EdgeInsets.only(left: 10,right: 10,bottom: 10),
         child: Column(
           children: [
-            Container(
-              width: ((MediaQuery.of(context).size.width) / 1),
-              height: 210,
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.all(Radius.circular(10)),
-                image: DecorationImage(
-                  image: NetworkImage(data.image),
-                  fit: BoxFit.fill,
-                  alignment: Alignment.center,
+            Stack(
+              children: [
+                Container(
+                  width: ((MediaQuery.of(context).size.width) / 1),
+                  height: 210,
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    image: DecorationImage(
+                      image: NetworkImage(data.image),
+                      fit: BoxFit.fill,
+                      alignment: Alignment.center,
+                    ),
+                  ),
+                  // child: Global.buildPlayIcon(() {}),
                 ),
-              ),
-              // child: Global.buildPlayIcon(() {}),
+                Container(
+                  height: 210,
+                  alignment: Alignment.bottomRight,
+                  // color: Colors.black54,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      data.diamond > 0 ? Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Container(
+                            decoration: const BoxDecoration(
+                              color: Color(0xffff0010),
+                              borderRadius: BorderRadius.only(topRight: Radius.circular(5)),
+                            ),
+                            height: 25,
+                            child: Container(
+                              margin: const EdgeInsets.all(5),
+                              child: Row(
+                                children: [
+                                  Text("${data.diamond}",style: const TextStyle(fontSize: 13,color: Colors.white)),
+                                  const Padding(padding: EdgeInsets.only(right: 2)),
+                                  Image.asset(ImageIcons.diamond),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ) : Container(),
+                      Column(
+                        children: [
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Container(
+                                  decoration: const BoxDecoration(
+                                    color: Colors.black45,
+                                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                                  ),
+                                  // height: 20,
+                                  child: Container(
+                                    margin: const EdgeInsets.all(2),
+                                    child: Text(Global.inSecondsTostring(data.duration),style: const TextStyle(fontSize: 15,color: Colors.white)),
+                                  ),
+                                ),
+                                const Padding(padding: EdgeInsets.only(right: 10)),
+                              ]
+                          ),
+                          const Padding(padding: EdgeInsets.only(top: 10)),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ]
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 SizedBox(
                   width: ((MediaQuery.of(context).size.width) / 1.1),
-                  child: Text(
-                    data.title,
-                    style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        overflow: TextOverflow.ellipsis),
+                  child: LimitedBox(
+                    maxHeight: 50,
+                    child: Text(
+                      data.title,
+                      style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          overflow: TextOverflow.clip),
+                    ),
                   ),
+                  // child: Text(
+                  //   data.title,
+                  //   style: const TextStyle(
+                  //       color: Colors.black,
+                  //       fontSize: 15,
+                  //       fontWeight: FontWeight.bold,
+                  //       overflow: TextOverflow.ellipsis),
+                  // ),
                 ),
               ],
             ),

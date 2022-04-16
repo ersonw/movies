@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'HttpManager.dart';
+import 'ImageIcons.dart';
 import 'UserInfoPage.dart';
 import 'data/ShareRecord.dart';
 import 'data/UserList.dart';
@@ -38,7 +39,9 @@ class _UserShareRecordsPage extends State<UserShareRecordsPage>{
   }
   _init()async{
     if(_page > total){
-      _page--;
+      setState(() {
+        _page--;
+      });
       return;
     }
     Map<String, dynamic> parm = {
@@ -59,6 +62,22 @@ class _UserShareRecordsPage extends State<UserShareRecordsPage>{
         }
       });
     }
+  }
+  _buildList(){
+    List<Widget> widgets = [];
+    for(int i = 0; i < _list.length; i++){
+      widgets.add(_buildListUser(i));
+    }
+    widgets.add(Center(
+      child: _page < total ? Image.asset(ImageIcons.Loading_icon,width: 150,) : Container(
+        margin: const EdgeInsets.only(top: 30, bottom: 30),
+        child: Text(
+          _list.length > 5 ? '已经到底了！' : (_list.isEmpty ? '您暂时还没有成功邀请好友哦！感谢去分享吧' : ''),
+          style: const TextStyle(color: Colors.grey, fontSize: 15),
+        ),
+      ),
+    ));
+    return widgets;
   }
   Widget _buildListUser(int index){
     ShareRecord record = _list[index];
@@ -134,11 +153,15 @@ class _UserShareRecordsPage extends State<UserShareRecordsPage>{
     return CupertinoPageScaffold(
       navigationBar: const CupertinoNavigationBar(),
       backgroundColor: Colors.black12,
-      child: ListView.builder(
+      child: ListView(
         controller: _controller,
-        itemCount: _list.length,
-        itemBuilder: (BuildContext _context, int index) => _buildListUser(index),
+        children: _buildList(),
       ),
+      // child: ListView.builder(
+      //   controller: _controller,
+      //   itemCount: _list.length,
+      //   itemBuilder: (BuildContext _context, int index) => _buildListUser(index),
+      // ),
     );
   }
   @override

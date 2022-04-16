@@ -257,7 +257,16 @@ class _MyProfile extends State<MyProfile> {
                                     image: DecorationImage(
                                       // image: AssetImage('assets/image/default_head.gif'),
                                       image: _buildAvatar(),
-                                    )),
+                                      fit: BoxFit.fill,
+                                    ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      blurRadius: 10, //阴影范围
+                                      spreadRadius: 0.1, //阴影浓度
+                                      color: Colors.grey.withOpacity(0.2), //阴影颜色
+                                    ),
+                                  ],
+                                ),
                               ),
                               Container(
                                 margin: const EdgeInsets.only(left: 10, top: 10),
@@ -289,7 +298,7 @@ class _MyProfile extends State<MyProfile> {
                           ),
                         ),
                       ),
-                      (_user.phone != null && _user.phone != '') || (_user.email != null && _user.email != '') ? Container() : InkWell(
+                      _user.phone != null && _user.phone != '' ? Container() : InkWell(
                         onTap: (){
                           Navigator.push(Global.MainContext, SlideRightRoute(page: const LoginPage())).then((value) => setState(() {Global.getUserInfo();}));
                         },

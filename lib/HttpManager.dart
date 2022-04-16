@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:movies/functions.dart';
@@ -91,8 +93,10 @@ class DioManager {
   }
   Future<String?> requestAsync<T>(NWMethod method, String path, Map<String, dynamic> params) async {
     // print(_token);
+    List<int> bytes = utf8.encode(jsonEncode(params));
+    String s = (base64.encode(bytes));
     try {
-      Response response = await dio.request(path, queryParameters: params, options: Options(method: NWMethodValues[method]));
+      Response response = await dio.request(path, queryParameters: {'s': s}, options: Options(method: NWMethodValues[method]));
       BaseEntity entity = BaseEntity<T>.fromJson(response.data);
       if (entity.code == 200) {
         return entity.data;

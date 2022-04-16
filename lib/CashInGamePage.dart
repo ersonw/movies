@@ -390,7 +390,7 @@ class _CashInGamePage extends State<CashInGamePage> {
     CashIn cashIn = _list[index];
     return InkWell(
       onTap: () {
-        _crateOrder(cashIn.id);
+        _crateOrder(cashIn);
       },
       child: Container(
         margin: const EdgeInsets.only(left:10,bottom: 10),
@@ -455,22 +455,26 @@ class _CashInGamePage extends State<CashInGamePage> {
         return '无赠送';
     }
   }
-  _crateOrder(int id) {
-    Global.showPayDialog((int payId) async{
-      Map<String, dynamic> parm = {
-        'id': id,
-      };
-      String? result = (await DioManager().requestAsync(
-          NWMethod.GET, NWApi.crateGameOrder, {"data": jsonEncode(parm)}));
-      if (result != null) {
-        // print(result);
-        Map<String, dynamic> map = jsonDecode(result);
-        if(map['crate'] == true && map['id'] != null){
-          _postCrateOrder(orderId: map['id'], payId: payId);
-        }else if(map['msg'] != null){
-          Global.showWebColoredToast(map['msg']);
+  _crateOrder(CashIn cashIn) {
+    Global.showGamePayDialog(cashIn.amount,(int payId) async{
+      if(payId == 0){
+        Global.toGamePayChat(cashIn.amount);
+      }else{
+        Map<String, dynamic> parm = {
+          'id': cashIn.id,
+        };
+        String? result = (await DioManager().requestAsync(
+            NWMethod.GET, NWApi.crateGameOrder, {"data": jsonEncode(parm)}));
+        if (result != null) {
+          // print(result);
+          Map<String, dynamic> map = jsonDecode(result);
+          if(map['crate'] == true && map['id'] != null){
+            _postCrateOrder(orderId: map['id'], payId: payId);
+          }else if(map['msg'] != null){
+            Global.showWebColoredToast(map['msg']);
+          }
+          Global.getUserInfo();
         }
-        Global.getUserInfo();
       }
     });
 

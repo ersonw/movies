@@ -34,12 +34,16 @@ class Video {
   String image = '';
   int play = 0;
   int recommendations = 0;
+  int diamond = 0;
+  int duration = 0;
 
   Video.formJson(Map<String, dynamic> json)
       : id = json['id'],
         title = json['title'],
         image = json['image'],
         play = json['play'],
+        diamond = json['diamond'],
+        duration = json['duration'],
         recommendations = json['recommendations'];
 
   Map<String, dynamic> toJson() => {
@@ -47,6 +51,8 @@ class Video {
         'title': title,
         'image': image,
         'play': play,
+        'diamond': diamond,
+        'duration': duration,
         'recommendations': recommendations,
       };
 
