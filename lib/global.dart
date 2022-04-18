@@ -76,6 +76,7 @@ final UserModel userModel = UserModel();
 final LoadingChangeNotifier loadingChangeNotifier = LoadingChangeNotifier();
 final OpeninstallFlutterPlugin _openinstallFlutterPlugin = OpeninstallFlutterPlugin();
 typedef clickCallback = void Function(int type);
+typedef clickCallbackCode = Future<bool> Function(String code);
 class Global {
   static const String REPORT_TESTS = 'effect_test';
   static const String REPORT_CREATE_ORDER = 'createOrder';
@@ -84,6 +85,9 @@ class Global {
   static const String REPORT_PHONE_LOGIN = 'phoneLogin';
   static const String REPORT_PLAYER_GAME = 'playerGame';
   static const String REPORT_CASH_IN_GAME = 'cashInGame';
+  static const String REPORT_OPEN_APP = 'openApp';
+  static const String REPORT_FORM_INVITE = 'formInvite';
+  static const String REPORT_FORM_CHANNEL = 'formChannel';
   static const String mykey = 'e797e49a5f21d99840c3a07dee2c3c7c';
   static const String myiv = 'e797e49a5f21d99840c3a07dee2c3c7a';
   static String codeInvite = '';
@@ -181,9 +185,9 @@ class Global {
         }
     );
   }
-  static Future<void> showVerifyCodeDialog(String phone)async{
+  static Future<void> showVerifyCodeDialog(String phone,{clickCallbackCode? callback,bool verify = false})async{
     Navigator.push(
-        MainContext, DialogRouter(VerifyCodeDialog(phone)));
+        MainContext, DialogRouter(VerifyCodeDialog(phone,callback: callback,verify: verify,)));
   }
   static Future<void> showIDDIalog()async{
     Navigator.push(
@@ -261,6 +265,9 @@ class Global {
   static Future<void> installHandler(Map<String, dynamic> data) async {
     // print(data['channelCode']);
     // channelCode = '101';
+    if(configModel.config.firstTime == true){
+      await Global.reportOpen(Global.REPORT_OPEN_APP);
+    }
     if(null != data['bindData']){
       Map<String, dynamic> map = jsonDecode(data['bindData']);
       if(null != map['code']){
@@ -278,12 +285,18 @@ class Global {
     }
     // handlerChannel();
   }
-  static void handlerChannel(){
+  static void handlerChannel() async{
     if(channelCode == null || channelCode.isEmpty){
       return;
     }
     if(channelIs){
       return;
+    }
+    if(configModel.config.firstTime == true){
+      await Global.reportOpen(Global.REPORT_FORM_CHANNEL);
+      Config _config = configModel.config;
+      _config.firstTime = false;
+      configModel.config = _config;
     }
     Map<String,dynamic> map = {
       'code': channelCode
@@ -402,8 +415,8 @@ class Global {
       await requestPhotosPermission();
       //DIO网络访问
       try {
-        Response response = await Dio().get('https://github1.oss-cn-hongkong.aliyuncs.com/ios/app-release.config');
-        // Response response = await Dio().get('http://23porn.oss-accelerate.aliyuncs.com/app-release.config');
+        // Response response = await Dio().get('https://github1.oss-cn-hongkong.aliyuncs.com/ios/app-release.config');
+        Response response = await Dio().get('http://23porn.oss-accelerate.aliyuncs.com/app-release.config');
         // Response response = await Dio().get('https://github1.oss-cn-hongkong.aliyuncs.com/ios/app-release.config.decode');
         // Response response = await Dio().get('http://23porn.oss-accelerate.aliyuncs.com/app-release.config.decode');
         // print(response);
@@ -1032,6 +1045,12 @@ class Global {
     Map<String,dynamic> map = {
       'code': code
     };
+    if(configModel.config.firstTime == true){
+      await Global.reportOpen(Global.REPORT_FORM_INVITE);
+      Config _config = configModel.config;
+      _config.firstTime = false;
+      configModel.config = _config;
+    }
     DioManager().request(NWMethod.POST, NWApi.joinInvite,
         params: {'data': jsonEncode(map)}, success: (data) {
           print("success data = $data");

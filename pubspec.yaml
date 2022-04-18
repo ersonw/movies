@@ -80,7 +80,8 @@ dependencies:
     path: ./openinstall-flutter-plugin
   encrypt: ^5.0.0
   flutter_jpush: ^0.0.4
-  verification_code_custom: ^0.0.3
+  verification_code_custom:
+    path: ./verification_code_custom-0.0.3
 
 flutter_native_splash:
   color: "#FFFFFF"

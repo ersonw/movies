@@ -79,8 +79,8 @@ android {
 //        // 接入小米厂商
 //        implementation 'cn.jiguang.sdk.plugin:xiaomi:4.0.0'
 //    }
-    apply plugin: 'com.google.gms.google-services'
-    apply plugin: 'com.huawei.agconnect'
+//    apply plugin: 'com.google.gms.google-services'
+//    apply plugin: 'com.huawei.agconnect'
 
 //    buildTypes {
 //        release {

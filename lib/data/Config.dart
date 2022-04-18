@@ -27,6 +27,7 @@ class Config {
   String kefuUrl = '';
   bool force = false;
   bool bootLock = false;
+  bool firstTime = true;
   String? bootLockPasswd = '';
   OssConfig ossConfig = OssConfig();
   List<VIPBuy> vipBuys = [];
@@ -54,6 +55,7 @@ class Config {
         autoLogin = json['autoLogin'] ?? false,
         bootImage = json['bootImage'],
         bootLock = json['bootLock'] ?? false,
+        firstTime = json['firstTime'] ?? true,
         bootLockPasswd = json['bootLockPasswd'],
         downloads = json['downloads'] == null
             ? []
@@ -98,6 +100,7 @@ class Config {
         'autoLogin': autoLogin,
         'bootImage': bootImage,
         'bootLock': bootLock,
+        'firstTime': firstTime,
         'bootLockPasswd': bootLockPasswd,
         'ossConfig': ossConfig.toJson(),
         'downloads': downloads.map((e) => e.toJson()).toList(),

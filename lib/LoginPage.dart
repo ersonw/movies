@@ -106,13 +106,14 @@ class _LoginPage extends State<LoginPage>{
     if(result != null){
       Map<String, dynamic> map = jsonDecode(result);
       codeId = map['id'];
-      // _countDown();
+      // print(codeId);
     }
   }
   void _callBack(){
     Navigator.pop(context);
   }
-  void _bindPhone() async{
+  Future<bool> _bindPhone() async{
+    // print(codeId);
     Map<String, dynamic> parm = {
       'id': codeId,
       'identifier': Global.uid,
@@ -130,8 +131,10 @@ class _LoginPage extends State<LoginPage>{
         await Global.reportOpen(Global.REPORT_BIND_PHONE);
         Global.showWebColoredToast('绑定成功!');
         Global.getUserInfo();
+        return true;
       }
     }
+    return false;
   }
   void _loginPhone() async{
     Map<String, dynamic> parm = {
@@ -154,6 +157,24 @@ class _LoginPage extends State<LoginPage>{
       }
     }
   }
+  _showCodeDialog({bool verify = false}){
+    Global.showVerifyCodeDialog('$countryCode${usernameEditingController.text}',verify: verify, callback: (String code) async{
+      if(code.isEmpty){
+        _sendSms();
+        return true;
+      }else if(code == '1'){
+        _showCodeDialog(verify: true);
+        return true;
+      }else{
+        codeText = code;
+        if(await _bindPhone()){
+          _callBack();
+          return true;
+        }
+      }
+      return false;
+    });
+  }
   _register() async{
     if(usernameEditingController.text.isEmpty || passwordEditingController.text.isEmpty){
       Global.showWebColoredToast('账号或者密码不允许为空');
@@ -168,7 +189,7 @@ class _LoginPage extends State<LoginPage>{
             _loginPhone();
           }
         }else{
-          Global.showVerifyCodeDialog('$countryCode${usernameEditingController.text}');
+          _showCodeDialog();
         }
       });
     }else{
@@ -204,7 +225,7 @@ class _LoginPage extends State<LoginPage>{
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
+      body: ListView(
         children: [
           Stack(
             alignment: Alignment.topLeft,

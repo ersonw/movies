@@ -803,9 +803,9 @@ packages:
   verification_code_custom:
     dependency: "direct main"
     description:
-      name: verification_code_custom
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "verification_code_custom-0.0.3"
+      relative: true
+    source: path
     version: "0.0.3"
   very_good_analysis:
     dependency: transitive

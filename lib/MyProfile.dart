@@ -300,7 +300,7 @@ class _MyProfile extends State<MyProfile> {
                           Navigator.push(Global.MainContext, SlideRightRoute(page: const LoginPage())).then((value) => setState(() {Global.getUserInfo();}));
                         },
                         child: Container(
-                          margin: EdgeInsets.only(right: 10),
+                          // margin: EdgeInsets.only(right: 10),
                           child: const Text("立即登录",style: TextStyle(color: Colors.blueAccent,fontSize: 15)),
                         ),
                       ),
