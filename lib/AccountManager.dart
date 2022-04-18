@@ -162,23 +162,12 @@ class _AccountManager extends State<AccountManager> {
           children: [
             InkWell(
               onTap: () async {
-                // List<Media>? res = await ImagesPicker.pick(
-                //   count: 1,
-                //   pickType: PickType.image,
-                //   language: Language.System,
-                //   cropOpt: CropOption(
-                //       aspectRatio: CropAspectRatio.custom,
-                //       cropType: CropType.circle),
-                // );
-                String res = await getImage(false);
-                if (res.isNotEmpty) {
-                  String image = res;
-                  // _user.avatar = image;
-                  Global.changeBgImage(image);
-                } else {
-                  // Global.showWebColoredToast("修改头像失败！");
-                }
-                // print(await getImage(false));
+                // String res = await getImage(false);
+                // if (res.isNotEmpty) {
+                //   String image = res;
+                //   // _user.avatar = image;
+                //   Global.changeBgImage(image);
+                // }
               },
               child: Container(
                 height: 210,
@@ -315,7 +304,7 @@ class _AccountManager extends State<AccountManager> {
                   InkWell(
                     onTap: () async {
                       String input = await ShowInputDialogAsync(context,
-                          text: _user.email, hintText: '输入电子邮箱地址');
+                          text: _user.email != null ? _user.email : '', hintText: '输入电子邮箱地址');
                       if (input == '') return;
                       // setState(() {
                       //   _user.email = input;
@@ -338,7 +327,7 @@ class _AccountManager extends State<AccountManager> {
                             SizedBox(
                               width: ((MediaQuery.of(context).size.width) / 2),
                               child: Text(
-                                _user.email,
+                                _user.email != null ? _user.email : '',
                                 style: const TextStyle(
                                     color: Colors.grey,
                                     fontSize: 18,
@@ -520,8 +509,9 @@ class _AccountManager extends State<AccountManager> {
                           ]),
                           Row(
                               mainAxisAlignment: MainAxisAlignment.end,
-                              children: const [
-                                Icon(
+                              children:  [
+                                _user.phone != null && _user.phone != '' ? Text('${_user.phone?.substring(0,4)}****${_user.phone?.substring(9)}', style: TextStyle(color: Colors.red)) : Container(),
+                                const Icon(
                                   Icons.chevron_right,
                                   size: 20,
                                   color: Colors.grey,
@@ -536,8 +526,7 @@ class _AccountManager extends State<AccountManager> {
                   ),
                   InkWell(
                     onTap: () {
-                      Navigator.push(
-                          context, DialogRouter(QRCodeDialog(_user.uid)));
+                      Global.showIDDIalog();
                     },
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

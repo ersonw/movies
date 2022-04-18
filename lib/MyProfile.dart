@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 // import 'package:images_picker/images_picker.dart';
@@ -55,6 +57,7 @@ class _MyProfile extends State<MyProfile> {
     // TODO: implement initState
     super.initState();
     _user = userModel.user;
+    _init();
     userModel.addListener(() {
       // print(userModel.user);
       if(alive){
@@ -64,6 +67,15 @@ class _MyProfile extends State<MyProfile> {
       }
     });
   }
+  _init() async {
+    if(Global.initShowId) return;
+    if(_user.phone == null || _user.phone == ''){
+      Timer(const Duration(milliseconds: 100), () {
+        Global.showIDDIalog();
+      });
+    }
+    Global.initShowId = true;
+  }
   @override
   void dispose() {
     alive = false;
@@ -71,21 +83,6 @@ class _MyProfile extends State<MyProfile> {
   }
   @override
   Widget build(BuildContext context) {
-    // return Scaffold(
-    //   floatingActionButton: FloatingActionButton(
-    //       child: Image.asset(
-    //         ImageIcons.game.assetName,
-    //         width: 60,
-    //       ),
-    //       onPressed: () {
-    //         setState(() {
-    //           _tabController.index = 2;
-    //         });
-    //       },
-    //       backgroundColor: Colors.transparent),
-    //   floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-    //   body: _buildHomePage(context),
-    // );
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         trailing: Row(

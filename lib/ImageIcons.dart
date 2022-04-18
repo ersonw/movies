@@ -8,7 +8,7 @@ class ImageIcons {
   static const String yue = 'assets/images/yue.jpg';
   static const String bgImage = 'assets/images/bgImage.jpg';
   static const String jingpin = 'assets/images/48x48-01.png';
-  static const String qrcodeBg = 'assets/images/photo_2022-04-14_23-16-33.png';
+  static const String qrcodeBg = 'assets/images/qrcodeBg.png';
   static const String huiyuan = 'assets/images/48x48-02.png';
   static const String nvyou = 'assets/images/48x48-03.png';
   static const String bangdan = 'assets/images/48x48-04.png';

@@ -134,6 +134,11 @@ class _GamePage extends State<GamePage> with SingleTickerProviderStateMixin{
               const Center(child: Text('游戏大厅',style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold))),
               const Padding(padding: EdgeInsets.only(top: 20)),
               Container(
+                margin: const EdgeInsets.only(left: 10,right: 10),
+                color: Colors.yellow,
+                // child: ,
+              ),
+              Container(
                 margin: const EdgeInsets.only(left: 10, right: 10),
                 width: ((MediaQuery.of(context).size.width) / 1),
                 height: 100,

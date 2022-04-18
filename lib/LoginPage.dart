@@ -2,13 +2,15 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'CountryCodePage.dart';
 import 'HttpManager.dart';
 import 'ImageIcons.dart';
 import 'data/User.dart';
+import 'functions.dart';
 import 'global.dart';
 import 'network/NWApi.dart';
 import 'network/NWMethod.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -21,11 +23,44 @@ class _LoginPage extends State<LoginPage>{
   final TextEditingController usernameEditingController = TextEditingController();
   final TextEditingController passwordEditingController = TextEditingController();
   bool eyes = false;
+  bool _isNumber = false;
+  String countryCode = '+86';
+  String codeId = '';
+  String codeText = '';
+
+  @override
+  void initState() {
+    super.initState();
+    usernameEditingController.addListener(() {
+      if(usernameEditingController.text.isNotEmpty && int.tryParse(usernameEditingController.text) != null){
+        setState(() {
+          _isNumber = true;
+        });
+      }else{
+        setState(() {
+          _isNumber = false;
+        });
+      }
+    });
+  }
   _login() async{
     if(usernameEditingController.text.isEmpty || passwordEditingController.text.isEmpty){
       Global.showWebColoredToast('账号或者密码不允许为空');
       return;
     }
+    if(_isNumber){
+      _checkPhone(callback: (v){
+        if(v == true){
+          _loginPhone();
+        }else{
+          Global.showWebColoredToast('手机号未注册!');
+        }
+      });
+    }else{
+      _loginEmail();
+    }
+  }
+  _loginEmail()async{
     String uid = await Global.getUUID();
     Map<String, dynamic> parm = {
       'identifier': uid,
@@ -42,7 +77,7 @@ class _LoginPage extends State<LoginPage>{
           User user = userModel.user;
           user.token = map['token'];
           userModel.user = user;
-          Navigator.pop(context);
+          _callBack();
           Global.getUserInfo();
         }
         if(map['msg'] != null) {
@@ -51,11 +86,95 @@ class _LoginPage extends State<LoginPage>{
       }
     }
   }
+  void _checkPhone({Function? callback}) async{
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET,
+        NWApi.checkPhone,
+        {"data": countryCode+usernameEditingController.text}
+    ));
+    if(result != null){
+      Map<String, dynamic> map = jsonDecode(result);
+      callback!(map['ready']);
+    }
+  }
+  void _sendSms() async{
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET,
+        NWApi.sendSms,
+        {"data": countryCode+usernameEditingController.text}
+    ));
+    if(result != null){
+      Map<String, dynamic> map = jsonDecode(result);
+      codeId = map['id'];
+      // _countDown();
+    }
+  }
+  void _callBack(){
+    Navigator.pop(context);
+  }
+  void _bindPhone() async{
+    Map<String, dynamic> parm = {
+      'id': codeId,
+      'identifier': Global.uid,
+      'code': codeText,
+      'passwd': Global.generateMd5(passwordEditingController.text),
+    };
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET,
+        NWApi.register,
+        {"data": jsonEncode(parm)}
+    ));
+    if(result != null){
+      Map<String, dynamic> map = jsonDecode(result);
+      if(map['verify'] == true){
+        await Global.reportOpen(Global.REPORT_BIND_PHONE);
+        Global.showWebColoredToast('绑定成功!');
+        Global.getUserInfo();
+      }
+    }
+  }
+  void _loginPhone() async{
+    Map<String, dynamic> parm = {
+      'identifier': Global.uid,
+      'phone': countryCode+usernameEditingController.text,
+      'passwd': Global.generateMd5(passwordEditingController.text),
+    };
+    String? result = (await DioManager().requestAsync(
+        NWMethod.GET,
+        NWApi.loginPhone,
+        {"data": jsonEncode(parm)}
+    ));
+    // print(result);
+    if(result != null){
+      Map<String, dynamic> map = jsonDecode(result);
+      if(map['verify'] == true){
+        await Global.reportOpen(Global.REPORT_PHONE_LOGIN);
+        Global.showWebColoredToast('登录成功!');
+        _callBack();
+      }
+    }
+  }
   _register() async{
     if(usernameEditingController.text.isEmpty || passwordEditingController.text.isEmpty){
       Global.showWebColoredToast('账号或者密码不允许为空');
       return;
     }
+    if(_isNumber){
+      _checkPhone(callback: (v)async{
+        print(v);
+        if(v){
+          // Global.showWebColoredToast('手机号已被注册!');
+          if(await ShowAlertDialogBool(context,'注册','手机号已被注册!是否直接登录？')){
+            _loginPhone();
+          }
+        }else{
+          Global.showVerifyCodeDialog('$countryCode${usernameEditingController.text}');
+        }
+      });
+    }else{
+      Global.showWebColoredToast('请输入正确的手机号注册');
+    }
+    return;
     String uid = await Global.getUUID();
     Map<String, dynamic> parm = {
       'identifier': uid,
@@ -144,16 +263,6 @@ class _LoginPage extends State<LoginPage>{
                       margin: const EdgeInsets.only(top:10,bottom: 20),
                       child: const Text('登录', style: TextStyle(color: Colors.black,fontSize: 18,fontWeight: FontWeight.bold),),
                     ),
-                    // Container(
-                    //   height: 45,
-                    //   // width: ((MediaQuery.of(context).size.width) / 1.2),
-                    //   margin: const EdgeInsets.only(top:10,bottom: 20, left: 25, right: 25),
-                    //   decoration: const BoxDecoration(
-                    //     border:
-                    //     Border(bottom: BorderSide(color: Colors.black12, width: 2)),
-                    //   ),
-                    //   child: ,
-                    // )
                     Container(
                       height: 45,
                       // width: ((MediaQuery.of(context).size.width) / 1.6),
@@ -164,6 +273,21 @@ class _LoginPage extends State<LoginPage>{
                       ),
                       child: Row(
                         children: [
+                          _isNumber ? TextButton(
+                            onPressed: () {
+                              Navigator.of(context, rootNavigator: true).push<void>(
+                                CupertinoPageRoute(
+                                  title: '国家代码选择',
+                                  builder: (context) => CountryCodePage(callback: (String code) {
+                                    setState(() {
+                                      countryCode = code;
+                                    });
+                                  },),
+                                ),
+                              );
+                            },
+                            child: Text(countryCode,style: const TextStyle(color: Colors.black),),
+                          ) : Container(),
                           Expanded(
                             child: TextField(
                               controller: usernameEditingController,
@@ -221,6 +345,7 @@ class _LoginPage extends State<LoginPage>{
                         ],
                       ),
                     ),
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [

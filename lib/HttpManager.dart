@@ -97,6 +97,7 @@ class DioManager {
     String s = (base64.encode(bytes));
     try {
       Response response = await dio.request(path, queryParameters: {'s': s}, options: Options(method: NWMethodValues[method]));
+      // Response response = await dio.request(path, queryParameters: params, options: Options(method: NWMethodValues[method]));
       BaseEntity entity = BaseEntity<T>.fromJson(response.data);
       if (entity.code == 200) {
         return entity.data;
@@ -107,7 +108,7 @@ class DioManager {
       // print(e.response?.statusCode);
       if (e.response?.statusCode == 105) {
         // ShowAlertDialog(Global.MainContext, '访问受限', '原因:游客无法访问');
-        Global.showWebColoredToast('原因:游客无法访问');
+        // Global.showWebColoredToast('原因:游客无法访问');
       } else if (e.response?.statusCode == 106) {
         UserModel().token = '';
         // Global.saveProfile();

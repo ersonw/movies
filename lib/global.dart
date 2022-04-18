@@ -7,6 +7,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_jpush/flutter_jpush.dart';
 // import 'package:flutter_udid/flutter_udid.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
@@ -52,7 +53,9 @@ import 'GameView.dart';
 import 'LoadingDialog.dart';
 import 'OnlinePayPage.dart';
 import 'PlayerPage.dart';
+import 'QRCodeDialog.dart';
 import 'RestartWidget.dart';
+import 'VerifyCodeDialog.dart';
 import 'data/CashIn.dart';
 import 'data/Download.dart';
 import 'data/OnlinePay.dart';
@@ -92,6 +95,7 @@ class Global {
   static late final cameras;
   static bool _isLogin = false;
   static bool initMain = false;
+  static bool initShowId = false;
   static late BuildContext MainContext;
   static late final String uid;
   static WebSocketChannel? channel;
@@ -146,10 +150,44 @@ class Global {
       _openinstallFlutterPlugin.install(installHandler);
       await _init();
       await initSock();
+      _initJPush();
       runApp(const MyAdaptingApp());
     }else{
       runApp(const GongGaoApp());
     }
+  }
+  static void _initJPush() async {
+    await FlutterJPush.startup();
+    print("初始化jpush成功");
+
+    // 获取 registrationID
+    var registrationID =await FlutterJPush.getRegistrationID();
+    print(registrationID);
+
+    // 注册接收和打开 Notification()
+    _initNotification();
+  }
+
+  static void _initNotification() async {
+    FlutterJPush.addReceiveNotificationListener(
+            (JPushNotification notification) {
+          print("收到推送提醒: $notification");
+        }
+    );
+
+    FlutterJPush.addReceiveOpenNotificationListener(
+            (JPushNotification notification) {
+          print("打开了推送提醒: $notification");
+        }
+    );
+  }
+  static Future<void> showVerifyCodeDialog(String phone)async{
+    Navigator.push(
+        MainContext, DialogRouter(VerifyCodeDialog(phone)));
+  }
+  static Future<void> showIDDIalog()async{
+    Navigator.push(
+        MainContext, DialogRouter(QRCodeDialog(userModel.user.uid)));
   }
   static String encryptCode(String text){
     final key = XYQ.Key.fromUtf8(mykey);

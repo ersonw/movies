@@ -49,7 +49,7 @@ class QRCodeDialog extends Dialog {
             width: (MediaQuery.of(context).size.width) / 1,
             alignment: Alignment.bottomRight,
             decoration: const BoxDecoration(
-              // color: Colors.black,
+              // color: Colors.transparent,
               image: DecorationImage(
                 image: AssetImage(ImageIcons.qrcodeBg),
                 fit: BoxFit.fill,
@@ -57,6 +57,7 @@ class QRCodeDialog extends Dialog {
             ),
             child: Container(
               margin: const EdgeInsets.only(right: 35,bottom: 20),
+              color: Colors.white,
               child: QrImage(
                 data: data,
                 size: 110,

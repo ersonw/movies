@@ -347,8 +347,9 @@ class _RecommendedPage extends State<RecommendedPage> {
         ),
         child: Container(
           margin: const EdgeInsets.only(left: 10),
-
+          alignment: Alignment.center,
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(ImageIcons.diamond,width: 15,),
               Text('$diamond钻石',style: const TextStyle(color: Colors.orange),),
