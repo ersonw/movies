@@ -92,6 +92,7 @@ class Global {
   static const String myiv = 'e797e49a5f21d99840c3a07dee2c3c7a';
   static String codeInvite = '';
   static String channelCode = '';
+  static String token = '';
   static bool channelIs = false;
   // 是否为release版
   static bool get isRelease => const bool.fromEnvironment("dart.vm.product");
@@ -848,18 +849,25 @@ class Global {
     );
   }
   static Future<void> loginSocket() async {
-    Timer(const Duration(seconds: 10), () {
-      if(!_isLogin){
-        // print(_isLogin);
-        // print(userModel.isLogin);
-        if (userModel.isLogin) {
-          WebSocketMessage _message = WebSocketMessage();
-          _message.code = WebSocketMessage.login;
-          _message.data = jsonEncode({"token": userModel.token});
-          channel?.sink.add(_message.toString());
-        }else{
-          // getUserInfo();
-        }
+    Timer(const Duration(seconds: 2), () {
+      // if(!_isLogin){
+      //   // print(_isLogin);
+      //   // print(userModel.isLogin);
+      //   if (userModel.isLogin) {
+      //     WebSocketMessage _message = WebSocketMessage();
+      //     _message.code = WebSocketMessage.login;
+      //     _message.data = jsonEncode({"token": userModel.token});
+      //     channel?.sink.add(_message.toString());
+      //   }else{
+      //     // getUserInfo();
+      //   }
+      // }
+      if(token != userModel.token){
+        WebSocketMessage _message = WebSocketMessage();
+        _message.code = WebSocketMessage.login;
+        _message.data = jsonEncode({"token": userModel.token});
+        channel?.sink.add(_message.toString());
+        token = userModel.token;
       }
     });
   }

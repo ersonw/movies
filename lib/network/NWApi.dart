@@ -17,6 +17,7 @@ class NWApi {
   static const getOrder = '/api/user/getOrder';
   static const getBalance = '/api/user/getBalance';
   static const getGames = '/api/getGames';
+  static const getTrumpets = '/api/getTrumpets';
   static const getRecords = '/api/user/getRecords';
   static const getOnlinePays = '/api/getOnlinePays';
   static const getGamePays = '/api/getGamePays';

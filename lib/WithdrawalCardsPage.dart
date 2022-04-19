@@ -36,7 +36,7 @@ class _WithdrawalCardsPage extends State<WithdrawalCardsPage> {
     String? result = (await DioManager().requestAsync(
         NWMethod.GET, NWApi.getWithdrawal, {"data": jsonEncode(parm)}));
     if (result != null) {
-      print(result);
+      // print(result);
       Map<String, dynamic> map = jsonDecode(result);
       if (map['cards'] != null) {
         _list = [];
@@ -243,7 +243,7 @@ class _WithdrawalCardsPage extends State<WithdrawalCardsPage> {
                           // _commentFocus.unfocus();
                         },
                         inputFormatters: <TextInputFormatter>[
-                          LengthLimitingTextInputFormatter(18)
+                          LengthLimitingTextInputFormatter(22)
                         ],
                         // controller: _controller,
                         decoration: const InputDecoration(
