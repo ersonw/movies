@@ -333,7 +333,7 @@ class _MyProfile extends State<MyProfile> {
                           ),
                         ),
                         InkWell(
-                          onTap: () => _enterDiamond(context),
+                          onTap: () => Global.enterDiamond(),
                           child: Column(
                             children: [
                               Text(Global.getNumbersToChinese(userModel.user.diamond),
@@ -536,7 +536,7 @@ class _MyProfile extends State<MyProfile> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               TextButton(
-                                onPressed: () => _enterDiamond(context),
+                                onPressed: () => Global.enterDiamond(),
                                 child: Column(
                                   children: [
                                     Image.asset(
@@ -755,12 +755,7 @@ class _MyProfile extends State<MyProfile> {
     );
   }
 
-  void _enterDiamond(BuildContext context) {
-    Navigator.push(Global.MainContext, SlideRightRoute(page: const BuyDiamondPage())).then((value) => setState(() {Global.getUserInfo();}));
-  }
-  void _enterGold(BuildContext context) {
-    Navigator.push(Global.MainContext, SlideRightRoute(page: const BuyGoldPage())).then((value) => setState(() {Global.getUserInfo();}));
-  }
+
 }
 
 

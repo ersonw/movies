@@ -13,6 +13,7 @@ import 'package:movies/data/SearchList.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'ActorPage.dart';
+import 'DiamondVideoPage.dart';
 import 'HttpManager.dart';
 import 'ImageIcons.dart';
 import 'RoundUnderlineTabIndicator.dart';
@@ -1426,9 +1427,9 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
             onTap: () {
               Navigator.of(context, rootNavigator: true).push<void>(
                 CupertinoPageRoute(
-                  title: '女优列表',
+                  title: '钻石专区',
                   // fullscreenDialog: true,
-                  builder: (context) => const ActorPage(),
+                  builder: (context) => const DiamondVideoPage(),
                 ),
               );
             },
@@ -1444,7 +1445,7 @@ class _IndexHomePage extends State<IndexHomePage>  with SingleTickerProviderStat
                 children: [
                   Image.asset(ImageIcons.nvyou,width: 30,),
                   const Text(
-                    '女优列表',
+                    '钻石专区',
                     style: TextStyle(color: Colors.brown, fontSize: 12,fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   )

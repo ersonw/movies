@@ -85,6 +85,7 @@ class NWApi {
   static const measurementTags = '/api/measurementTags';
   static const featuredLists = '/api/featuredLists';
   static const vipVideoLists = '/api/vipVideoLists';
+  static const diamondVideoLists = '/api/diamondVideoLists';
   static const ActorLists = '/api/ActorLists';
   static const PopularList = '/api/PopularList';
   static const Actor = '/api/Actor';

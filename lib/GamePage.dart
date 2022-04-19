@@ -58,11 +58,12 @@ class _GamePage extends State<GamePage> with SingleTickerProviderStateMixin{
       }
     });
   }
-  _trumpet()async{
+  void _trumpet()async{
     Map<String, dynamic> parm = { };
     String? result = (await DioManager().requestAsync(
         NWMethod.GET, NWApi.getTrumpets, {"data": jsonEncode(parm)}));
     if (result != null) {
+      // print(result);
       setState(() {
         _trumpets = (jsonDecode(result)['list'] as List).map((e) => Trumpet.formJson(e)).toList();
       });
@@ -132,13 +133,22 @@ class _GamePage extends State<GamePage> with SingleTickerProviderStateMixin{
   }
   Widget _marqueeview() {
     List<Widget> widgets = [];
-
+    for(int i=0;i< _trumpets.length; i++){
+      Trumpet trumpet = _trumpets[i];
+      widgets.add(Text(
+        trumpet.text,
+        style: const TextStyle(
+          fontSize: 13,
+          color: Color(0xFFEE8E2B),
+        ),
+      ),);
+    }
     return Container(
       // margin: EdgeInsets.only(left: 15, right: 15),
       height: 31,
       child: Row(
         children: <Widget>[
-          Padding(
+          const Padding(
             padding: EdgeInsets.only(left: 20, right: 10),
             child: Center(
               child: Icon(Icons.campaign,size: 20),
@@ -146,42 +156,18 @@ class _GamePage extends State<GamePage> with SingleTickerProviderStateMixin{
           ),
           Expanded(
               child: Padding(
-                padding: EdgeInsets.only(right: 15),
+                padding: const EdgeInsets.only(right: 15),
                 child: YYMarquee(
                   stepOffset: 200.0,
-                  duration: Duration(seconds: 5),
+                  duration: const Duration(seconds: 5),
                   paddingLeft: 50.0,
-                  children: [
-                    Text(
-                      '手机用户155****0523借款成功',
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Color(0xFFEE8E2B),
-                      ),
-                    ),
-                    Text(
-                      '手机用户1345****0531借款成功',
-                      style: TextStyle(fontSize: 13, color: Color(0xFFEE8E2B)),
-                    ),
-                    Text(
-                      '手机用户145****0555借款成功',
-                      style: TextStyle(fontSize: 13, color: Color(0xFFEE8E2B)),
-                    ),
-                    Text(
-                      '手机用户175****0594借款成功',
-                      style: TextStyle(fontSize: 13, color: Color(0xFFEE8E2B)),
-                    ),
-                    Text(
-                      '手机用户185****0521借款成功',
-                      style: TextStyle(fontSize: 13, color: Color(0xFFEE8E2B)),
-                    ),
-                  ],
+                  children: widgets,
                 ),
               )),
         ],
       ),
       decoration: BoxDecoration(
-        color: Color(0xFFFFF2E6),
+        color: const Color(0xFFFFF2E6),
         borderRadius: BorderRadius.circular(15),
       ),
     );
@@ -203,7 +189,7 @@ class _GamePage extends State<GamePage> with SingleTickerProviderStateMixin{
               const Padding(padding: EdgeInsets.only(top: 50)),
               const Center(child: Text('游戏大厅',style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold))),
               // const Padding(padding: EdgeInsets.only(top: 20)),
-              _marqueeview(),
+              _trumpets.isNotEmpty ? _marqueeview():Container(),
               Expanded(
                 child: ListView(
                   children: [

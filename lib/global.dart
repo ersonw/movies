@@ -46,6 +46,8 @@ import 'package:wakelock/wakelock.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:movies/utils/UploadOss.dart';
 import 'BindPhonePage.dart';
+import 'BuyDiamondPage.dart';
+import 'BuyGoldPage.dart';
 import 'DialogVideoRecommended.dart';
 import 'DownloadFile.dart';
 import 'GamePayPage.dart';
@@ -420,8 +422,8 @@ class Global {
       await requestPhotosPermission();
       //DIO网络访问
       try {
-        Response response = await Dio().get('https://github1.oss-cn-hongkong.aliyuncs.com/ios/app-release.config');
-        // Response response = await Dio().get('http://23porn.oss-accelerate.aliyuncs.com/app-release.config');
+        // Response response = await Dio().get('https://github1.oss-cn-hongkong.aliyuncs.com/ios/app-release.config');
+        Response response = await Dio().get('http://23porn.oss-accelerate.aliyuncs.com/app-release.config');
         // Response response = await Dio().get('https://github1.oss-cn-hongkong.aliyuncs.com/ios/app-release.config.decode');
         // Response response = await Dio().get('http://23porn.oss-accelerate.aliyuncs.com/app-release.config.decode');
         // print(response);
@@ -703,15 +705,12 @@ class Global {
     //   if (!mounted) return;
     // }) as String;
   }
-  // static void changePassword(String old, String news){
-  //   WebSocketMessage message = WebSocketMessage();
-  //   message.code = WebSocketMessage.user_change_passwoed;
-  //   Map<String, String> map = {};
-  //   map['old'] = old;
-  //   map['new'] = news;
-  //   message.data = jsonEncode(map);
-  //   channel?.sink.add(message.toString());
-  // }
+  static void enterDiamond() {
+    Navigator.push(Global.MainContext, SlideRightRoute(page: const BuyDiamondPage()));
+  }
+  static void enterGold() {
+    Navigator.push(Global.MainContext, SlideRightRoute(page: const BuyGoldPage()));
+  }
   static void changeUserProfile(User user) async{
     if(user.avatar == null || user.avatar?.startsWith('http') == true){
       //
@@ -839,11 +838,13 @@ class Global {
       onDone: () async {
         // print(channel?.sink.runtimeType.toString());
         _isLogin = false;
+        getUserInfo();
         await Future.delayed(const Duration(milliseconds: 5000), () {
           initSock();
         });
       },
       onError: (error) async {
+        _isLogin = false;
         print(error);
       },
     );
@@ -862,7 +863,8 @@ class Global {
       //     // getUserInfo();
       //   }
       // }
-      if(token != userModel.token){
+      // print('我登录了');
+      if(token != userModel.token || !_isLogin) {
         WebSocketMessage _message = WebSocketMessage();
         _message.code = WebSocketMessage.login;
         _message.data = jsonEncode({"token": userModel.token});
@@ -893,39 +895,10 @@ class Global {
         _isLogin = false;
         // userModel.token = '';
         break;
-      case WebSocketMessage.message_kefu_send_fail:
-        showWebColoredToast(message.message!);
-        KefuMessage kefuMessage =
-            KefuMessage.formJson(jsonDecode(message.data!));
-        keFuMessageModel.status(kefuMessage.id, message.code);
-        break;
-      case WebSocketMessage.message_kefu_send_success:
-        KefuMessage kefuMessage =
-            KefuMessage.formJson(jsonDecode(message.data!));
-        keFuMessageModel.status(kefuMessage.id, message.code);
-        break;
-      case WebSocketMessage.message_kefu_recevie:
-        keFuMessageModel.add(KefuMessage.formJson(jsonDecode(message.data!)));
-        break;
-      case WebSocketMessage.user_change_fail:
-        showWebColoredToast(message.message!);
-        getUserInfo();
-        break;
-      // case WebSocketMessage.user_change_success:
-      //   // showWebColoredToast('修改成功!');
-      //   // getUserInfo();
-      //   break;
-      // case WebSocketMessage.user_change_passwoed_fail:
-      //   // showWebColoredToast(message.message!);
-      //   break;
-      // case WebSocketMessage.user_change_passwoed_success:
-      //   // showWebColoredToast('密码修改成功!');
-      //   break;
       default:
-        if(message.message != null && message.message != '') showWebColoredToast(message.message!);
         break;
     }
-    // print(_userModel.token);
+    if(message.message != null && message.message != '') showWebColoredToast(message.message!);
   }
   static void playVideo(int id){
     // Navigator.of(MainContext, rootNavigator: true).push<void>(
@@ -1121,9 +1094,9 @@ class Global {
     getSystemMessage();
     userModel.addListener(() {
       if(userModel.isLogin){
-        // loginSocket();
+        loginSocket();
       }else{
-        getUserInfo().then((value) => loginSocket());
+        getUserInfo();
       }
     });
   }
@@ -1137,7 +1110,8 @@ class Global {
           getConfig();
         }
         if (MainContext != null) {
-          if (int.parse(packageInfo.buildNumber) == config.version) {
+          if (int.parse(packageInfo.buildNumber) > config.version) {
+            ShowAlertDialogBool(MainContext,'提示','当前属于测试未发布版本，请勿外传!');
           }else{
             String url = '';
             if(Platform.isIOS){

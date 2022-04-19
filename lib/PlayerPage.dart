@@ -15,6 +15,7 @@ import 'package:wakelock/wakelock.dart';
 import 'ActorDetailsPage.dart';
 import 'HttpManager.dart';
 import 'ImageIcons.dart';
+import 'MyProfile.dart';
 import 'VIPBuyPage.dart';
 import 'VideoFullPage.dart';
 import 'data/SearchList.dart';
@@ -228,24 +229,30 @@ class _PlayerPage extends State<PlayerPage> {
     }
   }
   _buyVideo() async {
-    if(await ShowAlertDialogBool(context, '购买付费视频', '确定花费 ${_player.diamond - _player.less}钻石 购买本视频吗？')){
-      Map<String, dynamic> parm = {
-        'id': widget.id,
-      };
-      String? result = (await DioManager().requestAsync(
-          NWMethod.GET, NWApi.buyVideo, {"data": jsonEncode(parm)}));
-      // print(result);
-      if (result == null) {
-        return;
+    if((_player.member ? (_player.diamond - _player.less) : _player.diamond) > userModel.user.diamond){
+      if(await ShowAlertDialogBool(context, '购买付费视频', '您的钻石余额不足，是否先去充值？')){
+        Global.enterDiamond();
       }
-      Map<String, dynamic> map = jsonDecode(result);
-      if(map['verify'] != null){
-        if(map['verify'] == true){
-          _initPlayer();
-        }else if(map['msg'] != null){
-          Global.showWebColoredToast(map['msg']);
-        }else{
-          Global.showWebColoredToast('未知错误，请刷新重试!');
+    }else{
+      if(await ShowAlertDialogBool(context, '购买付费视频', '确定花费 ${_player.member ? (_player.diamond - _player.less) : _player.diamond}钻石 购买本视频吗？')){
+        Map<String, dynamic> parm = {
+          'id': widget.id,
+        };
+        String? result = (await DioManager().requestAsync(
+            NWMethod.GET, NWApi.buyVideo, {"data": jsonEncode(parm)}));
+        // print(result);
+        if (result == null) {
+          return;
+        }
+        Map<String, dynamic> map = jsonDecode(result);
+        if(map['verify'] != null){
+          if(map['verify'] == true){
+            _initPlayer();
+          }else if(map['msg'] != null){
+            Global.showWebColoredToast(map['msg']);
+          }else{
+            Global.showWebColoredToast('未知错误，请刷新重试!');
+          }
         }
       }
     }
@@ -717,160 +724,6 @@ class _PlayerPage extends State<PlayerPage> {
                       color: Colors.black87,
                       child: Center(
                         child:
-                        // tryPlay ?
-                        // Column(
-                        //   mainAxisAlignment: MainAxisAlignment.center,
-                        //   children: [
-                        //     Column(
-                        //       mainAxisAlignment: MainAxisAlignment.start,
-                        //       children: [
-                        //         Container(
-                        //           margin: const EdgeInsets.only(
-                        //               left: 5, right: 20),
-                        //           child: Row(
-                        //             mainAxisAlignment:
-                        //             MainAxisAlignment.spaceBetween,
-                        //             children: [
-                        //               Row(
-                        //                 mainAxisAlignment:
-                        //                 MainAxisAlignment.start,
-                        //                 children: [
-                        //                   InkWell(
-                        //                     onTap: () {
-                        //                       Navigator.pop(context);
-                        //                     },
-                        //                     child: const Icon(
-                        //                       Icons.arrow_back,
-                        //                       color: Colors.grey,
-                        //                       size: 30,
-                        //                     ),
-                        //                   ),
-                        //                 ],
-                        //               ),
-                        //               _isReport
-                        //                   ? Container()
-                        //                   : InkWell(
-                        //                 onTap: () {
-                        //                   _report();
-                        //                 },
-                        //                 child: Container(
-                        //                   color: Colors.transparent,
-                        //                   margin: const EdgeInsets.only(
-                        //                       right: 20),
-                        //                   child: const Text(
-                        //                     '举报',
-                        //                     style: TextStyle(
-                        //                         color: Colors.black),
-                        //                   ),
-                        //                 ),
-                        //               ),
-                        //             ],
-                        //           ),
-                        //         ),
-                        //       ],
-                        //     ),
-                        //     Text(
-                        //       '试看已结束,${_player.member != true && _player.diamond ==0 ? '非会员': '未购买'}只能试看${_player.du}分钟哦',
-                        //       style:
-                        //       const TextStyle(color: Colors.white, fontSize: 20),
-                        //     ),
-                        //     const Padding(padding: EdgeInsets.all(10)),
-                        //     Row(
-                        //       mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        //       children: [
-                        //         SizedBox(
-                        //           width: 120,
-                        //           child: TextButton(
-                        //             style: ButtonStyle(
-                        //               backgroundColor:
-                        //               MaterialStateProperty.all(Colors.red),
-                        //               shape: MaterialStateProperty.all(
-                        //                   RoundedRectangleBorder(
-                        //                       borderRadius:
-                        //                       BorderRadius.circular(16))),
-                        //             ),
-                        //             onPressed: () {
-                        //               _tryPlayer();
-                        //             },
-                        //             child: const Text(
-                        //               '马上试看',
-                        //               style: TextStyle(color: Colors.white),
-                        //             ),
-                        //           ),
-                        //         ),
-                        //         _player.diamond > 0 ? SizedBox(
-                        //           width: 120,
-                        //           child: TextButton(
-                        //             style: ButtonStyle(
-                        //               backgroundColor:
-                        //               MaterialStateProperty.all(Colors.red),
-                        //               shape: MaterialStateProperty.all(
-                        //                   RoundedRectangleBorder(
-                        //                       borderRadius:
-                        //                       BorderRadius.circular(16))),
-                        //             ),
-                        //             onPressed: () {
-                        //               _buyVideo();
-                        //             },
-                        //             child:  Row(
-                        //               mainAxisAlignment: MainAxisAlignment.center,
-                        //               children: [
-                        //                 Row(
-                        //                   children: [
-                        //                     const Text(
-                        //                       '支付',
-                        //                       style: TextStyle(color: Colors.orange),
-                        //                       textAlign: TextAlign.right,
-                        //                     ),
-                        //                     Text(
-                        //                       Global.getNumbersToChinese(_player.diamond),
-                        //                       style:  TextStyle(color: Colors.orange, decoration: _player.less > 0 ? TextDecoration.lineThrough : TextDecoration.none),
-                        //                       textAlign: TextAlign.right,
-                        //                     ),
-                        //                     _player.less > 0 ? Text(
-                        //                       Global.getNumbersToChinese(_player.diamond - _player.less),
-                        //                       style: const TextStyle(color: Colors.orange),
-                        //                       textAlign: TextAlign.right,
-                        //                     ) : Container(),
-                        //                     Image.asset(ImageIcons.diamond,width: 12,),
-                        //                   ],
-                        //                 ),
-                        //               ],
-                        //             ),
-                        //           ),
-                        //         ) :
-                        //         SizedBox(
-                        //           width: 120,
-                        //           child: TextButton(
-                        //             style: ButtonStyle(
-                        //               backgroundColor:
-                        //               MaterialStateProperty.all(Colors.red),
-                        //               shape: MaterialStateProperty.all(
-                        //                   RoundedRectangleBorder(
-                        //                       borderRadius:
-                        //                       BorderRadius.circular(16))),
-                        //             ),
-                        //             onPressed: () {
-                        //               Navigator.of(context, rootNavigator: true)
-                        //                   .push<void>(
-                        //                 CupertinoPageRoute(
-                        //                   title: "VIP购买",
-                        //                   // fullscreenDialog: true,
-                        //                   builder: (context) =>
-                        //                   const VIPBuyPage(),
-                        //                 ),
-                        //               ).then((value) => _initPlayer());
-                        //             },
-                        //             child: const Text(
-                        //               '开通VIP',
-                        //               style: TextStyle(color: Colors.white),
-                        //             ),
-                        //           ),
-                        //         ),
-                        //       ],
-                        //     ),
-                        //   ],
-                        // ) :
                         (_player.diamond > 0 ?
                         Column(
                           // mainAxisAlignment: MainAxisAlignment.center,
@@ -924,15 +777,45 @@ class _PlayerPage extends State<PlayerPage> {
                               ],
                             ),
                             const Text(
-                              '试看已结束,购买才可以观看哦',
+                              '当前视频为钻石视频需要单独购买',
                               style:
                               TextStyle(color: Colors.white, fontSize: 20),
                             ),
-                            const Padding(padding: EdgeInsets.all(10)),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                SizedBox(
+                                Container(
+                                  height: 1,
+                                  width: 50,
+                                  margin: const EdgeInsets.all(10),
+                                  color: Colors.white.withOpacity(0.5),
+                                ),
+                                Text('购买价格如下',style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 15)),
+                                Container(
+                                  height: 1,
+                                  width: 50,
+                                  margin: const EdgeInsets.all(10),
+                                  color: Colors.white.withOpacity(0.5),
+                                ),
+                              ]
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('普通用户购买${_player.diamond}钻石',style: TextStyle(color: Colors.white.withOpacity(0.7),fontSize: 18)),
+                              ]
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('会员购买${_player.diamond - _player.less}钻石',style: TextStyle(color: Color(0xffffa726),fontSize: 15)),
+                              ]
+                            ),
+                            const Padding(padding: EdgeInsets.only(top: 5)),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                _player.member ? SizedBox(
                                   width: 120,
                                   child: TextButton(
                                     style: ButtonStyle(
@@ -961,7 +844,37 @@ class _PlayerPage extends State<PlayerPage> {
                                         textAlign: TextAlign.right
                                     ),
                                   ),
+                                ) :
+                                SizedBox(
+                                  width: 120,
+                                  child: TextButton(
+                                    style: ButtonStyle(
+                                      backgroundColor:
+                                      MaterialStateProperty.all(Colors.red),
+                                      shape: MaterialStateProperty.all(
+                                          RoundedRectangleBorder(
+                                              borderRadius:
+                                              BorderRadius.circular(16))),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(context, rootNavigator: true)
+                                          .push<void>(
+                                        CupertinoPageRoute(
+                                          title: "VIP购买",
+                                          // fullscreenDialog: true,
+                                          builder: (context) =>
+                                          const VIPBuyPage(),
+                                        ),
+                                      )
+                                          .then((value) => _initPlayer());
+                                    },
+                                    child: const Text(
+                                      '开通VIP',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
                                 ),
+                                const Padding(padding: EdgeInsets.only(left: 20)),
                                 SizedBox(
                                   width: 120,
                                   child: TextButton(
@@ -982,20 +895,19 @@ class _PlayerPage extends State<PlayerPage> {
                                         Row(
                                           children: [
                                             const Text(
-                                              '支付',
+                                              '去支付',
                                               style: TextStyle(color: Colors.orange),
                                               textAlign: TextAlign.right,
                                             ),
-                                            Text(
-                                              Global.getNumbersToChinese(_player.diamond),
-                                              style:  TextStyle(color: Colors.orange, decoration: _player.less > 0 ? TextDecoration.lineThrough : TextDecoration.none),
-                                              textAlign: TextAlign.right,
-                                            ),
-                                            _player.less > 0 ? Text(
+                                            _player.member ? Text(
                                               Global.getNumbersToChinese(_player.diamond - _player.less),
                                               style: const TextStyle(color: Colors.orange),
                                               textAlign: TextAlign.right,
-                                            ) : Container(),
+                                            ) : Text(
+                                              Global.getNumbersToChinese(_player.diamond),
+                                              style:  const TextStyle(color: Colors.orange,),
+                                              textAlign: TextAlign.right,
+                                            ),
                                             Image.asset(ImageIcons.diamond,width: 12,),
                                           ],
                                         ),
