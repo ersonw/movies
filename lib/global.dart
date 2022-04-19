@@ -225,7 +225,12 @@ class Global {
             _list.add(list[i]);
           }
         }else{
-          _list.add(list[i]);
+          if(list[i].mini > 0 && list[i].max == 0 && amount >= list[i].mini){
+            _list.add(list[i]);
+          }
+          if(list[i].mini == 0 && list[i].max > 0 && amount <= list[i].max){
+            _list.add(list[i]);
+          }
         }
       }
     }
@@ -414,8 +419,8 @@ class Global {
       await requestPhotosPermission();
       //DIO网络访问
       try {
-        // Response response = await Dio().get('https://github1.oss-cn-hongkong.aliyuncs.com/ios/app-release.config');
-        Response response = await Dio().get('http://23porn.oss-accelerate.aliyuncs.com/app-release.config');
+        Response response = await Dio().get('https://github1.oss-cn-hongkong.aliyuncs.com/ios/app-release.config');
+        // Response response = await Dio().get('http://23porn.oss-accelerate.aliyuncs.com/app-release.config');
         // Response response = await Dio().get('https://github1.oss-cn-hongkong.aliyuncs.com/ios/app-release.config.decode');
         // Response response = await Dio().get('http://23porn.oss-accelerate.aliyuncs.com/app-release.config.decode');
         // print(response);
