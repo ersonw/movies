@@ -212,22 +212,20 @@ class Global {
     Navigator.push(MainContext, DialogRouter(OnlinePayPage(list ,callback: callback,)));
   }
   static Future<void> showGamePayDialog(int amount,clickCallback callback)async{
+    // print(amount);
     List<OnlinePay> list = await _initGamePays();
+    // print(list);
     List<OnlinePay> _list = [];
     for (int i = 0; i < list.length; i++){
       if(list[i].mini == 0 && list[i].max == 0){
         _list.add(list[i]);
       }else{
-        if(list[i].mini > 0){
-          if(list[i].mini <= amount){
+        if(list[i].mini > 0 && list[i].max > 0){
+          if(amount >= list[i].mini && amount <= list[i].max){
             _list.add(list[i]);
           }
         }else{
-          if(list[i].max > 0){
-            if(list[i].max >= amount){
-              _list.add(list[i]);
-            }
-          }
+          _list.add(list[i]);
         }
       }
     }
@@ -255,6 +253,7 @@ class Global {
     String? result = (await DioManager().requestAsync(
         NWMethod.GET, NWApi.getGamePays, {"data": jsonEncode(parm)}));
     if (result != null) {
+      // print(result);
       Map<String, dynamic> map = jsonDecode(result);
       if (map != null && map["list"] != null){
         list = (map['list'] as List).map((e) => OnlinePay.formJson(e)).toList();

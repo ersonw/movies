@@ -19,12 +19,16 @@ class OnlinePay {
       : type = json['type'],
         title = json['title'],
         iconImage = json['iconImage'],
+        mini = json['mini'],
+        max = json['max'],
         id = json['id'];
 
   Map<String, dynamic> toJson() => {
         'type': type,
         'title': title,
         'iconImage': iconImage,
+        'mini': mini,
+        'max': max,
         'id': id,
       };
 
