@@ -1112,7 +1112,7 @@ class Global {
         if (MainContext != null) {
           if (int.parse(packageInfo.buildNumber) > config.version) {
             ShowAlertDialogBool(MainContext,'提示','当前属于测试未发布版本，请勿外传!');
-          }else{
+          }else if(int.parse(packageInfo.buildNumber) < config.version){
             String url = '';
             if(Platform.isIOS){
               // url = 'itms-services://?action=download-manifest&url=${config.urlIos}';

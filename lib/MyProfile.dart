@@ -431,6 +431,11 @@ class _MyProfile extends State<MyProfile> {
                   ),
                   InkWell(
                     onTap: (() {
+                      if(userModel.user.phone == null || userModel.user.phone == ''){
+                        Navigator.push(Global.MainContext, SlideRightRoute(page: const BindPhonePage())).then((value) => setState(() {Global.getUserInfo();}));
+                        ShowAlertDialog(Global.MainContext, '友情提示','为了您的账号安全，未绑定手机号开通会员将无法找回哟');
+                        return;
+                      }
                       Navigator.push(Global.MainContext, SlideRightRoute(page: const VIPBuyPage())).then((value) => setState(() {Global.getUserInfo();}));
                     }),
                     child: Stack(
