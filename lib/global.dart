@@ -54,10 +54,12 @@ import 'GamePayPage.dart';
 import 'GameView.dart';
 import 'LoadingDialog.dart';
 import 'OnlinePayPage.dart';
+import 'PayDialog.dart';
 import 'PlayerPage.dart';
 import 'QRCodeDialog.dart';
 import 'RestartWidget.dart';
 import 'VerifyCodeDialog.dart';
+import 'cool_flutter_ui/main.dart';
 import 'data/CashIn.dart';
 import 'data/Download.dart';
 import 'data/OnlinePay.dart';
@@ -70,6 +72,7 @@ import 'package:qr_code_tools/qr_code_tools.dart';
 import 'package:openinstall_flutter_plugin/openinstall_flutter_plugin.dart';
 import 'package:encrypt/encrypt.dart' as XYQ;
 
+import 'calculator/FakeRun.dart';
 import 'main.dart';
 final MessagesChangeNotifier messagesChangeNotifier = MessagesChangeNotifier();
 final KeFuMessageModel keFuMessageModel = KeFuMessageModel();
@@ -126,8 +129,6 @@ class Global {
         Navigator.push(MainContext, DialogRouter(LoadingDialog(false)));
       }
     });
-    // bool data = await fetchData();
-    // print(data);
     WidgetsFlutterBinding.ensureInitialized();
     _prefs = await SharedPreferences.getInstance();
     var _profile = _prefs.getString("profile");
@@ -147,18 +148,27 @@ class Global {
         print(e);
       }
     }
-    WidgetsFlutterBinding.ensureInitialized();
     cameras = await availableCameras();
     uid = await getUUID();
     // runApp(const GongGaoApp());
     if(await initNetworks()){
       await _initAssets();
-      _openinstallFlutterPlugin.init(wakeupHandler);
       _openinstallFlutterPlugin.install(installHandler);
-      await _init();
-      await initSock();
-      _initJPush();
-      runApp(const MyAdaptingApp());
+      _openinstallFlutterPlugin.init(wakeupHandler);
+      // if(Platform.isIOS &&  configModel.config.channel == true){
+        await _init();
+        await initSock();
+        _initJPush();
+        runApp(const MyAdaptingApp());
+      // }else if(Platform.isAndroid){
+      //   await _init();
+      //   await initSock();
+      //   _initJPush();
+      //   runApp(const MyAdaptingApp());
+      // }else{
+      //   // FakeRun();
+      //   cool_flutter_uiRun();
+      // }
     }else{
       runApp(const GongGaoApp());
     }
@@ -191,6 +201,10 @@ class Global {
   static Future<void> showVerifyCodeDialog(String phone,{clickCallbackCode? callback,bool verify = false})async{
     Navigator.push(
         MainContext, DialogRouter(VerifyCodeDialog(phone,callback: callback,verify: verify,)));
+  }
+  static Future<void> showPayDialogTiShi()async{
+    Navigator.push(
+        MainContext, DialogRouter(const PayDialog()));
   }
   static Future<void> showIDDIalog()async{
     Navigator.push(
@@ -272,9 +286,6 @@ class Global {
   static Future<void> installHandler(Map<String, dynamic> data) async {
     // print(data['channelCode']);
     // channelCode = '101';
-    if(configModel.config.firstTime == true){
-      await Global.reportOpen(Global.REPORT_OPEN_APP);
-    }
     if(null != data['bindData']){
       Map<String, dynamic> map = jsonDecode(data['bindData']);
       if(null != map['code']){
@@ -288,6 +299,18 @@ class Global {
       }
     }
     if(null != data['channelCode'] && data['channelCode'].toString().isNotEmpty){
+      if(configModel.config.firstTime == true){
+        await Global.reportOpen(Global.REPORT_OPEN_APP);
+      }
+      // if(Platform.isIOS &&  configModel.config.channel == false){
+      //   Config config = configModel.config;
+      //   config.channel = true;
+      //   configModel.config = config;
+      //   await _init();
+      //   await initSock();
+      //   _initJPush();
+      //   runApp(const MyAdaptingApp());
+      // }
       channelCode = data['channelCode'];
     }
     // handlerChannel();

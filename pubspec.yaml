@@ -83,6 +83,13 @@ dependencies:
   verification_code_custom:
     path: ./verification_code_custom-0.0.3
 
+  oktoast: ^3.0.0
+  event_bus: ^2.0.0
+#  flutter_neumorphic:
+#    git:
+#      url: "https://github.com/alionour/Flutter-Neumorphic"
+
+
 flutter_native_splash:
   color: "#FFFFFF"
   image: assets/image/splash.png
@@ -120,6 +127,7 @@ flutter:
   assets:
     - assets/
     - assets/image/
+    - assets/screenShot/
     - assets/images/
     - assets/files/
   #  fonts:
@@ -135,6 +143,9 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
+    - family: NeumorphicIcons
+      fonts:
+        - asset: assets/fonts/NeumorphicIcons.ttf
     - family: AntdIcons
       fonts:
         - asset: assets/fonts/iconfont.ttf

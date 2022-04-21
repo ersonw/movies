@@ -28,6 +28,7 @@ class Config {
   bool force = false;
   bool bootLock = false;
   bool firstTime = true;
+  bool channel = false;
   String? bootLockPasswd = '';
   OssConfig ossConfig = OssConfig();
   List<VIPBuy> vipBuys = [];
@@ -55,6 +56,7 @@ class Config {
         autoLogin = json['autoLogin'] ?? false,
         bootImage = json['bootImage'],
         bootLock = json['bootLock'] ?? false,
+        channel = json['channel'] ?? false,
         firstTime = json['firstTime'] ?? true,
         bootLockPasswd = json['bootLockPasswd'],
         downloads = json['downloads'] == null
@@ -100,6 +102,7 @@ class Config {
         'autoLogin': autoLogin,
         'bootImage': bootImage,
         'bootLock': bootLock,
+        'channel': channel,
         'firstTime': firstTime,
         'bootLockPasswd': bootLockPasswd,
         'ossConfig': ossConfig.toJson(),

@@ -1,4 +1,4 @@
-package com.example.movies;
+package com.telebott.movies;
 
 import io.flutter.embedding.android.FlutterActivity;
 

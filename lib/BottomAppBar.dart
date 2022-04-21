@@ -87,6 +87,7 @@ class _BottomAppBarState extends State<BottomAppBarState> {
   @override
   Widget build(BuildContext context) {
     _init(context);
+
     // Global.showLockScreen();
     return Scaffold(
       body: _eachView[_index],

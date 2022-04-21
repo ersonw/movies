@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.movies">
+    package="com.telebott.movies">
    <application
         android:label="23Porn 亚洲AV社区"
         android:name="${applicationName}"

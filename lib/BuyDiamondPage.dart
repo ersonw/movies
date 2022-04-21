@@ -296,6 +296,7 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
         if(map['url'] != null){
           await Global.reportOpen(Global.REPORT_CREATE_ORDER);
           launch(map['url']);
+          Global.showPayDialogTiShi();
         }else{
           Global.getUserInfo();
         }

@@ -38,7 +38,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.movies"
+        applicationId "com.telebott.movies"
         manifestPlaceholders = [
                 OPENINSTALL_APPKEY : "z1uhui99",
                 applicationName: "android.app.Application",

@@ -13,7 +13,6 @@ import 'package:movies/VIPBuyPage.dart';
 import 'package:movies/VideoRecordsPage.dart';
 import 'package:movies/data/User.dart';
 import 'package:movies/functions.dart';
-import 'package:movies/messagesPage.dart';
 import 'package:movies/profile_tab.dart';
 import 'package:movies/settings_tab.dart';
 import 'package:movies/system_ttf.dart';
@@ -167,13 +166,15 @@ class _MyProfile extends State<MyProfile> {
               onPressed: () {
                 // This pushes the settings page as a full page modal dialog on top
                 // of the tab bar and everything.
-                Navigator.of(context, rootNavigator: true).push<void>(
-                  CupertinoPageRoute(
-                    title: MessagesPage.title,
-                    // fullscreenDialog: true,
-                    builder: (context) => const MessagesPage(),
-                  ),
-                );
+                // Navigator.of(context, rootNavigator: true).push<void>(
+                //   CupertinoPageRoute(
+                //     title: MessagesPage.title,
+                //     // fullscreenDialog: true,
+                //     builder: (context) => const MessagesPage(),
+                //   ),
+                // );
+
+                Global.toChat();
               },
             ),
             CupertinoButton(

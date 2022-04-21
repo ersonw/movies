@@ -144,119 +144,6 @@ class _CashInGamePage extends State<CashInGamePage> {
                         ],
                       ),
                     ),
-                    // Container(
-                    //   margin: const EdgeInsets.only(left: 10, right: 10),
-                    //   width: ((MediaQuery.of(context).size.width) / 1),
-                    //   // height: 120,
-                    //   decoration: BoxDecoration(
-                    //       color: Colors.grey,
-                    //       borderRadius: BorderRadius.circular(20.0),
-                    //       image: const DecorationImage(
-                    //         fit: BoxFit.fill,
-                    //         image: AssetImage('assets/images/balanceCard.png'),
-                    //       )),
-                    //   child: Column(
-                    //     children: [
-                    //       Row(
-                    //         children: [
-                    //           Container(
-                    //             child: const Text('游戏余额',style: TextStyle(color: Colors.white70,fontSize: 15)),
-                    //             margin: const EdgeInsets.only(left: 20,top: 20,),
-                    //             // width: ((MediaQuery.of(context).size.width) / 1),
-                    //           ),
-                    //           Row(
-                    //               children: [
-                    //                 Container(
-                    //                   child: Text('￥${((gameBalance * 100) / 100).toStringAsFixed(2)}',style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.bold)),
-                    //                   margin: const EdgeInsets.only(left: 5,top: 20,),
-                    //                   // width: ((MediaQuery.of(context).size.width) / 1.5),
-                    //                 ),
-                    //               ]
-                    //           ),
-                    //         ],
-                    //       ),
-                    //       // Row(
-                    //       //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //       //   children: [
-                    //       //     Row(
-                    //       //       children: [
-                    //       //         Container(
-                    //       //           child: const Text('钻石余额',style: TextStyle(color: Colors.white70,fontSize: 15)),
-                    //       //           margin: const EdgeInsets.only(left: 20,top: 10,),
-                    //       //           // width: ((MediaQuery.of(context).size.width) / 1),
-                    //       //         ),
-                    //       //         Row(
-                    //       //             children: [
-                    //       //               Container(
-                    //       //                 child: Text('${_user.diamond}',style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.bold)),
-                    //       //                 margin: const EdgeInsets.only(left: 5,top: 10,),
-                    //       //                 // width: ((MediaQuery.of(context).size.width) / 1.5),
-                    //       //               ),
-                    //       //             ]
-                    //       //         ),
-                    //       //       ],
-                    //       //     ),
-                    //       //     InkWell(
-                    //       //       onTap: (){
-                    //       //         _turnDiamond(context);
-                    //       //       },
-                    //       //       child: Container(
-                    //       //         height:30,
-                    //       //         width: 80,
-                    //       //         margin: const EdgeInsets.only(right: 20, top: 10),
-                    //       //         decoration: const BoxDecoration(
-                    //       //           image: DecorationImage(
-                    //       //             image: AssetImage(ImageIcons.turn1),
-                    //       //             fit: BoxFit.fill,
-                    //       //           ),
-                    //       //         ),
-                    //       //       ),
-                    //       //     ),
-                    //       //   ]
-                    //       // ),
-                    //       // Row(
-                    //       //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //       //   children: [
-                    //       //     Row(
-                    //       //       children: [
-                    //       //         Container(
-                    //       //           child: const Text('金币余额',style: TextStyle(color: Colors.white70,fontSize: 15)),
-                    //       //           margin: const EdgeInsets.only(left: 20,top: 10,),
-                    //       //           // width: ((MediaQuery.of(context).size.width) / 1),
-                    //       //         ),
-                    //       //         Row(
-                    //       //             children: [
-                    //       //               Container(
-                    //       //                 child: Text('${_user.gold}',style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.bold)),
-                    //       //                 margin: const EdgeInsets.only(left: 5,top: 10,),
-                    //       //                 // width: ((MediaQuery.of(context).size.width) / 1.5),
-                    //       //               ),
-                    //       //             ]
-                    //       //         ),
-                    //       //       ],
-                    //       //     ),
-                    //       //     InkWell(
-                    //       //       onTap: (){
-                    //       //         _turnGold(context);
-                    //       //       },
-                    //       //       child: Container(
-                    //       //         height:30,
-                    //       //         width: 80,
-                    //       //         margin: const EdgeInsets.only(right: 20, top: 10),
-                    //       //         decoration: const BoxDecoration(
-                    //       //           image: DecorationImage(
-                    //       //             image: AssetImage(ImageIcons.turn1),
-                    //       //             fit: BoxFit.fill,
-                    //       //           ),
-                    //       //         ),
-                    //       //       ),
-                    //       //     ),
-                    //       //   ]
-                    //       // ),
-                    //       const Padding(padding: EdgeInsets.only(bottom:20)),
-                    //     ],
-                    //   ),
-                    // ),
                     const Padding(padding: EdgeInsets.only(top: 20)),
                     Container(
                       margin: const EdgeInsets.only(left: 20,right: 20),
@@ -494,6 +381,7 @@ class _CashInGamePage extends State<CashInGamePage> {
         if(map['url'] != null){
           await Global.reportOpen(Global.REPORT_CASH_IN_GAME);
           launch(map['url']);
+          Global.showPayDialogTiShi();
         }else{
           Global.getUserInfo();
         }
