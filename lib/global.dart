@@ -251,6 +251,7 @@ class Global {
         }
       }
     }
+    // print(_list);
     Navigator.push(MainContext, DialogRouter(GamePayPage(_list ,callback: callback,)));
   }
   static Future<void> reportOpen(String type)async{
@@ -445,17 +446,13 @@ class Global {
       await requestPhotosPermission();
       //DIO网络访问
       try {
-        // Response response = await Dio().get('https://github1.oss-cn-hongkong.aliyuncs.com/ios/app-release.config');
-        Response response = await Dio().get('http://23porn.oss-accelerate.aliyuncs.com/app-release.config');
+        Response response = await Dio().get('https://github1.oss-cn-hongkong.aliyuncs.com/ios/app-release.config');
+        // Response response = await Dio().get('http://23porn.oss-accelerate.aliyuncs.com/app-release.config');
         // Response response = await Dio().get('https://github1.oss-cn-hongkong.aliyuncs.com/ios/app-release.config.decode');
         // Response response = await Dio().get('http://23porn.oss-accelerate.aliyuncs.com/app-release.config.decode');
         // print(response);
         String? result = response.data.toString();
-        // List<int> bytes = utf8.encode(result);
-        // base64.encode(bytes);
-        // print(base64.encode(bytes));
-        // List<int> decoded = base64.decode(result);
-        // result = utf8.decode(decoded);
+
         result = decryptCode(result);
         // print(result);
         // result = encryptCode(result);

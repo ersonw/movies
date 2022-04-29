@@ -228,9 +228,8 @@ class _VIPBuyPage extends State<VIPBuyPage>
         }else{
           Global.getUserInfo();
         }
-      }else{
-        Global.showWebColoredToast(map['msg']);
       }
+      if(map['msg'] != null) Global.showWebColoredToast(map['msg']);
     }
   }
   _buildOnline() {

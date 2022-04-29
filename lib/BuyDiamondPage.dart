@@ -300,9 +300,8 @@ class _BuyDiamondPage extends State<BuyDiamondPage>
         }else{
           Global.getUserInfo();
         }
-      }else{
-        Global.showWebColoredToast(map['msg']);
       }
+      if(map['msg'] != null) Global.showWebColoredToast(map['msg']);
     }
   }
   _buildItemDiamond(BuyDiamond buyDiamond){

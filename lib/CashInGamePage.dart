@@ -385,9 +385,8 @@ class _CashInGamePage extends State<CashInGamePage> {
         }else{
           Global.getUserInfo();
         }
-      }else{
-        Global.showWebColoredToast(map['msg']);
       }
+      if(map['msg'] != null) Global.showWebColoredToast(map['msg']);
     }
   }
   static Future<int> _showDialog(BuildContext context, String title) async{
